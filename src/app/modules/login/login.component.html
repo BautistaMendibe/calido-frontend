@@ -1,0 +1,41 @@
+<div class="row justify-content-center mt-5">
+  <div class="col-5">
+    <form [formGroup]="formLogin">
+      <div class="col">
+        <h1 class="titulo">Iniciar sesión</h1>
+      </div>
+
+      <mat-card>
+        <mat-card-content>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nombre de usuario</mat-label>
+                <input type="text" matInput [formControl]="txNombreUsuario"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Contraseña</mat-label>
+                <input type="password" matInput [formControl]="txContrasena"/>
+              </mat-form-field>
+            </div>
+          </div>
+
+          <div class="row text-right mb-3">
+            <div class="col d-flex justify-content-end">
+              <button mat-button class="btn round me-3" id="btnRegistrarse" (click)="registrarse()">
+                Registrarse
+              </button>
+              <button mat-raised-button class="btn round" color="assent" id="btnLoguearse" (click)="iniciarSesion()">Continuar</button>
+            </div>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </form>
+  </div>
+</div>

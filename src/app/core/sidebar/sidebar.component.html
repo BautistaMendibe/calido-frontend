@@ -1,0 +1,47 @@
+<div class="sidenavContainer" (mouseenter)="onSinenavToggle()" (mouseleave)="onSinenavToggle()"
+     [@onSideNavChange]="sideNavState ? 'open' : 'close'">
+  <mat-nav-list *ngIf="!showFiller">
+    <div class="parent" *ngFor="let item of menuItems">
+      <mat-list-item (click)="navigate(item); activarItem(item)" class="parent" [class.activo]="item.activo">
+        <mat-icon>{{item.icon ? item.icon : 'gavel'}}
+        </mat-icon>
+        <span class="full-width" *ngIf="isExpanded || isShowing" [ngClass]="{'active' : item.activo}"
+              (click)="navigate(item)"
+              [@animateText]="linkText ? 'show' : 'hide'"
+              [@animateTextTraslate]="linkText ? 'in' : 'void'">
+          {{capitalize(item.nombre)}}
+        </span>
+        <mat-icon class="menu-button" [ngClass]="{'rotated' : item.activo}"
+                  *ngIf="item.subMenu && item.subMenu.length != 0"
+                  [@animateText]="linkText ? 'show' : 'hide'">expand_more
+        </mat-icon>
+      </mat-list-item>
+      <div class="submenu" [ngClass]="{'expanded' : item.activo && sideNavState}" *ngIf="isShowing || isExpanded &&
+         item.subMenu && item.subMenu.length">
+        <div *ngFor="let subItem of item.subMenu" [@animateSubText]="linkText ? 'show' : 'hide'">
+          <mat-list-item *ngIf="item.activo "
+                         [class.subMenuActivo]="subItem.activo && subItem.subMenu && subItem.subMenu.length"
+                         (click)="navigate(subItem); activarSubItem(subItem)">
+            <span class="full-width">
+              {{capitalize(subItem.nombre)}}</span>
+
+            <mat-icon class="menu-button" [ngClass]="{'rotated' : subItem.activo}"
+                      *ngIf="subItem.subMenu && subItem.subMenu.length != 0"
+                      [@animateText]="linkText ? 'show' : 'hide'">expand_more
+            </mat-icon>
+          </mat-list-item>
+          <div class="subSubMenu submenu" [ngClass]="{'expanded' : subItem.activo && sideNavState}" *ngIf="isShowing || isExpanded &&
+         subItem.subMenu && subItem.subMenu.length">
+            <div *ngFor="let subSubItem of subItem.subMenu" [@animateSubText]="linkText ? 'show' : 'hide'">
+              <mat-list-item *ngIf="subItem.activo && item.activo"
+                             (click)="navigate(subSubItem)">
+            <span class="full-width">
+              {{capitalize(subSubItem.nombre)}}</span>
+              </mat-list-item>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-nav-list>
+</div>

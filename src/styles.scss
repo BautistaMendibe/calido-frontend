@@ -1,0 +1,26 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.titulo {
+  font-weight: bold;
+  color: #e15b35;
+}
+
+/* Change the border focused color
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
+.mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
+.mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
+.mdc-notched-outline__trailing{
+  border-color: #ffbfb1 !important;
+  color: #f59f8a !important;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-floating-label{
+  color: #f59f8a!important;
+}
+*/
+

@@ -1,0 +1,25 @@
+:host {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+mat-drawer-container {
+  min-height: calc(100vh - 64px) !important;
+  background-color: #f5f5f5;
+}
+
+.offSidebar {
+  width: 60px;
+}
+
+.drawer {
+  min-height: calc(100vh - 64px) !important;
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  background-color: white;
+}
+
+app-header {
+  border-bottom: solid 1px #dddd;
+}

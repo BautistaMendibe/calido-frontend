@@ -1,0 +1,69 @@
+button:focus {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.grad {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.spacer {
+  flex: 1;
+}
+
+mat-sidenav {
+  width: 15%;
+  background-color: whitesmoke;
+}
+
+.toolbar img {
+  margin: 0 16px;
+}
+
+.menu-horizontal {
+  padding: 0;
+
+  .mat-list-item {
+    display: inline-block;
+    height: auto;
+    width: auto;
+    font-weight: 600;
+    color: white;
+  }
+}
+
+.menu-h {
+  width: 100%;
+}
+
+.example-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+.header-logo {
+  width: 35px;
+  transition: max-width 0.5s ease;
+  margin-left: 15px
+}
+
+ul li {
+  list-style: none;
+}
+
+.mat-button {
+  color: white !important;
+  align-content: center;
+}
+
+.padding-15 {
+  padding-top: 15px;
+}
+

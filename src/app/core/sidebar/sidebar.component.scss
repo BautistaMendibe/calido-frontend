@@ -1,0 +1,138 @@
+:host {
+  .mat-icon {
+    vertical-align: middle;
+    margin-right: 20px;
+  }
+
+  .profile-card {
+    text-align: center;
+    padding: 0 20px 20px 20px;
+
+    img {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 50%;
+    }
+  }
+}
+
+a {
+  font-weight: bold;
+}
+
+.userCel::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 15px;
+  height: 1px;
+  width: calc(100% - 30px);
+  background-color: rgba(180, 180, 180, .3);
+}
+
+
+.menu-category {
+  position: relative;
+  font-family: Roboto, sans-serif;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  line-height: 32px;
+  padding: 1rem 20px 0.5rem;
+  color: #fff;
+  opacity: 0.7;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.menu {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 30px;
+  color: #e15b35;
+}
+
+
+.menu-link {
+  height: 56px;
+  padding: 0 12px;
+  font-weight: 400;
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-transition: .2s linear;
+  transition: .2s linear;
+}
+
+
+.example-container {
+  height: 500px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
+.example-sidenav-content {
+  display: flex;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.example-sidenav {
+  user-select: none;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.menu-button {
+  transition: 300ms ease-in-out;
+  transform: rotate(0deg);
+}
+
+.menu-button.rotated {
+  transform: rotate(180deg);
+}
+
+.submenu {
+  overflow-y: hidden;
+  transition: transform 300ms ease;
+  transform: scaleY(0);
+  transform-origin: top;
+  padding-left: 30px;
+}
+
+.subSubMenu {
+  padding-left: 15px !important;
+}
+
+.submenu.expanded {
+  transform: scaleY(1);
+}
+
+.activo {
+  font-weight: bold;
+  box-shadow: inset 4px 0 0 #e15b35;
+}
+
+.subMenuActivo {
+  font-weight: bold;
+}
+
+
+.full-width {
+  outline: none !important;
+}
+
+.sidenavContainer {
+  min-width: 60px;
+  height: calc(100vh - 64px);
+  background-color: #f5f5f5;
+}
+
+::ng-deep .mat-list-item-content { color: #e15b35 !important; }

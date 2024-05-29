@@ -1,0 +1,34 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <div>
+      <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" (click)="toggleSideBar()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <a class="ml-2">
+        <img class="header-logo" src="../../../assets/imgs/logo-header.png" alt="logo-caja"/>
+      </a>
+    </div>
+    <div class="float-right mt-15" fxFlex fxLayout="row" fxLayoutAlign="flex-end">
+      <ul style="margin-top: 15px">
+        <li>
+          <button mat-button [matMenuTriggerFor]="menu" class="white" id="btnUsuario">
+            <mat-icon>person_outline</mat-icon>
+            <span id="txtNombreUsuario">
+              Bautista Mendibe
+            </span>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item class="btn" id="btnCambiar" (click)="change()">
+              <mat-icon>loop</mat-icon>
+              Cambiar sesión
+            </button>
+            <button mat-menu-item class="btn" id="btnSalir" (click)="exit()">
+              <mat-icon>exit_to_app</mat-icon>
+              Salir
+            </button>
+          </mat-menu>
+        </li>
+      </ul>
+    </div>
+  </mat-toolbar-row>
+</mat-toolbar>
