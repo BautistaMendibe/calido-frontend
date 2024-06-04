@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {HealthService} from "../../services/health.service";
+import {UsuariosService} from "../../services/usuarios.service";
 
 @Component({
   selector: 'app-login',
@@ -13,7 +14,7 @@ export class LoginComponent implements OnInit{
 
   constructor(
     private formBuilder: FormBuilder,
-    private healthService: HealthService) {
+    private usuariosService: UsuariosService) {
     this.formLogin = new FormGroup({});
   }
 
@@ -31,8 +32,15 @@ export class LoginComponent implements OnInit{
   public iniciarSesion(){
     // Verificamos si existe el usuario
     if (this.formLogin.valid) {
-      this.healthService.getStatusBackend().subscribe((res) => {
-        console.log(res);
+      const nombreUsuario = this.txNombreUsuario.value;
+      const contrasena = this.txContrasena.value;
+
+      this.usuariosService.validarInicioSesion(nombreUsuario, contrasena).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          console.log('Bienvenido');
+        } else {
+          console.log('Aca no entras pibe');
+        }
       })
     }
   }

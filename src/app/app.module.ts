@@ -14,6 +14,7 @@ import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { HomeComponent } from './modules/home/home.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
+import {UsuariosService} from "./services/usuarios.service";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,10 @@ import {HttpClientModule} from "@angular/common/http";
         ReactiveFormsModule,
         HttpClientModule
     ],
-  providers: [HealthService, provideAnimationsAsync()],
+  providers: [
+    HealthService,
+    UsuariosService,
+    provideAnimationsAsync()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

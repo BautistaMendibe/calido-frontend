@@ -1,3 +1,3 @@
-export class ResultadoSp {
-  constructor(public id?: number, public nombre?: string) {}
+export class SpResult {
+  constructor(public mensaje?: string) {}
 }
