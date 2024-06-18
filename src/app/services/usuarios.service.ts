@@ -4,7 +4,9 @@ import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class UsuariosService {
   private urlBackend = environmentDEV.backendUrl;
   private controllerName = 'usuarios';

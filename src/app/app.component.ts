@@ -1,11 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'front';
   sideBarOpen = true;
 
@@ -15,6 +15,10 @@ export class AppComponent {
     } else {
       this.sideBarOpen = event;
     }
+  }
+
+  ngOnInit(){
+    console.log('jsdfndsafds');
   }
 
 }

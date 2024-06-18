@@ -37,9 +37,9 @@ export class LoginComponent implements OnInit{
 
       this.usuariosService.validarInicioSesion(nombreUsuario, contrasena).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
-          console.log('Bienvenido');
+          console.log(respuesta);
         } else {
-          console.log('Aca no entras pibe');
+          console.log(respuesta);
         }
       })
     }
