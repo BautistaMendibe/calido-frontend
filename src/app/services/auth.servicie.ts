@@ -2,6 +2,8 @@ import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
+import { jwtDecode } from 'jwt-decode';
+
 
 @Injectable({
     providedIn: 'root'
@@ -21,8 +23,8 @@ export class AuthService {
         localStorage.removeItem('auth_token');
     }
 
-    public getToken(): string | null {
-        return localStorage.getItem('auth_token');
+    public getToken(): string {
+        return localStorage.getItem('auth_token') ?? '';
     }
 
     public isAuthenticated(): boolean {
@@ -34,6 +36,15 @@ export class AuthService {
     // Método para actualizar el estado de autenticación
     public updateAuthenticationStatus(isAuthenticated: boolean): void {
         this.authenticationStatusSource.next(isAuthenticated);
+    }
+
+    // Devuelve el token decodificado
+    public getDecodedAccessToken(token: string): any {
+        try {
+            return jwtDecode(token);
+        } catch(Error) {
+            return null;
+        }
     }
 
 }

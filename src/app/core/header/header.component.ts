@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.servicie";
 
@@ -19,9 +19,15 @@ export class HeaderComponent implements OnInit {
     this.authService.authenticationStatus$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
         this.toggleSideBarForMe.emit(true);
-        const token = this.authService.getToken();
-        console.log(token);
         this.estaLogeado = true;
+        const token = this.authService.getToken();
+
+        // Del token sacamos el nombre del usuario para mostrar
+        const infoToken: any = this.authService.getDecodedAccessToken(token);
+        const nombre = infoToken.result.nombre;
+        const apellido = infoToken.result.apellido;
+        this.nombreApellido = `${nombre} ${apellido}`;
+
       } else {
         this.toggleSideBarForMe.emit(false);
         this.estaLogeado = false;

@@ -9,12 +9,12 @@
       </a>
     </div>
     <div class="float-right mt-15" fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-      <ul style="margin-top: 15px">
+      <ul style="margin-top: 15px" *ngIf="estaLogeado">
         <li>
           <button mat-button [matMenuTriggerFor]="menu" class="white" id="btnUsuario">
             <mat-icon>person_outline</mat-icon>
             <span id="txtNombreUsuario">
-              Bautista Mendibe
+              {{nombreApellido}}
             </span>
           </button>
           <mat-menu #menu="matMenu">
