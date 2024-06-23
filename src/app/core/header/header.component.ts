@@ -9,17 +9,16 @@ import {Router} from "@angular/router";
 })
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
-  @Input() estaLogeado: boolean;
+  estaLogeado: boolean = false;
 
   constructor(private usuariosService: UsuariosService, private router: Router) {
-    this.estaLogeado = false;
   }
 
   ngOnInit() {
-    if (this.estaLogeado) {
-      const token = this.usuariosService.getToken();
-
-    }
+    this.usuariosService.authenticationStatus$.subscribe(isAuthenticated => {
+      this.estaLogeado = isAuthenticated;
+      // Aquí puedes agregar cualquier lógica adicional que necesites ejecutar cuando el estado de autenticación cambie
+    });
   }
 
   // Metodo para abrir el menu lateral
@@ -32,6 +31,8 @@ export class HeaderComponent implements OnInit {
 
   // Metodo para salir de la sesion actual
   public exit() {
+    this.toggleSideBarForMe.emit(false);
+    this.estaLogeado = false;
     this.usuariosService.logOut();
     this.router.navigate(['/login']);
   }

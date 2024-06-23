@@ -40,6 +40,7 @@ export class LoginComponent implements OnInit{
         if (token != 'ERROR') {
           // Si el inicio de sesion es correcto guardamos el token del usuario en el localStore y lo dirigimos al home
           this.usuariosService.setToken(token);
+          this.usuariosService.updateAuthenticationStatus(true);
           this.router.navigate(['/']);
         } else {
           console.log('usuario y/o contrasena invalido');

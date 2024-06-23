@@ -1,7 +1,7 @@
 <mat-toolbar>
   <mat-toolbar-row>
     <div>
-      <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" (click)="toggleSideBar()">
+      <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" [disabled]="!estaLogeado" (click)="toggleSideBar()">
         <mat-icon>menu</mat-icon>
       </button>
       <a class="ml-2">

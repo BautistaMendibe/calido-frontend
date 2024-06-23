@@ -1,4 +1,4 @@
-<app-header (toggleSideBarForMe)="sideBarToggler($event)" [estaLogeado]="estaLogeado"></app-header>
+<app-header (toggleSideBarForMe)="sideBarToggler($event)"></app-header>
 <mat-drawer-container>
   <mat-drawer mode="side" class="mat-elevation-z9 onSidebar" [opened]="sideBarOpen" position="start">
     <app-sidebar (toggleSideBarForMe)="sideBarToggler($event)"></app-sidebar>
