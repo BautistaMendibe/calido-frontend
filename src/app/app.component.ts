@@ -1,30 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthService} from "./services/auth.servicie";
+import {Component} from '@angular/core';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'front';
   sideBarOpen = false;
-  estaLogeado: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService) {}
-
-  ngOnInit(){
-    this.authService.getAuthenticationStatus().subscribe((estaLogeado) => {
-      if (estaLogeado) {
-        this.estaLogeado = true;
-        this.sideBarOpen = true;
-      } else {
-        this.estaLogeado = false;
-        this.router.navigate(['/login']);
-      }
-    })
-  }
+  constructor() {}
 
   sideBarToggler(event: any) {
     if (event) {

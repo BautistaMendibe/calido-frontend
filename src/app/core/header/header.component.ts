@@ -17,10 +17,15 @@ export class HeaderComponent implements OnInit {
 
   ngOnInit() {
     this.authService.authenticationStatus$.subscribe(isAuthenticated => {
-      this.estaLogeado = isAuthenticated;
       if (isAuthenticated) {
+        this.toggleSideBarForMe.emit(true);
         const token = this.authService.getToken();
         console.log(token);
+        this.estaLogeado = true;
+      } else {
+        this.toggleSideBarForMe.emit(false);
+        this.estaLogeado = false;
+        this.router.navigate(['/login']);
       }
     });
   }

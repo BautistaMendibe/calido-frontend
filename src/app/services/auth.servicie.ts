@@ -31,12 +31,6 @@ export class AuthService {
         return!!token;
     }
 
-    public getAuthenticationStatus(): Observable<boolean> {
-        // Retorna un Observable que emite el estado de autenticación
-        // Esto permite a los componentes suscribirse a cambios en el estado de autenticación
-        return new BehaviorSubject<boolean>(this.isAuthenticated()).asObservable();
-    }
-
     // Método para actualizar el estado de autenticación
     public updateAuthenticationStatus(isAuthenticated: boolean): void {
         this.authenticationStatusSource.next(isAuthenticated);
