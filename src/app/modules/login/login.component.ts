@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {HealthService} from "../../services/health.service";
 import {UsuariosService} from "../../services/usuarios.service";
 import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.servicie";
 
 @Component({
   selector: 'app-login',
@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit{
 
   constructor(
     private formBuilder: FormBuilder,
+    private authService: AuthService,
     private usuariosService: UsuariosService,
     private router: Router) {
     this.formLogin = new FormGroup({});
@@ -39,8 +40,8 @@ export class LoginComponent implements OnInit{
       this.usuariosService.validarInicioSesion(nombreUsuario, contrasena).subscribe((token) => {
         if (token != 'ERROR') {
           // Si el inicio de sesion es correcto guardamos el token del usuario en el localStore y lo dirigimos al home
-          this.usuariosService.setToken(token);
-          this.usuariosService.updateAuthenticationStatus(true);
+          this.authService.setToken(token);
+          this.authService.updateAuthenticationStatus(true);
           this.router.navigate(['/']);
         } else {
           console.log('usuario y/o contrasena invalido');
