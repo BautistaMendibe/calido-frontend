@@ -1,6 +1,6 @@
 import {Component, EventEmitter, OnInit, Input, Output} from '@angular/core';
-import {UsuariosService} from "../../services/usuarios.service";
 import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.servicie";
 
 @Component({
   selector: 'app-header',
@@ -9,15 +9,19 @@ import {Router} from "@angular/router";
 })
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
-  estaLogeado: boolean = false;
+  public estaLogeado: boolean = false;
+  public nombreApellido: string = '';
 
-  constructor(private usuariosService: UsuariosService, private router: Router) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   ngOnInit() {
-    this.usuariosService.authenticationStatus$.subscribe(isAuthenticated => {
+    this.authService.authenticationStatus$.subscribe(isAuthenticated => {
       this.estaLogeado = isAuthenticated;
-      // Aquí puedes agregar cualquier lógica adicional que necesites ejecutar cuando el estado de autenticación cambie
+      if (isAuthenticated) {
+        const token = this.authService.getToken();
+        console.log(token);
+      }
     });
   }
 
@@ -33,7 +37,7 @@ export class HeaderComponent implements OnInit {
   public exit() {
     this.toggleSideBarForMe.emit(false);
     this.estaLogeado = false;
-    this.usuariosService.logOut();
+    this.authService.logOut();
     this.router.navigate(['/login']);
   }
 

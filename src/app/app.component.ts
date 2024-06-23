@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
-import {UsuariosService} from "./services/usuarios.service";
+import {AuthService} from "./services/auth.servicie";
 
 @Component({
   selector: 'app-root',
@@ -12,10 +12,10 @@ export class AppComponent implements OnInit {
   sideBarOpen = false;
   estaLogeado: boolean = false;
 
-  constructor(private router: Router, private usuariosService: UsuariosService) {}
+  constructor(private router: Router, private authService: AuthService) {}
 
   ngOnInit(){
-    this.usuariosService.getAuthenticationStatus().subscribe((estaLogeado) => {
+    this.authService.getAuthenticationStatus().subscribe((estaLogeado) => {
       if (estaLogeado) {
         this.estaLogeado = true;
         this.sideBarOpen = true;
