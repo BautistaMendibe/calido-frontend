@@ -1,13 +1,40 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.servicie";
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss'
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
+  public estaLogeado: boolean = false;
+  public nombreApellido: string = '';
 
+  constructor(private authService: AuthService, private router: Router) {
+  }
+
+  ngOnInit() {
+    this.authService.authenticationStatus$.subscribe(isAuthenticated => {
+      if (isAuthenticated) {
+        this.toggleSideBarForMe.emit(true);
+        this.estaLogeado = true;
+        const token = this.authService.getToken();
+
+        // Del token sacamos el nombre del usuario para mostrar
+        const infoToken: any = this.authService.getDecodedAccessToken(token);
+        const nombre = infoToken.result.nombre;
+        const apellido = infoToken.result.apellido;
+        this.nombreApellido = `${nombre} ${apellido}`;
+
+      } else {
+        this.toggleSideBarForMe.emit(false);
+        this.estaLogeado = false;
+        this.router.navigate(['/login']);
+      }
+    });
+  }
 
   // Metodo para abrir el menu lateral
   public toggleSideBar() {
@@ -18,7 +45,12 @@ export class HeaderComponent {
   }
 
   // Metodo para salir de la sesion actual
-  public exit() {}
+  public exit() {
+    this.toggleSideBarForMe.emit(false);
+    this.estaLogeado = false;
+    this.authService.logOut();
+    this.router.navigate(['/login']);
+  }
 
   // Metodo para cambiar el rol del usuario actual
   public change() {}

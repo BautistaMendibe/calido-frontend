@@ -1,7 +1,7 @@
 <mat-toolbar>
   <mat-toolbar-row>
     <div>
-      <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" (click)="toggleSideBar()">
+      <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" [disabled]="!estaLogeado" (click)="toggleSideBar()">
         <mat-icon>menu</mat-icon>
       </button>
       <a class="ml-2">
@@ -9,12 +9,12 @@
       </a>
     </div>
     <div class="float-right mt-15" fxFlex fxLayout="row" fxLayoutAlign="flex-end">
-      <ul style="margin-top: 15px">
+      <ul style="margin-top: 15px" *ngIf="estaLogeado">
         <li>
           <button mat-button [matMenuTriggerFor]="menu" class="white" id="btnUsuario">
             <mat-icon>person_outline</mat-icon>
             <span id="txtNombreUsuario">
-              Bautista Mendibe
+              {{nombreApellido}}
             </span>
           </button>
           <mat-menu #menu="matMenu">

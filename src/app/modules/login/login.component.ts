@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {HealthService} from "../../services/health.service";
 import {UsuariosService} from "../../services/usuarios.service";
+import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.servicie";
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,9 @@ export class LoginComponent implements OnInit{
 
   constructor(
     private formBuilder: FormBuilder,
-    private usuariosService: UsuariosService) {
+    private authService: AuthService,
+    private usuariosService: UsuariosService,
+    private router: Router) {
     this.formLogin = new FormGroup({});
   }
 
@@ -30,16 +33,18 @@ export class LoginComponent implements OnInit{
   }
 
   public iniciarSesion(){
-    // Verificamos si existe el usuario
     if (this.formLogin.valid) {
       const nombreUsuario = this.txNombreUsuario.value;
       const contrasena = this.txContrasena.value;
 
-      this.usuariosService.validarInicioSesion(nombreUsuario, contrasena).subscribe((respuesta) => {
-        if (respuesta.mensaje == 'OK') {
-          console.log('Bienvenido');
+      this.usuariosService.validarInicioSesion(nombreUsuario, contrasena).subscribe((token) => {
+        if (token != 'ERROR') {
+          // Si el inicio de sesion es correcto guardamos el token del usuario en el localStore y lo dirigimos al home
+          this.authService.setToken(token);
+          this.authService.updateAuthenticationStatus(true);
+          this.router.navigate(['/']);
         } else {
-          console.log('Aca no entras pibe');
+          console.log('usuario y/o contrasena invalido');
         }
       })
     }

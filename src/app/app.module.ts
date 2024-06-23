@@ -15,6 +15,7 @@ import { HomeComponent } from './modules/home/home.component';
 import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
+import {AuthService} from "./services/auth.servicie";
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import {UsuariosService} from "./services/usuarios.service";
   providers: [
     HealthService,
     UsuariosService,
+    AuthService,
     provideAnimationsAsync()],
   bootstrap: [AppComponent]
 })
