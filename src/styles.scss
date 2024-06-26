@@ -8,6 +8,22 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: #e15b35;
 }
 
+.notify-success {
+  --mat-mdc-snack-bar-button-color: #155724;
+  --mdc-snackbar-container-color: #ccf4dc;
+  --mdc-snackbar-supporting-text-color: #155724;
+  --mat-snack-bar-button-color: #155724;
+  --mdc-snackbar-supporting-text-weight: 800;
+}
+
+.notify-error {
+  --mat-mdc-snack-bar-button-color: #571206;
+  --mdc-snackbar-container-color: #edd3c3;
+  --mdc-snackbar-supporting-text-color: #571206;
+  --mat-snack-bar-button-color: #571206;
+  --mdc-snackbar-supporting-text-weight: 800;
+}
+
 /* Change the border focused color
 .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-text-field--focused
 .mdc-notched-outline__leading,
