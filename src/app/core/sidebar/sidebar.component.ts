@@ -19,7 +19,7 @@ export class SidebarComponent {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
   menuItems: Menu[] = [
     {id: 1, nombre: 'Inicio', path:'', icon: 'home', activo: false, subMenu: []},
-    {id: 2, nombre: 'Ventas', path:'login', icon: 'sell', activo: false, subMenu: []},
+    {id: 2, nombre: 'Ventas', path:'', icon: 'sell', activo: false, subMenu: []},
     {id: 3, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
   ];
   isExpanded = true;

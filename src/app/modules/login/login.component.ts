@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {UsuariosService} from "../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.servicie";
+import {SnackBarService} from "../../services/snack-bar.service";
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,8 @@ export class LoginComponent implements OnInit{
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private usuariosService: UsuariosService,
-    private router: Router) {
+    private router: Router,
+    private snackBarService: SnackBarService) {
     this.formLogin = new FormGroup({});
   }
 
@@ -44,7 +46,7 @@ export class LoginComponent implements OnInit{
           this.authService.updateAuthenticationStatus(true);
           this.router.navigate(['/']);
         } else {
-          console.log('usuario y/o contrasena invalido');
+          this.snackBarService.openSnackBarError('Usuario y/o contrasena inválido');
         }
       })
     }
