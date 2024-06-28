@@ -16,6 +16,7 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
+import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {AuthService} from "./services/auth.servicie";
     LayoutComponent,
     HeaderComponent,
     SidebarComponent,
-    HomeComponent
+    HomeComponent,
+    ConsultarEmpleadosComponent
   ],
     imports: [
         BrowserModule,

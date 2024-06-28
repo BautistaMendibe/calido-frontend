@@ -4,8 +4,9 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .titulo {
-  font-weight: bold;
+  font-weight: 500;
   color: #e15b35;
+  font-size: 26px;
 }
 
 .notify-success {
@@ -22,6 +23,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --mdc-snackbar-supporting-text-color: #571206;
   --mat-snack-bar-button-color: #571206;
   --mdc-snackbar-supporting-text-weight: 800;
+}
+
+#btnLimpiarFiltro {
+  color: #e15b35;
+  margin-right: 14px;
+}
+
+#btnBuscar {
+  background-color: #e15b35;
+  color: white;
 }
 
 /* Change the border focused color
