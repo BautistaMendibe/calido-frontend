@@ -62,43 +62,78 @@
 
   <br>
 
-  <!--
 
-  <mat-card #resultsCard class="mat-elevation-z12" *ngIf="repartitions?.length">
-    <div class="row pb-3" *ngIf="!isEmployee">
-      <div class="col">
-        <h2 class="titulo">Consultar datos de contacto</h2>
+  <mat-card-header class="header-card">
+    <h5>Empleados encontrados</h5>
+  </mat-card-header>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort>
+            <!--
+            <ng-container matColumnDef="nrormtsa">
+              <mat-header-cell *matHeaderCellDef>Nro RMTSA</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Nro RMTSA">{{element.nroTramite}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="emision">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Emisión</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Emisión">{{element.fecEmision | date:'dd/MM/yyyy'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="vencimiento">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Vencimiento</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Vencimiento">{{element.fecVencimiento | date:'dd/MM/yyyy'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cuit">
+              <mat-header-cell *matHeaderCellDef>CUIT</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="CUIT">{{element.cuit}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="titular">
+              <mat-header-cell *matHeaderCellDef>Titular</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Titular">{{element.nombreTitular}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="dominio">
+              <mat-header-cell *matHeaderCellDef>Dominio</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Dominio">{{element.dominio}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="marca">
+              <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Marca">{{element.marca}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="modelo">
+              <mat-header-cell *matHeaderCellDef>Modelo</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Modelo">{{element.modelo}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Estado">{{element.estadoId}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+          -->
+          </mat-table>
+
+          <h6 *ngIf="!this.empleados.length" class="alert alert-secondary text-center">
+            No se encuentran empleados para mostrar, realice una nueva búsqueda.
+          </h6>
+
+          <mat-paginator *ngIf="this.empleados.length > 0"
+                         [length]="this.empleados.length"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
       </div>
-      <mat-divider inset></mat-divider>
-    </div>
-
-    <div class="row">
-      <div class="col">
-        <h5 class="titulo">Reparticiones</h5>
-      </div>
-    </div>
-
-    <div *ngIf="!repartitions?.length && wasSearch" class="row alert alert-warning">
-      <span>No se encontraron registros para los criterios de búsqueda ingresados</span>
-    </div>
-
-    <div>
-      <div class="container-fluid contenedor-scroll padding-top-15">
-        <caja-repartitions-table #repartitionsTableComponent *ngIf="isEmployee && repartitions"
-                                 [repartitions]="repartitions"
-                                 [tableFields]="displayedCollection"
-                                 [repatitionType]="'CONTACT_INFORMATION'">
-        </caja-repartitions-table>
-
-        <caja-repartitions-list *ngIf="!isEmployee && repartitions"
-                                [repartitions]="repartitions"
-                                [cardFields]="displayedCollection"
-                                [repatitionType]="'CONTACT_INFORMATION'">
-        </caja-repartitions-list>
-      </div>
-    </div>
-
-
+    </mat-card-content>
   </mat-card>
-  -->
+
 </div>

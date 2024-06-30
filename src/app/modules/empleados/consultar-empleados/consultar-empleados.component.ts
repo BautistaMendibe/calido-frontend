@@ -1,6 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-consultar-empleados',
@@ -9,14 +12,20 @@ import {Usuario} from "../../../models/usuario.model";
 })
 export class ConsultarEmpleadosComponent implements OnInit {
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
   // Ver. Crear tabla empleados que cada uno tenga un usuario
   public empleados: Usuario[] = [];
+  public columnas: string[] = ['nombre', 'apellido', 'cuil', 'telefono'];
 
   constructor(
     private fb: FormBuilder,
   ) {
     this.form = new FormGroup({});
+    this.tableDataSource.paginator = this.paginator;
+    this.tableDataSource.sort = this.sort;
   }
 
   ngOnInit() {
