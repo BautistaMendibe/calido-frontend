@@ -17,6 +17,7 @@ import {HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
 import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
+import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-emple
     HeaderComponent,
     SidebarComponent,
     HomeComponent,
-    ConsultarEmpleadosComponent
+    ConsultarEmpleadosComponent,
+    RegistrarEmpleadosComponent
   ],
     imports: [
         BrowserModule,
