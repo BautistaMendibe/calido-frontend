@@ -1,1 +1,121 @@
-<p>consultar-proveedores works!</p>
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4">
+    <div class="row">
+      <div class="col d-flex justify-content-between">
+        <p class="titulo">Consultar proveedores</p>
+        <button mat-raised-button color="accent" class="btn round mb-3" (click)="registrarNuevoProveedor()">Registrar nuevo proveedor</button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <h4>Filtros de búsqueda</h4>
+
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput [formControl]="txNombre"/>
+          </mat-form-field>
+          <!--
+          <caja-control-messages [control]="txCodigo"></caja-control-messages>
+          -->
+        </div>
+      </div>
+    </form>
+
+
+    <!-- Btn de buscar y limpiar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+          <mat-icon>autorenew</mat-icon>
+          Limpiar
+        </button>
+        <button mat-raised-button color="accent" class="btn round" (click)="buscar()" id="btnBuscar">Buscar</button>
+      </div>
+    </div>
+
+  </mat-card>
+
+  <br>
+
+
+  <mat-card-header class="header-card">
+    <h5>Proveedores encontrados</h5>
+  </mat-card-header>
+
+  <!--
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort>
+            <ng-container matColumnDef="nrormtsa">
+              <mat-header-cell *matHeaderCellDef>Nro RMTSA</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Nro RMTSA">{{element.nroTramite}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="emision">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Emisión</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Emisión">{{element.fecEmision | date:'dd/MM/yyyy'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="vencimiento">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>Vencimiento</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Vencimiento">{{element.fecVencimiento | date:'dd/MM/yyyy'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cuit">
+              <mat-header-cell *matHeaderCellDef>CUIT</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="CUIT">{{element.cuit}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="titular">
+              <mat-header-cell *matHeaderCellDef>Titular</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Titular">{{element.nombreTitular}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="dominio">
+              <mat-header-cell *matHeaderCellDef>Dominio</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Dominio">{{element.dominio}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="marca">
+              <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Marca">{{element.marca}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="modelo">
+              <mat-header-cell *matHeaderCellDef>Modelo</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Modelo">{{element.modelo}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let element" data-label="Estado">{{element.estadoId}}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
+          </mat-table>
+
+          <h6 *ngIf="!this.proveedores.length" class="alert alert-secondary text-center">
+            No se encuentran proveedores para mostrar, realice una nueva búsqueda.
+          </h6>
+
+          <mat-paginator *ngIf="this.proveedores.length > 0"
+                         [length]="this.proveedores.length"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+-->
+</div>
+
+
