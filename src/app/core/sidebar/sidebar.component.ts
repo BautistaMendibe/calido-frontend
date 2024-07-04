@@ -22,8 +22,10 @@ export class SidebarComponent {
     {id: 2, nombre: 'Ventas', path:'', icon: 'sell', activo: false, subMenu: []},
     {id: 3, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
     {id: 4, nombre: 'Empleados', path:'', icon: 'supervisor_account', activo: false, subMenu: [
-      {id: 4, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []}
+      {id: 5, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []}
     ]},
+    {id: 6, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
+
   ];
   isExpanded = true;
   isShowing = false;

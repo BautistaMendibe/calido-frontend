@@ -18,6 +18,7 @@ import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
 import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
 import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
+import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-emple
     SidebarComponent,
     HomeComponent,
     ConsultarEmpleadosComponent,
-    RegistrarEmpleadosComponent
+    RegistrarEmpleadosComponent,
+    ConsultarProveedoresComponent
   ],
     imports: [
         BrowserModule,
