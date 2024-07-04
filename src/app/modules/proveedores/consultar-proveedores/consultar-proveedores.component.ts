@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Proveedor} from "../../../models/proveedores.model";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {RegistrarProveedorComponent} from "../registrar-proveedor/registrar-proveedor.component";
 
 @Component({
   selector: 'app-consultar-proveedores',
@@ -15,7 +17,9 @@ export class ConsultarProveedoresComponent implements OnInit {
   public proveedores: Proveedor[] = [];
   public columnas: string[] = ['nombre', 'telefono', 'mail', 'direccion'];
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,) {
     this.form = new FormGroup({});
   }
 
@@ -33,7 +37,15 @@ export class ConsultarProveedoresComponent implements OnInit {
 
   public buscar() {}
 
-  public registrarNuevoProveedor() {}
+  public registrarNuevoProveedor() {
+    this.dialog.open(
+      RegistrarProveedorComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+      }
+    )
+  }
 
 
   // Regios getters
