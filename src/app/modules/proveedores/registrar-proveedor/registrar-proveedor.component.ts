@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Proveedor} from "../../../models/proveedores.model";
+import {ProveedoresService} from "../../../services/proveedores.service";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -10,7 +13,10 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(
+    private fb: FormBuilder,
+    private proveedoresService: ProveedoresService,
+    private dialogRef: MatDialogRef<any>) {
     this.form = new FormGroup({});
   }
 
@@ -39,9 +45,31 @@ export class RegistrarProveedorComponent implements OnInit{
 
   }
 
-  public registrarProveedor() {}
+  public registrarProveedor() {
 
-  public cancelar() {}
+    if (this.form.valid) {
+      const proveedor: Proveedor = new Proveedor();
+      proveedor.nombre = this.txNombre.value;
+      proveedor.telefono = this.txTelefono.value;
+      proveedor.email = this.txEmail.value;
+      proveedor.cuit = this.txCuit.value;
+
+      this.proveedoresService.registrarProveedor(proveedor).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          // Mostrar notificacion exitosa
+          // Volver a cargar la pantalla de consulta
+        } else {
+          // Mostrar notificacion error
+        }
+      })
+
+    }
+
+  }
+
+  public cancelar() {
+    this.dialogRef.close();
+  }
 
   // Regios getters
   get txNombre(): FormControl {
