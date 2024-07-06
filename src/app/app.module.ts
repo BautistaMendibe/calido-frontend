@@ -16,6 +16,10 @@ import {ReactiveFormsModule} from "@angular/forms";
 import {HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
+import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
+import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
+import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
+import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +28,11 @@ import {AuthService} from "./services/auth.servicie";
     LayoutComponent,
     HeaderComponent,
     SidebarComponent,
-    HomeComponent
+    HomeComponent,
+    ConsultarEmpleadosComponent,
+    RegistrarEmpleadosComponent,
+    ConsultarProveedoresComponent,
+    RegistrarProveedorComponent
   ],
     imports: [
         BrowserModule,

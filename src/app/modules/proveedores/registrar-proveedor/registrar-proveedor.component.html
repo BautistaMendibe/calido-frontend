@@ -1,0 +1,88 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+      <div class="col">
+        <p class="titulo">Registrar proveedor</p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput [formControl]="txNombre"/>
+          </mat-form-field>
+          <!--
+          <caja-control-messages [control]="txCodigo"></caja-control-messages>
+          -->
+        </div>
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Teléfono</mat-label>
+            <input type="text" matInput [formControl]="txTelefono"/>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Email</mat-label>
+            <input type="text" matInput [formControl]="txEmail"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row pt-4">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>CUIT/CUIL</mat-label>
+            <input type="text" matInput [formControl]="txCuit"/>
+          </mat-form-field>
+          <!--
+          <caja-control-messages [control]="txCodigo"></caja-control-messages>
+          -->
+        </div>
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Calle</mat-label>
+            <input type="text" matInput [formControl]="txCalle"/>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Número</mat-label>
+            <input type="text" matInput [formControl]="txNumero"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row pt-4">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Provincia</mat-label>
+            <input type="text" matInput [formControl]="txProvincia"/>
+          </mat-form-field>
+          <!--
+          <caja-control-messages [control]="txCodigo"></caja-control-messages>
+          -->
+        </div>
+      </div>
+    </form>
+
+    <mat-divider></mat-divider>
+    <br>
+
+    <!-- Btn de buscar y limpiar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+          Cancelar
+        </button>
+        <button mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registar</button>
+      </div>
+    </div>
+
+  <br>
+</div>
