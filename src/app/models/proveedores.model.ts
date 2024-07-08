@@ -7,6 +7,7 @@ export class Proveedor {
   domicilio: Domicilio;
   email: string;
   cuit: string;
+  //direccion: string;
 
   constructor(
     id?: number,
