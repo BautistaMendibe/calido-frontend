@@ -54,17 +54,17 @@
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="nombre">
               <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-              <mat-cell *matCellDef="let proveedor" data-label="Nro RMTSA">{{ proveedor.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="telefono">
               <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
-              <mat-cell *matCellDef="let proveedor" data-label="Emisión">{{ proveedor.telefono }}</mat-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Teléfono">{{ proveedor.telefono }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="mail">
               <mat-header-cell *matHeaderCellDef>Mail</mat-header-cell>
-              <mat-cell *matCellDef="let proveedor" data-label="Vencimiento">{{ proveedor.mail }}</mat-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Mail">{{ proveedor.email }}</mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
