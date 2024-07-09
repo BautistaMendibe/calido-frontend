@@ -6,6 +6,8 @@ import {MatDialog} from "@angular/material/dialog";
 import {RegistrarProveedorComponent} from "../registrar-proveedor/registrar-proveedor.component";
 import {FiltrosProveedores} from "../../../models/comandos/FiltrosProveedores.comando";
 import {ProveedoresService} from "../../../services/proveedores.service";
+import {Router} from "@angular/router";
+import {DetalleProveedorComponent} from "../detalle-proveedor/detalle-proveedor.component";
 
 @Component({
   selector: 'app-consultar-proveedores',
@@ -23,7 +25,9 @@ export class ConsultarProveedoresComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
-    private proveedoresService: ProveedoresService) {
+    private proveedoresService: ProveedoresService,
+    private router: Router
+  ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosProveedores();
   }
@@ -63,8 +67,18 @@ export class ConsultarProveedoresComponent implements OnInit {
     )
   }
 
-  public verProveedor(id: number) {
-
+  public verProveedor(proveedor: Proveedor, editar: boolean) {
+    this.dialog.open(
+      DetalleProveedorComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+        data: {
+          proveedor: proveedor,
+          edit: editar
+        }
+      }
+    )
   }
 
 

@@ -1,7 +1,7 @@
 <div class="container py-3 col-xl-11">
   <mat-card class="mat-elevation-z12 p-4">
     <div class="row">
-      <div class="col d-flex justify-content-between">
+      <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Consultar proveedores</p>
         <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoProveedor()">Registrar nuevo proveedor</button>
       </div>
@@ -70,8 +70,11 @@
             <ng-container matColumnDef="acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let proveedor" data-label="Acciones">
-                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verProveedor(proveedor.id)">
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verProveedor(proveedor, false)">
                   <mat-icon class="ver">visibility</mat-icon>
+                </button>
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verProveedor(proveedor, true)">
+                  <mat-icon class="editar">edit</mat-icon>
                 </button>
               </mat-cell>
             </ng-container>
