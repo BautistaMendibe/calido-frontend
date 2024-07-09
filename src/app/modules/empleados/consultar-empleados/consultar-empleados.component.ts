@@ -5,6 +5,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 
+
 @Component({
   selector: 'app-consultar-empleados',
   templateUrl: './consultar-empleados.component.html',
@@ -16,9 +17,9 @@ export class ConsultarEmpleadosComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
-  // Ver. Crear tabla empleados que cada uno tenga un usuario
+  // Ver. Crear tabla productos
   public empleados: Usuario[] = [];
-  public columnas: string[] = ['nombre', 'apellido', 'cuil', 'telefono'];
+  public columnas: string[] = ['Nombre', 'apellido', 'cuil', 'telefono'];
 
   constructor(
     private fb: FormBuilder,
