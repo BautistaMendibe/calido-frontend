@@ -80,61 +80,61 @@
   <mat-card-header class="header-card">
     <h5>Productos encontrados</h5>
   </mat-card-header>
+  <!--
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-table [dataSource]="tableDataSource" matSort>
 
-  <mat-card>
-    <mat-card-content>
-      <div class="row">
-        <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
-            <!--
-            <ng-container matColumnDef="nrormtsa">
-              <mat-header-cell *matHeaderCellDef>Nro RMTSA</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Nro RMTSA">{{element.nroTramite}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="nrormtsa">
+                <mat-header-cell *matHeaderCellDef>Nro RMTSA</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Nro RMTSA">{{element.nroTramite}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="emision">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Emisión</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Emisión">{{element.fecEmision | date:'dd/MM/yyyy'}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="emision">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Emisión</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Emisión">{{element.fecEmision | date:'dd/MM/yyyy'}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="vencimiento">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>Vencimiento</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Vencimiento">{{element.fecVencimiento | date:'dd/MM/yyyy'}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="vencimiento">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>Vencimiento</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Vencimiento">{{element.fecVencimiento | date:'dd/MM/yyyy'}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="cuit">
-              <mat-header-cell *matHeaderCellDef>CUIT</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="CUIT">{{element.cuit}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="cuit">
+                <mat-header-cell *matHeaderCellDef>CUIT</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="CUIT">{{element.cuit}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="titular">
-              <mat-header-cell *matHeaderCellDef>Titular</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Titular">{{element.nombreTitular}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="titular">
+                <mat-header-cell *matHeaderCellDef>Titular</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Titular">{{element.nombreTitular}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="dominio">
-              <mat-header-cell *matHeaderCellDef>Dominio</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Dominio">{{element.dominio}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="dominio">
+                <mat-header-cell *matHeaderCellDef>Dominio</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Dominio">{{element.dominio}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="marca">
-              <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Marca">{{element.marca}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="marca">
+                <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Marca">{{element.marca}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="modelo">
-              <mat-header-cell *matHeaderCellDef>Modelo</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Modelo">{{element.modelo}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="modelo">
+                <mat-header-cell *matHeaderCellDef>Modelo</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Modelo">{{element.modelo}}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="estado">
-              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-              <mat-cell *matCellDef="let element" data-label="Estado">{{element.estadoId}}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="estado">
+                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+                <mat-cell *matCellDef="let element" data-label="Estado">{{element.estadoId}}</mat-cell>
+              </ng-container>
 
-            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
-          -->
+              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+              <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
           </mat-table>
 
           <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
@@ -149,5 +149,6 @@
       </div>
     </mat-card-content>
   </mat-card>
+   -->
 
 </div>
