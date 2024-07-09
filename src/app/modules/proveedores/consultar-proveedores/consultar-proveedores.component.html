@@ -14,7 +14,7 @@
 
     <form [formGroup]="form">
       <div class="row pt-4">
-        <div class="col-md-2">
+        <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
@@ -53,18 +53,27 @@
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
               <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="telefono">
-              <mat-header-cell *matHeaderCellDef>Teléfono</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>TELÉFONO</mat-header-cell>
               <mat-cell *matCellDef="let proveedor" data-label="Teléfono">{{ proveedor.telefono }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="mail">
-              <mat-header-cell *matHeaderCellDef>Mail</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>MAIL</mat-header-cell>
               <mat-cell *matCellDef="let proveedor" data-label="Mail">{{ proveedor.email }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Acciones">
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verProveedor(proveedor.id)">
+                  <mat-icon class="ver">visibility</mat-icon>
+                </button>
+              </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>

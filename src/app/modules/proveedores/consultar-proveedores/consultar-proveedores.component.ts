@@ -17,7 +17,7 @@ export class ConsultarProveedoresComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Proveedor> = new MatTableDataSource<Proveedor>([]);
   public form: FormGroup;
   public proveedores: Proveedor[] = [];
-  public columnas: string[] = ['nombre', 'telefono', 'mail'];
+  public columnas: string[] = ['nombre', 'telefono', 'mail', 'acciones'];
   private filtros: FiltrosProveedores;
 
   constructor(
@@ -61,6 +61,10 @@ export class ConsultarProveedoresComponent implements OnInit {
         autoFocus: false,
       }
     )
+  }
+
+  public verProveedor(id: number) {
+
   }
 
 
