@@ -1,8 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Proveedor} from "../../../models/proveedores.model";
 import {ProveedoresService} from "../../../services/proveedores.service";
-import {MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {ConsultarProveedoresComponent} from "../consultar-proveedores/consultar-proveedores.component";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -12,12 +14,19 @@ import {MatDialogRef} from "@angular/material/dialog";
 export class RegistrarProveedorComponent implements OnInit{
 
   public form: FormGroup;
+  private referencia: ConsultarProveedoresComponent;
 
   constructor(
     private fb: FormBuilder,
     private proveedoresService: ProveedoresService,
-    private dialogRef: MatDialogRef<any>) {
+    private dialogRef: MatDialogRef<any>,
+    private notificacionService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      referencia: ConsultarProveedoresComponent
+    }
+  ) {
     this.form = new FormGroup({});
+    this.referencia = this.data.referencia;
   }
 
   ngOnInit() {
@@ -56,10 +65,11 @@ export class RegistrarProveedorComponent implements OnInit{
 
       this.proveedoresService.registrarProveedor(proveedor).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
-          // Mostrar notificacion exitosa
-          // Volver a cargar la pantalla de consulta
+          this.notificacionService.openSnackBarSuccess('El proveedor se registró con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
         } else {
-          // Mostrar notificacion error
+          this.notificacionService.openSnackBarError('Error al registrar un proveedor, intentelo nuevamente');
         }
       })
 
