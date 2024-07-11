@@ -23,4 +23,7 @@ export class ProveedoresService {
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-proveedor`, proveedor);
   }
 
+  public modificarProveedor(proveedor: Proveedor): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-proveedor`, proveedor);
+  }
 }

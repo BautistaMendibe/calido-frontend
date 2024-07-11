@@ -2,6 +2,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {Proveedor} from "../../../models/proveedores.model";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {ProveedoresService} from "../../../services/proveedores.service";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {ConsultarProveedoresComponent} from "../consultar-proveedores/consultar-proveedores.component";
 
 @Component({
   selector: 'app-detalle-proveedor',
@@ -11,20 +14,25 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 export class DetalleProveedorComponent implements OnInit {
 
   private proveedor: Proveedor;
+  private referencia: ConsultarProveedoresComponent;
   public edit: boolean;
   public form: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<DetalleProveedorComponent>,
     private fb: FormBuilder,
+    private proveedoresService: ProveedoresService,
+    private notificacionService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: {
       proveedor: Proveedor,
-      edit: boolean
+      edit: boolean,
+      referencia: ConsultarProveedoresComponent
     }
   ) {
 
     this.proveedor = this.data.proveedor;
     this.edit = this.data.edit;
+    this.referencia = this.data.referencia;
 
     this.form = new FormGroup({});
   }
@@ -67,7 +75,29 @@ export class DetalleProveedorComponent implements OnInit {
   }
 
   public modificarProveedor() {
+    const proveedor: Proveedor = new Proveedor();
 
+    proveedor.id = this.proveedor.id;
+    proveedor.nombre = this.txNombre.value;
+    proveedor.email = this.txEmail.value;
+    proveedor.cuit = this.txCuit.value;
+    proveedor.telefono = this.txTelefono.value;
+
+    // const domicilio = new Domicilio();
+    // const provincia = new Provincia();
+    // provincia.nombre = this.txProvincia.value
+    // domicilio.provincia = provincia;
+    // proveedor.domicilio = domicilio;
+
+    this.proveedoresService.modificarProveedor(proveedor).subscribe((res) => {
+      if (res.mensaje == 'OK') {
+        this.notificacionService.openSnackBarSuccess('Proveedor moficado con éxito');
+        this.dialogRef.close();
+        this.referencia.buscar();
+      } else {
+        this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar el proveedor');
+      }
+    });
   }
 
   private deshabilitarFormulario(){
