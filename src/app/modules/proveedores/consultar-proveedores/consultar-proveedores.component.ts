@@ -8,6 +8,7 @@ import {FiltrosProveedores} from "../../../models/comandos/FiltrosProveedores.co
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {Router} from "@angular/router";
 import {DetalleProveedorComponent} from "../detalle-proveedor/detalle-proveedor.component";
+import {SnackBarService} from "../../../services/snack-bar.service";
 
 @Component({
   selector: 'app-consultar-proveedores',
@@ -26,7 +27,8 @@ export class ConsultarProveedoresComponent implements OnInit {
     private fb: FormBuilder,
     private dialog: MatDialog,
     private proveedoresService: ProveedoresService,
-    private router: Router
+    private router: Router,
+    private notificacionService: SnackBarService,
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosProveedores();
@@ -54,7 +56,7 @@ export class ConsultarProveedoresComponent implements OnInit {
     this.proveedoresService.consultarProveedores(this.filtros).subscribe((proveedores) => {
       this.proveedores = proveedores;
       this.tableDataSource.data = proveedores;
-    })
+    });
   }
 
   public registrarNuevoProveedor() {
@@ -83,6 +85,17 @@ export class ConsultarProveedoresComponent implements OnInit {
         }
       }
     )
+  }
+
+  public eliminarProveedor(idProveedor: number) {
+    this.proveedoresService.eliminarProveedor(idProveedor).subscribe((respuesta) => {
+      if (respuesta.mensaje == 'OK') {
+        this.notificacionService.openSnackBarSuccess('Proveedor eliminado con éxito');
+        this.buscar();
+      } else {
+        this.notificacionService.openSnackBarError('Error al eliminar el proveedor');
+      }
+    })
   }
 
 

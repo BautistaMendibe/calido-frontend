@@ -26,4 +26,8 @@ export class ProveedoresService {
   public modificarProveedor(proveedor: Proveedor): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-proveedor`, proveedor);
   }
+
+  public eliminarProveedor(idProveedor: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-proveedor/${idProveedor}`);
+  }
 }
