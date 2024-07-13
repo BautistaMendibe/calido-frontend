@@ -1,0 +1,54 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">Consultar promoción</p>
+      <button class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput [formControl]="txNombre"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Porcentaje de descuento</mat-label>
+          <input type="text" matInput [formControl]="txPorcentajeDescuento"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Producto</mat-label>
+          <input type="text" matInput [formControl]="txProducto"/>
+        </mat-form-field>
+      </div>
+    </div>
+
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de buscar y limpiar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        Volver
+      </button>
+      <button *ngIf="edit" mat-raised-button color="accent" class="btn round" (click)="modificarPromocion()" id="btnBuscar">Modificar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

@@ -1,0 +1,105 @@
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">Consultar promociones</p>
+        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaPromocion()">Registrar nueva promoción</button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <h4 style="color: grey">Filtros de búsqueda</h4>
+
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput [formControl]="txNombre"/>
+          </mat-form-field>
+          <!--
+          <caja-control-messages [control]="txCodigo"></caja-control-messages>
+          -->
+        </div>
+      </div>
+    </form>
+
+
+    <!-- Btn de buscar y limpiar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+          <mat-icon>autorenew</mat-icon>
+          Limpiar
+        </button>
+        <button mat-raised-button color="accent" class="btn round" (click)="buscar()" id="btnBuscar">Buscar</button>
+      </div>
+    </div>
+
+  </mat-card>
+
+  <br>
+
+
+  <mat-card-header class="header-card">
+    <h2 style="color: grey">Promociones encontradas</h2>
+  </mat-card-header>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort>
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Nombre">{{ promocion.nombre }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="porcentajeDescuento">
+              <mat-header-cell *matHeaderCellDef>PORCENTAJE</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="producto">
+              <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Nombre del producto">{{ promocion.idProducto }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Acciones">
+
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verPromocion(promocion, false)">
+                  <mat-icon class="ver">visibility</mat-icon>
+                </button>
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verPromocion(promocion, true)">
+                  <mat-icon class="editar">edit</mat-icon>
+                </button>
+                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarPromocion(promocion.id)">
+                  <mat-icon class="eliminar">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
+          </mat-table>
+
+          <h6 *ngIf="!this.promociones.length" class="alert alert-secondary text-center">
+            No se encuentran promociones para mostrar, realice una nueva búsqueda.
+          </h6>
+
+          <mat-paginator *ngIf="this.promociones.length > 0"
+                         [length]="this.promociones.length"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+

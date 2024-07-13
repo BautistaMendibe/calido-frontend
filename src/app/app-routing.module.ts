@@ -6,12 +6,16 @@ import {ConsultarEmpleadosComponent} from "./modules/empleados/consultar-emplead
 import {
   ConsultarProveedoresComponent
 } from "./modules/proveedores/consultar-proveedores/consultar-proveedores.component";
+import {
+  ConsultarPromocionesComponent
+} from "./modules/promociones/consultar-promociones/consultar-promociones.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
-  {path:'consultar-proveedores', component: ConsultarProveedoresComponent}
+  {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
+  {path:'consultar-promociones', component: ConsultarPromocionesComponent}
 ];
 
 @NgModule({
