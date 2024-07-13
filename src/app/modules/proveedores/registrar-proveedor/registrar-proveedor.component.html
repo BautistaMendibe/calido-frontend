@@ -13,6 +13,16 @@
       <div class="row pt-4">
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tipo de proveedor</mat-label>
+            <mat-select [formControl]="txTipoProveedor">
+              <mat-option *ngFor="let tipoProveedor of this.listaTiposProveedores" [value]="tipoProveedor.id">
+                {{ tipoProveedor.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
@@ -32,9 +42,6 @@
             <input type="text" matInput [formControl]="txEmail"/>
           </mat-form-field>
         </div>
-      </div>
-
-      <div class="row pt-4">
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>CUIT/CUIL</mat-label>
@@ -44,6 +51,9 @@
           <caja-control-messages [control]="txCodigo"></caja-control-messages>
           -->
         </div>
+      </div>
+
+      <div class="row pt-4">
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Calle</mat-label>

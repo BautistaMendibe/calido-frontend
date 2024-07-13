@@ -5,6 +5,7 @@ import {ProveedoresService} from "../../../services/proveedores.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarProveedoresComponent} from "../consultar-proveedores/consultar-proveedores.component";
+import {TipoProveedor} from "../../../models/tipoProveedor.model";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -15,6 +16,7 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public form: FormGroup;
   private referencia: ConsultarProveedoresComponent;
+  public listaTiposProveedores: TipoProveedor[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -32,10 +34,12 @@ export class RegistrarProveedorComponent implements OnInit{
   ngOnInit() {
     this.crearFormulario();
     this.buscarProvincias();
+    this.buscarTiposProveedores();
   }
 
   private crearFormulario() {
     this.form = this.fb.group({
+      txTipoProveedor: ['', []],
       txNombre: ['', [Validators.required]],
       txTelefono: ['', []],
       txEmail: ['', []],
@@ -54,10 +58,18 @@ export class RegistrarProveedorComponent implements OnInit{
 
   }
 
+  private buscarTiposProveedores() {
+    this.proveedoresService.buscarTiposProveedores().subscribe((tiposProveedores) => {
+      this.listaTiposProveedores = tiposProveedores;
+      this.txTipoProveedor.setValue(tiposProveedores[0].id);
+    });
+  }
+
   public registrarProveedor() {
 
     if (this.form.valid) {
       const proveedor: Proveedor = new Proveedor();
+      proveedor.tipo.id = this.txTipoProveedor.value;
       proveedor.nombre = this.txNombre.value;
       proveedor.telefono = this.txTelefono.value;
       proveedor.email = this.txEmail.value;
@@ -82,6 +94,10 @@ export class RegistrarProveedorComponent implements OnInit{
   }
 
   // Regios getters
+  get txTipoProveedor(): FormControl {
+    return this.form.get('txTipoProveedor') as FormControl;
+  }
+
   get txNombre(): FormControl {
     return this.form.get('txNombre') as FormControl;
   }
