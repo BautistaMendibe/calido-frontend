@@ -8,7 +8,7 @@ export class Proveedor {
   domicilio: Domicilio;
   email: string;
   cuit: string;
-  tipo: TipoProveedor;
+  tipoProveedor: TipoProveedor;
   //direccion: string;
 
   constructor(
@@ -18,7 +18,7 @@ export class Proveedor {
     domicilio?: Domicilio,
     email?: string,
     cuit?: string,
-    tipo?: TipoProveedor
+    tipoProveedor?: TipoProveedor
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -26,6 +26,6 @@ export class Proveedor {
     this.domicilio = domicilio!;
     this.email = email!;
     this.cuit = cuit!;
-    this.tipo = tipo!;
+    this.tipoProveedor = tipoProveedor!;
   }
 }

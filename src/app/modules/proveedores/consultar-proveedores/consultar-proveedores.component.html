@@ -57,6 +57,11 @@
               <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="tipo">
+              <mat-header-cell *matHeaderCellDef>TIPO</mat-header-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.tipoProveedor.nombre }}</mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="telefono">
               <mat-header-cell *matHeaderCellDef>TELÉFONO</mat-header-cell>
               <mat-cell *matCellDef="let proveedor" data-label="Teléfono">{{ proveedor.telefono }}</mat-cell>

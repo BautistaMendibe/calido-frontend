@@ -20,7 +20,7 @@ export class ConsultarProveedoresComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Proveedor> = new MatTableDataSource<Proveedor>([]);
   public form: FormGroup;
   public proveedores: Proveedor[] = [];
-  public columnas: string[] = ['nombre', 'telefono', 'mail', 'acciones'];
+  public columnas: string[] = ['nombre', 'tipo', 'telefono', 'mail', 'acciones'];
   private filtros: FiltrosProveedores;
 
   constructor(
