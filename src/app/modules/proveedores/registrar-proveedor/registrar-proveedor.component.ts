@@ -69,6 +69,8 @@ export class RegistrarProveedorComponent implements OnInit{
 
     if (this.form.valid) {
       const proveedor: Proveedor = new Proveedor();
+      const tipoProveedor: TipoProveedor = new TipoProveedor();
+      proveedor.tipoProveedor =  tipoProveedor;
       proveedor.tipoProveedor.id = this.txTipoProveedor.value;
       proveedor.nombre = this.txNombre.value;
       proveedor.telefono = this.txTelefono.value;
