@@ -88,6 +88,25 @@
       </div>
 
     </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>DNI</mat-label>
+          <input type="text" matInput [formControl]="txDNI"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input type="date" matInput [formControl]="txFechaNacimiento"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
   </form>
 
   <mat-divider></mat-divider>
@@ -105,6 +124,3 @@
 
   <br>
 </div>
-
-
-
