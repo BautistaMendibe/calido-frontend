@@ -47,7 +47,7 @@
     <h2 style="color: grey">Proveedores encontrados</h2>
   </mat-card-header>
 
-  <mat-card>
+  <mat-card *ngIf="proveedores.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
