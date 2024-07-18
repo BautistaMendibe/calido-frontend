@@ -4,6 +4,12 @@ import {Usuario} from "../../../models/usuario.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
+import {RegistrarEmpleadosComponent} from "../../empleados/registrar-empleados/registrar-empleados.component";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {Router} from "@angular/router";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {MatDialog} from "@angular/material/dialog";
+import {ProveedoresService} from "../../../services/proveedores.service";
 
 @Component({
   selector: 'app-consultar-empleados',
@@ -22,6 +28,10 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
+    private dialog: MatDialog,
+    private usuariosService: UsuariosService,
+    private router: Router,
+    private notificacionService: SnackBarService,
   ) {
     this.form = new FormGroup({});
     this.tableDataSource.paginator = this.paginator;
@@ -44,6 +54,19 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public limpiarFiltros() {}
 
   public buscar() {}
+
+  public registrarNuevoEmpleado() {
+    this.dialog.open(
+      RegistrarEmpleadosComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+        data: {
+          referencia: this
+        }
+      }
+    )
+  }
 
   // Regios getters
   get txNombre(): FormControl {

@@ -1,1 +1,110 @@
-<p>registrar-empleados works!</p>
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col">
+      <p class="titulo">Registrar Empleado</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre de usuario</mat-label>
+          <input type="text" matInput [formControl]="txNombreUsuario"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput [formControl]="txNombre"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Apellido</mat-label>
+          <input type="text" matInput [formControl]="txApellido"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Código Postal</mat-label>
+          <input type="text" matInput [formControl]="txCodigoPostal"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>CUIT/CUIL</mat-label>
+          <input type="text" matInput [formControl]="txCuil"/>
+        </mat-form-field>
+
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Contraseña</mat-label>
+          <input type="text" matInput [formControl]="txContrasena"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Provincia</mat-label>
+          <input type="text" matInput [formControl]="txProvincia"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Género</mat-label>
+          <input type="text" matInput [formControl]="ddGenero"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field>
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl]="txFechaNacimiento">
+          <mat-hint>MM/DD/YYYY</mat-hint>
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+    </div>
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de buscar y limpiar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        Cancelar
+      </button>
+      <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registar</button>
+    </div>
+  </div>
+
+  <br>
+</div>
+
+
+

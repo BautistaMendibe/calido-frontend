@@ -14,6 +14,7 @@ export class Usuario {
   domicilio: Domicilio;
   dni: string;
   cuil: string;
+  contrasena: string;
 
   constructor(
     id?: number,
@@ -27,6 +28,7 @@ export class Usuario {
     domicilio?: Domicilio,
     dni?: string,
     cuil?: string,
+    contrasena?: string,
   ) {
     this.id = id!;
     this.nombreUsuario = nombreUsuario!;
@@ -39,5 +41,6 @@ export class Usuario {
     this.domicilio = domicilio!;
     this.dni = dni!;
     this.cuil = cuil!;
+    this.contrasena = contrasena!;
   }
 }
