@@ -54,29 +54,37 @@
       </div>
 
       <div class="row pt-4">
-        <div class="col-md-4">
+          <div class="col-md-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Provincia</mat-label>
+              <input matInput
+                     placeholder="Ingrese"
+                     [formControl]="txProvincia"
+                     [matAutocomplete]="autoCompleteProvincia">
+            </mat-form-field>
+            <mat-autocomplete #autoCompleteProvincia="matAutocomplete">
+              <mat-option *ngFor="let provincia of this.provinciasFiltradas" [value]="provincia.nombre">
+                {{provincia.nombre}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Localidad</mat-label>
+            <input type="text" matInput [formControl]="txLocalidad"/>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Calle</mat-label>
             <input type="text" matInput [formControl]="txCalle"/>
           </mat-form-field>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Número</mat-label>
             <input type="text" matInput [formControl]="txNumero"/>
           </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row pt-4">
-        <div class="col-md-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Provincia</mat-label>
-            <input type="text" matInput [formControl]="txProvincia"/>
-          </mat-form-field>
-          <!--
-          <caja-control-messages [control]="txCodigo"></caja-control-messages>
-          -->
         </div>
       </div>
     </form>

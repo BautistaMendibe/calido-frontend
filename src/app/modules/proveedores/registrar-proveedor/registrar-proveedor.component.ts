@@ -6,6 +6,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarProveedoresComponent} from "../consultar-proveedores/consultar-proveedores.component";
 import {TipoProveedor} from "../../../models/tipoProveedor.model";
+import {Provincia} from "../../../models/provincia.model";
+import {DomicilioService} from "../../../services/domicilio.service";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -17,10 +19,13 @@ export class RegistrarProveedorComponent implements OnInit{
   public form: FormGroup;
   private referencia: ConsultarProveedoresComponent;
   public listaTiposProveedores: TipoProveedor[] = [];
+  public listaProvincias: Provincia[] = [];
+  public provinciasFiltradas: Provincia[] = [];
 
   constructor(
     private fb: FormBuilder,
     private proveedoresService: ProveedoresService,
+    private domicilioService: DomicilioService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -44,18 +49,21 @@ export class RegistrarProveedorComponent implements OnInit{
       txTelefono: ['', []],
       txEmail: ['', []],
       txCuit: ['', []],
-      txCalle: ['', []],
-      txNumero: ['', []],
-      txProvincia: ['', []],
+      txProvincia: [ '', []],
+      txLocalidad: [ {value: '', disabled: true}, []],
+      txCalle: [{value: '', disabled: true}, []],
+      txNumero: [{value: '', disabled: true}, []],
     });
   }
 
   private buscarProvincias(){
-    // TODO: Crear variable provincias: Provincias[]
-    //
-    // Crear una funcion para retornar las provincias
-    // Rellenar el matOption txProvincias
-
+    this.domicilioService.obtenerProvincias().subscribe((provincias) => {
+      this.listaProvincias = provincias;
+      // TODO: Poner validador de estar en lista
+      this.txProvincia.valueChanges.subscribe((provincia) => {
+        this.provinciasFiltradas = this.filterProvincias(provincia);
+      });
+    });
   }
 
   private buscarTiposProveedores() {
@@ -66,7 +74,6 @@ export class RegistrarProveedorComponent implements OnInit{
   }
 
   public registrarProveedor() {
-
     if (this.form.valid) {
       const proveedor: Proveedor = new Proveedor();
       const tipoProveedor: TipoProveedor = new TipoProveedor();
@@ -85,14 +92,16 @@ export class RegistrarProveedorComponent implements OnInit{
         } else {
           this.notificacionService.openSnackBarError('Error al registrar un proveedor, intentelo nuevamente');
         }
-      })
-
+      });
     }
-
   }
 
   public cancelar() {
     this.dialogRef.close();
+  }
+
+  filterProvincias(busqueda: string) {
+    return this.listaProvincias.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
   // Regios getters
@@ -126,6 +135,10 @@ export class RegistrarProveedorComponent implements OnInit{
 
   get txProvincia(): FormControl {
     return this.form.get('txProvincia') as FormControl;
+  }
+
+  get txLocalidad(): FormControl {
+    return this.form.get('txLocalidad') as FormControl;
   }
 
 
