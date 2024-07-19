@@ -5,6 +5,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {PromocionesService} from "../../../services/promociones.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {Producto} from "../../../models/producto.model";
 
 @Component({
   selector: 'app-detalle-promocion',
@@ -17,6 +18,8 @@ export class DetallePromocionComponent implements OnInit {
   private referencia: ConsultarPromocionesComponent;
   public edit: boolean;
   public form: FormGroup;
+  public listaProductos: Producto[] = [];
+  public productosFiltrados: Producto[] = [];
 
   constructor(
     public dialogRef: MatDialogRef<DetallePromocionComponent>,
@@ -45,6 +48,21 @@ export class DetallePromocionComponent implements OnInit {
       this.deshabilitarFormulario();
     }
 
+    this.buscarProductos();
+  }
+
+  private buscarProductos(){
+    this.promocionesService.buscarProductos().subscribe((productos) => {
+      this.listaProductos = productos;
+      // TODO: Poner validador de estar en lista
+      this.txProducto.valueChanges.subscribe((producto) => {
+        this.productosFiltrados = this.filterProductos(producto);
+      });
+    });
+  }
+
+  filterProductos(busqueda: string) {
+    return this.listaProductos.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
   // Creamos el formulario con los datos de la promocion que pasamos como parametro
@@ -52,7 +70,7 @@ export class DetallePromocionComponent implements OnInit {
     this.form = this.fb.group({
       txNombre: [this.promocion.nombre, [Validators.required]],
       txPorcentajeDescuento: [this.promocion.porcentajeDescuento, [Validators.required]],
-      txProducto: [this.promocion.idProducto, [Validators.required]],
+      txProducto: [this.promocion.producto.nombre, [Validators.required]],
     });
   }
 
@@ -60,7 +78,6 @@ export class DetallePromocionComponent implements OnInit {
     this.edit = true;
     this.habilitarFormulario();
   }
-
 
   public cancelar() {
     this.dialogRef.close();

@@ -5,6 +5,7 @@ import {PromocionesService} from "../../../services/promociones.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-promociones.component";
+import {Producto} from "../../../models/producto.model";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -15,6 +16,8 @@ export class RegistrarPromocionComponent implements OnInit{
 
   public form: FormGroup;
   private referencia: ConsultarPromocionesComponent;
+  public listaProductos: Producto[] = [];
+  public productosFiltrados: Producto[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -31,7 +34,7 @@ export class RegistrarPromocionComponent implements OnInit{
 
   ngOnInit() {
     this.crearFormulario();
-    //this.buscarProducto();
+    this.buscarProductos();
   }
 
   private crearFormulario() {
@@ -42,6 +45,20 @@ export class RegistrarPromocionComponent implements OnInit{
     });
   }
 
+  private buscarProductos(){
+    this.promocionesService.buscarProductos().subscribe((productos) => {
+      this.listaProductos = productos;
+      // TODO: Poner validador de estar en lista
+      this.txProducto.valueChanges.subscribe((producto) => {
+        this.productosFiltrados = this.filterProductos(producto);
+      });
+    });
+  }
+
+  filterProductos(busqueda: string) {
+    return this.listaProductos.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+  }
+
   public registrarPromocion() {
 
     if (this.form.valid) {
@@ -49,7 +66,6 @@ export class RegistrarPromocionComponent implements OnInit{
       promocion.nombre = this.txNombre.value;
       promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
       promocion.idProducto = this.txProducto.value;
-
 
       this.promocionesService.registrarPromocion(promocion).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {

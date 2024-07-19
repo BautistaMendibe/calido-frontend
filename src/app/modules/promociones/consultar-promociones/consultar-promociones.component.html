@@ -64,7 +64,7 @@
 
             <ng-container matColumnDef="producto">
               <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
-              <mat-cell *matCellDef="let promocion" data-label="Nombre del producto">{{ promocion.idProducto }}</mat-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Nombre del producto">{{ promocion.producto.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">

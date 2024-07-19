@@ -29,8 +29,16 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Producto</mat-label>
-          <input type="text" matInput [formControl]="txProducto"/>
+          <input matInput
+                 placeholder="Ingrese"
+                 [formControl]="txProducto"
+                 [matAutocomplete]="autoCompleteProducto">
         </mat-form-field>
+        <mat-autocomplete #autoCompleteProducto="matAutocomplete">
+            <mat-option *ngFor="let producto of this.productosFiltrados" [value]="producto.nombre">
+              {{ producto.nombre }}
+            </mat-option>
+        </mat-autocomplete>
       </div>
     </div>
 

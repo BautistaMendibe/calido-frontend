@@ -5,6 +5,7 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {Promocion} from "../models/promociones.model";
 import {SpResult} from "../models/resultadoSp.model";
 import {FiltrosPromociones} from "../models/comandos/FiltrosPromociones.comando";
+import {Producto} from "../models/producto.model";
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,9 @@ export class PromocionesService {
 
   public eliminarPromocion(idPromocion: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-promocion/${idPromocion}`);
+  }
+
+  public buscarProductos(): Observable<Producto[]>{
+    return this.http.get<Producto[]>(`${this.urlBackend}/${this.controllerName}/buscar-productos`);
   }
 }
