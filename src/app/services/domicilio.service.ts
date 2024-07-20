@@ -18,7 +18,7 @@ export class DomicilioService {
     return this.http.get<Provincia[]>(`${this.urlBackend}/${this.controllerName}/obtener-provincias`);
   }
 
-  public obtenerLocalidadesPorProvincias(idProvincia: number): Observable<Localidad[]>{
+  public obtenerLocalidadesPorProvincia(idProvincia: number): Observable<Localidad[]>{
     return this.http.get<Localidad[]>(`${this.urlBackend}/${this.controllerName}/obtener-localidades-por-provincia/${idProvincia}`);
   }
 

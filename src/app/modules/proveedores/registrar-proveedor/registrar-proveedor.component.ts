@@ -8,6 +8,7 @@ import {ConsultarProveedoresComponent} from "../consultar-proveedores/consultar-
 import {TipoProveedor} from "../../../models/tipoProveedor.model";
 import {Provincia} from "../../../models/provincia.model";
 import {DomicilioService} from "../../../services/domicilio.service";
+import {Localidad} from "../../../models/localidad.model";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -21,6 +22,8 @@ export class RegistrarProveedorComponent implements OnInit{
   public listaTiposProveedores: TipoProveedor[] = [];
   public listaProvincias: Provincia[] = [];
   public provinciasFiltradas: Provincia[] = [];
+  public listaLocalidades: Localidad[] = [];
+  public localidadesFiltradas: Localidad[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -59,10 +62,39 @@ export class RegistrarProveedorComponent implements OnInit{
   private buscarProvincias(){
     this.domicilioService.obtenerProvincias().subscribe((provincias) => {
       this.listaProvincias = provincias;
-      // TODO: Poner validador de estar en lista
       this.txProvincia.valueChanges.subscribe((provincia) => {
         this.provinciasFiltradas = this.filterProvincias(provincia);
       });
+    });
+  }
+
+  public async seleccionarProvincia() {
+    const nombreProvincia = this.txProvincia.value;
+    const idProvincia: number = await this.buscarIdProvincia(nombreProvincia);
+    this.obtenerLocalidadesPorProvincia(idProvincia);
+    this.txLocalidad.enable();
+  }
+
+  private async buscarIdProvincia(nombre: string): Promise<number> {
+    const provincia = this.provinciasFiltradas.find((provincia) => provincia.nombre === nombre);
+    return provincia ? provincia.id : 0;
+  }
+
+  //public async seleccionarLocalidad() {
+  //  const nombreLocalidad = this.txLocalidad.value;
+  //  const idLocalidad: number = await this.buscarIdLocalidad(nombreLocalidad);
+  //  this.txCalle.enable();
+  //  this.txNumero.enable();
+  //}
+
+  //private async buscarIdLocalidad(nombre: string): Promise<number> {
+  //  const localidad = this.localidadesFiltradas.find((localidad) => localidad.nombre === nombre);
+  //  return localidad ? localidad.id : 0;
+  //}
+
+  public obtenerLocalidadesPorProvincia(idProvincia: number){
+    this.domicilioService.obtenerLocalidadesPorProvincia(idProvincia).subscribe((localidades) => {
+      this.localidadesFiltradas = localidades;
     });
   }
 
@@ -100,9 +132,13 @@ export class RegistrarProveedorComponent implements OnInit{
     this.dialogRef.close();
   }
 
-  filterProvincias(busqueda: string) {
+  private filterProvincias(busqueda: string) {
     return this.listaProvincias.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
+
+  //private filterLocalidades(busqueda: string) {
+  //  return this.listaLocalidades.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+  //}
 
   // Regios getters
   get txTipoProveedor(): FormControl {
