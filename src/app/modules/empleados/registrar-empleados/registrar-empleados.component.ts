@@ -37,11 +37,11 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombreUsuario: ['', [Validators.required]],
-      txNombre: ['', []],
-      txApellido: ['', []],
-      txFechaNac: ['', []], // a date
-      txCodPostal: ['', []], // a int
+      txNombreUsuario: ['', Validators.required],
+      txNombre: ['', Validators.required],
+      txApellido: ['', Validators.required],
+      txFechaNacimiento: ['', []], // a date
+      txCodigoPostal: ['', []], // a int
       txDNI: ['', []], // a int
       txCuil: ['', []], // mascara
       txContrasena: ['', []],
@@ -60,7 +60,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   public registrarNuevoEmpleado() {
 
-    if (this.form.valid) {
+      if (this.form.valid) {
       const empleado: Usuario = new Usuario();
       empleado.nombreUsuario = this.txNombreUsuario.value;
       empleado.nombre = this.txNombre.value;
@@ -71,7 +71,8 @@ export class RegistrarEmpleadosComponent implements OnInit{
       empleado.cuil = this.txCuil.value;
       empleado.contrasena = this.txContrasena.value;
       empleado.genero = this.ddGenero.value;
-      empleado.tipoUsuario.id = 1; // asigno empleado
+      empleado.domicilio = this.txProvincia.value;
+      // empleado.tipoUsuario.id = 1; // asigno empleado
 
 
       this.usuariosService.registrarUsuario(empleado).subscribe((respuesta) => {

@@ -78,12 +78,9 @@
       </div>
 
       <div class="col-md-4">
-        <mat-form-field>
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de nacimiento</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="txFechaNacimiento">
-          <mat-hint>MM/DD/YYYY</mat-hint>
-          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
+          <input type="date" matInput [formControl]="txFechaNacimiento"/>
         </mat-form-field>
       </div>
 
@@ -97,15 +94,7 @@
           <input type="text" matInput [formControl]="txDNI"/>
         </mat-form-field>
       </div>
-
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de nacimiento</mat-label>
-          <input type="date" matInput [formControl]="txFechaNacimiento"/>
-        </mat-form-field>
-      </div>
-
-    </div>
+   </div>
 
   </form>
 
@@ -118,9 +107,93 @@
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
         Cancelar
       </button>
-      <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registar</button>
+      <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>
     </div>
   </div>
 
   <br>
 </div>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Formulario con Bootstrap</title>-->
+<!--  &lt;!&ndash; Incluye Bootstrap CSS desde un CDN &ndash;&gt;-->
+<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container py-3">-->
+<!--  <h2>Registrar Empleado</h2>-->
+<!--  <form>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="nombreUsuario">Nombre de Usuario</label>-->
+<!--        <input type="text" class="form-control" id="nombreUsuario" placeholder="Nombre de Usuario">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="nombre">Nombre</label>-->
+<!--        <input type="text" class="form-control" id="nombre" placeholder="Nombre">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="apellido">Apellido</label>-->
+<!--        <input type="text" class="form-control" id="apellido" placeholder="Apellido">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="codigoPostal">Código Postal</label>-->
+<!--        <input type="text" class="form-control" id="codigoPostal" placeholder="Código Postal">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="cuil">CUIT/CUIL</label>-->
+<!--        <input type="text" class="form-control" id="cuil" placeholder="CUIT/CUIL">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="contrasena">Contraseña</label>-->
+<!--        <input type="password" class="form-control" id="contrasena" placeholder="Contraseña">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="provincia">Provincia</label>-->
+<!--        <input type="text" class="form-control" id="provincia" placeholder="Provincia">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="genero">Género</label>-->
+<!--        <input type="text" class="form-control" id="genero" placeholder="Género">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="fechaNacimiento">Fecha de Nacimiento</label>-->
+<!--        <input type="date" class="form-control" id="fechaNacimiento">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="dni">DNI</label>-->
+<!--        <input type="text" class="form-control" id="dni" placeholder="DNI">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--    &lt;!&ndash; Btn de buscar y limpiar &ndash;&gt;-->
+<!--    <div class="row text-right">-->
+<!--      <div class="col d-flex justify-content-end">-->
+<!--        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">-->
+<!--          Cancelar-->
+<!--        </button>-->
+<!--        <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--&lt;!&ndash; Incluye Bootstrap JS y dependencias desde un CDN &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+

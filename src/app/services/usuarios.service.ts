@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
-import {Proveedor} from "../models/proveedores.model";
 import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 
