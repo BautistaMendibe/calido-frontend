@@ -47,7 +47,10 @@
     <h2 style="color: grey">Promociones encontradas</h2>
   </mat-card-header>
 
-  <mat-card>
+  <!-- loading -->
+  <div class="lds-spinner-wrapper" *ngIf="promociones.length == 0"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+
+  <mat-card *ngIf="promociones.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
