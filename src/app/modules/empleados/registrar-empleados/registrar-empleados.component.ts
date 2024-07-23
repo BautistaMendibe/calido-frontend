@@ -37,14 +37,14 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombreUsuario: ['', Validators.required],
-      txNombre: ['', Validators.required],
-      txApellido: ['', Validators.required],
+      txNombreUsuario: ['', [Validators.required]],
+      txNombre: ['', [Validators.required]],
+      txApellido: ['', [Validators.required]],
       txFechaNacimiento: ['', []], // a date
       txCodigoPostal: ['', []], // a int
-      txDNI: ['', []], // a int
-      txCuil: ['', []], // mascara
-      txContrasena: ['', []],
+      txDNI: ['', Validators.required], // a int
+      txCuil: ['', Validators.required], // mascara
+      txContrasena: ['', [Validators.required, Validators.minLength(6)]],
       ddGenero: ['', []], // desplegable a int
       txProvincia: ['', []], // hacer el domicilio
     });

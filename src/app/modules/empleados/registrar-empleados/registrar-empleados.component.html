@@ -21,6 +21,17 @@
 
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Contraseña</mat-label>
+          <input type="password" matInput [formControl]="txContrasena"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Nombre</mat-label>
           <input type="text" matInput [formControl]="txNombre"/>
         </mat-form-field>
@@ -30,50 +41,6 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Apellido</mat-label>
           <input type="text" matInput [formControl]="txApellido"/>
-        </mat-form-field>
-      </div>
-
-    </div>
-
-    <div class="row pt-4">
-
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Código Postal</mat-label>
-          <input type="text" matInput [formControl]="txCodigoPostal"/>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>CUIT/CUIL</mat-label>
-          <input type="text" matInput [formControl]="txCuil"/>
-        </mat-form-field>
-
-      </div>
-
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Contraseña</mat-label>
-          <input type="text" matInput [formControl]="txContrasena"/>
-        </mat-form-field>
-      </div>
-
-    </div>
-
-    <div class="row pt-4">
-
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Provincia</mat-label>
-          <input type="text" matInput [formControl]="txProvincia"/>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Género</mat-label>
-          <input type="text" matInput [formControl]="ddGenero"/>
         </mat-form-field>
       </div>
 
@@ -90,10 +57,43 @@
 
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>DNI</mat-label>
-          <input type="text" matInput [formControl]="txDNI"/>
+          <mat-label>CUIT/CUIL</mat-label>
+          <input type="text" matInput [formControl]="txCuil"/>
         </mat-form-field>
       </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>DNI</mat-label>
+            <input type="text" matInput [formControl]="txDNI"/>
+          </mat-form-field>
+        </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Género</mat-label>
+          <input type="text" matInput [formControl]="ddGenero"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Código Postal</mat-label>
+          <input type="text" matInput [formControl]="txCodigoPostal"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Provincia</mat-label>
+          <input type="text" matInput [formControl]="txProvincia"/>
+        </mat-form-field>
+      </div>
+
    </div>
 
   </form>
