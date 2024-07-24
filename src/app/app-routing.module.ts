@@ -9,13 +9,15 @@ import {
 import {
   ConsultarPromocionesComponent
 } from "./modules/promociones/consultar-promociones/consultar-promociones.component";
+import {NotificarPromocionComponent} from "./modules/promociones/notificar-promocion/notificar-promocion.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
-  {path:'consultar-promociones', component: ConsultarPromocionesComponent}
+  {path:'consultar-promociones', component: ConsultarPromocionesComponent},
+  {path:'notificar-promocion', component: NotificarPromocionComponent}
 ];
 
 @NgModule({

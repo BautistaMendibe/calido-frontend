@@ -24,6 +24,7 @@ import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveed
 import { ConsultarPromocionesComponent } from './modules/promociones/consultar-promociones/consultar-promociones.component';
 import { RegistrarPromocionComponent } from './modules/promociones/registrar-promocion/registrar-promocion.component';
 import { DetallePromocionComponent } from './modules/promociones/detalle-promocion/detalle-promocion.component';
+import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +41,8 @@ import { DetallePromocionComponent } from './modules/promociones/detalle-promoci
     DetalleProveedorComponent,
     ConsultarPromocionesComponent,
     RegistrarPromocionComponent,
-    DetallePromocionComponent
+    DetallePromocionComponent,
+    NotificarPromocionComponent
   ],
     imports: [
         BrowserModule,

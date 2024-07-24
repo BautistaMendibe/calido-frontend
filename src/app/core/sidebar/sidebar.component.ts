@@ -26,7 +26,8 @@ export class SidebarComponent {
     ]},
     {id: 6, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
     {id: 7, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
-       {id: 8, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []}
+       {id: 8, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
+       {id: 9, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
     ]},
   ];
   isExpanded = true;

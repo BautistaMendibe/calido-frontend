@@ -32,6 +32,14 @@ export class PromocionesService {
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-promocion/${idPromocion}`);
   }
 
+  public notificarPromocion(data: string): Observable<SpResult> {
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/notificar-promocion`, data, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      }
+    });
+  }
+
   public buscarProductos(): Observable<Producto[]>{
     return this.http.get<Producto[]>(`${this.urlBackend}/${this.controllerName}/buscar-productos`);
   }
