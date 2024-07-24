@@ -9,6 +9,7 @@ import {TipoProveedor} from "../../../models/tipoProveedor.model";
 import {Provincia} from "../../../models/provincia.model";
 import {DomicilioService} from "../../../services/domicilio.service";
 import {Localidad} from "../../../models/localidad.model";
+import {Domicilio} from "../../../models/domicilio.model";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -19,6 +20,8 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public form: FormGroup;
   private referencia: ConsultarProveedoresComponent;
+  private idProvincia: number;
+  private idLocalidad: number;
   public listaTiposProveedores: TipoProveedor[] = [];
   public listaProvincias: Provincia[] = [];
   public provinciasFiltradas: Provincia[] = [];
@@ -37,6 +40,8 @@ export class RegistrarProveedorComponent implements OnInit{
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
+    this.idProvincia = -1;
+    this.idLocalidad = -1;
   }
 
   ngOnInit() {
@@ -70,9 +75,15 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public async seleccionarProvincia() {
     const nombreProvincia = this.txProvincia.value;
-    const idProvincia: number = await this.buscarIdProvincia(nombreProvincia);
-    this.obtenerLocalidadesPorProvincia(idProvincia);
+    this.idProvincia = await this.buscarIdProvincia(nombreProvincia);
+    this.obtenerLocalidadesPorProvincia(this.idProvincia);
+
     this.txLocalidad.enable();
+    this.txLocalidad.setValue(null);
+    this.txCalle.setValue(null);
+    this.txNumero.setValue(null);
+    this.txCalle.disable();
+    this.txNumero.disable();
   }
 
   private async buscarIdProvincia(nombre: string): Promise<number> {
@@ -80,21 +91,26 @@ export class RegistrarProveedorComponent implements OnInit{
     return provincia ? provincia.id : 0;
   }
 
-  //public async seleccionarLocalidad() {
-  //  const nombreLocalidad = this.txLocalidad.value;
-  //  const idLocalidad: number = await this.buscarIdLocalidad(nombreLocalidad);
-  //  this.txCalle.enable();
-  //  this.txNumero.enable();
-  //}
+  public filtrarLocalidades(){
+    const busqueda = this.txLocalidad.value;
+    this.localidadesFiltradas = this.filterLocalidades(busqueda);
+  }
 
-  //private async buscarIdLocalidad(nombre: string): Promise<number> {
-  //  const localidad = this.localidadesFiltradas.find((localidad) => localidad.nombre === nombre);
-  //  return localidad ? localidad.id : 0;
-  //}
+  public async seleccionarLocalidad() {
+    const nombreLocalidad = this.txLocalidad.value;
+    this.idLocalidad = await this.buscarIdLocalidad(nombreLocalidad);
+    this.txCalle.enable();
+    this.txNumero.enable();
+  }
+
+  private async buscarIdLocalidad(nombre: string): Promise<number> {
+    const localidad = this.localidadesFiltradas.find((localidad) => localidad.nombre === nombre);
+    return localidad ? localidad.id : 0;
+  }
 
   public obtenerLocalidadesPorProvincia(idProvincia: number){
     this.domicilioService.obtenerLocalidadesPorProvincia(idProvincia).subscribe((localidades) => {
-      this.localidadesFiltradas = localidades;
+      this.listaLocalidades = localidades;
     });
   }
 
@@ -107,14 +123,21 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public registrarProveedor() {
     if (this.form.valid) {
+      // Armamos el objeto Proveedor con todos los atributos
       const proveedor: Proveedor = new Proveedor();
       const tipoProveedor: TipoProveedor = new TipoProveedor();
+      const domicilio: Domicilio = new Domicilio();
       proveedor.tipoProveedor =  tipoProveedor;
       proveedor.tipoProveedor.id = this.txTipoProveedor.value;
       proveedor.nombre = this.txNombre.value;
       proveedor.telefono = this.txTelefono.value;
       proveedor.email = this.txEmail.value;
       proveedor.cuit = this.txCuit.value;
+      proveedor.domicilio = domicilio;
+      proveedor.domicilio.localidad.id =  this.idLocalidad;
+      proveedor.domicilio.localidad.idProvincia =  this.idProvincia;
+      proveedor.domicilio.calle =  this.txCalle.value;
+      proveedor.domicilio.numero =  this.txNumero.value;
 
       this.proveedoresService.registrarProveedor(proveedor).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
@@ -136,9 +159,9 @@ export class RegistrarProveedorComponent implements OnInit{
     return this.listaProvincias.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
-  //private filterLocalidades(busqueda: string) {
-  //  return this.listaLocalidades.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
-  //}
+  private filterLocalidades(busqueda: string) {
+    return this.listaLocalidades.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+  }
 
   // Regios getters
   get txTipoProveedor(): FormControl {

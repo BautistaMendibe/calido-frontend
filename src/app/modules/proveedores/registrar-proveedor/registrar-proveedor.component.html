@@ -68,13 +68,13 @@
               </mat-option>
             </mat-autocomplete>
           </div>
-        <!--
         <div class="col-md-3">
           <mat-form-field appearance="outline">
             <mat-label>Localidad</mat-label>
             <input matInput
                    placeholder="Ingrese"
                    [formControl]="txLocalidad"
+                   (input)="filtrarLocalidades()"
                    [matAutocomplete]="autoCompleteLocalidad">
           </mat-form-field>
           <mat-autocomplete #autoCompleteLocalidad="matAutocomplete" (optionSelected)="seleccionarLocalidad()">
@@ -82,13 +82,6 @@
               {{localidad.nombre}}
             </mat-option>
           </mat-autocomplete>
-        </div>
-        -->
-        <div class="col-md-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Localidad</mat-label>
-            <input type="text" matInput [formControl]="txLocalidad"/>
-          </mat-form-field>
         </div>
 
         <div class="col-md-3">
