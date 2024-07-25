@@ -21,6 +21,7 @@ import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-emple
 import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
+import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveedor/detalle-proveedor.component';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { ConsultarProductosComponent } from './modules/productos/consultar-produ
     RegistrarEmpleadosComponent,
     ConsultarProveedoresComponent,
     RegistrarProveedorComponent,
-    ConsultarProductosComponent
+    ConsultarProductosComponent,
+    DetalleProveedorComponent
   ],
     imports: [
         BrowserModule,
