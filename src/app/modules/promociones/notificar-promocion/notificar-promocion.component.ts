@@ -13,6 +13,8 @@ import { SnackBarService } from "../../../services/snack-bar.service";
 export class NotificarPromocionComponent implements OnInit {
   public form: FormGroup;
   public previewUrl: string | ArrayBuffer | null = null;
+  private selectedFile: File | null = null;
+  public isLoading = false;
 
   constructor(
     private fb: FormBuilder,
@@ -36,11 +38,11 @@ export class NotificarPromocionComponent implements OnInit {
   }
 
   private validateImage(file: File): boolean {
-    const validTypes = ['image/jpeg', 'image/png'];
+    const validTypes = ['image/jpeg'];
     const maxSize = 10 * 1024 * 1024; // 10MB
 
     if (!validTypes.includes(file.type)) {
-      this.notificacionService.openSnackBarError('El tipo de archivo no es válido. Solo se permiten archivos JPEG y PNG.');
+      this.notificacionService.openSnackBarError('El tipo de archivo no es válido. Solo se permiten archivos JPEG.');
       return false;
     }
 
@@ -69,12 +71,11 @@ export class NotificarPromocionComponent implements OnInit {
   }
 
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (!input.files?.length) {
-      return;
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.selectedFile = fileInput.files[0];
+      this.handleFileInput(this.selectedFile);
     }
-
-    this.handleFileInput(input.files[0]);
   }
 
   onDragOver(event: DragEvent) {
@@ -103,32 +104,31 @@ export class NotificarPromocionComponent implements OnInit {
   }
 
   async publicar() {
-    if (this.form.valid) {
-      const imageFile = this.form.get('image')!.value;
-      const comment = this.form.get('comment')!.value;
+    // TODO: Agregar que al darle click a 'publicar' pregunte si estás o no seguro de hacerlo.
+    if (this.form.valid && this.selectedFile) {
+      this.isLoading = true;
 
-      const base64Image = await this.convertImageToBase64(imageFile);
-      const data = new URLSearchParams();
-      data.append('comment', comment);
-      data.append('image', base64Image);
+      const comentario = this.form.get('comment')!.value;
+      const formData = new FormData();
+      formData.append('imagen', this.selectedFile);
+      formData.append('comentario', comentario);
 
-      this.promocionesService.notificarPromocion(data.toString()).subscribe((respuesta) => {
-        if (respuesta.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('La publicación se realizó con éxito');
-        } else {
-          this.notificacionService.openSnackBarError('Error al publicar la promoción, intentelo nuevamente');
+      this.promocionesService.notificarPromocion(formData).subscribe({
+        next: (respuesta) => {
+          this.isLoading = false;
+
+          if (respuesta.mensaje === 'OK') {
+            this.notificacionService.openSnackBarSuccess('La publicación se realizó con éxito');
+          } else {
+            this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
+          }
+        },
+        error: (error) => {
+          this.isLoading = false;
+          console.error('Error al publicar:', error);
+          this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
         }
-      })
-
+      });
     }
-  }
-
-  private convertImageToBase64(file: File): Promise<string> {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result as string);
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
   }
 }

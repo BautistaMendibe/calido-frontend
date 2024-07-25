@@ -13,20 +13,29 @@
 
     <form [formGroup]="form">
       <div class="row pt-4">
-        <div class="col-md-12 d-flex flex-column align-items-center">
-          <div
-            class="upload-container d-flex justify-content-center align-items-center mb-3"
-            (dragover)="onDragOver($event)"
-            (dragleave)="onDragLeave($event)"
-            (drop)="onDrop($event)">
+        <div class="col-md-12 d-flex">
+          <!-- Contenedor de la imagen -->
+          <div class="upload-container d-flex justify-content-center align-items-center mb-3">
             <img *ngIf="previewUrl" [src]="previewUrl" class="preview-img">
             <span *ngIf="!previewUrl" class="upload-text">Arrastra una imagen aquí o haz clic para subir</span>
             <input type="file" class="file-input" (change)="onFileSelected($event)">
           </div>
-          <textarea matInput placeholder="Escribe tu comentario aquí..." formControlName="comment" class="comment-textarea mb-3"></textarea>
+          <!-- Contenedor del comentario -->
+          <div class="comment-container d-flex flex-column justify-content-center ml-3">
+            <textarea matInput placeholder="Escribe tu comentario aquí..." formControlName="comment" class="comment-textarea mb-3"></textarea>
+          </div>
         </div>
       </div>
     </form>
+
+    <!-- Cargando Spinner -->
+    <div class="lds-spinner-wrapper" *ngIf="isLoading">
+      <div class="lds-spinner">
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+        <div></div><div></div><div></div><div></div>
+      </div>
+    </div>
 
     <div class="row text-right">
       <div class="col d-flex justify-content-end">
