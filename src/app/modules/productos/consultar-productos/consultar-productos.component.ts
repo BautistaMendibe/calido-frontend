@@ -1,32 +1,33 @@
-import {Component, ViewChild} from '@angular/core';
-import {MatPaginator} from "@angular/material/paginator";
-import {MatSort} from "@angular/material/sort";
+import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {Usuario} from "../../../models/usuario.model";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Producto} from "../../../models/producto.model";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {MatDialog} from "@angular/material/dialog";
+import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {ProductosService} from "../../../services/productos.service";
 
 @Component({
   selector: 'app-consultar-productos',
   templateUrl: './consultar-productos.component.html',
-  styleUrl: './consultar-productos.component.scss'
+  styleUrls: ['./consultar-productos.component.scss']
 })
+
 export class ConsultarProductosComponent {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
   // Ver. Crear tabla empleados que cada uno tenga un usuario
   public productos: Producto[] = [];
-  public columnas: string[] = ['id', 'nombre','proveedor', 'tipo' ,'costo', 'costoConIva', 'precioVenta', 'Cantidad'];
+  public columnas: string[] = ['id', 'nombre','costo', 'costoIva', 'tipoProducto' , 'proveedor' , 'marca'];
+  private filtros: FiltrosProductos;
 
   constructor(
     private fb: FormBuilder,
-  ) {
+    private dialog: MatDialog,
+    private productosService: ProductosService) {
+
     this.form = new FormGroup({});
-    this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
+    this.filtros = new FiltrosProductos();
   }
 
   ngOnInit() {
@@ -43,11 +44,29 @@ export class ConsultarProductosComponent {
     });
   }
 
-  public limpiarFiltros() {}
+  public limpiarFiltros() {
+    this.form.reset();
+  }
 
-  public buscar() {}
+  public buscar() {
+    this.filtros = {
+      id: this.txId.value,
+      nombre: this.txNombre.value,
+      tipoProducto: this.txTipo.value,
+      proveedor: this.txProveedor.value,
+      marca: this.txMarca.value,
+    };
 
-  // Regios getters
+
+
+      this.productosService.consultarProductos(this.filtros).subscribe((productos) => {
+        this.productos = productos;
+        this.tableDataSource.data = productos;
+      })
+
+  }
+
+
   get txId(): FormControl {
     return this.form.get('txId') as FormControl;
   }

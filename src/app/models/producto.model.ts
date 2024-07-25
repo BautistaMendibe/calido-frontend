@@ -1,5 +1,6 @@
-import { TipoProducto } from "./tipoProducto.model"
+import { TipoProducto } from "./tipoProducto.model";
 import { Proveedor } from "./proveedores.model";
+import { Marca } from "./Marcas.model";
 
 export class Producto {
   id: number;
@@ -8,24 +9,24 @@ export class Producto {
   costoIva: number;
   tipoProducto: TipoProducto;
   proveedor: Proveedor;
-  marca: string;
-
+  marca: Marca;
 
   constructor(
     id?: number,
     nombre?: string,
     costo?: number,
     costoIva?: number,
-    TipoProducto?: TipoProducto,
+    tipoProducto?: TipoProducto,
     proveedor?: Proveedor,
-    marca?: string
+    marca?: Marca
   ) {
     this.id = id!;
     this.nombre = nombre!;
-    this.marca = marca!;
     this.costo = parseFloat(costo!.toFixed(2)); // Asegura hasta 2 decimales
     this.costoIva = parseFloat(costoIva!.toFixed(2)); // Asegura hasta 2 decimales
-    this.tipoProducto = TipoProducto!;
+    this.tipoProducto = tipoProducto!;
     this.proveedor = proveedor!;
+    this.marca = marca!;
   }
 }
+

@@ -13,7 +13,7 @@
 
     <form [formGroup]="form">
       <div class="row pt-4">
-        <div class="col-md-2">
+        <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Id Producto</mat-label>
             <input type="text" matInput [formControl]="txId"/>
@@ -31,14 +31,10 @@
           <caja-control-messages [control]="txCodigo"></caja-control-messages>
           -->
         </div>
-        <div class="col-md-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Marca</mat-label>
-            <input type="text" matInput [formControl]="txMarca"/>
-          </mat-form-field>
-        </div>
-        <div class="col-md-2">
-          <mat-form-field appearance="outline" class="width-100" color="primary">
+      </div>
+      <div class="row pt-4 ">
+        <div class="col-md-2 custom-spacing">
+          <mat-form-field appearance="outline" class="width-80" color="primary">
             <mat-label>Tipo Producto</mat-label>
             <mat-select [formControl]="txTipo">
               <mat-option [value]="1">Jean</mat-option>
@@ -47,13 +43,23 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="col-md-2">
-          <mat-form-field appearance="outline" class="width-100" color="primary">
+        <div class="col-md-2 custom-spacing">
+          <mat-form-field appearance="outline" class="width-80" color="primary">
             <mat-label>Proveedor</mat-label>
             <mat-select [formControl]="txProveedor">
               <mat-option [value]="1">Maria Amores</mat-option>
               <mat-option [value]="2">Bandida</mat-option>
               <mat-option [value]="3">Tubos</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Marca</mat-label>
+            <mat-select [formControl]="txMarca">
+              <mat-option [value]="1">Nike</mat-option>
+              <mat-option [value]="2">Adidas</mat-option>
+              <mat-option [value]="3">Prit Soul</mat-option>
             </mat-select>
           </mat-form-field>
         </div>
@@ -78,67 +84,65 @@
 
 
   <mat-card-header class="header-card">
-    <h5>Productos encontrados</h5>
+    <h2 style="color: grey">Proveedores encontrados</h2>
   </mat-card-header>
-  <!--
-    <mat-card>
-      <mat-card-content>
-        <div class="row">
-          <div class="col-md-12">
-            <mat-table [dataSource]="tableDataSource" matSort>
 
-              <ng-container matColumnDef="nrormtsa">
-                <mat-header-cell *matHeaderCellDef>Nro RMTSA</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Nro RMTSA">{{element.nroTramite}}</mat-cell>
-              </ng-container>
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort>
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="id">{{ producto.id }}</mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="emision">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Emisión</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Emisión">{{element.fecEmision | date:'dd/MM/yyyy'}}</mat-cell>
-              </ng-container>
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Nombre">{{ producto.nombre }}</mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="vencimiento">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>Vencimiento</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Vencimiento">{{element.fecVencimiento | date:'dd/MM/yyyy'}}</mat-cell>
-              </ng-container>
+            <ng-container matColumnDef="costo">
+              <mat-header-cell *matHeaderCellDef>Costo</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Costo">{{ producto.costo }}</mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="cuit">
-                <mat-header-cell *matHeaderCellDef>CUIT</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="CUIT">{{element.cuit}}</mat-cell>
-              </ng-container>
+            <ng-container matColumnDef="costoIva">
+              <mat-header-cell *matHeaderCellDef>Costo Con Iva</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="costoConIva">{{ producto.costoConIva }}</mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="titular">
-                <mat-header-cell *matHeaderCellDef>Titular</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Titular">{{element.nombreTitular}}</mat-cell>
-              </ng-container>
+            <!-- Tipo Producto -->
+            <ng-container matColumnDef="tipoProducto">
+              <mat-header-cell *matHeaderCellDef>Tipo Producto</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="tipoProducto">
+                {{ producto.tipoProducto?.nombre }}
+              </mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="dominio">
-                <mat-header-cell *matHeaderCellDef>Dominio</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Dominio">{{element.dominio}}</mat-cell>
-              </ng-container>
+            <!-- Proveedor -->
+            <ng-container matColumnDef="proveedor">
+              <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="proveedor">
+                {{ producto.proveedor?.nombre }}
+              </mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="marca">
-                <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Marca">{{element.marca}}</mat-cell>
-              </ng-container>
+            <!-- Marca -->
+            <ng-container matColumnDef="marca">
+              <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="marca">
+                {{ producto.marca?.nombre }}
+              </mat-cell>
+            </ng-container>
 
-              <ng-container matColumnDef="modelo">
-                <mat-header-cell *matHeaderCellDef>Modelo</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Modelo">{{element.modelo}}</mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="estado">
-                <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-                <mat-cell *matCellDef="let element" data-label="Estado">{{element.estadoId}}</mat-cell>
-              </ng-container>
-
-              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-              <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
 
           </mat-table>
 
           <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
-            No se encuentran productos para mostrar, realice una nueva búsqueda.
+            No se encuentran proveedores para mostrar, realice una nueva búsqueda.
           </h6>
 
           <mat-paginator *ngIf="this.productos.length > 0"
@@ -149,6 +153,4 @@
       </div>
     </mat-card-content>
   </mat-card>
-   -->
-
 </div>
