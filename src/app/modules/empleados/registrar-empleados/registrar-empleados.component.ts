@@ -44,7 +44,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txCodigoPostal: ['', []], // a int
       txDNI: ['', Validators.required], // a int
       txCuil: ['', Validators.required], // mascara
-      txContrasena: ['', [Validators.required, Validators.minLength(6)]],
+      txContrasena: ['', [Validators.required, Validators.minLength(8)]],
       ddGenero: ['', []], // desplegable a int
       txProvincia: ['', []], // hacer el domicilio
     });
@@ -70,9 +70,9 @@ export class RegistrarEmpleadosComponent implements OnInit{
       empleado.dni = this.txDNI.value;
       empleado.cuil = this.txCuil.value;
       empleado.contrasena = this.txContrasena.value;
-      empleado.genero = this.ddGenero.value;
+      empleado.idGenero = this.ddGenero.value;
       empleado.domicilio = this.txProvincia.value;
-      // empleado.tipoUsuario.id = 1; // asigno empleado
+      // empleado.tipoUsuario.id = 1; // asigno empleado en back
 
 
       this.usuariosService.registrarUsuario(empleado).subscribe((respuesta) => {

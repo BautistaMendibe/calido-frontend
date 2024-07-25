@@ -10,7 +10,7 @@ export class Usuario {
   fechaNacimiento: Date;
   codigoPostal: number;
   tipoUsuario: TipoUsuario;
-  genero: Genero;
+  idGenero: number;
   domicilio: Domicilio;
   dni: string;
   cuil: string;
@@ -24,7 +24,7 @@ export class Usuario {
     fechaNacimiento?: Date,
     codigoPostal?: number,
     tipoUsuario?: TipoUsuario,
-    genero?: Genero,
+    idGenero?: number,
     domicilio?: Domicilio,
     dni?: string,
     cuil?: string,
@@ -37,7 +37,7 @@ export class Usuario {
     this.fechaNacimiento = fechaNacimiento!;
     this.codigoPostal = codigoPostal!;
     this.tipoUsuario = tipoUsuario!;
-    this.genero = genero!;
+    this.idGenero = idGenero!;
     this.domicilio = domicilio!;
     this.dni = dni!;
     this.cuil = cuil!;

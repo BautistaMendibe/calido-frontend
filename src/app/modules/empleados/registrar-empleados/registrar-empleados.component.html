@@ -72,9 +72,22 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Género</mat-label>
-          <input type="text" matInput [formControl]="ddGenero"/>
+          <mat-select [formControl]="ddGenero">
+            <mat-option value= "1" >Masculino</mat-option>
+            <mat-option value= "2" >Femenino</mat-option>
+            <mat-option value= "3" >No binario</mat-option>
+            <mat-option value= "4" >Otro</mat-option>
+            <mat-option value= "5" >Prefiero no decirlo</mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
+
+<!--      <div class="col-md-4">-->
+<!--        <mat-form-field appearance="outline" class="w-100">-->
+<!--          <mat-label>genero</mat-label>-->
+<!--          <input type="text" matInput [formControl]="ddGenero"/>-->
+<!--        </mat-form-field>-->
+<!--      </div>-->
 
     </div>
 

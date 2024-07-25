@@ -4,6 +4,7 @@ import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
+import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,14 @@ export class UsuariosService {
 
   public registrarUsuario(usuario: Usuario): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-usuario`, usuario);
+  }
+
+  public consultarUsuarios(filtro: FiltrosEmpleados): Observable<Usuario[]>{
+    return this.http.post<Usuario[]>(`${this.urlBackend}/${this.controllerName}/consultar-usuarios`, filtro);
+  }
+
+  public eliminarUsuario(idUsuario: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-usuario/${idUsuario}`);
   }
 
 }
