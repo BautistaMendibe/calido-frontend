@@ -9,6 +9,7 @@ import {ProveedoresService} from "../../../services/proveedores.service";
 import {Router} from "@angular/router";
 import {DetalleProveedorComponent} from "../detalle-proveedor/detalle-proveedor.component";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-consultar-proveedores',
@@ -29,6 +30,7 @@ export class ConsultarProveedoresComponent implements OnInit {
     private proveedoresService: ProveedoresService,
     private router: Router,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosProveedores();
@@ -64,6 +66,7 @@ export class ConsultarProveedoresComponent implements OnInit {
       RegistrarProveedorComponent,
       {
         width: '75%',
+        height: 'auto',
         autoFocus: false,
         data: {
           referencia: this,
@@ -79,6 +82,7 @@ export class ConsultarProveedoresComponent implements OnInit {
       RegistrarProveedorComponent,
       {
         width: '75%',
+        height: 'auto',
         autoFocus: false,
         data: {
           proveedor: proveedor,
@@ -91,14 +95,20 @@ export class ConsultarProveedoresComponent implements OnInit {
   }
 
   public eliminarProveedor(idProveedor: number) {
-    this.proveedoresService.eliminarProveedor(idProveedor).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Proveedor eliminado con éxito');
-        this.buscar();
-      } else {
-        this.notificacionService.openSnackBarError('Error al eliminar el proveedor');
-      }
-    })
+    this.notificationDialogService.confirmation('¿Desea eliminar el proveedor?', 'Eliminar proveedor')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.proveedoresService.eliminarProveedor(idProveedor).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Proveedor eliminado con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar el proveedor');
+            }
+          });
+        }
+      });
   }
 
 
