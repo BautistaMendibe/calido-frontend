@@ -88,6 +88,11 @@ export class RegistrarProveedorComponent implements OnInit{
     this.txCalle.setValue(this.proveedor.domicilio?.calle);
     this.txNumero.setValue(this.proveedor.domicilio?.calle);
 
+    if (this.proveedor.domicilio?.localidad){
+      this.obtenerLocalidadesPorProvincia(this.proveedor.domicilio.localidad.provincia.id);
+      this.localidadesFiltradas = this.filterLocalidades(this.proveedor.domicilio.localidad.nombre);
+    }
+
     if (this.formDesactivado) {
       this.form.disable();
     }
