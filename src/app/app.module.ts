@@ -22,6 +22,8 @@ import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-p
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
 import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveedor/detalle-proveedor.component';
+import { MessagesComponent } from './shared/messages/messages.component';
+import {MatDialogClose} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -35,6 +37,7 @@ import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveed
     RegistrarEmpleadosComponent,
     ConsultarProveedoresComponent,
     RegistrarProveedorComponent,
+    MessagesComponent,
     ConsultarProductosComponent,
     DetalleProveedorComponent
   ],

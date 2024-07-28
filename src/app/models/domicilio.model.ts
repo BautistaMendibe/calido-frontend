@@ -1,20 +1,24 @@
-import {Provincia} from "./provincia.model";
+import { Localidad } from "./localidad.model";
 
 export class Domicilio {
   id: string;
   calle: string;
   numero: number;
-  provincia: Provincia;
+  localidad: Localidad;
 
   constructor(
     id?: string,
     calle?: string,
     numero?: number,
-    provincia?: Provincia,
+    localidadId?: number
   ) {
     this.id = id!;
     this.calle = calle!;
     this.numero = numero!;
-    this.provincia = provincia!;
+
+    // Crear una nueva instancia de Localidad
+    const localidad = new Localidad(localidadId!);
+
+    this.localidad = localidad;
   }
 }
