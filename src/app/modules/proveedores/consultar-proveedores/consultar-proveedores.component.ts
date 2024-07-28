@@ -7,7 +7,6 @@ import {RegistrarProveedorComponent} from "../registrar-proveedor/registrar-prov
 import {FiltrosProveedores} from "../../../models/comandos/FiltrosProveedores.comando";
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {Router} from "@angular/router";
-import {DetalleProveedorComponent} from "../detalle-proveedor/detalle-proveedor.component";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
 
