@@ -66,7 +66,9 @@ export class ConsultarProveedoresComponent implements OnInit {
         width: '75%',
         autoFocus: false,
         data: {
-          referencia: this
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
         }
       }
     )
@@ -81,7 +83,8 @@ export class ConsultarProveedoresComponent implements OnInit {
         data: {
           proveedor: proveedor,
           esConsulta: true,
-          referencia: this
+          referencia: this,
+          formDesactivado: !editar
         }
       }
     )

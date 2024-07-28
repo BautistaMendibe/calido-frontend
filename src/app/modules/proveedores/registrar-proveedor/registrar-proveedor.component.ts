@@ -29,6 +29,7 @@ export class RegistrarProveedorComponent implements OnInit{
   public localidadesFiltradas: Localidad[] = [];
   public proveedor: Proveedor;
   public esConsulta: boolean;
+  public formDesactivado: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -40,12 +41,14 @@ export class RegistrarProveedorComponent implements OnInit{
       referencia: ConsultarProveedoresComponent;
       proveedor: Proveedor;
       esConsulta: boolean;
+      formDesactivado: boolean;
     }
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
     this.proveedor = this.data.proveedor;
     this.esConsulta = this.data.esConsulta;
+    this.formDesactivado = this.data.formDesactivado;
     this.idProvincia = -1;
     this.idLocalidad = -1;
   }
@@ -68,9 +71,9 @@ export class RegistrarProveedorComponent implements OnInit{
       txEmail: ['', []],
       txCuit: ['', []],
       txProvincia: [ '', []],
-      txLocalidad: [ {value: '', disabled: true}, []],
-      txCalle: [{value: '', disabled: true}, []],
-      txNumero: [{value: '', disabled: true}, []],
+      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
     });
   }
 
@@ -85,7 +88,9 @@ export class RegistrarProveedorComponent implements OnInit{
     this.txCalle.setValue(this.proveedor.domicilio?.calle);
     this.txNumero.setValue(this.proveedor.domicilio?.calle);
 
-    this.form.disable();
+    if (this.formDesactivado) {
+      this.form.disable();
+    }
   }
 
   public habilitarEdicion(){
