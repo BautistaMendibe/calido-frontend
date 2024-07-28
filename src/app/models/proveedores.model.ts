@@ -1,4 +1,5 @@
 import {Domicilio} from "./domicilio.model";
+import {TipoProveedor} from "./tipoProveedor.model";
 
 export class Proveedor {
   id: number;
@@ -7,7 +8,7 @@ export class Proveedor {
   domicilio: Domicilio;
   email: string;
   cuit: string;
-  //direccion: string;
+  tipoProveedor: TipoProveedor;
 
   constructor(
     id?: number,
@@ -15,7 +16,8 @@ export class Proveedor {
     telefono?: string,
     domicilio?: Domicilio,
     email?: string,
-    cuit?: string
+    cuit?: string,
+    tipoProveedor?: TipoProveedor
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -23,5 +25,6 @@ export class Proveedor {
     this.domicilio = domicilio!;
     this.email = email!;
     this.cuit = cuit!;
+    this.tipoProveedor = tipoProveedor!;
   }
 }

@@ -47,7 +47,11 @@
     <h2 style="color: grey">Proveedores encontrados</h2>
   </mat-card-header>
 
-  <mat-card>
+  <!-- loading -->
+  <div class="lds-spinner-wrapper" *ngIf="proveedores.length == 0"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+
+
+  <mat-card *ngIf="proveedores.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
@@ -55,6 +59,11 @@
             <ng-container matColumnDef="nombre">
               <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
               <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="tipo">
+              <mat-header-cell *matHeaderCellDef>TIPO</mat-header-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.tipoProveedor.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="telefono">

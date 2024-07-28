@@ -7,8 +7,8 @@ import {RegistrarProveedorComponent} from "../registrar-proveedor/registrar-prov
 import {FiltrosProveedores} from "../../../models/comandos/FiltrosProveedores.comando";
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {Router} from "@angular/router";
-import {DetalleProveedorComponent} from "../detalle-proveedor/detalle-proveedor.component";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-consultar-proveedores',
@@ -20,7 +20,7 @@ export class ConsultarProveedoresComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Proveedor> = new MatTableDataSource<Proveedor>([]);
   public form: FormGroup;
   public proveedores: Proveedor[] = [];
-  public columnas: string[] = ['nombre', 'telefono', 'mail', 'acciones'];
+  public columnas: string[] = ['nombre', 'tipo', 'telefono', 'mail', 'acciones'];
   private filtros: FiltrosProveedores;
 
   constructor(
@@ -29,6 +29,7 @@ export class ConsultarProveedoresComponent implements OnInit {
     private proveedoresService: ProveedoresService,
     private router: Router,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosProveedores();
@@ -64,9 +65,12 @@ export class ConsultarProveedoresComponent implements OnInit {
       RegistrarProveedorComponent,
       {
         width: '75%',
+        height: 'auto',
         autoFocus: false,
         data: {
-          referencia: this
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
         }
       }
     )
@@ -74,28 +78,36 @@ export class ConsultarProveedoresComponent implements OnInit {
 
   public verProveedor(proveedor: Proveedor, editar: boolean) {
     this.dialog.open(
-      DetalleProveedorComponent,
+      RegistrarProveedorComponent,
       {
         width: '75%',
+        height: 'auto',
         autoFocus: false,
         data: {
           proveedor: proveedor,
-          edit: editar,
-          referencia: this
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar
         }
       }
     )
   }
 
   public eliminarProveedor(idProveedor: number) {
-    this.proveedoresService.eliminarProveedor(idProveedor).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Proveedor eliminado con éxito');
-        this.buscar();
-      } else {
-        this.notificacionService.openSnackBarError('Error al eliminar el proveedor');
-      }
-    })
+    this.notificationDialogService.confirmation('¿Desea eliminar el proveedor?', 'Eliminar proveedor')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.proveedoresService.eliminarProveedor(idProveedor).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Proveedor eliminado con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar el proveedor');
+            }
+          });
+        }
+      });
   }
 
 
