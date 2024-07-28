@@ -74,13 +74,13 @@ export class ConsultarProveedoresComponent implements OnInit {
 
   public verProveedor(proveedor: Proveedor, editar: boolean) {
     this.dialog.open(
-      DetalleProveedorComponent,
+      RegistrarProveedorComponent,
       {
         width: '75%',
         autoFocus: false,
         data: {
           proveedor: proveedor,
-          edit: editar,
+          esConsulta: true,
           referencia: this
         }
       }

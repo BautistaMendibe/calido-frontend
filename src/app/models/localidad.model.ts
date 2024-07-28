@@ -1,13 +1,15 @@
+import {Provincia} from "./provincia.model";
+
 export class Localidad {
   id: number;
   nombre: string;
-  idProvincia: number;
   codigoPostal: string;
+  provincia: Provincia;
 
-  constructor(id: number, nombre?: string, idProvincia?: number, codigoPostal?: string) {
+  constructor(id: number, nombre?: string, provincia?: Provincia, codigoPostal?: string) {
     this.id = id;
     this.nombre = nombre!;
-    this.idProvincia = idProvincia!;
+    this.provincia = provincia!;
     this.codigoPostal = codigoPostal!;
   }
 }

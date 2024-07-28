@@ -27,6 +27,8 @@ export class RegistrarProveedorComponent implements OnInit{
   public provinciasFiltradas: Provincia[] = [];
   public listaLocalidades: Localidad[] = [];
   public localidadesFiltradas: Localidad[] = [];
+  public proveedor: Proveedor;
+  public esConsulta: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -35,11 +37,15 @@ export class RegistrarProveedorComponent implements OnInit{
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: {
-      referencia: ConsultarProveedoresComponent
+      referencia: ConsultarProveedoresComponent;
+      proveedor: Proveedor;
+      esConsulta: boolean;
     }
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
+    this.proveedor = this.data.proveedor;
+    this.esConsulta = this.data.esConsulta;
     this.idProvincia = -1;
     this.idLocalidad = -1;
   }
@@ -48,6 +54,10 @@ export class RegistrarProveedorComponent implements OnInit{
     this.crearFormulario();
     this.buscarProvincias();
     this.buscarTiposProveedores();
+
+    if (this.esConsulta && this.proveedor) {
+      this.rellenarFormularioDataProveedor();
+    }
   }
 
   private crearFormulario() {
@@ -62,6 +72,24 @@ export class RegistrarProveedorComponent implements OnInit{
       txCalle: [{value: '', disabled: true}, []],
       txNumero: [{value: '', disabled: true}, []],
     });
+  }
+
+  private rellenarFormularioDataProveedor() {
+    this.txTipoProveedor.setValue(this.proveedor.tipoProveedor.id);
+    this.txNombre.setValue(this.proveedor.nombre);
+    this.txTelefono.setValue(this.proveedor.telefono);
+    this.txEmail.setValue(this.proveedor.email);
+    this.txCuit.setValue(this.proveedor.cuit);
+    this.txProvincia.setValue(this.proveedor.domicilio?.localidad?.provincia.nombre);
+    this.txLocalidad.setValue(this.proveedor.domicilio?.localidad?.nombre);
+    this.txCalle.setValue(this.proveedor.domicilio?.calle);
+    this.txNumero.setValue(this.proveedor.domicilio?.calle);
+
+    this.form.disable();
+  }
+
+  public habilitarEdicion(){
+    this.form.enable();
   }
 
   private buscarProvincias(){
@@ -117,7 +145,11 @@ export class RegistrarProveedorComponent implements OnInit{
   private buscarTiposProveedores() {
     this.proveedoresService.buscarTiposProveedores().subscribe((tiposProveedores) => {
       this.listaTiposProveedores = tiposProveedores;
-      this.txTipoProveedor.setValue(tiposProveedores[0].id);
+
+      // Si no hay un proveedor para consultar pone el tipo 'Mayorista' por default
+      if (!this.proveedor) {
+        this.txTipoProveedor.setValue(tiposProveedores[0].id);
+      }
     });
   }
 
@@ -135,7 +167,6 @@ export class RegistrarProveedorComponent implements OnInit{
       proveedor.cuit = this.txCuit.value;
       proveedor.domicilio = domicilio;
       proveedor.domicilio.localidad.id =  this.idLocalidad;
-      proveedor.domicilio.localidad.idProvincia =  this.idProvincia;
       proveedor.domicilio.calle =  this.txCalle.value;
       proveedor.domicilio.numero =  this.txNumero.value;
 
@@ -148,6 +179,30 @@ export class RegistrarProveedorComponent implements OnInit{
           this.notificacionService.openSnackBarError('Error al registrar un proveedor, intentelo nuevamente');
         }
       });
+    }
+  }
+
+  public modificarProveedor() {
+    if (this.form.valid) {
+
+      this.proveedor.tipoProveedor.id = this.txTipoProveedor.value;
+      this.proveedor.nombre = this.txNombre.value;
+      this.proveedor.telefono = this.txTelefono.value;
+      this.proveedor.email = this.txEmail.value;
+      this.proveedor.cuit = this.txCuit.value;
+      this.proveedor.domicilio.localidad.id =  this.idLocalidad;
+      this.proveedor.domicilio.calle =  this.txCalle.value;
+      this.proveedor.domicilio.numero =  this.txNumero.value;
+
+      this.proveedoresService.modificarProveedor(this.proveedor).subscribe((res) => {
+        if (res.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('Proveedor moficado con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar el proveedor');
+        }
+      })
     }
   }
 

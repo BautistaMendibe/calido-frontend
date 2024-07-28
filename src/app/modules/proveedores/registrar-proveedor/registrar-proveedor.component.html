@@ -1,10 +1,13 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-      <div class="col">
-        <p class="titulo">Registrar proveedor</p>
-      </div>
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar proveedor' : 'Registrar proveedor'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
     </div>
+  </div>
 
     <mat-divider></mat-divider>
 
@@ -108,7 +111,8 @@
         <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
           Cancelar
         </button>
-        <button mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registar</button>
+        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registar</button>
+        <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarProveedor()">Modificar</button>
       </div>
     </div>
 

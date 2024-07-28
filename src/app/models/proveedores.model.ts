@@ -9,7 +9,6 @@ export class Proveedor {
   email: string;
   cuit: string;
   tipoProveedor: TipoProveedor;
-  //direccion: string;
 
   constructor(
     id?: number,
