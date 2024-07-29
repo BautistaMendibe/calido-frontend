@@ -1,0 +1,10 @@
+export const enum TypeMessage {
+  CONFIRMATION = 1,
+  ERROR,
+  DELETE,
+  INFORMATIVE,
+  CORRECT,
+  WARNING,
+  WARNING_WITH_HTML,
+  WARNING_ERROR
+}

@@ -7,9 +7,10 @@ import {RegistrarPromocionComponent} from "../registrar-promocion/registrar-prom
 import {FiltrosPromociones} from "../../../models/comandos/FiltrosPromociones.comando";
 import {PromocionesService} from "../../../services/promociones.service";
 import {Router} from "@angular/router";
-import {SnackBarService} from "../../../services/snack-bar.service";
 import {DetallePromocionComponent} from "../detalle-promocion/detalle-promocion.component";
-// importar detalle promoción por algún motivo
+import {MessagesComponent} from "../../../shared/messages/messages.component";
+import {NotificationService} from "../../../services/notificacion.service";
+import {SnackBarService} from "../../../services/snack-bar.service";
 
 @Component({
   selector: 'app-consultar-promociones',
@@ -30,6 +31,7 @@ export class ConsultarPromocionesComponent implements OnInit {
     private promocionesService: PromocionesService,
     private router: Router,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosPromociones();
@@ -91,14 +93,21 @@ export class ConsultarPromocionesComponent implements OnInit {
 
 
   public eliminarPromocion(idPromocion: number) {
-    this.promocionesService.eliminarPromocion(idPromocion).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Promoción eliminada con éxito');
-        this.buscar();
-      } else {
-        this.notificacionService.openSnackBarError('Error al eliminar la promoción');
+
+    this.notificationDialogService.confirmation("¿Desea eliminar la promoción?", "Eliminar promoción")
+      .afterClosed()
+      .subscribe((value) => {
+      if (value) {
+        this.promocionesService.eliminarPromocion(idPromocion).subscribe((respuesta) => {
+          if (respuesta.mensaje == 'OK') {
+            this.notificacionService.openSnackBarSuccess('Promoción eliminada con éxito');
+            this.buscar();
+          } else {
+            this.notificacionService.openSnackBarError('Error al eliminar la promoción');
+          }
+        });
       }
-    })
+    });
   }
 
 

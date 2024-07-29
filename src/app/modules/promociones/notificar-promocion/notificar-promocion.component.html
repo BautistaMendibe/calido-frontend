@@ -14,32 +14,63 @@
     <form [formGroup]="form">
       <div class="row pt-4">
         <div class="col-md-12 d-flex">
-          <!-- Contenedor de la imagen -->
           <div class="upload-container d-flex justify-content-center align-items-center mb-3">
             <img *ngIf="previewUrl" [src]="previewUrl" class="preview-img">
             <span *ngIf="!previewUrl" class="upload-text">Arrastra una imagen aquí o haz clic para subir</span>
             <input type="file" class="file-input" (change)="onFileSelected($event)">
           </div>
-          <!-- Contenedor del comentario -->
           <div class="comment-container d-flex flex-column justify-content-center ml-3">
             <textarea matInput placeholder="Escribe tu comentario aquí..." formControlName="comment" class="comment-textarea mb-3"></textarea>
+            <button mat-icon-button class="emoji-button" (click)="toggleEmojiPicker()">
+              <mat-icon>sentiment_very_satisfied</mat-icon>
+            </button>
+            <emoji-mart class="emoji-mart"
+              *ngIf="showEmojiPicker"
+              (emojiClick)="addEmoji($event)"
+              title="Selecciona un emoji"
+              [i18n]="{
+                        search: 'Buscar',
+                        emojilist: 'Lista de emojis',
+                        clear: 'Limpiar',
+                        notfound: 'No se encontraron emojis',
+                        categories: {
+                          search: 'Resultados encontrados',
+                          recent: 'Recientes',
+                          people: 'Personas',
+                          nature: 'Naturaleza',
+                          foods: 'Comida',
+                          activity: 'Actividades',
+                          places: 'Lugares',
+                          objects: 'Objetos',
+                          symbols: 'Símbolos',
+                          flags: 'Banderas',
+                          custom: 'Personalizado'
+                        },
+                        skintones: {
+                          light: 'Claro',
+                          medium_light: 'Medio claro',
+                          medium: 'Medio',
+                          medium_dark: 'Medio oscuro',
+                          dark: 'Oscuro'
+                        }
+                      }"
+              set="apple"
+            ></emoji-mart>
           </div>
+        </div>
+      </div>
+      <div class="row pt-2">
+        <div class="col-md-12 d-flex align-items-center justify-content-end">
+          <button mat-stroked-button color="warn" class="btn round" (click)="publicar()">Publicar</button>
         </div>
       </div>
     </form>
 
-    <!-- Cargando Spinner -->
     <div class="lds-spinner-wrapper" *ngIf="isLoading">
       <div class="lds-spinner">
         <div></div><div></div><div></div><div></div>
         <div></div><div></div><div></div><div></div>
         <div></div><div></div><div></div><div></div>
-      </div>
-    </div>
-
-    <div class="row text-right">
-      <div class="col d-flex justify-content-end">
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="publicar()">Publicar</button>
       </div>
     </div>
   </mat-card>

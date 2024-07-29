@@ -39,6 +39,7 @@
 .comment-container {
   flex-grow: 1;
   margin-left: 20px;
+  position: relative;
 }
 
 .comment-textarea {
@@ -46,4 +47,21 @@
   height: 500px;
   font-size: 16px;
   padding: 10px;
+  padding-bottom: 40px;
+  box-sizing: border-box;
+}
+
+.emoji-button {
+  position: absolute;
+  bottom: 18px;
+  left: 2px;
+  z-index: 1
+}
+
+.emoji-mart {
+  position: absolute;
+  top: calc(100% - 495px);
+  left: calc(100% - 615px);
+  z-index: 1000;
+  width: 300px;
 }

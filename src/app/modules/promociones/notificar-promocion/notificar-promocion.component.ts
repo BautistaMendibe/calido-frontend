@@ -4,6 +4,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { PromocionesService } from "../../../services/promociones.service";
 import { Router } from "@angular/router";
 import { SnackBarService } from "../../../services/snack-bar.service";
+import {NotificationService} from "../../../services/notificacion.service";
+
 
 @Component({
   selector: 'app-notificar-promocion',
@@ -15,6 +17,7 @@ export class NotificarPromocionComponent implements OnInit {
   public previewUrl: string | ArrayBuffer | null = null;
   private selectedFile: File | null = null;
   public isLoading = false;
+  public showEmojiPicker = false;
 
   constructor(
     private fb: FormBuilder,
@@ -22,6 +25,7 @@ export class NotificarPromocionComponent implements OnInit {
     private promocionesService: PromocionesService,
     private router: Router,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService
   ) {
     this.form = new FormGroup({});
   }
@@ -78,57 +82,47 @@ export class NotificarPromocionComponent implements OnInit {
     }
   }
 
-  onDragOver(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    (event.target as HTMLElement).classList.add('dragover');
-  }
-
-  onDragLeave(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    (event.target as HTMLElement).classList.remove('dragover');
-  }
-
-  onDrop(event: DragEvent) {
-    event.preventDefault();
-    event.stopPropagation();
-    (event.target as HTMLElement).classList.remove('dragover');
-
-    const files = event.dataTransfer?.files;
-    if (!files?.length) {
-      return;
-    }
-
-    this.handleFileInput(files[0]);
-  }
-
   async publicar() {
-    // TODO: Agregar que al darle click a 'publicar' pregunte si estás o no seguro de hacerlo.
     if (this.form.valid && this.selectedFile) {
-      this.isLoading = true;
 
       const comentario = this.form.get('comment')!.value;
       const formData = new FormData();
       formData.append('imagen', this.selectedFile);
       formData.append('comentario', comentario);
 
-      this.promocionesService.notificarPromocion(formData).subscribe({
-        next: (respuesta) => {
-          this.isLoading = false;
+      this.notificationDialogService.confirmation("¿Desea publicar la promoción?", "Publicar promoción")
+        .afterClosed()
+        .subscribe((value) => {
+          if (value) {
+            this.isLoading = true;
+            this.promocionesService.notificarPromocion(formData).subscribe({
+              next: (respuesta) => {
+                this.isLoading = false;
 
-          if (respuesta.mensaje === 'OK') {
-            this.notificacionService.openSnackBarSuccess('La publicación se realizó con éxito');
-          } else {
-            this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
+                if (respuesta.mensaje === 'OK') {
+                  this.notificacionService.openSnackBarSuccess('La publicación se realizó con éxito');
+                } else {
+                  this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
+                }
+              },
+              error: (error) => {
+                this.isLoading = false;
+                console.error('Error al publicar:', error);
+                this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
+              }
+            });
           }
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error al publicar:', error);
-          this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
-        }
-      });
+        });
     }
   }
+
+  toggleEmojiPicker() {
+    this.showEmojiPicker = !this.showEmojiPicker;
+  }
+
+  addEmoji(event: any) {
+    const commentControl = this.form.get('comment');
+    commentControl?.setValue(commentControl?.value + event.emoji.native);
+  }
+
 }

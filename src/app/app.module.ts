@@ -25,6 +25,9 @@ import { ConsultarPromocionesComponent } from './modules/promociones/consultar-p
 import { RegistrarPromocionComponent } from './modules/promociones/registrar-promocion/registrar-promocion.component';
 import { DetallePromocionComponent } from './modules/promociones/detalle-promocion/detalle-promocion.component';
 import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
+import {MessagesComponent} from './shared/messages/messages.component';
+import {MatDialogClose} from "@angular/material/dialog";
+import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 
 @NgModule({
   declarations: [
@@ -42,17 +45,20 @@ import { NotificarPromocionComponent } from './modules/promociones/notificar-pro
     ConsultarPromocionesComponent,
     RegistrarPromocionComponent,
     DetallePromocionComponent,
-    NotificarPromocionComponent
+    NotificarPromocionComponent,
+    MessagesComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        MaterialModule,
-        BrowserAnimationsModule,
-        FlexLayoutModule,
-        ReactiveFormsModule,
-        HttpClientModule
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MaterialModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatDialogClose,
+    PickerComponent
+  ],
   providers: [
     HealthService,
     UsuariosService,
