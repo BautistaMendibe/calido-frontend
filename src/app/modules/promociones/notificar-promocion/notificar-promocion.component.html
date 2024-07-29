@@ -19,16 +19,19 @@
             <span *ngIf="!previewUrl" class="upload-text">Arrastra una imagen aquí o haz clic para subir</span>
             <input type="file" class="file-input" (change)="onFileSelected($event)">
           </div>
-          <div class="comment-container d-flex flex-column justify-content-center ml-3">
-            <textarea matInput placeholder="Escribe tu comentario aquí..." formControlName="comment" class="comment-textarea mb-3"></textarea>
+          <div class="comment-container d-flex flex-column justify-content-center ml-3 w-100">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Comentario</mat-label>
+              <textarea matInput placeholder="Escribe tu comentario aquí..." formControlName="comment" class="comment-textarea mb-3"></textarea>
+            </mat-form-field>
             <button mat-icon-button class="emoji-button" (click)="toggleEmojiPicker()">
               <mat-icon>sentiment_very_satisfied</mat-icon>
             </button>
             <emoji-mart class="emoji-mart"
-              *ngIf="showEmojiPicker"
-              (emojiClick)="addEmoji($event)"
-              title="Selecciona un emoji"
-              [i18n]="{
+                        *ngIf="showEmojiPicker"
+                        (emojiClick)="addEmoji($event)"
+                        title="Selecciona un emoji"
+                        [i18n]="{
                         search: 'Buscar',
                         emojilist: 'Lista de emojis',
                         clear: 'Limpiar',
@@ -54,7 +57,7 @@
                           dark: 'Oscuro'
                         }
                       }"
-              set="apple"
+                        set="apple"
             ></emoji-mart>
           </div>
         </div>
