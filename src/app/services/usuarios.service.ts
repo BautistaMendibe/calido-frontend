@@ -5,6 +5,7 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
+import {Proveedor} from "../models/proveedores.model";
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +30,10 @@ export class UsuariosService {
 
   public consultarUsuarios(filtro: FiltrosEmpleados): Observable<Usuario[]>{
     return this.http.post<Usuario[]>(`${this.urlBackend}/${this.controllerName}/consultar-usuarios`, filtro);
+  }
+
+  public modificarUsuario(usuario: Usuario): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-usuario`, usuario);
   }
 
   public eliminarUsuario(idUsuario: number): Observable<SpResult>{

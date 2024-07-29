@@ -10,6 +10,9 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";
+import {Proveedor} from "../../../models/proveedores.model";
+import {DetalleProveedorComponent} from "../../proveedores/detalle-proveedor/detalle-proveedor.component";
+import {DetalleEmpleadosComponent} from "../detalle-empleados/detalle-empleados.component";
 
 @Component({
   selector: 'app-consultar-empleados',
@@ -63,10 +66,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
-    console.log("A"); // Inspección de los datos devueltos
     this.usuariosService.consultarUsuarios(this.filtros).subscribe((empleados) => {
-      console.log(empleados); // Inspección de los datos devueltos
-      console.log("A"); // Inspección de los datos devueltos
       this.empleados = empleados;
       this.tableDataSource.data = empleados;
     });
@@ -85,6 +85,21 @@ export class ConsultarEmpleadosComponent implements OnInit {
     )
   }
 
+  public verEmpleado(usuario: Usuario, editar: boolean) {
+    this.dialog.open(
+      DetalleEmpleadosComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+        data: {
+          usuario: usuario,
+          edit: editar,
+          referencia: this
+        }
+      }
+    )
+  }
+
    public eliminarUsuario(idUsuario: number) {
     this.usuariosService.eliminarUsuario(idUsuario).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
@@ -96,7 +111,6 @@ export class ConsultarEmpleadosComponent implements OnInit {
     })
   }
 
-  public verEmpleado(empleado: Usuario, editar: boolean) {  }
 
   // Regios getters
   get txNombre(): FormControl {
