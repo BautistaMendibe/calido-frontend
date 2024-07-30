@@ -18,7 +18,7 @@ export class ConsultarProductosComponent {
   public form: FormGroup;
   // Ver. Crear tabla empleados que cada uno tenga un usuario
   public productos: Producto[] = [];
-  public columnas: string[] = ['id', 'nombre','costo', 'costoIva', 'tipoProducto' , 'proveedor' , 'marca'];
+  public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipo', 'marca', 'proveedor', 'ntipoproducto', 'nmarca', 'nproveedor'];
   private filtros: FiltrosProductos;
 
   constructor(
@@ -57,9 +57,8 @@ export class ConsultarProductosComponent {
       marca: this.txMarca.value,
     };
 
-
-
       this.productosService.consultarProductos(this.filtros).subscribe((productos) => {
+        console.log('Productos recibidos:', productos); // Log para verificar datos
         this.productos = productos;
         this.tableDataSource.data = productos;
       })
