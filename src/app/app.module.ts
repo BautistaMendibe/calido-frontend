@@ -21,7 +21,6 @@ import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-emple
 import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
-import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveedor/detalle-proveedor.component';
 import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
 
@@ -39,7 +38,6 @@ import {MatDialogClose} from "@angular/material/dialog";
     RegistrarProveedorComponent,
     MessagesComponent,
     ConsultarProductosComponent,
-    DetalleProveedorComponent
   ],
     imports: [
         BrowserModule,
@@ -48,7 +46,8 @@ import {MatDialogClose} from "@angular/material/dialog";
         BrowserAnimationsModule,
         FlexLayoutModule,
         ReactiveFormsModule,
-        HttpClientModule
+        HttpClientModule,
+        MatDialogClose
     ],
   providers: [
     HealthService,
