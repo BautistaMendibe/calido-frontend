@@ -28,6 +28,8 @@ import { NotificarPromocionComponent } from './modules/promociones/notificar-pro
 import {MessagesComponent} from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
+import { ConsultarConfiguracionesComponent } from './modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component';
+import { RegistrarConfiguracionesComponent } from './modules/configuraciones/registrar-configuraciones/registrar-configuraciones.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +48,9 @@ import {PickerComponent} from "@ctrl/ngx-emoji-mart";
     RegistrarPromocionComponent,
     DetallePromocionComponent,
     NotificarPromocionComponent,
-    MessagesComponent
+    MessagesComponent,
+    ConsultarConfiguracionesComponent,
+    RegistrarConfiguracionesComponent
   ],
   imports: [
     BrowserModule,

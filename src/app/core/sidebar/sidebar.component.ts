@@ -29,6 +29,7 @@ export class SidebarComponent {
        {id: 8, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
        {id: 9, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
     ]},
+    {id: 10, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;

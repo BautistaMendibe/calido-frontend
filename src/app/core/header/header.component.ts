@@ -24,8 +24,8 @@ export class HeaderComponent implements OnInit {
 
         // Del token sacamos el nombre del usuario para mostrar
         const infoToken: any = this.authService.getDecodedAccessToken(token);
-        const nombre = infoToken.result.nombre;
-        const apellido = infoToken.result.apellido;
+        const nombre = infoToken.nombre;
+        const apellido = infoToken.apellido;
         this.nombreApellido = `${nombre} ${apellido}`;
 
       } else {
