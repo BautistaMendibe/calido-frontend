@@ -59,7 +59,7 @@ export class DetalleEmpleadosComponent implements OnInit {
       txCuil: [this.usuario.cuil, []],
       txContrasena: [this.usuario.contrasena, []],
       ddGenero: [this.usuario.idGenero, []],
-      txProvincia: [this.usuario.domicilio.provincia, []],
+      txProvincia: [this.usuario.domicilio.localidad.provincia.nombre, []],
     });
   }
 

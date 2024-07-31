@@ -10,8 +10,6 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";
-import {Proveedor} from "../../../models/proveedores.model";
-import {DetalleProveedorComponent} from "../../proveedores/detalle-proveedor/detalle-proveedor.component";
 import {DetalleEmpleadosComponent} from "../detalle-empleados/detalle-empleados.component";
 
 @Component({
