@@ -1,0 +1,61 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col">
+      <p class="titulo">Registrar promoción de producto</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput [formControl]="txNombre"/>
+        </mat-form-field>
+        <!--
+        <caja-control-messages [control]="txCodigo"></caja-control-messages>
+        -->
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Porcentaje de descuento</mat-label>
+          <input type="text" matInput [formControl]="txPorcentajeDescuento"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Producto</mat-label>
+          <input matInput
+                 placeholder="Ingrese"
+                 [formControl]="txProducto"
+                 [matAutocomplete]="autoCompleteProducto">
+        </mat-form-field>
+        <mat-autocomplete #autoCompleteProducto="matAutocomplete" (optionSelected)="enSeleccionDeProducto($event)">
+            <mat-option *ngFor="let producto of this.productosFiltrados" [value]="producto.nombre" [id]="producto.id.toString()">
+              {{ producto.nombre }}
+            </mat-option>
+        </mat-autocomplete>
+      </div>
+    </div>
+
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de buscar y limpiar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        Cancelar
+      </button>
+      <button mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

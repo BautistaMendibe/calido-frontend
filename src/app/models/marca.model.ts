@@ -1,4 +1,4 @@
-export interface TipoProducto {
+export interface Marca {
   id: number;
   nombre: string;
 }

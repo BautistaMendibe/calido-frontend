@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 
+@import '@ctrl/ngx-emoji-mart/picker';
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -84,6 +85,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   background: currentColor;
 }
 
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-floating-label{
+  color: #f59f8a!important;
+}
+
 .lds-spinner div:nth-child(1) { transform: rotate(0deg); animation-delay: -1.1s; }
 .lds-spinner div:nth-child(2) { transform: rotate(30deg); animation-delay: -1s; }
 .lds-spinner div:nth-child(3) { transform: rotate(60deg); animation-delay: -0.9s; }
@@ -104,4 +109,3 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     opacity: 0;
   }
 }
-
