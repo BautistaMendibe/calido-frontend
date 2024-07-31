@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MessagesComponent } from '../shared/messages/messages.component';
-import {TypeMessage} from "../shared/messages/types-messages.util";
+import { TypeMessage } from '../shared/messages/type-messages.util';
 
 @Injectable({
   providedIn: 'root'

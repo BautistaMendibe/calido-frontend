@@ -5,6 +5,7 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {Proveedor} from "../models/proveedores.model";
 import {SpResult} from "../models/resultadoSp.model";
 import {FiltrosProveedores} from "../models/comandos/FiltrosProveedores.comando";
+import {TipoProveedor} from "../models/tipoProveedor.model";
 
 @Injectable({
   providedIn: 'root'
@@ -29,5 +30,9 @@ export class ProveedoresService {
 
   public eliminarProveedor(idProveedor: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-proveedor/${idProveedor}`);
+  }
+
+  public buscarTiposProveedores(): Observable<TipoProveedor[]>{
+    return this.http.get<TipoProveedor[]>(`${this.urlBackend}/${this.controllerName}/buscar-tipos-proveedores`);
   }
 }

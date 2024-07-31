@@ -1,16 +1,29 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-      <div class="col">
-        <p class="titulo">Registrar proveedor</p>
-      </div>
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar proveedor' : 'Registrar proveedor'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
     </div>
+  </div>
 
     <mat-divider></mat-divider>
 
     <br>
     <form [formGroup]="form">
       <div class="row pt-4">
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tipo de proveedor</mat-label>
+            <mat-select [formControl]="txTipoProveedor">
+              <mat-option *ngFor="let tipoProveedor of this.listaTiposProveedores" [value]="tipoProveedor.id">
+                {{ tipoProveedor.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre</mat-label>
@@ -32,9 +45,6 @@
             <input type="text" matInput [formControl]="txEmail"/>
           </mat-form-field>
         </div>
-      </div>
-
-      <div class="row pt-4">
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>CUIT/CUIL</mat-label>
@@ -44,29 +54,50 @@
           <caja-control-messages [control]="txCodigo"></caja-control-messages>
           -->
         </div>
-        <div class="col-md-4">
+      </div>
+
+      <div class="row pt-4">
+          <div class="col-md-3">
+            <mat-form-field appearance="outline">
+              <mat-label>Provincia</mat-label>
+              <input matInput
+                     placeholder="Ingrese"
+                     [formControl]="txProvincia"
+                     [matAutocomplete]="autoCompleteProvincia">
+            </mat-form-field>
+            <mat-autocomplete #autoCompleteProvincia="matAutocomplete" (optionSelected)="seleccionarProvincia()">
+              <mat-option *ngFor="let provincia of this.provinciasFiltradas" [value]="provincia.nombre">
+                {{provincia.nombre}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline">
+            <mat-label>Localidad</mat-label>
+            <input matInput
+                   placeholder="Ingrese"
+                   [formControl]="txLocalidad"
+                   (input)="filtrarLocalidades()"
+                   [matAutocomplete]="autoCompleteLocalidad">
+          </mat-form-field>
+          <mat-autocomplete #autoCompleteLocalidad="matAutocomplete" (optionSelected)="seleccionarLocalidad()">
+            <mat-option *ngFor="let localidad of this.localidadesFiltradas" [value]="localidad.nombre">
+              {{localidad.nombre}}
+            </mat-option>
+          </mat-autocomplete>
+        </div>
+
+        <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Calle</mat-label>
             <input type="text" matInput [formControl]="txCalle"/>
           </mat-form-field>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Número</mat-label>
             <input type="text" matInput [formControl]="txNumero"/>
           </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row pt-4">
-        <div class="col-md-4">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Provincia</mat-label>
-            <input type="text" matInput [formControl]="txProvincia"/>
-          </mat-form-field>
-          <!--
-          <caja-control-messages [control]="txCodigo"></caja-control-messages>
-          -->
         </div>
       </div>
     </form>
@@ -80,7 +111,8 @@
         <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
           Cancelar
         </button>
-        <button mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registar</button>
+        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registar</button>
+        <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarProveedor()" id="btnBuscar2">Modificar</button>
       </div>
     </div>
 

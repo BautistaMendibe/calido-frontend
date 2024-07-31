@@ -20,16 +20,15 @@ import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-emple
 import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
 import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
-import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveedor/detalle-proveedor.component';
 import { ConsultarPromocionesComponent } from './modules/promociones/consultar-promociones/consultar-promociones.component';
 import { RegistrarPromocionComponent } from './modules/promociones/registrar-promocion/registrar-promocion.component';
 import { DetallePromocionComponent } from './modules/promociones/detalle-promocion/detalle-promocion.component';
 import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
-import {MessagesComponent} from './shared/messages/messages.component';
-import {MatDialogClose} from "@angular/material/dialog";
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 import { ConsultarConfiguracionesComponent } from './modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component';
 import { RegistrarConfiguracionesComponent } from './modules/configuraciones/registrar-configuraciones/registrar-configuraciones.component';
+import { MessagesComponent } from './shared/messages/messages.component';
+import {MatDialogClose} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -43,26 +42,25 @@ import { RegistrarConfiguracionesComponent } from './modules/configuraciones/reg
     RegistrarEmpleadosComponent,
     ConsultarProveedoresComponent,
     RegistrarProveedorComponent,
-    DetalleProveedorComponent,
     ConsultarPromocionesComponent,
     RegistrarPromocionComponent,
     DetallePromocionComponent,
     NotificarPromocionComponent,
     MessagesComponent,
     ConsultarConfiguracionesComponent,
-    RegistrarConfiguracionesComponent
+    RegistrarConfiguracionesComponent,
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MaterialModule,
-    BrowserAnimationsModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    MatDialogClose,
-    PickerComponent
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MaterialModule,
+        BrowserAnimationsModule,
+        FlexLayoutModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        MatDialogClose,
+        PickerComponent
+    ],
   providers: [
     HealthService,
     UsuariosService,

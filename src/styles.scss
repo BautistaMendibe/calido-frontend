@@ -36,6 +36,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: white;
 }
 
+#btnBuscar2 {
+  background-color: #e15b35;
+  color: white;
+}
+
 .ver {
   color: #3400c6;
 }
@@ -78,6 +83,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height: 8.8px;
   border-radius: 20%;
   background: currentColor;
+}
+
+.mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-floating-label{
+  color: #f59f8a!important;
 }
 
 .lds-spinner div:nth-child(1) { transform: rotate(0deg); animation-delay: -1.1s; }
