@@ -22,6 +22,8 @@ import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-p
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 import { DetalleProveedorComponent } from './modules/proveedores/detalle-proveedor/detalle-proveedor.component';
 import { DetalleEmpleadosComponent } from './modules/empleados/detalle-empleados/detalle-empleados.component';
+import { MessagesComponent } from './shared/messages/messages.component';
+import {MatDialogClose} from "@angular/material/dialog";
 
 @NgModule({
   declarations: [
@@ -35,8 +37,8 @@ import { DetalleEmpleadosComponent } from './modules/empleados/detalle-empleados
     RegistrarEmpleadosComponent,
     ConsultarProveedoresComponent,
     RegistrarProveedorComponent,
-    DetalleProveedorComponent,
-    DetalleEmpleadosComponent
+    DetalleEmpleadosComponent,
+    MessagesComponent
   ],
     imports: [
         BrowserModule,
@@ -45,7 +47,8 @@ import { DetalleEmpleadosComponent } from './modules/empleados/detalle-empleados
         BrowserAnimationsModule,
         FlexLayoutModule,
         ReactiveFormsModule,
-        HttpClientModule
+        HttpClientModule,
+        MatDialogClose
     ],
   providers: [
     HealthService,
