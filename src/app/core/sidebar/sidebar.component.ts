@@ -24,7 +24,7 @@ export class SidebarComponent {
         {id: 4, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
         {id: 5, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 6, nombre: 'Productos', path:'', icon: 'shopping_cart', activo: false, subMenu: [
+    {id: 6, nombre: 'Productos', path:'/consultar-productos', icon: 'shopping_cart', activo: false, subMenu: [
         {id: 7, nombre: 'Consultar productos', path:'/consultar-productos', icon: '', activo: false, subMenu: []}
       ]},
     {id: 8, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
