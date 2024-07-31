@@ -21,18 +21,18 @@ export class SidebarComponent {
     {id: 1, nombre: 'Inicio', path:'', icon: 'home', activo: false, subMenu: []},
     {id: 2, nombre: 'Ventas', path:'', icon: 'sell', activo: false, subMenu: []},
     {id: 3, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
-        {id: 4, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
-        {id: 5, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
+        {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 6, nombre: 'Productos', path:'/consultar-productos', icon: 'shopping_cart', activo: false, subMenu: [
-        {id: 7, nombre: 'Consultar productos', path:'/consultar-productos', icon: '', activo: false, subMenu: []}
+    {id: 4, nombre: 'Productos', path:'/consultar-productos', icon: 'shopping_cart', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar productos', path:'/consultar-productos', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 8, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
-    {id: 9, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
-    {id: 10, nombre: 'Empleados', path:'', icon: 'supervisor_account', activo: false, subMenu: [
-      {id: 11, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []}
+    {id: 5, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
+    {id: 6, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
+    {id: 7, nombre: 'Empleados', path:'', icon: 'supervisor_account', activo: false, subMenu: [
+      {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []}
     ]},
-    {id: 12, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
+    {id: 8, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;
