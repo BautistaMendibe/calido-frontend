@@ -1,1 +1,212 @@
-<p>registrar-empleados works!</p>
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col">
+      <p class="titulo">Registrar Empleado</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre de usuario</mat-label>
+          <input type="text" matInput [formControl]="txNombreUsuario"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Contraseña</mat-label>
+          <input type="password" matInput [formControl]="txContrasena"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput [formControl]="txNombre"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Apellido</mat-label>
+          <input type="text" matInput [formControl]="txApellido"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input type="date" matInput [formControl]="txFechaNacimiento"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>CUIT/CUIL</mat-label>
+          <input type="text" matInput [formControl]="txCuil"/>
+        </mat-form-field>
+      </div>
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>DNI</mat-label>
+            <input type="text" matInput [formControl]="txDNI"/>
+          </mat-form-field>
+        </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Género</mat-label>
+          <mat-select [formControl]="ddGenero">
+            <mat-option value= "1" >Masculino</mat-option>
+            <mat-option value= "2" >Femenino</mat-option>
+            <mat-option value= "3" >No binario</mat-option>
+            <mat-option value= "4" >Otro</mat-option>
+            <mat-option value= "5" >Prefiero no decirlo</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+<!--      <div class="col-md-4">-->
+<!--        <mat-form-field appearance="outline" class="w-100">-->
+<!--          <mat-label>genero</mat-label>-->
+<!--          <input type="text" matInput [formControl]="ddGenero"/>-->
+<!--        </mat-form-field>-->
+<!--      </div>-->
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Código Postal</mat-label>
+          <input type="text" matInput [formControl]="txCodigoPostal"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Provincia</mat-label>
+          <input type="text" matInput [formControl]="txProvincia"/>
+        </mat-form-field>
+      </div>
+
+   </div>
+
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de buscar y limpiar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        Cancelar
+      </button>
+      <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>
+    </div>
+  </div>
+
+  <br>
+</div>
+
+
+<!--<!DOCTYPE html>-->
+<!--<html lang="en">-->
+<!--<head>-->
+<!--  <meta charset="UTF-8">-->
+<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+<!--  <title>Formulario con Bootstrap</title>-->
+<!--  &lt;!&ndash; Incluye Bootstrap CSS desde un CDN &ndash;&gt;-->
+<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container py-3">-->
+<!--  <h2>Registrar Empleado</h2>-->
+<!--  <form>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="nombreUsuario">Nombre de Usuario</label>-->
+<!--        <input type="text" class="form-control" id="nombreUsuario" placeholder="Nombre de Usuario">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="nombre">Nombre</label>-->
+<!--        <input type="text" class="form-control" id="nombre" placeholder="Nombre">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="apellido">Apellido</label>-->
+<!--        <input type="text" class="form-control" id="apellido" placeholder="Apellido">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="codigoPostal">Código Postal</label>-->
+<!--        <input type="text" class="form-control" id="codigoPostal" placeholder="Código Postal">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="cuil">CUIT/CUIL</label>-->
+<!--        <input type="text" class="form-control" id="cuil" placeholder="CUIT/CUIL">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="contrasena">Contraseña</label>-->
+<!--        <input type="password" class="form-control" id="contrasena" placeholder="Contraseña">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="provincia">Provincia</label>-->
+<!--        <input type="text" class="form-control" id="provincia" placeholder="Provincia">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="genero">Género</label>-->
+<!--        <input type="text" class="form-control" id="genero" placeholder="Género">-->
+<!--      </div>-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="fechaNacimiento">Fecha de Nacimiento</label>-->
+<!--        <input type="date" class="form-control" id="fechaNacimiento">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--    <div class="form-row">-->
+<!--      <div class="form-group col-md-4">-->
+<!--        <label for="dni">DNI</label>-->
+<!--        <input type="text" class="form-control" id="dni" placeholder="DNI">-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </form>-->
+<!--    &lt;!&ndash; Btn de buscar y limpiar &ndash;&gt;-->
+<!--    <div class="row text-right">-->
+<!--      <div class="col d-flex justify-content-end">-->
+<!--        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">-->
+<!--          Cancelar-->
+<!--        </button>-->
+<!--        <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--&lt;!&ndash; Incluye Bootstrap JS y dependencias desde un CDN &ndash;&gt;-->
+<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
+<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>-->
+<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->
+
+

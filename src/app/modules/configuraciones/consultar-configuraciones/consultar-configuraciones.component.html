@@ -1,0 +1,118 @@
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">Editar Configuración del Usuario</p>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <h4 style="color: grey">Información del Usuario</h4>
+
+    <form [formGroup]="form">
+      <!-- idUsuario -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>ID Usuario</mat-label>
+            <input type="text" matInput [formControl]="idUsuario" [disabled]="true"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Nombre de Usuario -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre de Usuario</mat-label>
+            <input type="text" matInput [formControl]="nombreUsuario" [disabled]="true"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Razon Social -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Razón Social</mat-label>
+            <input type="text" matInput [formControl]="razonSocial"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Domicilio Comercial -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Domicilio Comercial</mat-label>
+            <input type="text" matInput [formControl]="domicilioComercial"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- CUIT -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>CUIT</mat-label>
+            <input type="text" matInput [formControl]="cuit"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Fecha de Inicio de Actividades -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha de Inicio de Actividades</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="fechaInicioActividades"/>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Condición IVA -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Condición IVA</mat-label>
+            <input type="text" matInput [formControl]="condicionIva"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!-- Logo -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Logo</mat-label>
+            <input type="file" matInput (change)="onFileChange($event)"/>
+          </mat-form-field>
+          <div class="logo-preview">
+            <img [src]="logoUrl" alt="Logo Actual" class="img-thumbnail">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contraseña de Instagram -->
+      <div class="row pt-4">
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contraseña de Instagram</mat-label>
+            <input type="password" matInput [formControl]="contrasenaInstagram"/>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+
+    <!-- Btn Guardar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-raised-button color="primary" class="btn round" (click)="guardarConfiguracion()">Guardar</button>
+      </div>
+    </div>
+  </mat-card>
+</div>
