@@ -29,6 +29,8 @@ import { ConsultarConfiguracionesComponent } from './modules/configuraciones/con
 import { RegistrarConfiguracionesComponent } from './modules/configuraciones/registrar-configuraciones/registrar-configuraciones.component';
 import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
+import {ConsultarProductosComponent} from "./modules/productos/consultar-productos/consultar-productos.component";
+import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import {MatDialogClose} from "@angular/material/dialog";
     SidebarComponent,
     HomeComponent,
     ConsultarEmpleadosComponent,
+    DetalleEmpleadosComponent,
     RegistrarEmpleadosComponent,
+    ConsultarProductosComponent,
     ConsultarProveedoresComponent,
     RegistrarProveedorComponent,
     ConsultarPromocionesComponent,

@@ -1,6 +1,5 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
 import { SnackBarService } from "../../../services/snack-bar.service";
 
 @Component({
@@ -15,9 +14,7 @@ export class ConsultarConfiguracionesComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
-    @Inject(MAT_DIALOG_DATA) public data: any
   ) {
     this.form = new FormGroup({});
     this.logoUrl = '';
@@ -73,10 +70,6 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       // TODO guardar configuracion
 
     }
-  }
-
-  public cancelar() {
-    this.dialogRef.close();
   }
 
   // Getters
