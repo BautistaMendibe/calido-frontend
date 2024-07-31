@@ -84,9 +84,10 @@
 
 
   <mat-card-header class="header-card">
-    <h2 style="color: grey">Proveedores encontrados</h2>
+    <h2 style="color: grey">Productos encontrados</h2>
   </mat-card-header>
 
+  <!--
   <mat-card>
     <mat-card-content>
       <div class="row">
@@ -112,7 +113,7 @@
               <mat-cell *matCellDef="let producto" data-label="costoIva">{{ producto.costoIva }}</mat-cell>
             </ng-container>
 
-            <!-- Tipo Producto -->
+
             <ng-container matColumnDef="tipoProducto">
               <mat-header-cell *matHeaderCellDef>Tipo Producto</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="tipoProducto">
@@ -120,7 +121,7 @@
               </mat-cell>
             </ng-container>
 
-            <!-- Proveedor -->
+
             <ng-container matColumnDef="proveedor">
               <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="proveedor">
@@ -128,7 +129,7 @@
               </mat-cell>
             </ng-container>
 
-            <!-- Marca -->
+
             <ng-container matColumnDef="marca">
               <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="marca">
@@ -153,4 +154,5 @@
       </div>
     </mat-card-content>
   </mat-card>
+-->
 </div>
