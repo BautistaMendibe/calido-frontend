@@ -5,7 +5,7 @@
         <mat-icon>menu</mat-icon>
       </button>
       <a class="ml-2">
-        <img class="header-logo" src="../../../assets/imgs/logo-header.png" alt="logo-caja"/>
+        <img class="header-logo" [src]="logoUrl ? logoUrl : '../../../assets/imgs/logo-header.png'" alt="logo-caja"/>
       </a>
     </div>
     <div class="float-right mt-15" fxFlex fxLayout="row" fxLayoutAlign="flex-end">

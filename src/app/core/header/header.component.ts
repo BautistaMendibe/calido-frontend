@@ -1,6 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.servicie";
+import {ConfiguracionesService} from "../../services/configuraciones.service";
 
 @Component({
   selector: 'app-header',
@@ -11,13 +12,18 @@ export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
   public estaLogeado: boolean = false;
   public nombreApellido: string = '';
+  public logoUrl: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private configuracionesService: ConfiguracionesService) {
   }
 
   ngOnInit() {
     this.authService.authenticationStatus$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
+        this.obtenerLogo();
         this.toggleSideBarForMe.emit(true);
         this.estaLogeado = true;
         const token = this.authService.getToken();
@@ -33,6 +39,13 @@ export class HeaderComponent implements OnInit {
         this.estaLogeado = false;
         this.router.navigate(['/login']);
       }
+    });
+  }
+
+  // Metodo que obtiene el logo para utilizar en el header desde la configuración
+  public obtenerLogo() {
+    this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
+       this.logoUrl = configuracion.logo; // De todas formas, el scss redimensiona a 35x43px
     });
   }
 

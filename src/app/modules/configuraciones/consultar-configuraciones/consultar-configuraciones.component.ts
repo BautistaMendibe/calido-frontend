@@ -1,6 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import {Component, OnInit} from '@angular/core';
+import {Form, FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import { SnackBarService } from "../../../services/snack-bar.service";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Configuracion} from "../../../models/configuracion.model";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-consultar-configuraciones',
@@ -10,19 +13,24 @@ import { SnackBarService } from "../../../services/snack-bar.service";
 export class ConsultarConfiguracionesComponent implements OnInit {
 
   public form: FormGroup;
-  public logoUrl: string | ArrayBuffer;
+  public esSuperusuario: boolean = false;
+  public configuracion: Configuracion = new Configuracion();
+  public logoUrl: string | ArrayBuffer | null = null;
+  private selectedFile: File | null = null;
+  public isLoading = false;
 
   constructor(
     private fb: FormBuilder,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
+    private configuracionesService: ConfiguracionesService,
   ) {
     this.form = new FormGroup({});
-    this.logoUrl = '';
   }
 
   ngOnInit() {
     this.crearFormulario();
-    // TODO buscar datos de la configuracion
+    this.buscarConfiguracion();
   }
 
   private crearFormulario() {
@@ -31,46 +39,168 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       nombreUsuario: [{ value: '', disabled: true }],
       razonSocial: ['', [Validators.required]],
       domicilioComercial: ['', [Validators.required]],
-      cuit: ['', [Validators.required, Validators.pattern("^[0-9]{2}-[0-9]{8}-[0-9]{1}$")]],
+      cuit: ['', [Validators.required]],
       fechaInicioActividades: ['', [Validators.required]],
       condicionIva: ['', [Validators.required]],
       logo: [null],
-      contrasenaInstagram: ['', [Validators.required]]
+      contrasenaInstagram: ['', [Validators.required]],
+      usuarioInstagram: ['', [Validators.required]]
     });
   }
 
-  onFileChange(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const reader = new FileReader();
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      reader.readAsDataURL(file);
+  private buscarConfiguracion() {
+    this.configuracionesService.consultarConfiguraciones().subscribe({
+      next: (configuracion) => {
+        this.configuracion = configuracion;
+        this.logoUrl = configuracion.logo;
 
-      reader.onload = () => {
-        if (reader.result) {
-          this.logoUrl = reader.result as string;
-          this.form.patchValue({
-            logo: file
-          });
-        }
-      };
+        this.form.patchValue({
+          idUsuario: configuracion.idUsuario,
+          nombreUsuario: configuracion.usuario.nombreUsuario,
+          razonSocial: configuracion.razonSocial,
+          domicilioComercial: configuracion.domicilioComercial,
+          cuit: configuracion.cuit,
+          fechaInicioActividades: configuracion.fechaInicioActividades,
+          condicionIva: configuracion.condicionIva,
+          contrasenaInstagram: configuracion.contrasenaInstagram,
+          logo: configuracion.logo,
+          usuarioInstagram: configuracion.usuarioInstagram
+        });
+      },
+      error: (err) => {
+        console.error('Error al consultar la configuración:', err);
+        this.notificacionService.openSnackBarError('Error al cargar la configuración. Intente nuevamente.');
+      }
+    });
+  }
+
+  private validateImage(file: File): boolean {
+    const validTypes = ['image/png', 'image/jpeg'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+    if (!validTypes.includes(file.type)) {
+      this.notificacionService.openSnackBarError('El tipo de archivo no es válido. Solo se permiten archivos PNG o JPG.');
+      return false;
+    }
+
+    if (file.size > maxSize) {
+      this.notificacionService.openSnackBarError('El tamaño del archivo es demasiado grande. El tamaño máximo permitido es de 10MB.');
+      return false;
+    }
+
+    return true;
+  }
+
+  private handleFileInput(file: File) {
+    if (!this.validateImage(file)) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.logoUrl = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.selectedFile = fileInput.files[0];
+      this.handleFileInput(this.selectedFile);
     }
   }
 
+  // Método que se ejecuta al dar click al botón de guardar
   public guardarConfiguracion() {
     if (this.form.valid) {
-      const formData = new FormData();
-      Object.keys(this.form.controls).forEach(key => {
-        const control = this.form.get(key);
-        if (control) {
-          formData.append(key, control.value);
-        }
+      this.convertirLogoABase64((logoBase64) => {
+        const configuracion = this.crearConfiguracionDesdeFormulario(logoBase64);
+        console.log(logoBase64);
+        this.actualizarConfiguracion(configuracion);
       });
-
-      // TODO guardar configuracion
-
     }
   }
+
+  // Método que convierte el logo a base64 para guardarlo así en la tabla configuración
+  private convertirLogoABase64(callback: (logoBase64: string | null) => void) {
+    if (!this.selectedFile) {
+      callback(null);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      callback(reader.result as string);
+    };
+    reader.readAsDataURL(this.selectedFile);
+  }
+
+  private crearConfiguracionDesdeFormulario(logoBase64: string | null): Configuracion {
+    return new Configuracion(
+      this.configuracion.id,
+      this.configuracion.idUsuario,
+      this.razonSocial.value,
+      this.domicilioComercial.value,
+      this.cuit.value,
+      this.fechaInicioActividades.value,
+      this.condicionIva.value,
+      logoBase64,
+      this.contrasenaInstagram.value,
+      this.usuarioInstagram.value
+    );
+  }
+
+  private actualizarConfiguracion(configuracion: Configuracion) {
+    this.notificationDialogService.confirmation("¿Desea modificar la configuración?", "Modificar configuración")
+      .afterClosed()
+      .subscribe((confirmed) => {
+        if (confirmed) {
+          this.isLoading = true;
+          this.configuracionesService.modificarConfiguracion(configuracion).subscribe({
+            next: (respuesta) => {
+              this.isLoading = false;
+
+              if (respuesta.mensaje === 'OK') {
+                this.notificacionService.openSnackBarSuccess('La configuración se modificó con éxito');
+                window.location.reload();
+              } else {
+                this.notificacionService.openSnackBarError('Error al modificar la configuración, inténtelo nuevamente');
+              }
+            },
+            error: (error) => {
+              this.isLoading = false;
+              console.error('Error al modificar la configuración:', error);
+              this.notificacionService.openSnackBarError('Error al modificar la configuración, inténtelo nuevamente');
+            }
+          });
+        }
+      });
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+
+    if (event.dataTransfer?.files) {
+      const file = event.dataTransfer.files[0];
+      this.previewImage(file);
+    }
+  }
+
+  previewImage(file: File): void {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.logoUrl = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
 
   // Getters
   get idUsuario(): FormControl {
@@ -107,6 +237,10 @@ export class ConsultarConfiguracionesComponent implements OnInit {
 
   get contrasenaInstagram(): FormControl {
     return this.form.get('contrasenaInstagram') as FormControl;
+  }
+
+  get usuarioInstagram(): FormControl {
+    return this.form.get('usuarioInstagram') as FormControl;
   }
 
 }
