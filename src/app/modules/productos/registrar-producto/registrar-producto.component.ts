@@ -184,14 +184,14 @@ export class RegistrarProductoComponent implements OnInit {
   }
 
 // Métodos para obtener el id basado en el nombre
-  private getTipoProductoId(nombre: string): number | null {
+  private getTipoProductoId(nombre: string): number {
     const tipoProducto = this.listaTipoProducto.find(tp => tp.nombre === nombre);
-    return tipoProducto ? tipoProducto.id : null; // Devuelve null si no se encuentra el tipo de producto
+    return tipoProducto ? tipoProducto.id : 0; // Devuelve null si no se encuentra el tipo de producto
   }
 
-  private getMarcaId(nombre: string): number | null {
+  private getMarcaId(nombre: string): number  {
     const marca = this.listaMarcas.find(m => m.nombre === nombre);
-    return marca ? marca.id : null; // Devuelve null si no se encuentra la marca
+    return marca ? marca.id : 0; // Devuelve null si no se encuentra la marca
   }
 
 
