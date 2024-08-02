@@ -5,6 +5,10 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {Producto} from "../models/producto.model";
 import {SpResult} from "../models/resultadoSp.model";
 import {FiltrosProductos} from "../models/comandos/FiltrosProductos.comando";
+import {TipoProveedor} from "../models/tipoProveedor.model";
+import {TipoProducto} from "../models/tipoProducto.model";
+import {Marca} from "../models/Marcas.model";
+import {Proveedor} from "../models/proveedores.model";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +25,10 @@ export class ProductosService {
 
   public registrarProducto(producto: Producto): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-producto`, producto);
+  }
+
+  public buscarTiposProductos(): Observable<TipoProducto[]>{
+    return this.http.get<TipoProducto[]>(`${this.urlBackend}/${this.controllerName}/buscar-tipo-productos`);
   }
 
 }

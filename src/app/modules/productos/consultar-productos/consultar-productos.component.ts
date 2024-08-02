@@ -1,32 +1,39 @@
-import {Component} from '@angular/core';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Producto} from "../../../models/producto.model";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormGroup, FormControl} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {ProductosService} from "../../../services/productos.service";
+import {RegistrarProductoComponent} from "../registrar-producto/registrar-producto.component";
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
   selector: 'app-consultar-productos',
   templateUrl: './consultar-productos.component.html',
   styleUrls: ['./consultar-productos.component.scss']
 })
-
-export class ConsultarProductosComponent {
+export class ConsultarProductosComponent implements OnInit, OnDestroy {
 
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
-  // Ver. Crear tabla empleados que cada uno tenga un usuario
   public productos: Producto[] = [];
-  public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipo', 'marca', 'proveedor', 'ntipoproducto', 'nmarca', 'nproveedor'];
+  public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipoProducto', 'proveedor', 'marca'];
   private filtros: FiltrosProductos;
+  private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
     private productosService: ProductosService) {
-
-    this.form = new FormGroup({});
+    this.form = this.fb.group({
+      txId: [''],
+      txNombre: [''],
+      txMarca: [''],
+      txTipo: [''],
+      txProveedor: [''],
+    });
     this.filtros = new FiltrosProductos();
   }
 
@@ -34,13 +41,18 @@ export class ConsultarProductosComponent {
     this.createForm();
   }
 
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   private createForm() {
     this.form = this.fb.group({
-      txId: ['', []],
-      txNombre: ['', []],
-      txMarca: ['', []],
-      txTipo: ['', []],
-      txProveedor: ['', []],
+      txId: [''],
+      txNombre: [''],
+      txMarca: [''],
+      txTipo: [''],
+      txProveedor: [''],
     });
   }
 
@@ -57,14 +69,34 @@ export class ConsultarProductosComponent {
       marca: this.txMarca.value,
     };
 
-      this.productosService.consultarProductos(this.filtros).subscribe((productos) => {
-        console.log('Productos recibidos:', productos); // Log para verificar datos
-        this.productos = productos;
-        this.tableDataSource.data = productos;
-      })
-
+    this.productosService.consultarProductos(this.filtros)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (productos) => {
+          this.productos = productos;
+          this.tableDataSource.data = productos;
+        },
+        error: (err) => {
+          console.error('Error al consultar productos:', err);
+        }
+      });
   }
 
+  public registrarNuevoProducto() {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
+        }
+      }
+    );
+  }
 
   get txId(): FormControl {
     return this.form.get('txId') as FormControl;
