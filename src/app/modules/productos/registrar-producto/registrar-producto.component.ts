@@ -27,7 +27,6 @@ export class RegistrarProductoComponent implements OnInit {
   public listaTipoProducto: TipoProducto[] = [];
   public tiposProductoFiltrados: TipoProducto[] = [];
   public listaProveedores: Proveedor[] = [];
-  public proveedoresFiltrados: Proveedor[] = [];
   public listaMarcas: Marca[] = [];
   public marcasFiltradas: Marca[] = [];
   public esConsulta: boolean;
@@ -76,21 +75,37 @@ export class RegistrarProductoComponent implements OnInit {
       txCosto: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       txTipoProducto: ['', [Validators.pattern('^[^0-9]+$')]],
       txMarca: ['', [Validators.pattern('^[^0-9]+$')]],
-      txProveedor: ['', [Validators.pattern('^[^0-9]+$')]],
+      txProveedor: ['', [Validators.required]],
     });
   }
 
   private rellenarFormularioDataProducto() {
-    this.form.get('txNombre')?.setValue(this.producto.nombre);
-    this.form.get('txCosto')?.setValue(this.producto.costo);
-    this.form.get('txTipoProducto')?.setValue(this.producto.tipoProducto.nombre);
-    this.form.get('txMarca')?.setValue(this.producto.marca.nombre);
-    this.form.get('txProveedor')?.setValue(this.producto.proveedor.nombre);
+    if (this.producto) {
+      this.form.get('txNombre')?.setValue(this.producto.nombre);
+      this.form.get('txCosto')?.setValue(this.producto.costo);
 
-    if (this.formDesactivado) {
-      this.form.disable();
+      // Si el producto tiene un tipoProducto asociado, rellena el campo correspondiente
+      if (this.producto.tipoProducto) {
+        this.form.get('txTipoProducto')?.setValue(this.producto.tipoProducto.nombre);
+      }
+
+      // Si el producto tiene una marca asociada, rellena el campo correspondiente
+      if (this.producto.marca) {
+        this.form.get('txMarca')?.setValue(this.producto.marca.nombre);
+      }
+
+      // Rellenar el proveedor si está presente
+      if (this.producto.proveedor) {
+        this.form.get('txProveedor')?.setValue(this.producto.proveedor.id);
+      }
+
+      // Si el formulario está desactivado, desactivar todos los controles
+      if (this.formDesactivado) {
+        this.form.disable();
+      }
     }
   }
+
 
   // Obtener TipoProductos
   private buscarTiposProductos() {
@@ -124,34 +139,36 @@ export class RegistrarProductoComponent implements OnInit {
   private buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedores = proveedores;
-      this.form.get('txProveedor')?.valueChanges.subscribe((proveedor) => {
-        this.proveedoresFiltrados = this.filterProveedores(proveedor);
-      });
     });
-  }
-
-  private filterProveedores(busqueda: string) {
-    return this.listaProveedores.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
   public registrarProducto() {
     if (this.form.valid) {
-      // Armamos el objeto Producto con todos los atributos
       const producto: Producto = new Producto();
       const tipoProducto: TipoProducto = new TipoProducto();
       const marca: Marca = new Marca();
       const proveedor: Proveedor = new Proveedor();
 
-      // Asignamos los valores al objeto Producto
+      // Asignamos los valores de texto y los IDs al objeto Producto
+      tipoProducto.nombre = this.txTipoProducto.value; // Nombre del tipo de producto
+      tipoProducto.id = this.getTipoProductoId(this.txTipoProducto.value); // ID del tipo de producto
+
+      marca.nombre = this.txMarca.value; // Nombre de la marca
+      marca.id = this.getMarcaId(this.txMarca.value); // ID de la marca
+
+      proveedor.id = this.txProveedor.value; // ID del proveedor
+
       producto.tipoProducto = tipoProducto;
-      producto.tipoProducto.id = this.txTipoProducto.value;
       producto.nombre = this.txNombre.value;
-      producto.costo = this.txCosto.value;
-      producto.costoIva = this.txCosto.value * 1.21; // Ejemplo para calcular el costo con IVA
+
+      // Asegúrate de que los valores son números
+      const costo = parseFloat(this.txCosto.value);
+      producto.costo = costo;
+      producto.costoIva = costo * 1.21; // Ejemplo para calcular el costo con IVA
       producto.marca = marca;
-      producto.marca.id = this.txMarca.value;
       producto.proveedor = proveedor;
-      producto.proveedor.id = this.txProveedor.value;
+
+      console.log('Producto a registrar:', producto); // Depuración
 
       // Llamamos al servicio para registrar el producto
       this.productosService.registrarProducto(producto).subscribe((respuesta) => {
@@ -165,6 +182,18 @@ export class RegistrarProductoComponent implements OnInit {
       });
     }
   }
+
+// Métodos para obtener el id basado en el nombre
+  private getTipoProductoId(nombre: string): number | null {
+    const tipoProducto = this.listaTipoProducto.find(tp => tp.nombre === nombre);
+    return tipoProducto ? tipoProducto.id : null; // Devuelve null si no se encuentra el tipo de producto
+  }
+
+  private getMarcaId(nombre: string): number | null {
+    const marca = this.listaMarcas.find(m => m.nombre === nombre);
+    return marca ? marca.id : null; // Devuelve null si no se encuentra la marca
+  }
+
 
   public cancelar() {
     this.dialogRef.close();
@@ -216,4 +245,5 @@ export class RegistrarProductoComponent implements OnInit {
     return '';
   }
 }
+
 
