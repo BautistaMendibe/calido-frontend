@@ -27,6 +27,14 @@ export class ProductosService {
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-producto`, producto);
   }
 
+  public modificarProducto(producto: Producto): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-producto`, producto);
+  }
+
+  public eliminarProducto(idProducto: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-producto/${idProducto}`);
+  }
+
   public buscarTiposProductos(): Observable<TipoProducto[]>{
     return this.http.get<TipoProducto[]>(`${this.urlBackend}/${this.controllerName}/buscar-tipo-productos`);
   }

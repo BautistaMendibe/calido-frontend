@@ -104,6 +104,20 @@
               <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
               <mat-cell *matCellDef="let producto">{{ producto.marca?.nombre }}</mat-cell>
             </ng-container>
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Acciones">
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verProducto(producto, false)">
+                  <mat-icon class="ver">visibility</mat-icon>
+                </button>
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verProducto(producto, true)">
+                  <mat-icon class="editar">edit</mat-icon>
+                </button>
+                <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarProducto(producto.id)">
+                  <mat-icon class="eliminar">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
           </mat-table>
@@ -119,4 +133,5 @@
     </mat-card-content>
   </mat-card>
 </div>
+
 

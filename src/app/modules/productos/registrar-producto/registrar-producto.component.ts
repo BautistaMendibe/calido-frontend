@@ -80,34 +80,18 @@ export class RegistrarProductoComponent implements OnInit {
   }
 
   private rellenarFormularioDataProducto() {
-    if (this.producto) {
-      this.form.get('txNombre')?.setValue(this.producto.nombre);
-      this.form.get('txCosto')?.setValue(this.producto.costo);
+    this.idProducto = this.producto.id;
+    this.form.get('txNombre')?.setValue(this.producto.nombre);
+    this.form.get('txCosto')?.setValue(this.producto.costo);
+    this.form.get('txTipoProducto')?.setValue(this.producto.tipoProducto.nombre);
+    this.form.get('txMarca')?.setValue(this.producto.marca.nombre);
+    this.form.get('txProveedor')?.setValue(this.producto.proveedor.id);
 
-      // Si el producto tiene un tipoProducto asociado, rellena el campo correspondiente
-      if (this.producto.tipoProducto) {
-        this.form.get('txTipoProducto')?.setValue(this.producto.tipoProducto.nombre);
-      }
-
-      // Si el producto tiene una marca asociada, rellena el campo correspondiente
-      if (this.producto.marca) {
-        this.form.get('txMarca')?.setValue(this.producto.marca.nombre);
-      }
-
-      // Rellenar el proveedor si está presente
-      if (this.producto.proveedor) {
-        this.form.get('txProveedor')?.setValue(this.producto.proveedor.id);
-      }
-
-      // Si el formulario está desactivado, desactivar todos los controles
-      if (this.formDesactivado) {
-        this.form.disable();
-      }
+    if (this.formDesactivado) {
+      this.form.disable();
     }
   }
 
-
-  // Obtener TipoProductos
   private buscarTiposProductos() {
     this.productosService.buscarTiposProductos().subscribe((tipoProductos) => {
       this.listaTipoProducto = tipoProductos;
@@ -121,7 +105,6 @@ export class RegistrarProductoComponent implements OnInit {
     return this.listaTipoProducto.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
-  // Obtener Marcas
   private buscarMarcas() {
     this.marcasService.buscarMarcas().subscribe((marcas) => {
       this.listaMarcas = marcas;
@@ -135,7 +118,6 @@ export class RegistrarProductoComponent implements OnInit {
     return this.listaMarcas.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
-  // Obtener Proveedores
   private buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedores = proveedores;
@@ -149,28 +131,23 @@ export class RegistrarProductoComponent implements OnInit {
       const marca: Marca = new Marca();
       const proveedor: Proveedor = new Proveedor();
 
-      // Asignamos los valores de texto y los IDs al objeto Producto
-      tipoProducto.nombre = this.txTipoProducto.value; // Nombre del tipo de producto
-      tipoProducto.id = this.getTipoProductoId(this.txTipoProducto.value); // ID del tipo de producto
-
-      marca.nombre = this.txMarca.value; // Nombre de la marca
-      marca.id = this.getMarcaId(this.txMarca.value); // ID de la marca
-
-      proveedor.id = this.txProveedor.value; // ID del proveedor
+      tipoProducto.nombre = this.txTipoProducto.value;
+      tipoProducto.id = this.getTipoProductoId(this.txTipoProducto.value);
+      marca.nombre = this.txMarca.value;
+      marca.id = this.getMarcaId(this.txMarca.value);
+      proveedor.id = this.txProveedor.value;
 
       producto.tipoProducto = tipoProducto;
       producto.nombre = this.txNombre.value;
 
-      // Asegúrate de que los valores son números
       const costo = parseFloat(this.txCosto.value);
       producto.costo = costo;
-      producto.costoIva = costo * 1.21; // Ejemplo para calcular el costo con IVA
+      producto.costoIva = costo * 1.21;
       producto.marca = marca;
       producto.proveedor = proveedor;
 
-      console.log('Producto a registrar:', producto); // Depuración
+      console.log('Producto a registrar:', producto);
 
-      // Llamamos al servicio para registrar el producto
       this.productosService.registrarProducto(producto).subscribe((respuesta) => {
         if (respuesta.mensaje === 'OK') {
           this.notificacionService.openSnackBarSuccess('El producto se registró con éxito');
@@ -183,23 +160,57 @@ export class RegistrarProductoComponent implements OnInit {
     }
   }
 
-// Métodos para obtener el id basado en el nombre
   private getTipoProductoId(nombre: string): number {
     const tipoProducto = this.listaTipoProducto.find(tp => tp.nombre === nombre);
-    return tipoProducto ? tipoProducto.id : 0; // Devuelve null si no se encuentra el tipo de producto
+    return tipoProducto ? tipoProducto.id : 0;
   }
 
-  private getMarcaId(nombre: string): number  {
+  private getMarcaId(nombre: string): number {
     const marca = this.listaMarcas.find(m => m.nombre === nombre);
-    return marca ? marca.id : 0; // Devuelve null si no se encuentra la marca
+    return marca ? marca.id : 0;
   }
 
+  public modificarProducto() {
+    if (this.form.valid) {
+      const producto: Producto = new Producto();
+      const tipoProducto: TipoProducto = new TipoProducto();
+      const marca: Marca = new Marca();
+      const proveedor: Proveedor = new Proveedor();
+
+      producto.id = this.idProducto;
+      tipoProducto.nombre = this.txTipoProducto.value;
+      tipoProducto.id = this.getTipoProductoId(this.txTipoProducto.value);
+      marca.nombre = this.txMarca.value;
+      marca.id = this.getMarcaId(this.txMarca.value);
+      proveedor.id = this.txProveedor.value;
+
+      producto.tipoProducto = tipoProducto;
+      producto.nombre = this.txNombre.value;
+
+      const costo = parseFloat(this.txCosto.value);
+      producto.costo = costo;
+      producto.costoIva = costo * 1.21;
+      producto.marca = marca;
+      producto.proveedor = proveedor;
+
+      console.log('Producto a modificar:', producto);
+
+      this.productosService.modificarProducto(producto).subscribe((respuesta) => {
+        if (respuesta.mensaje === 'OK') {
+          this.notificacionService.openSnackBarSuccess('El producto se modificó con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError('Error al modificar el producto, inténtelo nuevamente');
+        }
+      });
+    }
+  }
 
   public cancelar() {
     this.dialogRef.close();
   }
 
-  // Getters para los form controls
   get txNombre(): FormControl {
     return this.form.get('txNombre') as FormControl;
   }
@@ -220,7 +231,6 @@ export class RegistrarProductoComponent implements OnInit {
     return this.form.get('txProveedor') as FormControl;
   }
 
-  // Métodos para evitar la entrada de caracteres no válidos
   public soloNumeros(event: KeyboardEvent) {
     const pattern = /[0-9]/;
     if (!pattern.test(event.key)) {

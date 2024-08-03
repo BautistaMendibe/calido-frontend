@@ -8,6 +8,8 @@ import {ProductosService} from "../../../services/productos.service";
 import {RegistrarProductoComponent} from "../registrar-producto/registrar-producto.component";
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-consultar-productos',
@@ -19,13 +21,15 @@ export class ConsultarProductosComponent implements OnInit, OnDestroy {
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
   public productos: Producto[] = [];
-  public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipoProducto', 'proveedor', 'marca'];
+  public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
   private filtros: FiltrosProductos;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
+    private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
     private productosService: ProductosService) {
     this.form = this.fb.group({
       txId: [''],
@@ -98,6 +102,41 @@ export class ConsultarProductosComponent implements OnInit, OnDestroy {
     );
   }
 
+  public verProducto(producto: Producto, editar: boolean) {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          producto: producto,
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar
+        }
+      }
+    );
+  }
+
+  public eliminarProducto(idProducto: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar el producto?', 'Eliminar producto')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.productosService.eliminarProducto(idProducto).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Producto eliminado con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar el producto');
+            }
+          });
+        }
+      });
+  }
+
+
   get txId(): FormControl {
     return this.form.get('txId') as FormControl;
   }
@@ -117,4 +156,5 @@ export class ConsultarProductosComponent implements OnInit, OnDestroy {
   get txProveedor(): FormControl {
     return this.form.get('txProveedor') as FormControl;
   }
+
 }
