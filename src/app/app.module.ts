@@ -20,10 +20,18 @@ import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-emple
 import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
 import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
+import { ConsultarPromocionesComponent } from './modules/promociones/consultar-promociones/consultar-promociones.component';
+import { RegistrarPromocionComponent } from './modules/promociones/registrar-promocion/registrar-promocion.component';
+import { DetallePromocionComponent } from './modules/promociones/detalle-promocion/detalle-promocion.component';
+import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
+import {PickerComponent} from "@ctrl/ngx-emoji-mart";
+import { ConsultarConfiguracionesComponent } from './modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component';
+import { RegistrarConfiguracionesComponent } from './modules/configuraciones/registrar-configuraciones/registrar-configuraciones.component';
 import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
 import { RegistrarProductoComponent } from './modules/productos/registrar-producto/registrar-producto.component';
 import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
+import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
 
 
 @NgModule({
@@ -35,12 +43,20 @@ import {MatDialogClose} from "@angular/material/dialog";
     SidebarComponent,
     HomeComponent,
     ConsultarEmpleadosComponent,
+    DetalleEmpleadosComponent,
     RegistrarEmpleadosComponent,
+    ConsultarProductosComponent,
     ConsultarProveedoresComponent,
     RegistrarProveedorComponent,
+    ConsultarPromocionesComponent,
+    RegistrarPromocionComponent,
+    DetallePromocionComponent,
+    NotificarPromocionComponent,
     MessagesComponent,
     ConsultarProductosComponent,
     RegistrarProductoComponent,
+    ConsultarConfiguracionesComponent,
+    RegistrarConfiguracionesComponent,
   ],
     imports: [
         BrowserModule,
@@ -50,7 +66,8 @@ import {MatDialogClose} from "@angular/material/dialog";
         FlexLayoutModule,
         ReactiveFormsModule,
         HttpClientModule,
-        MatDialogClose
+        MatDialogClose,
+        PickerComponent
     ],
   providers: [
     HealthService,

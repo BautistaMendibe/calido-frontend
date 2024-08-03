@@ -1,6 +1,6 @@
-import { TipoProducto } from "./tipoProducto.model";
+import { TipoProducto } from "./tipoProducto.model"
 import { Proveedor } from "./proveedores.model";
-import { Marca } from "./Marcas.model";
+import { Marca } from "./marca.model";
 
 export class Producto {
   id: number;

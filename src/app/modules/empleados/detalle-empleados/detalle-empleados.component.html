@@ -1,0 +1,118 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">Consultar usuario</p>
+      <button class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Usuario</mat-label>
+          <input type="text" matInput [formControl]="txNombreUsuario"/>
+        </mat-form-field>
+
+      </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Nombre</mat-label>
+          <input type="text" matInput [formControl]="txNombre"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Apellido</mat-label>
+          <input type="text" matInput [formControl]="txApellido"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de Nacimiento</mat-label>
+          <input type="text" matInput [formControl]="txFechaNacimiento"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Codigo Postal</mat-label>
+          <input type="text" matInput [formControl]="txCodigoPostal"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>DNI</mat-label>
+          <input type="text" matInput [formControl]="txDNI"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>CUIL</mat-label>
+          <input type="text" matInput [formControl]="txCuil"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Contraseña</mat-label>
+          <input type="text" matInput [formControl]="txContrasena"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Género</mat-label>
+          <input type="text" matInput [formControl]="ddGenero"/>
+        </mat-form-field>
+      </div>
+
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Domicilio</mat-label>
+          <input type="text" matInput [formControl]="txProvincia"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de buscar y limpiar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        Volver
+      </button>
+      <button *ngIf="edit" mat-raised-button color="accent" class="btn round" (click)="modificarEmpleado()" id="btnBuscar">Modificar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

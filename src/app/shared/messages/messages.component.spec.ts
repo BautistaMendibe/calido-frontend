@@ -11,7 +11,7 @@ describe('MessagesComponent', () => {
       declarations: [MessagesComponent]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(MessagesComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

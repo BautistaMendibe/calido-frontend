@@ -7,5 +7,3 @@ export class TipoProducto {
     this.nombre = nombre!;
   }
 }
-
-
