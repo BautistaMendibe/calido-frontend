@@ -100,14 +100,52 @@
         </mat-form-field>
       </div>
 
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
+   </div>
+
+    <div class="row pt-4">
+      <div class="col-md-3">
+        <mat-form-field appearance="outline">
           <mat-label>Provincia</mat-label>
-          <input type="text" matInput [formControl]="txProvincia"/>
+          <input matInput
+                 placeholder="Ingrese"
+                 [formControl]="txProvincia"
+                 [matAutocomplete]="autoCompleteProvincia">
         </mat-form-field>
+        <mat-autocomplete #autoCompleteProvincia="matAutocomplete" (optionSelected)="seleccionarProvincia()">
+          <mat-option *ngFor="let provincia of this.provinciasFiltradas" [value]="provincia.nombre">
+            {{provincia.nombre}}
+          </mat-option>
+        </mat-autocomplete>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline">
+          <mat-label>Localidad</mat-label>
+          <input matInput
+                 placeholder="Ingrese"
+                 [formControl]="txLocalidad"
+                 (input)="filtrarLocalidades()"
+                 [matAutocomplete]="autoCompleteLocalidad">
+        </mat-form-field>
+        <mat-autocomplete #autoCompleteLocalidad="matAutocomplete" (optionSelected)="seleccionarLocalidad()">
+          <mat-option *ngFor="let localidad of this.localidadesFiltradas" [value]="localidad.nombre">
+            {{localidad.nombre}}
+          </mat-option>
+        </mat-autocomplete>
       </div>
 
-   </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Calle</mat-label>
+          <input type="text" matInput [formControl]="txCalle"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número</mat-label>
+          <input type="text" matInput [formControl]="txNumero"/>
+        </mat-form-field>
+      </div>
+    </div>
 
   </form>
 
