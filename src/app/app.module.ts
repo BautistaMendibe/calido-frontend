@@ -13,7 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { HomeComponent } from './modules/home/home.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
 import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
@@ -32,6 +32,7 @@ import {MatDialogClose} from "@angular/material/dialog";
 import {ConsultarProductosComponent} from "./modules/productos/consultar-productos/consultar-productos.component";
 import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -73,7 +74,10 @@ import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
     UsuariosService,
     AuthService,
     provideAnimationsAsync(),
-    provideNgxMask()
+    provideNgxMask(),
+    {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })
