@@ -152,16 +152,16 @@ export class RegistrarProveedorComponent implements OnInit{
     });
   }
 
-  private buscarTiposProveedores() {
-    this.proveedoresService.buscarTiposProveedores().subscribe((tiposProveedores) => {
-      this.listaTiposProveedores = tiposProveedores;
+    private buscarTiposProveedores() {
+      this.proveedoresService.buscarTiposProveedores().subscribe((tiposProveedores) => {
+        this.listaTiposProveedores = tiposProveedores;
 
-      // Si no hay un proveedor para consultar pone el tipo 'Mayorista' por default
-      if (!this.proveedor) {
-        this.txTipoProveedor.setValue(tiposProveedores[0].id);
-      }
-    });
-  }
+        // Si no hay un proveedor para consultar pone el tipo 'Mayorista' por default
+        if (!this.proveedor) {
+          this.txTipoProveedor.setValue(tiposProveedores[0].id);
+        }
+      });
+    }
 
   public registrarProveedor() {
     if (this.form.valid) {
