@@ -18,6 +18,7 @@ export class ConsultarConfiguracionesComponent implements OnInit {
   public logoUrl: string | ArrayBuffer | null = null;
   private selectedFile: File | null = null;
   public isLoading = false;
+  public isSearchingConfiguration: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +31,7 @@ export class ConsultarConfiguracionesComponent implements OnInit {
 
   ngOnInit() {
     this.crearFormulario();
+    this.isSearchingConfiguration = true;
     this.buscarConfiguracion();
   }
 
@@ -52,6 +54,7 @@ export class ConsultarConfiguracionesComponent implements OnInit {
     this.configuracionesService.consultarConfiguraciones().subscribe({
       next: (configuracion) => {
         this.configuracion = configuracion;
+        this.isSearchingConfiguration = false;
         this.logoUrl = configuracion.logo;
 
         this.form.patchValue({
@@ -69,6 +72,7 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       },
       error: (err) => {
         console.error('Error al consultar la configuración:', err);
+        this.isSearchingConfiguration = false;
         this.notificacionService.openSnackBarError('Error al cargar la configuración. Intente nuevamente.');
       }
     });
