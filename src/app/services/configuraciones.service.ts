@@ -18,11 +18,20 @@ export class ConfiguracionesService {
     return this.http.get<Configuracion>(`${this.urlBackend}/${this.controllerName}/consultar-configuraciones`);
   }
 
-  public registrarConfiguracion(configuracion: Configuracion): Observable<SpResult>{
-    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-configuracion`, configuracion);
+  public registrarConfiguracion(): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-configuracion`);
   }
 
   public modificarConfiguracion(configuracion: Configuracion): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-configuracion`, configuracion);
   }
+
+  public existeConfiguracion(): Observable<boolean>{
+    return this.http.get<boolean>(`${this.urlBackend}/${this.controllerName}/existe-configuracion`);
+  }
+
+  public obtenerSuperusuario(): Observable<string>{
+    return this.http.get<string>(`${this.urlBackend}/${this.controllerName}/obtener-superusuario`);
+  }
+
 }

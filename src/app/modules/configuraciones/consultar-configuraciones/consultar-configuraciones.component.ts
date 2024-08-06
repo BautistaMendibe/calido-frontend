@@ -37,14 +37,14 @@ export class ConsultarConfiguracionesComponent implements OnInit {
     this.form = this.fb.group({
       idUsuario: [{ value: '', disabled: true }],
       nombreUsuario: [{ value: '', disabled: true }],
-      razonSocial: ['', [Validators.required]],
-      domicilioComercial: ['', [Validators.required]],
-      cuit: ['', [Validators.required]],
-      fechaInicioActividades: ['', [Validators.required]],
-      condicionIva: ['', [Validators.required]],
+      razonSocial: [''],
+      domicilioComercial: [''],
+      cuit: [''],
+      fechaInicioActividades: [''],
+      condicionIva: [''],
       logo: [null],
-      contrasenaInstagram: ['', [Validators.required]],
-      usuarioInstagram: ['', [Validators.required]]
+      contrasenaInstagram: [''],
+      usuarioInstagram: ['']
     });
   }
 
