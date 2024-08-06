@@ -53,7 +53,7 @@ export class AuthService {
       const expirationDate = tokenPayload.exp * 1000;
       const currentDate = Date.now();
 
-      if (currentDate < expirationDate) {
+      if (currentDate > expirationDate) {
         this.notificacionService.openSnackBarError('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
       }
 
