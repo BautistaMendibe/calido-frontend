@@ -65,7 +65,4 @@ export class HeaderComponent implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  // Metodo para cambiar el rol del usuario actual
-  public change() {}
-
 }
