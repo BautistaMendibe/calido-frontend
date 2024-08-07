@@ -27,7 +27,10 @@
             <div class="col-6">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Contraseña</mat-label>
-                <input type="password" matInput [formControl]="txContrasena"/>
+                <input [type]="hidePassword ? 'password' : 'text'" matInput [formControl]="txContrasena"/>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
               </mat-form-field>
             </div>
           </div>

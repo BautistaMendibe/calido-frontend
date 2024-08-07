@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit{
   public existeConfiguracion: boolean = false;
   public isLoading: boolean = true;
   public isValidatingPassword: boolean = false;
+  public hidePassword: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,
