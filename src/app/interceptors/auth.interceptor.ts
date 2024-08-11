@@ -21,12 +21,17 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
-    if (token && this.authService.isAuthenticated()) {
-      req = req.clone({
-        setHeaders: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+    if (token) {
+      if (this.authService.isAuthenticated()) {
+        req = req.clone({
+          setHeaders: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      } else {
+        this.authService.logOut();
+        this.router.navigate(['/login']);
+      }
     }
 
     // En caso de que el backend le envíe un ERROR 401 (Unauthorized) hace logout() y redirige al login.

@@ -53,12 +53,14 @@ export class AuthService {
       const expirationDate = tokenPayload.exp * 1000;
       const currentDate = Date.now();
 
-      if (currentDate > expirationDate) {
+      const isTokenExpired = currentDate > expirationDate;
+
+      if (isTokenExpired) {
         this.notificacionService.openSnackBarError('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
       }
 
-      return currentDate < expirationDate;
-    }
+      return !isTokenExpired;
+      }
 
     // Método para actualizar el estado de autenticación
     public updateAuthenticationStatus(isAuthenticated: boolean): void {
