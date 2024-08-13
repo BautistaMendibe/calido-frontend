@@ -13,7 +13,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { HomeComponent } from './modules/home/home.component';
 import {ReactiveFormsModule} from "@angular/forms";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
 import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
@@ -32,7 +32,8 @@ import { RegistrarProductoComponent } from './modules/productos/registrar-produc
 import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
 import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
-
+import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
+import {AuthInterceptor} from "./interceptors/auth.interceptor";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/d
     RegistrarProductoComponent,
     ConsultarConfiguracionesComponent,
     RegistrarConfiguracionesComponent,
+    ConsultarConfiguracionesComponent
   ],
     imports: [
         BrowserModule,
@@ -67,13 +69,20 @@ import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/d
         ReactiveFormsModule,
         HttpClientModule,
         MatDialogClose,
-        PickerComponent
+        PickerComponent,
+        NgxMaskDirective,
+        NgxMaskPipe
     ],
   providers: [
     HealthService,
     UsuariosService,
     AuthService,
-    provideAnimationsAsync()],
+    provideAnimationsAsync(),
+    provideNgxMask(),
+    {
+      provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

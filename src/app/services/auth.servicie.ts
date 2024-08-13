@@ -1,8 +1,8 @@
 import {Injectable} from "@angular/core";
 import {BehaviorSubject, Observable} from "rxjs";
-import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
 import { jwtDecode } from 'jwt-decode';
+import {SnackBarService} from "./snack-bar.service";
 
 
 @Injectable({
@@ -13,7 +13,10 @@ export class AuthService {
     private authenticationStatusSource = new BehaviorSubject<boolean>(this.isAuthenticated());
     authenticationStatus$ = this.authenticationStatusSource.asObservable();
 
-    constructor() {}
+
+    constructor(
+      private notificacionService: SnackBarService
+    ) {}
 
     public setToken(token: string) {
         localStorage.setItem('auth_token', token);
@@ -21,17 +24,43 @@ export class AuthService {
 
     public logOut() {
         localStorage.removeItem('auth_token');
+        this.updateAuthenticationStatus(false);
     }
 
     public getToken(): string {
         return localStorage.getItem('auth_token') ?? '';
     }
 
-    public isAuthenticated(): boolean {
-        // Devuelve true si el token existe, indicando que el usuario está autenticado
-        const token = localStorage.getItem('auth_token');
-        return!!token;
-    }
+  /**
+   * Método para verificar si el token está expirado
+   * @returns boolean
+   */
+  public isAuthenticated(): boolean {
+
+      // Verifica que el token exista
+      const token = this.getToken();
+      if (!token) {
+        return false;
+      }
+
+      // Verifica que el token puede ser decodificado correctamente
+      const tokenPayload = this.getDecodedAccessToken(token);
+      if (!tokenPayload) {
+        return false;
+      }
+
+      // Verifica que la fecha de expiración del token sea mayor a la fecha actual
+      const expirationDate = tokenPayload.exp * 1000;
+      const currentDate = Date.now();
+
+      const isTokenExpired = currentDate > expirationDate;
+
+      if (isTokenExpired) {
+        this.notificacionService.openSnackBarError('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
+      }
+
+      return !isTokenExpired;
+      }
 
     // Método para actualizar el estado de autenticación
     public updateAuthenticationStatus(isAuthenticated: boolean): void {
