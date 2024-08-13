@@ -20,6 +20,10 @@ export class ProveedoresService {
     return this.http.post<Proveedor[]>(`${this.urlBackend}/${this.controllerName}/consultar-proveedores`, filtro);
   }
 
+  public buscarTodosProveedores(): Observable<Proveedor[]>{
+    return this.http.get<Proveedor[]>(`${this.urlBackend}/${this.controllerName}/buscar-todos-proveedores`);
+  }
+
   public registrarProveedor(proveedor: Proveedor): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-proveedor`, proveedor);
   }

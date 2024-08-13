@@ -26,9 +26,11 @@ import { DetallePromocionComponent } from './modules/promociones/detalle-promoci
 import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 import { ConsultarConfiguracionesComponent } from './modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component';
+import { RegistrarConfiguracionesComponent } from './modules/configuraciones/registrar-configuraciones/registrar-configuraciones.component';
+import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
+import { RegistrarProductoComponent } from './modules/productos/registrar-producto/registrar-producto.component';
 import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
-import {ConsultarProductosComponent} from "./modules/productos/consultar-productos/consultar-productos.component";
 import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
@@ -52,6 +54,10 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     DetallePromocionComponent,
     NotificarPromocionComponent,
     MessagesComponent,
+    ConsultarProductosComponent,
+    RegistrarProductoComponent,
+    ConsultarConfiguracionesComponent,
+    RegistrarConfiguracionesComponent,
     ConsultarConfiguracionesComponent
   ],
     imports: [

@@ -4,9 +4,7 @@ import {LoginComponent} from "./modules/login/login.component";
 import {HomeComponent} from "./modules/home/home.component";
 import {ConsultarEmpleadosComponent} from "./modules/empleados/consultar-empleados/consultar-empleados.component";
 import {ConsultarProductosComponent} from "./modules/productos/consultar-productos/consultar-productos.component";
-import {
-  ConsultarProveedoresComponent
-} from "./modules/proveedores/consultar-proveedores/consultar-proveedores.component";
+import {ConsultarProveedoresComponent} from "./modules/proveedores/consultar-proveedores/consultar-proveedores.component";
 import {
   ConsultarPromocionesComponent
 } from "./modules/promociones/consultar-promociones/consultar-promociones.component";
@@ -24,7 +22,9 @@ const routes: Routes = [
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
   {path:'consultar-promociones', component: ConsultarPromocionesComponent},
   {path:'notificar-promocion', component: NotificarPromocionComponent},
-  {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent}
+  {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
+  {path:'consultar-productos', component: ConsultarProductosComponent}
+
 ];
 
 @NgModule({
