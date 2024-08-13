@@ -46,6 +46,11 @@ export class SidebarComponent {
 
   onSinenavToggle() {
     this.sideNavState = !this.sideNavState;
+
+    if (!this.sideNavState) {
+      this.colapsarSubmenus();
+    }
+
     setTimeout(() => {
       this.linkText = this.sideNavState;
     }, 300);
@@ -80,6 +85,17 @@ export class SidebarComponent {
       }
     });
     subItem.activo = !subItem.activo;
+  }
+
+  colapsarSubmenus() {
+    this.menuItems.forEach(item => {
+      item.activo = false;
+      if (item.subMenu) {
+        item.subMenu.forEach(subItem => {
+          subItem.activo = false;
+        });
+      }
+    })
   }
 
 }

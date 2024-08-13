@@ -105,10 +105,10 @@ export class NotificarPromocionComponent implements OnInit {
                   this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
                 }
               },
-              error: (error) => {
+              error: () => {
                 this.isLoading = false;
-                console.error('Error al publicar:', error);
-                this.notificacionService.openSnackBarError('Error al publicar, intentelo nuevamente');
+                this.notificacionService.openSnackBarError('No se pudo publicar la promoción. ' +
+                  'Por favor, verifica tus credenciales en el menú de configuración.');
               }
             });
           }

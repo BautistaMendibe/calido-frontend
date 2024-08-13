@@ -40,4 +40,8 @@ export class UsuariosService {
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-usuario/${idUsuario}`);
   }
 
+  public registrarSuperusuario(usuario: Usuario): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-superusuario`, usuario);
+  }
+
 }
