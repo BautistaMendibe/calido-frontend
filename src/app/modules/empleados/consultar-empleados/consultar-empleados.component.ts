@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";
 import {DetalleEmpleadosComponent} from "../detalle-empleados/detalle-empleados.component";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-consultar-empleados',
@@ -27,7 +28,6 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public empleados: Usuario[] = [];
   public columnas: string[] = ['nombreUsuario', "nombre",'apellido', 'cuil', 'acciones'];
 
-
   private filtros: FiltrosEmpleados;
 
   constructor(
@@ -36,6 +36,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
     private usuariosService: UsuariosService,
     private router: Router,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosEmpleados();
@@ -64,6 +65,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
+
     this.usuariosService.consultarUsuarios(this.filtros).subscribe((empleados) => {
       this.empleados = empleados;
       this.tableDataSource.data = empleados;
@@ -77,7 +79,9 @@ export class ConsultarEmpleadosComponent implements OnInit {
         width: '75%',
         autoFocus: false,
         data: {
-          referencia: this
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
         }
       }
     )
@@ -85,28 +89,36 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   public verEmpleado(usuario: Usuario, editar: boolean) {
     this.dialog.open(
-      DetalleEmpleadosComponent,
+      RegistrarEmpleadosComponent,
       {
         width: '75%',
+        height: 'auto',
         autoFocus: false,
         data: {
           usuario: usuario,
-          edit: editar,
-          referencia: this
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar
         }
       }
     )
   }
 
-   public eliminarUsuario(idUsuario: number) {
-    this.usuariosService.eliminarUsuario(idUsuario).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Usuario eliminado con éxito');
-        this.buscar();
-      } else {
-        this.notificacionService.openSnackBarError('Error al eliminar el usuario');
-      }
-    })
+  public eliminarUsuario(idUsuario: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar el usuario?', 'Eliminar Usuario') //Está seguro?
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuariosService.eliminarUsuario(idUsuario).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Usuario eliminado con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar el usuario');
+            }
+          });
+        }
+      });
   }
 
 
