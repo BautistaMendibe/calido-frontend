@@ -1,36 +1,75 @@
-<div class="row justify-content-center mt-5">
+<div class="lds-spinner-wrapper" *ngIf="isLoading">
+  <div class="lds-spinner">
+    <div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div>
+    <div></div><div></div><div></div><div></div>
+  </div>
+</div>
+
+<div *ngIf="!isLoading" class="row justify-content-center mt-5">
   <div class="col-5">
     <form [formGroup]="formLogin">
       <div class="col">
-        <h1 class="titulo">Iniciar sesión</h1>
+        <h1 class="titulo">{{ existeConfiguracion ? 'Iniciar sesión' : 'Registrar usuario' }}</h1>
       </div>
 
       <mat-card>
         <mat-card-content>
+
+          <!-- Fila de Nombre de usuario y Contraseña (mismo comportamiento para login y registro) -->
           <div class="row">
-            <div class="col">
+            <div class="col-6">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Nombre de usuario</mat-label>
                 <input type="text" matInput [formControl]="txNombreUsuario"/>
               </mat-form-field>
             </div>
-          </div>
-
-          <div class="row">
-            <div class="col">
+            <div class="col-6">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Contraseña</mat-label>
-                <input type="password" matInput [formControl]="txContrasena"/>
+                <input [type]="hidePassword ? 'password' : 'text'" matInput [formControl]="txContrasena"/>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
               </mat-form-field>
             </div>
           </div>
 
+          <!-- Campos adicionales solo para el registro -->
+          <div *ngIf="!existeConfiguracion">
+
+            <div class="row">
+              <div class="col-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Nombre</mat-label>
+                  <input type="text" matInput [formControl]="txNombre"/>
+                </mat-form-field>
+              </div>
+              <div class="col-6">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Apellido</mat-label>
+                  <input type="text" matInput [formControl]="txApellido"/>
+                </mat-form-field>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Botones -->
           <div class="row text-right mb-3">
             <div class="col d-flex justify-content-end">
-              <button mat-button class="btn round me-3" id="btnRegistrarse" (click)="registrarse()">
-                Registrarse
+              <button mat-raised-button class="btn round" color="assent" id="btnLoguearse"
+                      (click)="existeConfiguracion ? iniciarSesion() : registrarse()">
+                {{ existeConfiguracion ? 'Continuar' : 'Registrarse' }}
               </button>
-              <button mat-raised-button class="btn round" color="assent" id="btnLoguearse" (click)="iniciarSesion()">Continuar</button>
+            </div>
+
+            <div class="lds-spinner-wrapper" *ngIf="isValidatingPassword">
+              <div class="lds-spinner">
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
+                <div></div><div></div><div></div><div></div>
+              </div>
             </div>
           </div>
 
