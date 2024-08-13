@@ -31,6 +31,7 @@ import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
 import {ConsultarProductosComponent} from "./modules/productos/consultar-productos/consultar-productos.component";
 import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
+import { NgxMaskDirective, provideNgxMask } from 'ngx-mask';
 
 @NgModule({
   declarations: [
@@ -63,13 +64,14 @@ import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/d
         ReactiveFormsModule,
         HttpClientModule,
         MatDialogClose,
-        PickerComponent
+        PickerComponent,
     ],
   providers: [
     HealthService,
     UsuariosService,
     AuthService,
-    provideAnimationsAsync()],
+    provideAnimationsAsync(),
+    provideNgxMask()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

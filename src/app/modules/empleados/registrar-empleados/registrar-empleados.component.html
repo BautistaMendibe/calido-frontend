@@ -1,8 +1,11 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-    <div class="col">
-      <p class="titulo">Registrar Empleado</p>
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar Empleado' : 'Registrar Empleado'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
     </div>
   </div>
 
@@ -19,13 +22,44 @@
         </mat-form-field>
       </div>
 
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Contraseña</mat-label>
-          <input type="password" matInput [formControl]="txContrasena"/>
-        </mat-form-field>
-      </div>
+<!--      <div class="col-md-4">-->
+<!--        <mat-form-field appearance="outline" class="w-100">-->
+<!--          <mat-label>Contraseña</mat-label>-->
+<!--          <input type="password" matInput [formControl]="txContrasena"/>-->
 
+<!--        </mat-form-field>-->
+<!--        <div *ngIf="esConsulta && form.get('txContrasena')?.hasError('required')" >-->
+<!--          Debe ingresar una nueva contraseña.-->
+<!--        </div>-->
+<!--        <div *ngIf="form.get('txContrasena')?.touched || form.get('txContrasena')?.dirty">-->
+<!--&lt;!&ndash;          <div *ngIf="form.get('txContrasena')?.hasError('required')">&ndash;&gt;-->
+<!--&lt;!&ndash;            La contraseña es obligatoria.&ndash;&gt;-->
+<!--&lt;!&ndash;          </div>&ndash;&gt;-->
+
+<!--          <div *ngIf="form.get('txContrasena')?.hasError('minlength')">-->
+<!--            La contraseña debe tener al menos 8 caracteres.-->
+<!--          </div>-->
+<!--          <div *ngIf="form.get('txContrasena')?.hasError('pattern')">-->
+<!--            La contraseña debe contener al menos una mayúscula, una minúscula y un número.-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
+
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Contraseña</mat-label>
+<!--            <input type="password" matInput [formControl]="txContrasena"/>-->
+              <input
+                matInput
+                type="password"
+                formControlName="txContrasena"
+                (focus)="applyPasswordValidations()"
+              />
+              <mat-error *ngIf="form.get('txContrasena')?.hasError('required')">La contraseña es requerida</mat-error>
+              <mat-error *ngIf="form.get('txContrasena')?.hasError('minlength')">La contraseña debe tener al menos 8 caracteres</mat-error>
+              <mat-error *ngIf="form.get('txContrasena')?.hasError('pattern')">La contraseña debe contener al menos una letra mayúscula y un número</mat-error>
+          </mat-form-field>
+        </div>
     </div>
 
     <div class="row pt-4">
@@ -49,6 +83,11 @@
           <mat-label>Fecha de nacimiento</mat-label>
           <input type="date" matInput [formControl]="txFechaNacimiento"/>
         </mat-form-field>
+        <div *ngIf="form.get('txFechaNacimiento')?.touched || form.get('txFechaNacimiento')?.dirty">
+          <div *ngIf="form.get('txFechaNacimiento')?.hasError('fechaInvalida')">
+            La fecha de nacimiento debe ser anterior a hoy.
+          </div>
+        </div>
       </div>
 
     </div>
@@ -73,11 +112,9 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Género</mat-label>
           <mat-select [formControl]="ddGenero">
-            <mat-option value= "1" >Masculino</mat-option>
-            <mat-option value= "2" >Femenino</mat-option>
-            <mat-option value= "3" >No binario</mat-option>
-            <mat-option value= "4" >Otro</mat-option>
-            <mat-option value= "5" >Prefiero no decirlo</mat-option>
+            <mat-option *ngFor="let genero of generos" [value]="genero.id">
+              {{ genero.nombre }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
@@ -158,7 +195,8 @@
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
         Cancelar
       </button>
-      <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>
+      <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarEmpleado()" id="btnBuscar2">Modificar</button>
     </div>
   </div>
 

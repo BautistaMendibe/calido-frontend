@@ -193,6 +193,7 @@ export class RegistrarProveedorComponent implements OnInit{
   }
 
   public modificarProveedor() {
+    console.log("a")
     if (this.form.valid) {
 
       this.proveedor.tipoProveedor.id = this.txTipoProveedor.value;
