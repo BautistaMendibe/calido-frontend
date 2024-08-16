@@ -9,7 +9,7 @@
     <!-- Factura de venta -->
     <div class="col">
       <mat-card class="p-4">
-        <h2>Factura de venta</h2>
+        <h2 style="color: #e15b35">Factura de venta</h2>
         <mat-divider></mat-divider>
         <br>
         <div class="row">
@@ -52,7 +52,21 @@
             </button>
           </div>
         </div>
-
+        <mat-divider></mat-divider>
+        <br>
+        <!-- Carrito vacio -->
+        <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
+          <mat-icon>add_shopping_cart</mat-icon>
+          <p style="margin-top: 10px;">Acá verás los productos que elijas para tu venta</p>
+        </div>
+        <mat-divider></mat-divider>
+        <br>
+        <p style="color: grey; font-weight: 500">0 productos</p>
+        <!-- Poner el total a la derecha de la cantidad de productos -->
+        <br>
+        <button mat-raised-button color="accent" class="btn round" id="btnBuscar" [disabled]="true">
+          Vender
+        </button>
       </mat-card>
     </div>
   </div>
