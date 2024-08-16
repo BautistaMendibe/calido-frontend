@@ -4,10 +4,34 @@
     <div class="col-7">
       <mat-card class="p-4">
         <div class="row">
-          <div class="col-1">l</div>
-          <div class="col-1">b</div>
-          <div class="col-7">buscar</div>
-          <div class="col-3">add</div>
+          <!-- Botón de la lupa -->
+          <div class="col-1">
+            <button mat-icon-button>
+              <mat-icon>search</mat-icon>
+            </button>
+          </div>
+
+          <!-- Botón del código de barras -->
+          <div class="col-1">
+            <button mat-icon-button>
+              <mat-icon>qr_code_scanner</mat-icon>
+            </button>
+          </div>
+
+          <!-- Input de búsqueda -->
+          <div class="col-7">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Buscar productos</mat-label>
+              <input type="text" matInput/>
+            </mat-form-field>
+          </div>
+
+          <!-- Columna con el botón de 'Nuevo producto' -->
+          <div class="col-3">
+            <button mat-stroked-button color="warn" class="btn round h-75">
+              <mat-icon>add</mat-icon> Nuevo producto
+            </button>
+          </div>
         </div>
       </mat-card>
     </div>
