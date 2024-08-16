@@ -12,6 +12,7 @@ import {NotificarPromocionComponent} from "./modules/promociones/notificar-promo
 import {
   ConsultarConfiguracionesComponent
 } from "./modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component";
+import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path:'consultar-promociones', component: ConsultarPromocionesComponent},
   {path:'notificar-promocion', component: NotificarPromocionComponent},
   {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
-  {path:'consultar-productos', component: ConsultarProductosComponent}
+  {path:'consultar-productos', component: ConsultarProductosComponent},
+  {path:'registar-venta', component: RegistrarVentaComponent}
 
 ];
 

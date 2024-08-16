@@ -33,6 +33,7 @@ import {MatDialogClose} from "@angular/material/dialog";
 import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import { RegistrarVentaComponent } from './modules/venta/registrar-venta/registrar-venta.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     MessagesComponent,
     ConsultarProductosComponent,
     RegistrarProductoComponent,
-    ConsultarConfiguracionesComponent
+    ConsultarConfiguracionesComponent,
+    RegistrarVentaComponent
   ],
     imports: [
         BrowserModule,

@@ -19,7 +19,9 @@ export class SidebarComponent {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
   menuItems: Menu[] = [
     {id: 1, nombre: 'Inicio', path:'', icon: 'home', activo: false, subMenu: []},
-    {id: 2, nombre: 'Ventas', path:'', icon: 'sell', activo: false, subMenu: []},
+    {id: 2, nombre: 'Ventas', path:'', icon: 'sell', activo: false, subMenu: [
+        {id: 1, nombre: 'Registrar venta', path:'/registar-venta', icon: '', activo: false, subMenu: []}
+      ]},
     {id: 3, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
