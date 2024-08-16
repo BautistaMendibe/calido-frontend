@@ -34,11 +34,33 @@
           </div>
         </div>
 
+        <br>
+
         <!-- Lista de productos a seleccionar -->
+        <div>
+          <div class="col-4" style="height: 150px">
+            <div class="card h-100" style="border-radius: 10px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);">
+              <div class="row h-50 row h-50 d-flex justify-content-center align-items-center">
+                <img *ngIf="false" src="ruta-de-la-imagen.jpg" class="img-fluid rounded-top" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                <mat-icon style="color: grey; font-size: 25px">loyalty</mat-icon>
+              </div>
+              <div class="row align-items-center text-center my-2">
+                <div class="col">
+                  Remera La Coste
+                </div>
+              </div>
+              <div class="row align-items-center text-center mb-2 my-1">
+                <div class="col">
+                  <strong style="font-size: 16px; color: grey">$100</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
 
         <!-- Mensaje de que no hay productos -->
-        <div class="text-center">
+        <div class="text-center" *ngIf="false">
           <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
             <p style="margin-top: 30vh">
               Para crear tu primer factura te invitamos a crear tu primer producto.
@@ -109,7 +131,7 @@
         <!-- Poner el total a la derecha de la cantidad de productos -->
         <br>
         <button mat-raised-button color="accent" class="btn round" id="btnBuscar" [disabled]="true">
-          Vender
+          Confirmar venta
         </button>
       </mat-card>
     </div>
