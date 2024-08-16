@@ -2,7 +2,7 @@
   <div class="row">
     <!-- Lista de productos -->
     <div class="col-7">
-      <mat-card class="p-4">
+      <mat-card class="p-4" style="min-height: 85vh">
         <div class="row">
           <!-- Botón de la lupa -->
           <div class="col-1">
@@ -26,19 +26,33 @@
             </mat-form-field>
           </div>
 
-          <!-- Columna con el botón de 'Nuevo producto' -->
+          <!-- Botón de 'Nuevo producto' -->
           <div class="col-3">
             <button mat-stroked-button color="warn" class="btn round h-75">
               <mat-icon>add</mat-icon>Nuevo producto
             </button>
           </div>
         </div>
+
+        <!-- Lista de productos a seleccionar -->
+
+
+        <!-- Mensaje de que no hay productos -->
+        <div class="text-center">
+          <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
+            <p style="margin-top: 30vh">
+              Para crear tu primer factura te invitamos a crear tu primer producto.
+            </p>
+            <button mat-raised-button color="accent" class="btn round" id="btnBuscar">Nuevo producto</button>
+          </div>
+        </div>
+
       </mat-card>
     </div>
 
     <!-- Factura de venta -->
     <div class="col">
-      <mat-card class="p-4">
+      <mat-card class="p-4" style="min-height: 85vh">
         <h2 style="color: #e15b35">Factura de venta</h2>
         <mat-divider></mat-divider>
         <br>
@@ -85,7 +99,7 @@
         <mat-divider></mat-divider>
         <br>
         <!-- Carrito vacio -->
-        <div style="height: 300px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
+        <div style="height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
           <mat-icon>add_shopping_cart</mat-icon>
           <p style="margin-top: 10px;">Acá verás los productos que elijas para tu venta</p>
         </div>
