@@ -6,5 +6,9 @@ import { Component } from '@angular/core';
   styleUrl: './registrar-venta.component.scss'
 })
 export class RegistrarVentaComponent {
+  isSelected: boolean = false;
 
+  toggleSelection() {
+    this.isSelected = !this.isSelected;
+  }
 }

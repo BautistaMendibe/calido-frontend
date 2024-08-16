@@ -39,9 +39,20 @@
         <!-- Lista de productos a seleccionar -->
         <div>
           <div class="col-4" style="height: 150px">
-            <div class="card h-100" style="border-radius: 10px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.2);">
-              <div class="row h-50 row h-50 d-flex justify-content-center align-items-center">
-                <img *ngIf="false" src="ruta-de-la-imagen.jpg" class="img-fluid rounded-top" alt="Imagen" style="width: 100%; height: 100%; object-fit: cover; border-top-left-radius: 15px; border-top-right-radius: 15px;">
+            <div class="card h-100"
+                 [ngClass]="{'selected-card': isSelected}"
+                 (click)="toggleSelection()"
+                 style="border-radius: 10px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); position: relative;">
+
+              <!-- Círculo con el número en la esquina superior derecha -->
+              <div *ngIf="isSelected"
+                   style="position: absolute; top: -10px; right: -10px; background-color: #e15b35; color: white;
+                  border-radius: 50%; width: 30px; height: 30px; display: flex;
+                  justify-content: center; align-items: center; font-size: 14px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
+                1
+              </div>
+
+              <div class="row h-50 d-flex justify-content-center align-items-center">
                 <mat-icon style="color: grey; font-size: 25px">loyalty</mat-icon>
               </div>
               <div class="row align-items-center text-center my-2">
