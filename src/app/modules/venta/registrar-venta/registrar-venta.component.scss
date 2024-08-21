@@ -1,7 +1,114 @@
+/* Producto seleccionado */
 .selected-card {
   border: 2px solid #e15b35;
 }
 
+/* Línea punteada */
 .dotted-line {
-  border-top: 1px dotted #000; /* Línea punteada */
+  border-top: 1px dotted #000;
+}
+
+/* Estilo general del card de productos */
+.product-list {
+  min-height: 85vh;
+}
+
+/* Botón 'Nuevo producto' */
+.new-product-btn {
+  height: 75%;
+}
+
+/* Tarjeta de producto */
+.product-card {
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  height: 150px;
+}
+
+/* Círculo con la cantidad seleccionada */
+.selected-product-circle {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background-color: #e15b35;
+  color: white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* Icono del producto */
+.product-icon {
+  color: grey;
+  font-size: 25px;
+}
+
+/* Precio del producto */
+.product-price {
+  font-size: 16px;
+  color: grey;
+}
+
+/* Mensaje de producto vacío */
+.empty-product-message {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: grey;
+  margin-top: 30vh;
+}
+
+/* Factura de venta */
+.sale-invoice {
+  min-height: 85vh;
+}
+
+/* Título de la factura */
+.invoice-title {
+  color: #e15b35;
+}
+
+/* Botón 'Nuevo cliente' */
+.new-client-btn {
+  height: 75%;
+}
+
+/* Input de cantidad */
+.quantity-input {
+  width: 40px;
+}
+
+/* Contenedor del resumen */
+.summary-container {
+  padding: 1rem;
+  background-color: #f8f9fa;
+  border-radius: 0.375rem;
+}
+
+/* Carrito vacío */
+.empty-cart {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: grey;
+}
+
+/* Contador de productos seleccionados */
+.product-count {
+  color: grey;
+  font-weight: 500;
+}
+
+/* Botón de confirmación de venta */
+.confirm-sale-btn {
+  width: 100%;
 }

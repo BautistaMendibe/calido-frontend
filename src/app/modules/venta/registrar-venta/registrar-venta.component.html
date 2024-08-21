@@ -2,7 +2,7 @@
   <div class="row">
     <!-- Lista de productos -->
     <div class="col-7">
-      <mat-card class="p-4" style="min-height: 85vh">
+      <mat-card class="p-4 product-list">
         <div class="row">
           <!-- Botón de la lupa -->
           <div class="col-1">
@@ -28,7 +28,7 @@
 
           <!-- Botón de 'Nuevo producto' -->
           <div class="col-3">
-            <button mat-stroked-button color="warn" class="btn round h-75">
+            <button mat-stroked-button color="warn" class="btn round new-product-btn">
               <mat-icon>add</mat-icon>Nuevo producto
             </button>
           </div>
@@ -38,41 +38,38 @@
 
         <!-- Lista de productos a seleccionar -->
         <div class="row">
-            <div class="col-4" style="height: 150px" *ngFor="let producto of productos">
-              <div class="card h-100"
-                   [ngClass]="{'selected-card': producto.seleccionadoParaVenta}"
-                   (click)="seleccionarProducto(producto)"
-                   style="border-radius: 10px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); position: relative;">
+          <div class="col-4" *ngFor="let producto of productos">
+            <div class="card product-card"
+                 [ngClass]="{'selected-card': producto.seleccionadoParaVenta}"
+                 (click)="seleccionarProducto(producto)">
 
-                <!-- Círculo con el número en la esquina superior derecha -->
-                <div *ngIf="producto.seleccionadoParaVenta"
-                     style="position: absolute; top: -10px; right: -10px; background-color: #e15b35; color: white;
-                  border-radius: 50%; width: 30px; height: 30px; display: flex;
-                  justify-content: center; align-items: center; font-size: 14px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
-                  {{ producto.cantidadSeleccionada }}
-                </div>
+              <!-- Círculo con el número en la esquina superior derecha -->
+              <div *ngIf="producto.seleccionadoParaVenta"
+                   class="selected-product-circle">
+                {{ producto.cantidadSeleccionada }}
+              </div>
 
-                <div class="row h-50 d-flex justify-content-center align-items-center">
-                  <mat-icon style="color: grey; font-size: 25px">loyalty</mat-icon>
+              <div class="row h-50 d-flex justify-content-center align-items-center">
+                <mat-icon class="product-icon">loyalty</mat-icon>
+              </div>
+              <div class="row align-items-center text-center my-2">
+                <div class="col">
+                  {{producto.nombre}}
                 </div>
-                <div class="row align-items-center text-center my-2">
-                  <div class="col">
-                    {{producto.nombre}}
-                  </div>
-                </div>
-                <div class="row align-items-center text-center mb-2 my-1">
-                  <div class="col">
-                    <strong style="font-size: 16px; color: grey">${{producto.costo}}</strong>
-                  </div>
+              </div>
+              <div class="row align-items-center text-center mb-2 my-1">
+                <div class="col">
+                  <strong class="product-price">${{producto.costo}}</strong>
                 </div>
               </div>
             </div>
+          </div>
         </div>
 
         <!-- Mensaje de que no hay productos -->
         <div class="text-center" *ngIf="false">
-          <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
-            <p style="margin-top: 30vh">
+          <div class="empty-product-message">
+            <p>
               Para crear tu primer factura te invitamos a crear tu primer producto.
             </p>
             <button mat-raised-button color="accent" class="btn round" id="btnBuscar">Nuevo producto</button>
@@ -84,8 +81,8 @@
 
     <!-- Factura de venta -->
     <div class="col">
-      <mat-card class="p-4" style="min-height: 85vh">
-        <h2 style="color: #e15b35">Factura de venta</h2>
+      <mat-card class="p-4 sale-invoice">
+        <h2 class="invoice-title">Factura de venta</h2>
         <mat-divider></mat-divider>
         <br>
         <div class="row">
@@ -123,7 +120,7 @@
             </mat-form-field>
           </div>
           <div class="col-3">
-            <button mat-stroked-button color="warn" class="btn round h-75">
+            <button mat-stroked-button color="warn" class="btn round new-client-btn">
               <mat-icon>add</mat-icon> Nuevo
             </button>
           </div>
@@ -138,7 +135,7 @@
           </div>
           <div class="d-flex align-items-center">
             <button class="btn btn-outline-secondary btn-sm">-</button>
-            <input type="text" class="form-control form-control-sm mx-2 text-center" value="1" style="width: 40px;">
+            <input type="text" class="form-control form-control-sm mx-2 text-center quantity-input" value="1">
             <button class="btn btn-outline-secondary btn-sm">+</button>
           </div>
           <div class="text-end">
@@ -148,7 +145,7 @@
 
         <!-- Resumen -->
         <div class="border-top pt-3">
-          <div class="p-3 bg-light rounded">
+          <div class="summary-container">
             <div class="d-flex justify-content-between mb-2">
               <span>Subtotal</span>
               <span>$123.00</span>
@@ -162,17 +159,17 @@
         </div>
 
         <!-- Carrito vacio -->
-        <div *ngIf="productosSeleccionados.length == 0" style="height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: grey;">
+        <div *ngIf="productosSeleccionados.length == 0" class="empty-cart">
           <mat-icon>add_shopping_cart</mat-icon>
-          <p style="margin-top: 10px;">Acá verás los productos que elijas para tu venta</p>
+          <p>Acá verás los productos que elijas para tu venta</p>
         </div>
 
         <mat-divider></mat-divider>
         <br>
-        <p style="color: grey; font-weight: 500">{{productosSeleccionados.length}} Producto</p>
+        <p class="product-count">{{productosSeleccionados.length}} Producto</p>
         <br>
         <!-- Botones -->
-        <button mat-raised-button color="accent" class="btn round" id="btnBuscar" [disabled]="true">
+        <button mat-raised-button color="accent" class="btn round confirm-sale-btn" id="btnBuscar" [disabled]="true">
           Confirmar venta
         </button>
       </mat-card>
