@@ -11,6 +11,7 @@ import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comand
 export class RegistrarVentaComponent implements OnInit{
   public isSelected: boolean = false;
   public productos: Producto[] = [];
+  public productosSeleccionados: Producto[] = [];
 
   constructor(private productosService: ProductosService) {
   }
@@ -24,6 +25,22 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
     });
+  }
+
+  public seleccionarProducto(producto: Producto) {
+    const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
+
+    if (index > -1) {
+      // Si el producto ya está en la lista, lo eliminamos y marcamos el seleccionado para venta en false
+      this.productosSeleccionados.splice(index, 1);
+      producto.seleccionadoParaVenta = false;
+      producto.cantidadSeleccionada = 0;
+    } else {
+      // Si el producto no está en la lista, lo agregamos y marcamos el seleccionado para venta en true
+      this.productosSeleccionados.push(producto);
+      producto.seleccionadoParaVenta = true;
+      producto.cantidadSeleccionada = 1;
+    }
   }
 
   toggleSelection() {

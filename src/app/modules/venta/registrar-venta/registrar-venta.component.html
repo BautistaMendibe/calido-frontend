@@ -40,16 +40,16 @@
         <div class="row">
             <div class="col-4" style="height: 150px" *ngFor="let producto of productos">
               <div class="card h-100"
-                   [ngClass]="{'selected-card': isSelected}"
-                   (click)="toggleSelection()"
+                   [ngClass]="{'selected-card': producto.seleccionadoParaVenta}"
+                   (click)="seleccionarProducto(producto)"
                    style="border-radius: 10px; box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1); position: relative;">
 
                 <!-- Círculo con el número en la esquina superior derecha -->
-                <div *ngIf="isSelected"
+                <div *ngIf="producto.cantidadSeleccionada != 0"
                      style="position: absolute; top: -10px; right: -10px; background-color: #e15b35; color: white;
                   border-radius: 50%; width: 30px; height: 30px; display: flex;
                   justify-content: center; align-items: center; font-size: 14px; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);">
-                  1
+                  {{ producto.cantidadSeleccionada }}
                 </div>
 
                 <div class="row h-50 d-flex justify-content-center align-items-center">

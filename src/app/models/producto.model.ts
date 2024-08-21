@@ -10,6 +10,9 @@ export class Producto {
   tipoProducto: TipoProducto;
   proveedor: Proveedor;
   marca: Marca;
+  seleccionadoParaVenta: boolean;
+  cantidadEnStock: number;
+  cantidadSeleccionada: number;
 
   constructor(
     id?: number,
@@ -18,7 +21,10 @@ export class Producto {
     costoIva?: number,
     tipoProducto?: TipoProducto,
     proveedor?: Proveedor,
-    marca?: Marca
+    marca?: Marca,
+    seleccionadoParaVenta?: boolean,
+    cantidadEnStock?: number,
+    cantidadSeleccionada?: number
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -27,6 +33,9 @@ export class Producto {
     this.tipoProducto = tipoProducto!;
     this.proveedor = proveedor!;
     this.marca = marca!;
+    this.seleccionadoParaVenta = !seleccionadoParaVenta;
+    this.cantidadEnStock = cantidadEnStock!;
+    this.cantidadSeleccionada = cantidadSeleccionada!;
   }
 }
 
