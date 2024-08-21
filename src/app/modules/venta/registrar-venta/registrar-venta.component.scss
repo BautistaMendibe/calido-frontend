@@ -112,3 +112,15 @@
 .confirm-sale-btn {
   width: 100%;
 }
+
+.custom-align-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%; /* Asegura que el contenedor tenga la altura adecuada */
+}
+
+.custom-align-center h5 {
+  margin: 0; /* Elimina los márgenes por defecto */
+  line-height: 1.5rem; /* Ajusta la altura de línea si es necesario */
+}
