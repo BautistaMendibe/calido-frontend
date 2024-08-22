@@ -32,6 +32,8 @@ export class RegistrarProductoComponent implements OnInit {
   public esConsulta: boolean;
   public formDesactivado: boolean;
   public producto: Producto;
+  public productoImg: string | ArrayBuffer | null = null;
+  private selectedFile: File | null = null;
 
   constructor(
     private fb: FormBuilder,
@@ -76,7 +78,27 @@ export class RegistrarProductoComponent implements OnInit {
       txTipoProducto: ['', [Validators.pattern('^[^0-9]+$')]],
       txMarca: ['', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: ['', [Validators.required]],
+      txImpuestos: ['21', [Validators.required]], // Valor por defecto IVA
+      txCostoFinal: [{value: '', disabled: true}, [Validators.required]],
+      txDescripcion: ['']
     });
+
+    // Suscribirse a los cambios en txCosto y txImpuestos
+    this.form.get('txCosto')?.valueChanges.subscribe(() => {
+      this.calcularCostoFinal();
+    });
+
+    this.form.get('txImpuestos')?.valueChanges.subscribe(() => {
+      this.calcularCostoFinal();
+    });
+  }
+
+  private calcularCostoFinal() {
+    const costo = this.form.get('txCosto')?.value || 0;
+    const impuestos = this.form.get('txImpuestos')?.value || 0;
+    const costoFinal = costo * (1 + impuestos / 100);
+
+    this.form.get('txCostoFinal')?.setValue(costoFinal.toFixed(2)); // Actualiza txCostoFinal
   }
 
   private rellenarFormularioDataProducto() {
@@ -211,26 +233,6 @@ export class RegistrarProductoComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  get txNombre(): FormControl {
-    return this.form.get('txNombre') as FormControl;
-  }
-
-  get txCosto(): FormControl {
-    return this.form.get('txCosto') as FormControl;
-  }
-
-  get txTipoProducto(): FormControl {
-    return this.form.get('txTipoProducto') as FormControl;
-  }
-
-  get txMarca(): FormControl {
-    return this.form.get('txMarca') as FormControl;
-  }
-
-  get txProveedor(): FormControl {
-    return this.form.get('txProveedor') as FormControl;
-  }
-
   public soloNumeros(event: KeyboardEvent) {
     const pattern = /[0-9]/;
     if (!pattern.test(event.key)) {
@@ -253,6 +255,111 @@ export class RegistrarProductoComponent implements OnInit {
       return 'Formato inválido';
     }
     return '';
+  }
+
+  private handleFileInput(file: File) {
+    if (!this.validateImage(file)) {
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.productoImg = reader.result;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  onFileSelected(event: Event) {
+    const fileInput = event.target as HTMLInputElement;
+    if (fileInput.files && fileInput.files.length > 0) {
+      this.selectedFile = fileInput.files[0];
+      this.handleFileInput(this.selectedFile);
+    }
+  }
+
+  private convertirImagenABase64(callback: (logoBase64: string | null) => void) {
+    if (!this.selectedFile) {
+      callback(null);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      callback(reader.result as string);
+    };
+    reader.readAsDataURL(this.selectedFile);
+  }
+
+  private validateImage(file: File): boolean {
+    const validTypes = ['image/png', 'image/jpeg'];
+    const maxSize = 10 * 1024 * 1024; // 10MB
+
+    if (!validTypes.includes(file.type)) {
+      this.notificacionService.openSnackBarError('El tipo de archivo no es válido. Solo se permiten archivos PNG o JPG.');
+      return false;
+    }
+
+    if (file.size > maxSize) {
+      this.notificacionService.openSnackBarError('El tamaño del archivo es demasiado grande. El tamaño máximo permitido es de 10MB.');
+      return false;
+    }
+
+    return true;
+  }
+
+  onDragOver(event: DragEvent): void {
+    event.preventDefault();
+  }
+
+  onDrop(event: DragEvent): void {
+    event.preventDefault();
+
+    if (event.dataTransfer?.files) {
+      const file = event.dataTransfer.files[0];
+      this.previewImage(file);
+    }
+  }
+
+  previewImage(file: File): void {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.productoImg = reader.result;
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  get txNombre(): FormControl {
+    return this.form.get('txNombre') as FormControl;
+  }
+
+  get txCosto(): FormControl {
+    return this.form.get('txCosto') as FormControl;
+  }
+
+  get txTipoProducto(): FormControl {
+    return this.form.get('txTipoProducto') as FormControl;
+  }
+
+  get txMarca(): FormControl {
+    return this.form.get('txMarca') as FormControl;
+  }
+
+  get txProveedor(): FormControl {
+    return this.form.get('txProveedor') as FormControl;
+  }
+
+  get txImpuestos(): FormControl {
+    return this.form.get('txImpuestos') as FormControl;
+  }
+
+  get txCostoFinal(): FormControl {
+    return this.form.get('txCostoFinal') as FormControl;
+  }
+
+  get txDescripcion(): FormControl {
+    return this.form.get('txDescripcion') as FormControl;
   }
 }
 

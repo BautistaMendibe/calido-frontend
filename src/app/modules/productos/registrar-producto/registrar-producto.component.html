@@ -11,75 +11,134 @@
   </div>
 
   <mat-divider></mat-divider>
-
   <br>
-  <form [formGroup]="form">
-    <div class="row pt-4">
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Nombre</mat-label>
-          <input type="text" matInput [formControl]="txNombre" (keypress)="soloLetras($event)" />
-          <mat-error *ngIf="txNombre.invalid">{{getErrorMessage(txNombre)}}</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Costo</mat-label>
-          <input type="text" matInput [formControl]="txCosto" (keypress)="soloNumeros($event)" />
-          <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Proveedor</mat-label>
-          <mat-select [formControl]="txProveedor">
-            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
-              {{proveedor.nombre}}
-            </mat-option>
-          </mat-select>
-          <mat-error *ngIf="txProveedor.invalid">{{getErrorMessage(txProveedor)}}</mat-error>
-        </mat-form-field>
-      </div>
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Tipo Producto</mat-label>
-          <input type="text" matInput [formControl]="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto" (keypress)="soloLetras($event)" />
-          <mat-error *ngIf="txTipoProducto.invalid">{{getErrorMessage(txTipoProducto)}}</mat-error>
-        </mat-form-field>
-        <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
-          <mat-option *ngFor="let tipoProducto of tiposProductoFiltrados" [value]="tipoProducto.nombre">
-            {{tipoProducto.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-      </div>
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Marca</mat-label>
-          <input type="text" matInput [formControl]="txMarca" [matAutocomplete]="autoCompleteMarca" (keypress)="soloLetras($event)" />
-          <mat-error *ngIf="txMarca.invalid">{{getErrorMessage(txMarca)}}</mat-error>
-        </mat-form-field>
-        <mat-autocomplete #autoCompleteMarca="matAutocomplete">
-          <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.nombre">
-            {{marca.nombre}}
-          </mat-option>
-        </mat-autocomplete>
+
+  <div class="row">
+    <!-- Columna de Inputs -->
+    <div class="col-md-8">
+      <form [formGroup]="form">
+        <!-- Primera línea: Nombre del producto -->
+        <div class="row pt-4">
+          <div class="col-md-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Nombre</mat-label>
+              <input type="text" matInput formControlName="txNombre" (keydown)="soloLetras($event)" />
+              <mat-error *ngIf="txNombre.invalid">{{getErrorMessage(txNombre)}}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Segunda línea: Tipo Producto, Marca, Proveedor -->
+        <div class="row pt-4">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Tipo Producto</mat-label>
+              <input type="text" matInput formControlName="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto" (keydown)="soloLetras($event)" />
+              <mat-error *ngIf="txTipoProducto.invalid">{{getErrorMessage(txTipoProducto)}}</mat-error>
+            </mat-form-field>
+            <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
+              <mat-option *ngFor="let tipoProducto of tiposProductoFiltrados" [value]="tipoProducto.nombre">
+                {{tipoProducto.nombre}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Marca</mat-label>
+              <input type="text" matInput formControlName="txMarca" [matAutocomplete]="autoCompleteMarca" (keydown)="soloLetras($event)" />
+              <mat-error *ngIf="txMarca.invalid">{{getErrorMessage(txMarca)}}</mat-error>
+            </mat-form-field>
+            <mat-autocomplete #autoCompleteMarca="matAutocomplete">
+              <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.nombre">
+                {{marca.nombre}}
+              </mat-option>
+            </mat-autocomplete>
+          </div>
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Proveedor</mat-label>
+              <mat-select formControlName="txProveedor">
+                <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
+                  {{proveedor.nombre}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="txProveedor.invalid">{{getErrorMessage(txProveedor)}}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Tercera línea: Costo Base, Impuestos, Costo Final -->
+        <div class="row pt-4">
+          <div class="col-md-4">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Costo Base</mat-label>
+              <input type="text" matInput formControlName="txCosto" (keydown)="soloNumeros($event)" />
+              <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
+            <span>+</span>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Impuestos</mat-label>
+              <mat-select formControlName="txImpuestos">
+                <mat-option value="0">Ninguno (0%)</mat-option>
+                <mat-option value="21">IVA (21%)</mat-option>
+              </mat-select>
+              <mat-error *ngIf="txImpuestos.invalid">{{getErrorMessage(txImpuestos)}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
+            <span>=</span>
+          </div>
+          <div class="col-md-3">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Costo Final</mat-label>
+              <input type="text" matInput formControlName="txCostoFinal" readonly />
+            </mat-form-field>
+          </div>
+        </div>
+
+        <!-- Cuarta línea: Descripción -->
+        <div class="row pt-4">
+          <div class="col-md-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput formControlName="txDescripcion" rows="3"></textarea>
+              <mat-error *ngIf="txDescripcion.invalid">{{getErrorMessage(txDescripcion)}}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Columna de Subir Imagen -->
+    <div class="col-md-4">
+      <div class="upload-container d-flex align-items-center mb-3"
+           (dragover)="onDragOver($event)"
+           (drop)="onDrop($event)">
+        <img *ngIf="productoImg" [src]="productoImg" class="preview-img">
+        <span *ngIf="!productoImg" class="upload-text">Arrastra aquí...</span>
+        <input type="file" class="file-input" (change)="onFileSelected($event)">
       </div>
     </div>
-  </form>
 
-  <mat-divider></mat-divider>
-  <br>
-  <div class="row text-right">
-    <div class="col d-flex justify-content-end">
-      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnCancelar">
-        Cancelar
-      </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProducto()" id="btnRegistrar">
-        Registrar
-      </button>
-      <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">Modificar</button>
+    <mat-divider></mat-divider>
+    <br>
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+          Cancelar
+        </button>
+        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProducto()" id="btnBuscar">
+          Registrar
+        </button>
+        <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">
+          Modificar
+        </button>
+      </div>
     </div>
+    <br>
   </div>
-  <br>
 </div>
-

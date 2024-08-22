@@ -1,5 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {UsuariosService} from "../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {AuthService} from "../../services/auth.servicie";
@@ -19,6 +27,7 @@ export class LoginComponent implements OnInit{
   public isLoading: boolean = true;
   public isValidatingPassword: boolean = false;
   public hidePassword: boolean = true;
+  public hideConfirmPassword: boolean = true;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -59,10 +68,35 @@ export class LoginComponent implements OnInit{
   private crearFormularioRegister() {
     this.formLogin = this.formBuilder.group({
       txNombreUsuario: ['', [Validators.required]],
-      txContrasena: ['', [Validators.required]],
+      txContrasena: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)
+        ]
+      ],
       txNombre: ['', [Validators.required]],
-      txApellido: ['', [Validators.required]]
-    });
+      txApellido: ['', [Validators.required]],
+      txConfirmarContrasena: ['', [Validators.required]]
+    }, { validators: this.passwordMatchValidator.bind(this) });
+  }
+
+  public passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
+    const password = control.get('txContrasena');
+    const confirmPassword = control.get('txConfirmarContrasena');
+
+    if (!password || !confirmPassword) {
+      return null;
+    }
+
+    if (password.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+      confirmPassword.setErrors(null);
+      return null;
+    }
   }
 
   public iniciarSesion(){
@@ -149,6 +183,9 @@ export class LoginComponent implements OnInit{
   get txContrasena(): FormControl {
     return this.formLogin.get('txContrasena') as FormControl;
   }
-  // endregion
 
+  get txConfirmarContrasena(): FormControl {
+    return this.formLogin.get('txConfirmarContrasena') as FormControl
+  }
+  // endregion
 }

@@ -90,11 +90,15 @@
             </ng-container>
             <ng-container matColumnDef="costo">
               <mat-header-cell *matHeaderCellDef>Costo</mat-header-cell>
-              <mat-cell *matCellDef="let producto">{{ producto.costo }}</mat-cell>
+              <mat-cell *matCellDef="let producto">
+                {{ producto.costo | currency:'$':'symbol':'1.2-2' }}
+              </mat-cell>
             </ng-container>
             <ng-container matColumnDef="costoIva">
               <mat-header-cell *matHeaderCellDef>Costo Con Iva</mat-header-cell>
-              <mat-cell *matCellDef="let producto">{{ producto.costoIva }}</mat-cell>
+              <mat-cell *matCellDef="let producto">
+                {{ producto.costoIva | currency:'$':'symbol':'1.2-2' }}
+              </mat-cell>
             </ng-container>
             <ng-container matColumnDef="tipoProducto">
               <mat-header-cell *matHeaderCellDef>Tipo Producto</mat-header-cell>
