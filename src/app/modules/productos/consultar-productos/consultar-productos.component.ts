@@ -10,25 +10,35 @@ import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
+import {TipoProducto} from "../../../models/tipoProducto.model";
+import {Proveedor} from "../../../models/proveedores.model";
+import {Marca} from "../../../models/Marcas.model";
+import {MarcasService} from "../../../services/marcas.service";
+import {ProveedoresService} from "../../../services/proveedores.service";
 
 @Component({
   selector: 'app-consultar-productos',
   templateUrl: './consultar-productos.component.html',
   styleUrls: ['./consultar-productos.component.scss']
 })
-export class ConsultarProductosComponent implements OnInit, OnDestroy {
+export class ConsultarProductosComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
   public productos: Producto[] = [];
   public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
   private filtros: FiltrosProductos;
+  public listaTipoProducto: TipoProducto[] = [];
+  public listaProveedores: Proveedor[] = [];
+  public listaMarcas: Marca[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
     private notificacionService: SnackBarService,
+    private marcasService: MarcasService,
+    private proveedoresService: ProveedoresService,
     private notificationDialogService: NotificationService,
     private productosService: ProductosService) {
     this.form = this.fb.group({
@@ -43,11 +53,10 @@ export class ConsultarProductosComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.createForm();
-  }
-
-  ngOnDestroy() {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.buscarTiposProductos();
+    this.buscarMarcas();
+    this.buscarProveedores();
+    this.buscar();
   }
 
   private createForm() {
@@ -134,6 +143,24 @@ export class ConsultarProductosComponent implements OnInit, OnDestroy {
           });
         }
       });
+  }
+
+  private buscarTiposProductos() {
+    this.productosService.buscarTiposProductos().subscribe((tipoProductos) => {
+      this.listaTipoProducto = tipoProductos;
+    });
+  }
+
+  private buscarMarcas() {
+    this.marcasService.buscarMarcas().subscribe((marcas) => {
+      this.listaMarcas = marcas;
+    });
+  }
+
+  private buscarProveedores() {
+    this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
+      this.listaProveedores = proveedores;
+    });
   }
 
 
