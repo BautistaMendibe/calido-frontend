@@ -128,10 +128,10 @@
         <mat-divider></mat-divider>
         <br>
         <!-- Producto -->
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3" *ngFor="let producto of productosSeleccionados">
           <div>
-            <h5 class="m-0"><b>Producto 2</b></h5>
-            <small class="text-muted">$148.83</small>
+            <h5 class="m-0"><b>{{ producto.nombre }}</b></h5>
+            <small class="text-muted">$ {{ producto.costo }}</small>
           </div>
           <div class="d-flex align-items-center">
             <button class="btn btn-outline-secondary btn-sm">-</button>
@@ -139,7 +139,7 @@
             <button class="btn btn-outline-secondary btn-sm">+</button>
           </div>
           <div class="text-end">
-            <h5 class="m-0"><b>$148.83</b></h5>
+            <h5 class="m-0"><b>$ {{ producto.costo }}</b></h5>
           </div>
         </div>
 
