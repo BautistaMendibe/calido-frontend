@@ -38,7 +38,7 @@
 
         <!-- Lista de productos a seleccionar -->
         <div class="row">
-          <div class="col-4" *ngFor="let producto of productos">
+          <div class="col-4 p-3" *ngFor="let producto of productos">
             <div class="card product-card"
                  [ngClass]="{'selected-card': producto.seleccionadoParaVenta}"
                  (click)="seleccionarProducto(producto)">
