@@ -17,7 +17,7 @@
     <!-- Columna de Inputs -->
     <div class="col-md-8">
       <form [formGroup]="form">
-        <!-- Primera línea: Nombre del producto -->
+        <!-- Primera línea: Nombre del producto y Código de Barras -->
         <div class="row pt-4">
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -29,7 +29,7 @@
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Código de Barras</mat-label>
-              <input type="text" matInput formControlName="txCodigoBarras"/>
+              <input type="text" matInput formControlName="txCodigoBarras" maxlength="13"/>
               <mat-error *ngIf="txCodigoBarras.invalid">{{getErrorMessage(txCodigoBarras)}}</mat-error>
             </mat-form-field>
           </div>

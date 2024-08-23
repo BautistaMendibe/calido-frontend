@@ -20,22 +20,14 @@ export class RegistrarProductoComponent implements OnInit {
 
   public form: FormGroup;
   private referencia: ConsultarProductosComponent;
-  private idProducto: number;
-  public nombre: string;
-  public costo: number;
-  public costoImpuesto: number;
-  public descripcion: string;
-  public codigoBarras: string;
   public listaTipoProducto: TipoProducto[] = [];
   public tiposProductoFiltrados: TipoProducto[] = [];
   public listaProveedores: Proveedor[] = [];
   public listaMarcas: Marca[] = [];
   public marcasFiltradas: Marca[] = [];
-  public esConsulta: boolean;
-  public formDesactivado: boolean;
-  public producto: Producto;
   public productoImg: string | ArrayBuffer | null = null;
   private selectedFile: File | null = null;
+  public esConsulta: boolean;
 
   constructor(
     private fb: FormBuilder,
@@ -53,100 +45,62 @@ export class RegistrarProductoComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
-    this.producto = this.data.producto;
+    this.productoImg = this.data.producto?.imgProducto || null;
     this.esConsulta = this.data.esConsulta;
-    this.formDesactivado = this.data.formDesactivado;
-    this.idProducto = this.producto ? this.producto.id : -1;
-    this.nombre = this.producto ? this.producto.nombre : '';
-    this.costo = this.producto ? this.producto.costo : 0;
-    this.costoImpuesto = this.producto ? this.producto.costoImpuesto : 0;
-    this.codigoBarras = this.producto ? this.producto.codigoBarra : '';
-    this.productoImg = this.producto ? this.producto.imgProducto : null;
-    this.descripcion = this.producto ? this.producto.descripcion : '';
   }
 
   ngOnInit() {
     this.crearFormulario();
+
+    if (this.data.formDesactivado) {
+      this.form.disable();
+    }
+
     this.buscarTiposProductos();
     this.buscarMarcas();
     this.buscarProveedores();
 
-    if (this.esConsulta && this.producto) {
-      this.rellenarFormularioDataProducto();
-    }
+    this.form.get('txCosto')?.valueChanges.subscribe(() => this.calcularCostoFinal());
+    this.form.get('txImpuestos')?.valueChanges.subscribe(() => this.calcularCostoFinal());
   }
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombre: ['', [Validators.required, Validators.pattern('^[^0-9]+$')]],
-      txCodigoBarras: ['', [Validators.required, Validators.maxLength(13)]],
-      txCosto: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
-      txTipoProducto: ['', [Validators.pattern('^[^0-9]+$')]],
-      txMarca: ['', [Validators.pattern('^[^0-9]+$')]],
-      txProveedor: ['', [Validators.required]],
+      txNombre: [this.data.producto?.nombre || '', [Validators.required, Validators.pattern('^[^0-9]+$')]],
+      txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13)]],
+      txCosto: [Number(this.data.producto?.costo) || '', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      txTipoProducto: [this.data.producto?.tipoProducto?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
+      txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
+      txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txImpuestos: ['21', [Validators.required]], // Valor por defecto IVA
-      txCostoFinal: [{value: '', disabled: true}, [Validators.required]],
-      txDescripcion: ['', [Validators.maxLength(200)]]
-    });
-
-    // Suscribirse a los cambios en txCosto y txImpuestos
-    this.form.get('txCosto')?.valueChanges.subscribe(() => {
-      this.calcularCostoFinal();
-    });
-
-    this.form.get('txImpuestos')?.valueChanges.subscribe(() => {
-      this.calcularCostoFinal();
+      txCostoFinal: [{ value: this.data.producto?.costoImpuesto || '', disabled: true }, [Validators.required]],
+      txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]]
     });
   }
 
   private calcularCostoFinal() {
-    const costo = this.form.get('txCosto')?.value || 0;
-    const impuestos = this.form.get('txImpuestos')?.value || 0;
+    const costo = parseFloat(this.txCosto.value) || 0;
+    const impuestos = parseFloat(this.txImpuestos.value) || 0;
     const costoFinal = costo * (1 + impuestos / 100);
-
-    this.form.get('txCostoFinal')?.setValue(parseFloat(costoFinal.toFixed(2))); // Actualiza txCostoFinal
-  }
-
-  private rellenarFormularioDataProducto() {
-    this.idProducto = this.producto.id;
-    this.form.get('txNombre')?.setValue(this.producto.nombre);
-    this.form.get('txCosto')?.setValue(this.producto.costo);
-    this.form.get('txTipoProducto')?.setValue(this.producto.tipoProducto.nombre);
-    this.form.get('txMarca')?.setValue(this.producto.marca.nombre);
-    this.form.get('txProveedor')?.setValue(this.producto.proveedor.id);
-    this.form.get('txDescripcion')?.setValue(this.producto.descripcion);
-    this.form.get('txCodigoBarras')?.setValue(this.producto.codigoBarra);
-    this.form.get('txCostoFinal')?.setValue(this.producto.costoImpuesto);
-
-    if (this.formDesactivado) {
-      this.form.disable();
-    }
+    this.txCostoFinal.setValue(costoFinal.toFixed(2), { emitEvent: false });
   }
 
   private buscarTiposProductos() {
     this.productosService.buscarTiposProductos().subscribe((tipoProductos) => {
       this.listaTipoProducto = tipoProductos;
-      this.form.get('txTipoProducto')?.valueChanges.subscribe((tipoProducto) => {
-        this.tiposProductoFiltrados = this.filterTipoProductos(tipoProducto);
+      this.txTipoProducto.valueChanges.subscribe((tipoProducto) => {
+        this.tiposProductoFiltrados = this.filtrarLista(tipoProducto, this.listaTipoProducto);
       });
     });
-  }
-
-  private filterTipoProductos(busqueda: string) {
-    return this.listaTipoProducto.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
   private buscarMarcas() {
     this.marcasService.buscarMarcas().subscribe((marcas) => {
       this.listaMarcas = marcas;
-      this.form.get('txMarca')?.valueChanges.subscribe((marca) => {
-        this.marcasFiltradas = this.filterMarcas(marca);
+      this.txMarca.valueChanges.subscribe((marca) => {
+        this.marcasFiltradas = this.filtrarLista(marca, this.listaMarcas);
       });
     });
-  }
-
-  private filterMarcas(busqueda: string) {
-    return this.listaMarcas.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
   }
 
   private buscarProveedores() {
@@ -155,127 +109,91 @@ export class RegistrarProductoComponent implements OnInit {
     });
   }
 
+  private filtrarLista(busqueda: string, lista: any[]): any[] {
+    return lista.filter((value) => value.nombre.toLowerCase().startsWith(busqueda.toLowerCase()));
+  }
+
   public registrarProducto() {
     if (this.form.valid) {
-      const producto: Producto = new Producto();
-      const tipoProducto: TipoProducto = new TipoProducto();
-      const marca: Marca = new Marca();
-      const proveedor: Proveedor = new Proveedor();
-
-      tipoProducto.nombre = this.txTipoProducto.value;
-      tipoProducto.id = this.getTipoProductoId(this.txTipoProducto.value);
-      marca.nombre = this.txMarca.value;
-      marca.id = this.getMarcaId(this.txMarca.value);
-      proveedor.id = this.txProveedor.value;
-      producto.tipoProducto = tipoProducto;
-      producto.nombre = this.txNombre.value;
-      producto.costo = this.txCosto.value;
-      producto.costoImpuesto = this.txCostoFinal.value;
-      producto.descripcion = this.txDescripcion.value;
-      producto.imgProducto = this.productoImg as string;
-      producto.codigoBarra = this.txCodigoBarras.value;
-      producto.marca = marca;
-      producto.proveedor = proveedor;
-
-      console.log(producto);
-
+      const producto = this.construirProducto();
       this.productosService.registrarProducto(producto).subscribe((respuesta) => {
-        if (respuesta.mensaje === 'OK') {
-          this.notificacionService.openSnackBarSuccess('El producto se registró con éxito');
-          this.dialogRef.close();
-          this.referencia.buscar();
-        } else {
-          this.notificacionService.openSnackBarError('Error al registrar el producto, intentelo nuevamente');
-        }
+        this.gestionarRespuesta(respuesta, 'El producto se registró con éxito');
       });
     }
-  }
-
-  private getTipoProductoId(nombre: string): number {
-    const tipoProducto = this.listaTipoProducto.find(tp => tp.nombre === nombre);
-    return tipoProducto ? tipoProducto.id : 0;
-  }
-
-  private getMarcaId(nombre: string): number {
-    const marca = this.listaMarcas.find(m => m.nombre === nombre);
-    return marca ? marca.id : 0;
   }
 
   public modificarProducto() {
     if (this.form.valid) {
-      const producto: Producto = new Producto();
-      const tipoProducto: TipoProducto = new TipoProducto();
-      const marca: Marca = new Marca();
-      const proveedor: Proveedor = new Proveedor();
-
-      producto.id = this.idProducto;
-      tipoProducto.nombre = this.txTipoProducto.value;
-      tipoProducto.id = this.getTipoProductoId(this.txTipoProducto.value);
-      marca.nombre = this.txMarca.value;
-      marca.id = this.getMarcaId(this.txMarca.value);
-      proveedor.id = this.txProveedor.value;
-      producto.tipoProducto = tipoProducto;
-      producto.nombre = this.txNombre.value;
-      producto.costo = this.txCosto.value;
-      producto.costoImpuesto = this.txCostoFinal.value;
-      producto.descripcion = this.txDescripcion.value;
-      producto.codigoBarra = this.txCodigoBarras.value;
-      producto.imgProducto = this.productoImg as string;
-      producto.marca = marca;
-      producto.proveedor = proveedor;
-
-      console.log('Producto a modificar:', producto);
-
+      const producto = this.construirProducto(this.data.producto?.id);
       this.productosService.modificarProducto(producto).subscribe((respuesta) => {
-        if (respuesta.mensaje === 'OK') {
-          this.notificacionService.openSnackBarSuccess('El producto se modificó con éxito');
-          this.dialogRef.close();
-          this.referencia.buscar();
-        } else {
-          this.notificacionService.openSnackBarError('Error al modificar el producto, inténtelo nuevamente');
-        }
+        this.gestionarRespuesta(respuesta, 'El producto se modificó con éxito');
       });
     }
+  }
+
+  private construirProducto(id?: number): Producto {
+    return {
+      id: id || undefined,
+      nombre: this.txNombre.value,
+      costo: parseFloat(this.txCosto.value) || 0,
+      costoImpuesto: parseFloat(this.txCostoFinal.value) || 0,
+      descripcion: this.txDescripcion.value,
+      codigoBarra: this.txCodigoBarras.value,
+      imgProducto: this.productoImg as string,
+      tipoProducto: { nombre: this.txTipoProducto.value, id: this.getTipoProductoId(this.txTipoProducto.value) },
+      marca: { nombre: this.txMarca.value, id: this.getMarcaId(this.txMarca.value) },
+      proveedor: { id: this.txProveedor.value }
+    } as Producto;
+  }
+
+  private gestionarRespuesta(respuesta: any, mensajeExito: string) {
+    if (respuesta.mensaje === 'OK') {
+      this.notificacionService.openSnackBarSuccess(mensajeExito);
+      this.dialogRef.close();
+      this.referencia.buscar();
+    } else {
+      this.notificacionService.openSnackBarError('Error al procesar la solicitud, intentelo nuevamente');
+    }
+  }
+
+  private getTipoProductoId(nombre: string): number {
+    return this.listaTipoProducto.find(tp => tp.nombre === nombre)?.id || 0;
+  }
+
+  private getMarcaId(nombre: string): number {
+    return this.listaMarcas.find(m => m.nombre === nombre)?.id || 0;
   }
 
   public cancelar() {
     this.dialogRef.close();
   }
 
-  // Método para obtener mensajes de error
   public getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) {
-      return 'Este campo es obligatorio';
-    } else if (control.hasError('pattern')) {
-      return 'Formato inválido';
-    }
+    if (control.hasError('required')) return 'Este campo es obligatorio';
+    if (control.hasError('pattern')) return 'Formato inválido';
     return '';
   }
 
-  private handleFileInput(file: File) {
-    if (!this.validateImage(file)) {
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = reader.result as string;
-      this.productoImg = result;
-      this.convertirImagenABase64(result);
-    };
-    reader.readAsDataURL(file);
-  }
-
-  onFileSelected(event: Event) {
+  public onFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
-    if (fileInput.files && fileInput.files.length > 0) {
+    if (fileInput.files?.length) {
       this.selectedFile = fileInput.files[0];
       this.handleFileInput(this.selectedFile);
     }
   }
 
+  private handleFileInput(file: File) {
+    if (!this.validateImage(file)) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.productoImg = reader.result;
+      this.convertirImagenABase64(this.productoImg as string);
+    };
+    reader.readAsDataURL(file);
+  }
+
   private convertirImagenABase64(base64Image: string) {
-    this.productoImg = base64Image || '';
+    this.productoImg = base64Image;
   }
 
   private validateImage(file: File): boolean {
@@ -295,26 +213,22 @@ export class RegistrarProductoComponent implements OnInit {
     return true;
   }
 
-  onDragOver(event: DragEvent): void {
+  public onDragOver(event: DragEvent): void {
     event.preventDefault();
   }
 
-  onDrop(event: DragEvent): void {
+  public onDrop(event: DragEvent): void {
     event.preventDefault();
-
-    if (event.dataTransfer?.files) {
-      const file = event.dataTransfer.files[0];
-      this.previewImage(file);
+    if (event.dataTransfer?.files?.length) {
+      this.previewImage(event.dataTransfer.files[0]);
     }
   }
 
-  previewImage(file: File): void {
+  private previewImage(file: File): void {
     const reader = new FileReader();
-
     reader.onload = () => {
       this.productoImg = reader.result;
     };
-
     reader.readAsDataURL(file);
   }
 
@@ -354,5 +268,3 @@ export class RegistrarProductoComponent implements OnInit {
     return this.form.get('txCodigoBarras') as FormControl;
   }
 }
-
-

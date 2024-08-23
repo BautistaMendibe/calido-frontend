@@ -246,11 +246,6 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   public modificarEmpleado() {
     if (this.form.valid) {
-      console.log("A")
-    } else {
-      console.log("B")
-    }
-    if (this.form.valid) {
       const domicilio: Domicilio = new Domicilio();
       this.usuario.nombreUsuario = this.txNombreUsuario.value;
       this.usuario.nombre = this.txNombre.value;
