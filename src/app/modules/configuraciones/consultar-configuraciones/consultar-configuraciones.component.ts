@@ -120,7 +120,6 @@ export class ConsultarConfiguracionesComponent implements OnInit {
     if (this.form.valid) {
       this.convertirLogoABase64((logoBase64) => {
         const configuracion = this.crearConfiguracionDesdeFormulario(logoBase64);
-        console.log(logoBase64);
         this.actualizarConfiguracion(configuracion);
       });
     }

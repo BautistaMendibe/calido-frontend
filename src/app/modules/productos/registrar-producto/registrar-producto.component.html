@@ -19,11 +19,18 @@
       <form [formGroup]="form">
         <!-- Primera línea: Nombre del producto -->
         <div class="row pt-4">
-          <div class="col-md-12">
+          <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Nombre</mat-label>
-              <input type="text" matInput formControlName="txNombre" (keydown)="soloLetras($event)" />
+              <input type="text" matInput formControlName="txNombre"/>
               <mat-error *ngIf="txNombre.invalid">{{getErrorMessage(txNombre)}}</mat-error>
+            </mat-form-field>
+          </div>
+          <div class="col-md-6">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Código de Barras</mat-label>
+              <input type="text" matInput formControlName="txCodigoBarras"/>
+              <mat-error *ngIf="txCodigoBarras.invalid">{{getErrorMessage(txCodigoBarras)}}</mat-error>
             </mat-form-field>
           </div>
         </div>
@@ -33,7 +40,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Tipo Producto</mat-label>
-              <input type="text" matInput formControlName="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto" (keydown)="soloLetras($event)" />
+              <input type="text" matInput formControlName="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto"/>
               <mat-error *ngIf="txTipoProducto.invalid">{{getErrorMessage(txTipoProducto)}}</mat-error>
             </mat-form-field>
             <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
@@ -45,7 +52,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Marca</mat-label>
-              <input type="text" matInput formControlName="txMarca" [matAutocomplete]="autoCompleteMarca" (keydown)="soloLetras($event)" />
+              <input type="text" matInput formControlName="txMarca" [matAutocomplete]="autoCompleteMarca"/>
               <mat-error *ngIf="txMarca.invalid">{{getErrorMessage(txMarca)}}</mat-error>
             </mat-form-field>
             <mat-autocomplete #autoCompleteMarca="matAutocomplete">
@@ -72,7 +79,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Costo Base</mat-label>
-              <input type="text" matInput formControlName="txCosto" (keydown)="soloNumeros($event)" />
+              <input type="text" matInput formControlName="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
               <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
             </mat-form-field>
           </div>
@@ -95,7 +102,7 @@
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Costo Final</mat-label>
-              <input type="text" matInput formControlName="txCostoFinal" readonly />
+              <input type="text" matInput formControlName="txCostoFinal" mask="separator.2" prefix="$" thousandSeparator="," />
             </mat-form-field>
           </div>
         </div>

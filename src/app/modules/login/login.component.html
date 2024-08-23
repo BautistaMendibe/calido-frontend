@@ -1,5 +1,5 @@
 <div *ngIf="!isLoading" class="row justify-content-center mt-5">
-  <div class="col-8"> <!-- Aumentado a col-10 para más espacio -->
+  <div class="col-8">
     <form [formGroup]="formLogin">
       <div class="col">
         <h1 class="titulo">{{ existeConfiguracion ? 'Iniciar sesión' : 'Registrar usuario' }}</h1>
@@ -14,13 +14,13 @@
               <div class="col-6">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Nombre</mat-label>
-                  <input type="text" matInput formControlName="txNombre"/>
+                  <input type="text" matInput [formControl]="txNombre"/>
                 </mat-form-field>
               </div>
               <div class="col-6">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Apellido</mat-label>
-                  <input type="text" matInput formControlName="txApellido"/>
+                  <input type="text" matInput [formControl]="txApellido"/>
                 </mat-form-field>
               </div>
             </div>
@@ -37,7 +37,7 @@
             <div class="col">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Contraseña</mat-label>
-                <input [type]="hidePassword ? 'password' : 'text'" matInput formControlName="txContrasena"/>
+                <input [type]="hidePassword ? 'password' : 'text'" matInput [formControl]="txContrasena"/>
                 <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
                   <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>
@@ -49,7 +49,7 @@
             <div *ngIf="!existeConfiguracion" class="col">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Confirmar Contraseña</mat-label>
-                <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput formControlName="txConfirmarContrasena"/>
+                <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput [formControl]="txConfirmarContrasena"/>
                 <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
                   <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
                 </button>

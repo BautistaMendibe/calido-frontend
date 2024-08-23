@@ -26,7 +26,7 @@ export class ConsultarProductosComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
   public productos: Producto[] = [];
-  public columnas: string[] = ['id', 'nombre', 'costo', 'costoIva', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
+  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'costoImpuesto', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
   private filtros: FiltrosProductos;
   public listaTipoProducto: TipoProducto[] = [];
   public listaProveedores: Proveedor[] = [];
@@ -42,7 +42,6 @@ export class ConsultarProductosComponent implements OnInit {
     private notificationDialogService: NotificationService,
     private productosService: ProductosService) {
     this.form = this.fb.group({
-      txId: [''],
       txNombre: [''],
       txMarca: [''],
       txTipo: [''],
@@ -61,7 +60,6 @@ export class ConsultarProductosComponent implements OnInit {
 
   private createForm() {
     this.form = this.fb.group({
-      txId: [''],
       txNombre: [''],
       txMarca: [''],
       txTipo: [''],
@@ -75,7 +73,6 @@ export class ConsultarProductosComponent implements OnInit {
 
   public buscar() {
     this.filtros = {
-      id: this.txId.value,
       nombre: this.txNombre.value,
       tipoProducto: this.txTipo.value,
       proveedor: this.txProveedor.value,
@@ -161,11 +158,6 @@ export class ConsultarProductosComponent implements OnInit {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedores = proveedores;
     });
-  }
-
-
-  get txId(): FormControl {
-    return this.form.get('txId') as FormControl;
   }
 
   get txNombre(): FormControl {

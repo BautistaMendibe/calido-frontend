@@ -23,7 +23,9 @@ export class RegistrarProductoComponent implements OnInit {
   private idProducto: number;
   public nombre: string;
   public costo: number;
-  public costoIva: number;
+  public costoImpuesto: number;
+  public descripcion: string;
+  public codigoBarras: string;
   public listaTipoProducto: TipoProducto[] = [];
   public tiposProductoFiltrados: TipoProducto[] = [];
   public listaProveedores: Proveedor[] = [];
@@ -57,7 +59,10 @@ export class RegistrarProductoComponent implements OnInit {
     this.idProducto = this.producto ? this.producto.id : -1;
     this.nombre = this.producto ? this.producto.nombre : '';
     this.costo = this.producto ? this.producto.costo : 0;
-    this.costoIva = this.producto ? this.producto.costoIva : 0;
+    this.costoImpuesto = this.producto ? this.producto.costoImpuesto : 0;
+    this.codigoBarras = this.producto ? this.producto.codigoBarra : '';
+    this.productoImg = this.producto ? this.producto.imgProducto : null;
+    this.descripcion = this.producto ? this.producto.descripcion : '';
   }
 
   ngOnInit() {
@@ -74,13 +79,14 @@ export class RegistrarProductoComponent implements OnInit {
   private crearFormulario() {
     this.form = this.fb.group({
       txNombre: ['', [Validators.required, Validators.pattern('^[^0-9]+$')]],
+      txCodigoBarras: ['', [Validators.required, Validators.maxLength(13)]],
       txCosto: ['', [Validators.required, Validators.pattern('^[0-9]+$')]],
       txTipoProducto: ['', [Validators.pattern('^[^0-9]+$')]],
       txMarca: ['', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: ['', [Validators.required]],
       txImpuestos: ['21', [Validators.required]], // Valor por defecto IVA
       txCostoFinal: [{value: '', disabled: true}, [Validators.required]],
-      txDescripcion: ['']
+      txDescripcion: ['', [Validators.maxLength(200)]]
     });
 
     // Suscribirse a los cambios en txCosto y txImpuestos
@@ -98,7 +104,7 @@ export class RegistrarProductoComponent implements OnInit {
     const impuestos = this.form.get('txImpuestos')?.value || 0;
     const costoFinal = costo * (1 + impuestos / 100);
 
-    this.form.get('txCostoFinal')?.setValue(costoFinal.toFixed(2)); // Actualiza txCostoFinal
+    this.form.get('txCostoFinal')?.setValue(parseFloat(costoFinal.toFixed(2))); // Actualiza txCostoFinal
   }
 
   private rellenarFormularioDataProducto() {
@@ -108,6 +114,9 @@ export class RegistrarProductoComponent implements OnInit {
     this.form.get('txTipoProducto')?.setValue(this.producto.tipoProducto.nombre);
     this.form.get('txMarca')?.setValue(this.producto.marca.nombre);
     this.form.get('txProveedor')?.setValue(this.producto.proveedor.id);
+    this.form.get('txDescripcion')?.setValue(this.producto.descripcion);
+    this.form.get('txCodigoBarras')?.setValue(this.producto.codigoBarra);
+    this.form.get('txCostoFinal')?.setValue(this.producto.costoImpuesto);
 
     if (this.formDesactivado) {
       this.form.disable();
@@ -158,17 +167,17 @@ export class RegistrarProductoComponent implements OnInit {
       marca.nombre = this.txMarca.value;
       marca.id = this.getMarcaId(this.txMarca.value);
       proveedor.id = this.txProveedor.value;
-
       producto.tipoProducto = tipoProducto;
       producto.nombre = this.txNombre.value;
-
-      const costo = parseFloat(this.txCosto.value);
-      producto.costo = costo;
-      producto.costoIva = costo * 1.21;
+      producto.costo = this.txCosto.value;
+      producto.costoImpuesto = this.txCostoFinal.value;
+      producto.descripcion = this.txDescripcion.value;
+      producto.imgProducto = this.productoImg as string;
+      producto.codigoBarra = this.txCodigoBarras.value;
       producto.marca = marca;
       producto.proveedor = proveedor;
 
-      console.log('Producto a registrar:', producto);
+      console.log(producto);
 
       this.productosService.registrarProducto(producto).subscribe((respuesta) => {
         if (respuesta.mensaje === 'OK') {
@@ -205,13 +214,13 @@ export class RegistrarProductoComponent implements OnInit {
       marca.nombre = this.txMarca.value;
       marca.id = this.getMarcaId(this.txMarca.value);
       proveedor.id = this.txProveedor.value;
-
       producto.tipoProducto = tipoProducto;
       producto.nombre = this.txNombre.value;
-
-      const costo = parseFloat(this.txCosto.value);
-      producto.costo = costo;
-      producto.costoIva = costo * 1.21;
+      producto.costo = this.txCosto.value;
+      producto.costoImpuesto = this.txCostoFinal.value;
+      producto.descripcion = this.txDescripcion.value;
+      producto.codigoBarra = this.txCodigoBarras.value;
+      producto.imgProducto = this.productoImg as string;
       producto.marca = marca;
       producto.proveedor = proveedor;
 
@@ -233,20 +242,6 @@ export class RegistrarProductoComponent implements OnInit {
     this.dialogRef.close();
   }
 
-  public soloNumeros(event: KeyboardEvent) {
-    const pattern = /[0-9]/;
-    if (!pattern.test(event.key)) {
-      event.preventDefault();
-    }
-  }
-
-  public soloLetras(event: KeyboardEvent) {
-    const pattern = /[a-zA-Z\s]/;
-    if (!pattern.test(event.key)) {
-      event.preventDefault();
-    }
-  }
-
   // Método para obtener mensajes de error
   public getErrorMessage(control: FormControl): string {
     if (control.hasError('required')) {
@@ -264,7 +259,9 @@ export class RegistrarProductoComponent implements OnInit {
 
     const reader = new FileReader();
     reader.onload = () => {
-      this.productoImg = reader.result;
+      const result = reader.result as string;
+      this.productoImg = result;
+      this.convertirImagenABase64(result);
     };
     reader.readAsDataURL(file);
   }
@@ -277,17 +274,8 @@ export class RegistrarProductoComponent implements OnInit {
     }
   }
 
-  private convertirImagenABase64(callback: (logoBase64: string | null) => void) {
-    if (!this.selectedFile) {
-      callback(null);
-      return;
-    }
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      callback(reader.result as string);
-    };
-    reader.readAsDataURL(this.selectedFile);
+  private convertirImagenABase64(base64Image: string) {
+    this.productoImg = base64Image || '';
   }
 
   private validateImage(file: File): boolean {
@@ -360,6 +348,10 @@ export class RegistrarProductoComponent implements OnInit {
 
   get txDescripcion(): FormControl {
     return this.form.get('txDescripcion') as FormControl;
+  }
+
+  get txCodigoBarras(): FormControl {
+    return this.form.get('txCodigoBarras') as FormControl;
   }
 }
 

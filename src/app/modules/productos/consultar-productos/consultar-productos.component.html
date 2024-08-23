@@ -13,18 +13,10 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Id Producto</mat-label>
-            <input type="text" matInput [formControl]="txId"/>
-          </mat-form-field>
-        </div>
-        <div class="col-md-3">
-          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
         </div>
-      </div>
-      <div class="row pt-4">
         <div class="col-md-2 custom-spacing">
           <mat-form-field appearance="outline" class="width-80">
             <mat-label>Tipo Producto</mat-label>
@@ -73,16 +65,22 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="lds-spinner-wrapper" *ngIf="productos.length == 0"><div class="lds-spinner"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div></div>
+  <div class="lds-spinner-wrapper" *ngIf="productos.length == 0">
+    <div class="lds-spinner">
+      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+    </div>
+  </div>
 
   <mat-card *ngIf="productos.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
-            <ng-container matColumnDef="id">
-              <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
-              <mat-cell *matCellDef="let producto">{{ producto.id }}</mat-cell>
+            <ng-container matColumnDef="imgProducto">
+              <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+              <mat-cell *matCellDef="let producto">
+                <img [src]="producto.imgProducto" class="img-thumbnail"/>
+              </mat-cell>
             </ng-container>
             <ng-container matColumnDef="nombre">
               <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
@@ -94,10 +92,10 @@
                 {{ producto.costo | currency:'$':'symbol':'1.2-2' }}
               </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="costoIva">
-              <mat-header-cell *matHeaderCellDef>Costo Con Iva</mat-header-cell>
+            <ng-container matColumnDef="costoImpuesto">
+              <mat-header-cell *matHeaderCellDef>Costo Impuestos</mat-header-cell>
               <mat-cell *matCellDef="let producto">
-                {{ producto.costoIva | currency:'$':'symbol':'1.2-2' }}
+                {{ producto.costoImpuesto | currency:'$':'symbol':'1.2-2' }}
               </mat-cell>
             </ng-container>
             <ng-container matColumnDef="tipoProducto">
@@ -141,5 +139,3 @@
     </mat-card-content>
   </mat-card>
 </div>
-
-
