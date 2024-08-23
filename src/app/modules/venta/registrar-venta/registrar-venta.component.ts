@@ -9,9 +9,10 @@ import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comand
   styleUrl: './registrar-venta.component.scss'
 })
 export class RegistrarVentaComponent implements OnInit{
-  public isSelected: boolean = false;
   public productos: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
+  public subTotal: number = 0;
+  public impuestoIva: number = 0;
 
   constructor(private productosService: ProductosService) {
   }
@@ -41,10 +42,14 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = true;
       producto.cantidadSeleccionada = 1;
     }
+
+    this.validarCantidadProductosSeleccionados();
+    this.calcularSubTotal();
   }
 
   public aumentarCantidad(producto: Producto) {
     producto.cantidadSeleccionada++;
+    this.calcularSubTotal();
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -53,6 +58,23 @@ export class RegistrarVentaComponent implements OnInit{
       const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
       this.productosSeleccionados.splice(index, 1);
       producto.seleccionadoParaVenta = false;
+    }
+    this.validarCantidadProductosSeleccionados();
+    this.calcularSubTotal();
+  }
+
+  private calcularSubTotal() {
+    this.subTotal = 0;
+    this.productosSeleccionados.forEach((producto) => {
+      this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+    });
+    this.impuestoIva = this.subTotal * 0.21;
+  }
+
+  private validarCantidadProductosSeleccionados() {
+    if (this.productosSeleccionados.length == 0) {
+      this.subTotal = 0;
+      this.impuestoIva = 0;
     }
   }
 
