@@ -127,19 +127,23 @@
         </div>
         <mat-divider></mat-divider>
         <br>
-        <!-- Producto -->
-        <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3" *ngFor="let producto of productosSeleccionados">
-          <div>
-            <h5 class="m-0"><b>{{ producto.nombre }}</b></h5>
-            <small class="text-muted">$ {{ producto.costo }}</small>
-          </div>
-          <div class="d-flex align-items-center">
-            <button class="btn btn-outline-secondary btn-sm">-</button>
-            <input type="text" class="form-control form-control-sm mx-2 text-center quantity-input" value="1">
-            <button class="btn btn-outline-secondary btn-sm">+</button>
-          </div>
-          <div class="text-end">
-            <h5 class="m-0"><b>$ {{ producto.costo }}</b></h5>
+        <!-- Productos seleccionados -->
+        <div *ngIf="productosSeleccionados.length > 0">
+          <div *ngFor="let producto of productosSeleccionados">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+              <div>
+                <h5 class="m-0"><b>{{ producto.nombre }}</b></h5>
+                <small class="text-muted">$ {{ producto.costo }}</small>
+              </div>
+              <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary btn-sm"(click)="producto.cantidadSeleccionada = producto.cantidadSeleccionada - 1">-</button>
+                <input type="text" class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
+                <button class="btn btn-outline-secondary btn-sm" (click)="producto.cantidadSeleccionada = producto.cantidadSeleccionada + 1">+</button>
+              </div>
+              <div class="text-end">
+                <h5 class="m-0"><b>$ {{ producto.costo * producto.cantidadSeleccionada }}</b></h5>
+              </div>
+            </div>
           </div>
         </div>
 
