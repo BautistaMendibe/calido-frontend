@@ -148,7 +148,7 @@
         </div>
 
         <!-- Resumen -->
-        <div class="border-top pt-3">
+        <div class="border-top pt-3" *ngIf="productosSeleccionados.length > 0">
           <div class="summary-container">
             <div class="d-flex justify-content-between custom-align-center">
               <h5 class="text-muted">Subtotal</h5>
@@ -172,7 +172,7 @@
         <p class="product-count">{{productosSeleccionados.length}} Producto</p>
         <br>
         <!-- Botones -->
-        <button mat-raised-button color="accent" class="btn round confirm-sale-btn" id="btnBuscar" [disabled]="true">
+        <button mat-raised-button color="accent" class="btn round confirm-sale-btn" id="btnBuscar" [disabled]="productosSeleccionados.length == 0">
           Confirmar venta
         </button>
       </mat-card>
