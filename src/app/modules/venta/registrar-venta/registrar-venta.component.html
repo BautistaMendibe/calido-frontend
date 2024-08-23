@@ -131,16 +131,16 @@
         <div *ngIf="productosSeleccionados.length > 0">
           <div *ngFor="let producto of productosSeleccionados">
             <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
-              <div>
+              <div class="col-4">
                 <h5 class="m-0"><b>{{ producto.nombre }}</b></h5>
                 <small class="text-muted">$ {{ producto.costo }}</small>
               </div>
-              <div class="d-flex align-items-center">
-                <button class="btn btn-outline-secondary btn-sm"(click)="producto.cantidadSeleccionada = producto.cantidadSeleccionada - 1">-</button>
-                <input type="text" class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
-                <button class="btn btn-outline-secondary btn-sm" (click)="producto.cantidadSeleccionada = producto.cantidadSeleccionada + 1">+</button>
+              <div class="d-flex align-items-center col-4 justify-content-center">
+                <button class="btn btn-light btn-sm"(click)="producto.cantidadSeleccionada = producto.cantidadSeleccionada - 1">-</button>
+                <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
+                <button class="btn btn-light btn-sm" (click)="producto.cantidadSeleccionada = producto.cantidadSeleccionada + 1">+</button>
               </div>
-              <div class="text-end">
+              <div class="text-end col-4">
                 <h5 class="m-0"><b>$ {{ producto.costo * producto.cantidadSeleccionada }}</b></h5>
               </div>
             </div>
