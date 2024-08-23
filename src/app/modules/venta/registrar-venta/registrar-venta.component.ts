@@ -43,7 +43,17 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
-  toggleSelection() {
-    this.isSelected = !this.isSelected;
+  public aumentarCantidad(producto: Producto) {
+    producto.cantidadSeleccionada++;
   }
+
+  public disminuirCantidad(producto: Producto) {
+    producto.cantidadSeleccionada--;
+    if (producto.cantidadSeleccionada == 0) {
+      const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
+      this.productosSeleccionados.splice(index, 1);
+      producto.seleccionadoParaVenta = false;
+    }
+  }
+
 }
