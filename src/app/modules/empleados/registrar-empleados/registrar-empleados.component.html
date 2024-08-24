@@ -22,33 +22,9 @@
         </mat-form-field>
       </div>
 
-<!--      <div class="col-md-4">-->
-<!--        <mat-form-field appearance="outline" class="w-100">-->
-<!--          <mat-label>Contraseña</mat-label>-->
-<!--          <input type="password" matInput [formControl]="txContrasena"/>-->
-
-<!--        </mat-form-field>-->
-<!--        <div *ngIf="esConsulta && form.get('txContrasena')?.hasError('required')" >-->
-<!--          Debe ingresar una nueva contraseña.-->
-<!--        </div>-->
-<!--        <div *ngIf="form.get('txContrasena')?.touched || form.get('txContrasena')?.dirty">-->
-<!--&lt;!&ndash;          <div *ngIf="form.get('txContrasena')?.hasError('required')">&ndash;&gt;-->
-<!--&lt;!&ndash;            La contraseña es obligatoria.&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-
-<!--          <div *ngIf="form.get('txContrasena')?.hasError('minlength')">-->
-<!--            La contraseña debe tener al menos 8 caracteres.-->
-<!--          </div>-->
-<!--          <div *ngIf="form.get('txContrasena')?.hasError('pattern')">-->
-<!--            La contraseña debe contener al menos una mayúscula, una minúscula y un número.-->
-<!--          </div>-->
-<!--        </div>-->
-<!--      </div>-->
-
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Contraseña</mat-label>
-<!--            <input type="password" matInput [formControl]="txContrasena"/>-->
               <input
                 matInput
                 type="password"
@@ -118,14 +94,6 @@
           </mat-select>
         </mat-form-field>
       </div>
-
-<!--      <div class="col-md-4">-->
-<!--        <mat-form-field appearance="outline" class="w-100">-->
-<!--          <mat-label>genero</mat-label>-->
-<!--          <input type="text" matInput [formControl]="ddGenero"/>-->
-<!--        </mat-form-field>-->
-<!--      </div>-->
-
     </div>
 
     <div class="row pt-4">
@@ -189,100 +157,19 @@
   <mat-divider></mat-divider>
   <br>
 
-  <!-- Btn de buscar y limpiar -->
+  <!-- Btn de cancelar, registrar y modificar -->
   <div class="row text-right">
     <div class="col d-flex justify-content-end">
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-        Cancelar
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
       </button>
       <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>
-      <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarEmpleado()" id="btnBuscar2">Modificar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarEmpleado()" id="btnBuscar2">Modificar</button>
     </div>
   </div>
 
   <br>
 </div>
 
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--  <meta charset="UTF-8">-->
-<!--  <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--  <title>Formulario con Bootstrap</title>-->
-<!--  &lt;!&ndash; Incluye Bootstrap CSS desde un CDN &ndash;&gt;-->
-<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="container py-3">-->
-<!--  <h2>Registrar Empleado</h2>-->
-<!--  <form>-->
-<!--    <div class="form-row">-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="nombreUsuario">Nombre de Usuario</label>-->
-<!--        <input type="text" class="form-control" id="nombreUsuario" placeholder="Nombre de Usuario">-->
-<!--      </div>-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="nombre">Nombre</label>-->
-<!--        <input type="text" class="form-control" id="nombre" placeholder="Nombre">-->
-<!--      </div>-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="apellido">Apellido</label>-->
-<!--        <input type="text" class="form-control" id="apellido" placeholder="Apellido">-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="form-row">-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="codigoPostal">Código Postal</label>-->
-<!--        <input type="text" class="form-control" id="codigoPostal" placeholder="Código Postal">-->
-<!--      </div>-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="cuil">CUIT/CUIL</label>-->
-<!--        <input type="text" class="form-control" id="cuil" placeholder="CUIT/CUIL">-->
-<!--      </div>-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="contrasena">Contraseña</label>-->
-<!--        <input type="password" class="form-control" id="contrasena" placeholder="Contraseña">-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="form-row">-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="provincia">Provincia</label>-->
-<!--        <input type="text" class="form-control" id="provincia" placeholder="Provincia">-->
-<!--      </div>-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="genero">Género</label>-->
-<!--        <input type="text" class="form-control" id="genero" placeholder="Género">-->
-<!--      </div>-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="fechaNacimiento">Fecha de Nacimiento</label>-->
-<!--        <input type="date" class="form-control" id="fechaNacimiento">-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="form-row">-->
-<!--      <div class="form-group col-md-4">-->
-<!--        <label for="dni">DNI</label>-->
-<!--        <input type="text" class="form-control" id="dni" placeholder="DNI">-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </form>-->
-<!--    &lt;!&ndash; Btn de buscar y limpiar &ndash;&gt;-->
-<!--    <div class="row text-right">-->
-<!--      <div class="col d-flex justify-content-end">-->
-<!--        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">-->
-<!--          Cancelar-->
-<!--        </button>-->
-<!--        <button mat-raised-button color="accent" class="btn round" (click)="registrarNuevoEmpleado()" id="btnBuscar">Registrar</button>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--</div>-->
-
-<!--&lt;!&ndash; Incluye Bootstrap JS y dependencias desde un CDN &ndash;&gt;-->
-<!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>-->
-<!--<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>-->
-<!--<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>-->
-<!--</body>-->
-<!--</html>-->
 
 

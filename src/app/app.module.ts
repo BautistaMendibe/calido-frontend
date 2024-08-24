@@ -30,7 +30,6 @@ import { ConsultarProductosComponent } from './modules/productos/consultar-produ
 import { RegistrarProductoComponent } from './modules/productos/registrar-producto/registrar-producto.component';
 import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
-import {DetalleEmpleadosComponent} from "./modules/empleados/detalle-empleados/detalle-empleados.component";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 
@@ -43,7 +42,6 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     SidebarComponent,
     HomeComponent,
     ConsultarEmpleadosComponent,
-    DetalleEmpleadosComponent,
     RegistrarEmpleadosComponent,
     ConsultarProductosComponent,
     ConsultarProveedoresComponent,

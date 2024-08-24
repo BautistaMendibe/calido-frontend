@@ -119,7 +119,8 @@ export class ConsultarProductosComponent implements OnInit {
           producto: producto,
           esConsulta: true,
           referencia: this,
-          formDesactivado: !editar
+          formDesactivado: !editar,
+          editar: editar
         }
       }
     );

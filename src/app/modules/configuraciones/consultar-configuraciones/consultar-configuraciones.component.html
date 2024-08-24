@@ -124,12 +124,9 @@
       </div>
     </div>
 
-    <div class="lds-spinner-wrapper" *ngIf="isLoading">
-      <div class="lds-spinner">
-        <div></div><div></div><div></div><div></div>
-        <div></div><div></div><div></div><div></div>
-        <div></div><div></div><div></div><div></div>
-      </div>
+    <!-- loading -->
+    <div class="spinner-wrapper" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
     </div>
   </mat-card>
 </div>

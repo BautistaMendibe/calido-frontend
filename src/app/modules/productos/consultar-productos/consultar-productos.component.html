@@ -65,10 +65,8 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="lds-spinner-wrapper" *ngIf="productos.length == 0">
-    <div class="lds-spinner">
-      <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
-    </div>
+  <div class="spinner-wrapper" *ngIf="productos.length == 0">
+    <mat-spinner></mat-spinner>
   </div>
 
   <mat-card *ngIf="productos.length > 0">

@@ -105,16 +105,16 @@
     <mat-divider></mat-divider>
     <br>
 
-    <!-- Btn de buscar y limpiar -->
-    <div class="row text-right">
-      <div class="col d-flex justify-content-end">
-        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-          Cancelar
-        </button>
-        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registar</button>
-        <button *ngIf="esConsulta" mat-raised-button color="accent" class="btn round" (click)="modificarProveedor()" id="btnBuscar2">Modificar</button>
-      </div>
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+      </button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProveedor()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarProveedor()" id="btnBuscar2">Modificar</button>
     </div>
+  </div>
 
   <br>
 </div>

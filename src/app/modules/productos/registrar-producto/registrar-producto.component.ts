@@ -41,6 +41,7 @@ export class RegistrarProductoComponent implements OnInit {
       producto: Producto;
       esConsulta: boolean;
       formDesactivado: boolean;
+      editar: boolean;
     }
   ) {
     this.form = new FormGroup({});
@@ -166,6 +167,13 @@ export class RegistrarProductoComponent implements OnInit {
 
   public cancelar() {
     this.dialogRef.close();
+  }
+
+  public habilitarEdicion(){
+    this.form.enable();
+    this.txCostoFinal.disable();
+    this.data.formDesactivado = false;
+    this.data.editar = true;
   }
 
   public getErrorMessage(control: FormControl): string {

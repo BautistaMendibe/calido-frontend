@@ -62,3 +62,18 @@
   height: 100%;
   line-height: 2.2;
 }
+
+.upload-container {
+  position: relative;
+
+  .disabled-container {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &.disabled-container {
+    .preview-img {
+      opacity: 0.3;
+    }
+  }
+}

@@ -42,6 +42,7 @@ export class RegistrarProveedorComponent implements OnInit{
       proveedor: Proveedor;
       esConsulta: boolean;
       formDesactivado: boolean;
+      editar: boolean;
     }
   ) {
     this.form = new FormGroup({});
@@ -100,6 +101,7 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public habilitarEdicion(){
     this.form.enable();
+    this.data.editar = true;
   }
 
   private buscarProvincias(){
