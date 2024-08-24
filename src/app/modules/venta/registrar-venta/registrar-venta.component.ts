@@ -13,6 +13,7 @@ export class RegistrarVentaComponent implements OnInit{
   public productosSeleccionados: Producto[] = [];
   public subTotal: number = 0;
   public impuestoIva: number = 0;
+  public cargandoProductos: boolean = true;
 
   constructor(private productosService: ProductosService) {
   }
@@ -25,6 +26,7 @@ export class RegistrarVentaComponent implements OnInit{
     const filtros: FiltrosProductos = new FiltrosProductos();
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
+      this.cargandoProductos = false;
     });
   }
 
