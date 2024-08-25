@@ -147,11 +147,11 @@
               <div class="text-end col-4">
                 <span class="m-0 costo"><b>$ {{ producto.costo * producto.cantidadSeleccionada }}</b></span>
                 <div class="iconos-editar-eliminar ">
-                  <button mat-icon-button (click)="editarProductoEnVenta(producto)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                  <button mat-icon-button (click)="eliminarProductoDeVenta(producto)">
+                  <button mat-icon-button [matTooltip]="'Editar en esta venta'" (click)="editarProductoEnVenta(producto)">
                     <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button [matTooltip]="'Quitar'" (click)="eliminarProductoDeVenta(producto)">
+                    <mat-icon>delete</mat-icon>
                   </button>
                 </div>
               </div>

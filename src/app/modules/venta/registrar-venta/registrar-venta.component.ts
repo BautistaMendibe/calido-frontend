@@ -84,7 +84,9 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
-  public cancelarVenta(){}
+  public cancelarVenta(){
+
+  }
 
   private calcularTotal() {
     this.totalVenta = this.subTotal + this.impuestoIva;
@@ -92,6 +94,12 @@ export class RegistrarVentaComponent implements OnInit{
 
   public editarProductoEnVenta(producto: Producto){}
 
-  public eliminarProductoDeVenta(producto: Producto) {}
+  public eliminarProductoDeVenta(producto: Producto) {
+    const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
+    // Si el producto ya está en la lista, lo eliminamos y marcamos el seleccionado para venta en false
+    this.productosSeleccionados.splice(index, 1);
+    producto.seleccionadoParaVenta = false;
+    producto.cantidadSeleccionada = 0;
+  }
 
 }
