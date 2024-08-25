@@ -157,12 +157,12 @@
           <div class="summary-container">
             <div class="summary-row">
               <span>Subtotal</span>
-              <span>${{ subTotal }}</span>
+              <span class="text-summary">$ {{ subTotal }}</span>
             </div>
             <div class="dotted-line"></div>
             <div class="summary-row">
               <span>IVA (21.00%)</span>
-              <span>{{ impuestoIva }}</span>
+              <span class="text-summary">$ {{ impuestoIva }}</span>
             </div>
           </div>
         </div>
@@ -179,9 +179,9 @@
             <span>Confirmar venta</span>
             <span class="text-right">$148.83</span>
           </button>
-          <div class="d-flex justify-content-between mt-2">
+          <div class="d-flex justify-content-between mt-3">
             <span class="text-small">{{ productosSeleccionados.length }} Producto</span>
-            <a class="text-small text-info">Cancelar</a>
+            <a (click)="cancelarVenta()" class="text-small btn-cancelar">Cancelar</a>
           </div>
         </div>
 

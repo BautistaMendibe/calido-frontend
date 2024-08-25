@@ -80,4 +80,6 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
+  public cancelarVenta(){}
+
 }
