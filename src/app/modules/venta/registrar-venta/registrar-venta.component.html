@@ -173,9 +173,6 @@
           <p>Acá verás los productos que elijas para tu venta</p>
         </div>
 
-        <br>
-        <p class="product-count">{{productosSeleccionados.length}} Producto</p>
-        <br>
         <!-- Botones -->
         <div class="container mt-4">
           <button class="btn btn-custom">
@@ -183,14 +180,11 @@
             <span class="text-right">$148.83</span>
           </button>
           <div class="d-flex justify-content-between mt-2">
-            <span class="text-small">1 Producto</span>
+            <span class="text-small">{{ productosSeleccionados.length }} Producto</span>
             <a class="text-small text-info">Cancelar</a>
           </div>
         </div>
 
-        <button mat-raised-button color="accent" class="btn round confirm-sale-btn" id="btnBuscar" [disabled]="productosSeleccionados.length == 0">
-          Confirmar venta
-        </button>
       </mat-card>
     </div>
   </div>
