@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -16,7 +17,10 @@ export class RegistrarVentaComponent implements OnInit{
   public cargandoProductos: boolean = true;
   public totalVenta: number = 0;
 
-  constructor(private productosService: ProductosService) {
+  constructor(
+    private productosService: ProductosService,
+    private notificationDialogService: NotificationService
+  ) {
   }
 
   ngOnInit(){
@@ -84,8 +88,23 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
-  public cancelarVenta(){
+  public cancelarVenta() {
+    this.notificationDialogService.confirmation('Los productos serán eliminados de la venta actual\n\n¿Desea continuar?', 'Cancelar venta')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          // Recorremos los productos seleccionados en orden inverso
+          for (let i = this.productosSeleccionados.length - 1; i >= 0; i--) {
+            // Actualizamos las propiedades del producto
+            const producto = this.productosSeleccionados[i];
+            producto.seleccionadoParaVenta = false;
+            producto.cantidadSeleccionada = 0;
 
+            // Eliminamos el producto del array de productos seleccionados
+            this.productosSeleccionados.splice(i, 1);
+          }
+        }
+      });
   }
 
   private calcularTotal() {
