@@ -70,6 +70,7 @@ export class RegistrarVentaComponent implements OnInit{
   private buscarFormasDePago() {
     this.ventasService.buscarFormasDePago().subscribe((formasDePago) => {
       this.formasDePago = formasDePago;
+      this.txFormaDePago.setValue(this.formasDePago[0].id);
     });
   }
 
