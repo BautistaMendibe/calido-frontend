@@ -3,13 +3,6 @@
   border: 2px solid #e15b35;
 }
 
-/* Línea punteada */
-.dotted-line {
-  border-top: 1px dotted #000;
-  margin-top: 0em;
-  margin-bottom: 0em;
-}
-
 /* Estilo general del card de productos */
 .product-list {
   min-height: 85vh;
@@ -88,12 +81,6 @@
   width: 40px;
 }
 
-/* Contenedor del resumen */
-.summary-container {
-  padding: 10px;
-  background-color: #f8f9fa;
-  border-radius: 0.375rem;
-}
 
 /* Carrito vacío */
 .empty-cart {
@@ -109,13 +96,6 @@
 .product-count {
   color: grey;
   font-weight: 500;
-}
-
-.custom-align-center {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 100%; /* Asegura que el contenedor tenga la altura adecuada */
 }
 
 .custom-align-center h5 {
@@ -137,4 +117,20 @@
 }
 .text-right {
   text-align: right; /* Alineación a la derecha para el precio */
+}
+
+
+.summary-container {
+  background-color: #f8fafc; /* Color de fondo similar al de la imagen */
+  padding: 15px; /* Espaciado interno */
+  border-radius: 5px; /* Bordes redondeados */
+}
+.dotted-line {
+  border-top: 1px dotted #ccc; /* Línea punteada */
+  margin: 10px 0; /* Espaciado arriba y abajo de la línea */
+}
+.summary-row {
+  display: flex;
+  justify-content: space-between; /* Espacio entre el texto y el monto */
+  align-items: center;
 }

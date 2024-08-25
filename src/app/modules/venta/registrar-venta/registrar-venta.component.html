@@ -153,16 +153,16 @@
         </div>
 
         <!-- Resumen -->
-        <div class="border-top pt-3" *ngIf="productosSeleccionados.length > 0">
+        <div class="container mt-4" *ngIf="productosSeleccionados.length > 0">
           <div class="summary-container">
-            <div class="d-flex justify-content-between align-items-center custom-align-center mt-2">
-              <h4 class="text-muted">Subtotal</h4>
-              <h4 class="text-muted"><b>$ {{ subTotal }}</b></h4>
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <span>${{ subTotal }}</span>
             </div>
-            <hr class="dotted-line">
-            <div class="d-flex justify-content-between custom-align-center mt-3">
-              <h4 class="text-muted">IVA (21.00%)</h4>
-              <h4 class="text-muted"><b>$ {{impuestoIva}}</b></h4>
+            <div class="dotted-line"></div>
+            <div class="summary-row">
+              <span>IVA (21.00%)</span>
+              <span>{{ impuestoIva }}</span>
             </div>
           </div>
         </div>
