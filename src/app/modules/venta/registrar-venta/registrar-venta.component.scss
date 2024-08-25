@@ -155,9 +155,32 @@
 
 .producto-item {
   background-color: white;
+  position: relative;
 }
 
 .producto-item:hover {
   background-color: #f8f8f8;
   cursor: pointer;
+}
+
+.producto-item:hover .costo {
+  display: none; /* Esconde el texto de costo */
+}
+
+.producto-item:hover .iconos-editar-eliminar {
+  display: inline-block; /* Muestra los iconos */
+}
+
+.iconos-editar-eliminar {
+  display: none; /* Ocultar íconos por defecto */
+}
+
+.iconos-editar-eliminar i {
+  margin-left: 10px;
+  cursor: pointer;
+  color: #6c757d; /* Color de los íconos */
+}
+
+.iconos-editar-eliminar i:hover {
+  color: #343a40; /* Color más oscuro al hacer hover */
 }

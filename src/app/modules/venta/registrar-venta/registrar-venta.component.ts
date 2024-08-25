@@ -90,4 +90,8 @@ export class RegistrarVentaComponent implements OnInit{
     this.totalVenta = this.subTotal + this.impuestoIva;
   }
 
+  public editarProductoEnVenta(producto: Producto){}
+
+  public eliminarProductoDeVenta(producto: Producto) {}
+
 }
