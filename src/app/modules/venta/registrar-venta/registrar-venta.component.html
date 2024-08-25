@@ -94,7 +94,7 @@
           <div class="col">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Forma de pago</mat-label>
-              <mat-select>
+              <mat-select [formControl]="txFormaDePago">
                 <mat-option>
 
                 </mat-option>
@@ -104,7 +104,7 @@
           <div class="col">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Numeración</mat-label>
-              <mat-select>
+              <mat-select [formControl]="txNumeracion">
                 <mat-option>
 
                 </mat-option>
@@ -117,7 +117,7 @@
           <div class="col-9">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cliente</mat-label>
-              <mat-select>
+              <mat-select [formControl]="txCliente">
                 <mat-option>
 
                 </mat-option>
@@ -182,7 +182,7 @@
 
         <!-- Botones -->
         <div class="container mt-4">
-          <button class="btn btn-custom" [disabled]="totalVenta == 0">
+          <button class="btn btn-custom" [disabled]="totalVenta == 0" (click)="confirmarVenta()">
             <span>Confirmar venta</span>
             <span class="text-right">$ {{this.totalVenta}}</span>
           </button>

@@ -3,6 +3,8 @@ import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {NotificationService} from "../../../services/notificacion.service";
+import {Venta} from "../../../models/venta.model";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -16,15 +18,19 @@ export class RegistrarVentaComponent implements OnInit{
   public impuestoIva: number = 0;
   public cargandoProductos: boolean = true;
   public totalVenta: number = 0;
+  public form: FormGroup;
 
   constructor(
+    private fb: FormBuilder,
     private productosService: ProductosService,
     private notificationDialogService: NotificationService
   ) {
+    this.form = new FormGroup({});
   }
 
   ngOnInit(){
     this.buscarProductos();
+    this.crearFormulario();
   }
 
   private buscarProductos() {
@@ -32,6 +38,14 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
       this.cargandoProductos = false;
+    });
+  }
+
+  private crearFormulario() {
+    this.form = this.fb.group({
+      txFormaDePago: ['', []],
+      txNumeracion: ['', []],
+      txCliente: ['', []],
     });
   }
 
@@ -119,6 +133,27 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosSeleccionados.splice(index, 1);
     producto.seleccionadoParaVenta = false;
     producto.cantidadSeleccionada = 0;
+  }
+
+  public confirmarVenta() {
+    const venta: Venta = new Venta();
+
+    // Seteamos valores de la venta
+
+
+  }
+
+  // Region getters
+  get txFormaDePago(): FormControl {
+    return this.form.get('txFormaDePago') as FormControl;
+  }
+
+  get txNumeracion(): FormControl {
+    return this.form.get('txNumeracion') as FormControl;
+  }
+
+  get txCliente(): FormControl {
+    return this.form.get('txCliente') as FormControl;
   }
 
 }
