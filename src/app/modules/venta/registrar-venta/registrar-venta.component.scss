@@ -111,11 +111,6 @@
   font-weight: 500;
 }
 
-/* Botón de confirmación de venta */
-.confirm-sale-btn {
-  width: 100%;
-}
-
 .custom-align-center {
   display: flex;
   justify-content: space-between;
@@ -126,4 +121,20 @@
 .custom-align-center h5 {
   margin: 0; /* Elimina los márgenes por defecto */
   line-height: 1.5rem; /* Ajusta la altura de línea si es necesario */
+}
+
+.btn-custom {
+  background-color: #e15b35; /* Color del botón */
+  color: white;
+  width: 100%; /* Ancho completo del botón */
+  display: flex;
+  justify-content: space-between; /* Espacio entre el texto y el precio */
+  align-items: center; /* Alineación vertical centrada */
+  padding: 10px 20px; /* Espaciado interno del botón */
+}
+.text-small {
+  font-size: 12px; /* Tamaño de letra pequeño para los textos de abajo */
+}
+.text-right {
+  text-align: right; /* Alineación a la derecha para el precio */
 }
