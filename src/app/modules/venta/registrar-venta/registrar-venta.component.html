@@ -134,7 +134,7 @@
         <!-- Productos seleccionados -->
         <div *ngIf="productosSeleccionados.length > 0">
           <div *ngFor="let producto of productosSeleccionados">
-            <div class="d-flex justify-content-between align-items-center border-bottom p-3">
+            <div class="d-flex justify-content-between align-items-center border-bottom p-3 producto-item">
               <div class="col-4 d-flex flex-column">
                 <span class="m-0"><b>{{ producto.nombre }}</b></span>
                 <span class="text-muted">$ {{ producto.costo }}</span>
