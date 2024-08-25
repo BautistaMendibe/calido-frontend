@@ -5,7 +5,7 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
-import {Proveedor} from "../models/proveedores.model";
+import {Asistencia} from "../models/asistencia";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +42,18 @@ export class UsuariosService {
 
   public registrarSuperusuario(usuario: Usuario): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-superusuario`, usuario);
+  }
+
+  public consultarAsistencias(): Observable<Asistencia[]>{
+    return this.http.get<Asistencia[]>(`${this.urlBackend}/${this.controllerName}/consultar-asistencias`);
+  }
+
+  public registrarAsistencia(asistencia: Asistencia): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-asistencia`, asistencia);
+  }
+
+  public modificarAsistencia(asistencia: Asistencia): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-asistencia`, asistencia);
   }
 
 }

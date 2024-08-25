@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {LOCALE_ID, NgModule} from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,7 +12,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SidebarComponent } from './core/sidebar/sidebar.component';
 import { HomeComponent } from './modules/home/home.component';
-import {ReactiveFormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
 import {AuthService} from "./services/auth.servicie";
@@ -32,6 +32,12 @@ import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
+import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
+import { ConsultarAsistenciaComponent } from './modules/empleados/consultar-asistencia/consultar-asistencia.component';
+import { registerLocaleData } from '@angular/common';
+import localeEs from '@angular/common/locales/es';
+
+registerLocaleData(localeEs, 'es');
 
 @NgModule({
   declarations: [
@@ -53,21 +59,24 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     MessagesComponent,
     ConsultarProductosComponent,
     RegistrarProductoComponent,
-    ConsultarConfiguracionesComponent
+    ConsultarConfiguracionesComponent,
+    RegistrarAsistenciaComponent,
+    ConsultarAsistenciaComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        MaterialModule,
-        BrowserAnimationsModule,
-        FlexLayoutModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        MatDialogClose,
-        PickerComponent,
-        NgxMaskDirective,
-        NgxMaskPipe
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MaterialModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatDialogClose,
+    PickerComponent,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    FormsModule
+  ],
   providers: [
     HealthService,
     UsuariosService,
@@ -76,7 +85,8 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
     provideNgxMask(),
     {
       provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
-    }
+    },
+    { provide: LOCALE_ID, useValue: 'es' },
   ],
   bootstrap: [AppComponent]
 })

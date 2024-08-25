@@ -12,18 +12,22 @@ import {NotificarPromocionComponent} from "./modules/promociones/notificar-promo
 import {
   ConsultarConfiguracionesComponent
 } from "./modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component";
+import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asistencia/consultar-asistencia.component";
+import {RegistrarAsistenciaComponent} from "./modules/empleados/registrar-asistencia/registrar-asistencia.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
+  {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
   {path:'consultar-promociones', component: ConsultarPromocionesComponent},
   {path:'notificar-promocion', component: NotificarPromocionComponent},
   {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
-  {path:'consultar-productos', component: ConsultarProductosComponent}
+  {path:'consultar-productos', component: ConsultarProductosComponent},
+  {path:'registrar-asistencia', component: RegistrarAsistenciaComponent}
 
 ];
 

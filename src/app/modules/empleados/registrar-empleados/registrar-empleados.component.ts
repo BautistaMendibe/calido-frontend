@@ -233,7 +233,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
           this.dialogRef.close();
           this.referencia.buscar();
         } else {
-          this.notificacionService.openSnackBarError('Error al registrar un empleado, intentelo nuevamente');
+          this.notificacionService.openSnackBarError('Error al registrar un empleado, inténtelo nuevamente');
         }
       })
 

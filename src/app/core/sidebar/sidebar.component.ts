@@ -28,9 +28,11 @@ export class SidebarComponent {
     {id: 5, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
     {id: 6, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
     {id: 7, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
-      {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []}
+      {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
+      {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, subMenu: []}
     ]},
-    {id: 8, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
+    {id: 8, nombre: 'Asistencia', path:'/registrar-asistencia', icon: 'event_available', activo: false, subMenu: []},
+    {id: 9, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;
