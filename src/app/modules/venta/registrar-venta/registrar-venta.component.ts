@@ -5,6 +5,9 @@ import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comand
 import {NotificationService} from "../../../services/notificacion.service";
 import {Venta} from "../../../models/venta.model";
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Usuario} from "../../../models/usuario.model";
+import {FormaDePago} from "../../../models/formaDePago.model";
+import {VentasService} from "../../../services/ventas.services";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -19,11 +22,14 @@ export class RegistrarVentaComponent implements OnInit{
   public cargandoProductos: boolean = true;
   public totalVenta: number = 0;
   public form: FormGroup;
+  public usuarios: Usuario[] = [];
+  public formasDePago: FormaDePago[] = [];
 
   constructor(
     private fb: FormBuilder,
     private productosService: ProductosService,
-    private notificationDialogService: NotificationService
+    private notificationDialogService: NotificationService,
+    private ventasService: VentasService
   ) {
     this.form = new FormGroup({});
   }
@@ -31,6 +37,7 @@ export class RegistrarVentaComponent implements OnInit{
   ngOnInit(){
     this.buscarProductos();
     this.crearFormulario();
+    this.buscarDataCombos();
   }
 
   private buscarProductos() {
@@ -46,6 +53,23 @@ export class RegistrarVentaComponent implements OnInit{
       txFormaDePago: ['', []],
       txNumeracion: ['', []],
       txCliente: ['', []],
+    });
+  }
+
+  private buscarDataCombos() {
+    this.buscarUsuariosClientes();
+    this.buscarFormasDePago();
+  }
+
+  private buscarUsuariosClientes() {
+    this.ventasService.buscarUsuariosClientes().subscribe((usuarios) => {
+      this.usuarios = usuarios;
+    });
+  }
+
+  private buscarFormasDePago() {
+    this.ventasService.buscarFormasDePago().subscribe((formasDePago) => {
+      this.formasDePago = formasDePago;
     });
   }
 
