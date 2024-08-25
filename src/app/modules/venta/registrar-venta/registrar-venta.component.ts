@@ -14,6 +14,7 @@ export class RegistrarVentaComponent implements OnInit{
   public subTotal: number = 0;
   public impuestoIva: number = 0;
   public cargandoProductos: boolean = true;
+  public totalVenta: number = 0;
 
   constructor(private productosService: ProductosService) {
   }
@@ -47,11 +48,13 @@ export class RegistrarVentaComponent implements OnInit{
 
     this.validarCantidadProductosSeleccionados();
     this.calcularSubTotal();
+    this.calcularTotal();
   }
 
   public aumentarCantidad(producto: Producto) {
     producto.cantidadSeleccionada++;
     this.calcularSubTotal();
+    this.calcularTotal();
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -63,6 +66,7 @@ export class RegistrarVentaComponent implements OnInit{
     }
     this.validarCantidadProductosSeleccionados();
     this.calcularSubTotal();
+    this.calcularTotal();
   }
 
   private calcularSubTotal() {
@@ -81,5 +85,9 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public cancelarVenta(){}
+
+  private calcularTotal() {
+    this.totalVenta = this.subTotal + this.impuestoIva;
+  }
 
 }
