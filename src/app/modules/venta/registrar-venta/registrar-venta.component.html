@@ -174,7 +174,7 @@
 
         <!-- Botones -->
         <div class="container mt-4">
-          <button class="btn btn-custom">
+          <button class="btn btn-custom" [disabled]="totalVenta == 0">
             <span>Confirmar venta</span>
             <span class="text-right">$ {{this.totalVenta}}</span>
           </button>
