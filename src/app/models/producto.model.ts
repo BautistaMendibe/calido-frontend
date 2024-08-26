@@ -6,33 +6,42 @@ export class Producto {
   id: number;
   nombre: string;
   costo: number;
-  costoIva: number;
+  costoImpuesto: number;
   tipoProducto: TipoProducto;
   proveedor: Proveedor;
   marca: Marca;
   seleccionadoParaVenta: boolean;
   cantidadEnStock: number;
   cantidadSeleccionada: number;
+  codigoBarra: string;
+  descripcion: string;
+  imgProducto: string;
 
   constructor(
     id?: number,
     nombre?: string,
     costo?: number,
-    costoIva?: number,
+    costoImpuesto?: number,
     tipoProducto?: TipoProducto,
     proveedor?: Proveedor,
-    marca?: Marca,
     seleccionadoParaVenta?: boolean,
     cantidadEnStock?: number,
-    cantidadSeleccionada?: number
+    cantidadSeleccionada?: number,
+    marca?: Marca,
+    codigoBarra?: string,
+    descripcion?: string,
+    imgProducto?: string
   ) {
     this.id = id!;
     this.nombre = nombre!;
-    this.costo = costo!; // Asegura hasta 2 decimales
-    this.costoIva = costoIva!; // Asegura hasta 2 decimales
+    this.costo = costo!;
+    this.costoImpuesto = costoImpuesto!;
     this.tipoProducto = tipoProducto!;
     this.proveedor = proveedor!;
     this.marca = marca!;
+    this.codigoBarra = codigoBarra!;
+    this.descripcion = descripcion!;
+    this.imgProducto = imgProducto!;
     this.seleccionadoParaVenta = !seleccionadoParaVenta;
     this.cantidadEnStock = cantidadEnStock!;
     this.cantidadSeleccionada = cantidadSeleccionada!;

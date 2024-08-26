@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {Proveedor} from "../../../models/proveedores.model";
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -42,6 +42,7 @@ export class RegistrarProveedorComponent implements OnInit{
       proveedor: Proveedor;
       esConsulta: boolean;
       formDesactivado: boolean;
+      editar: boolean;
     }
   ) {
     this.form = new FormGroup({});
@@ -68,7 +69,7 @@ export class RegistrarProveedorComponent implements OnInit{
       txTipoProveedor: ['', []],
       txNombre: ['', [Validators.required]],
       txTelefono: ['', []],
-      txEmail: ['', []],
+      txEmail: ['', [this.emailValidator()]],
       txCuit: ['', []],
       txProvincia: [ '', []],
       txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
@@ -100,6 +101,19 @@ export class RegistrarProveedorComponent implements OnInit{
 
   public habilitarEdicion(){
     this.form.enable();
+    this.data.editar = true;
+  }
+
+  private emailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+      const valid = emailPattern.test(control.value);
+      return valid ? null : { invalidEmail: { value: control.value } };
+    };
   }
 
   private buscarProvincias(){
@@ -207,7 +221,7 @@ export class RegistrarProveedorComponent implements OnInit{
 
       this.proveedoresService.modificarProveedor(this.proveedor).subscribe((res) => {
         if (res.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('Proveedor moficado con éxito');
+          this.notificacionService.openSnackBarSuccess('Proveedor modificado con éxito');
           this.dialogRef.close();
           this.referencia.buscar();
         } else {

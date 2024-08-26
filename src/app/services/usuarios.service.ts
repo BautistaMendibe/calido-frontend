@@ -5,7 +5,8 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
-import {Proveedor} from "../models/proveedores.model";
+import {Asistencia} from "../models/asistencia";
+import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando";
 
 @Injectable({
   providedIn: 'root'
@@ -42,6 +43,22 @@ export class UsuariosService {
 
   public registrarSuperusuario(usuario: Usuario): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-superusuario`, usuario);
+  }
+
+  public consultarAsistencias(filtro: FiltrosAsistencias): Observable<Asistencia[]>{
+    return this.http.post<Asistencia[]>(`${this.urlBackend}/${this.controllerName}/consultar-asistencias`, filtro);
+  }
+
+  public registrarAsistencia(asistencia: Asistencia): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-asistencia`, asistencia);
+  }
+
+  public modificarAsistencia(asistencia: Asistencia): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-asistencia`, asistencia);
+  }
+
+  public eliminarAsistencia(idAsistencia: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-asistencia/${idAsistencia}`);
   }
 
 }

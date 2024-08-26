@@ -1,13 +1,5 @@
-<div class="lds-spinner-wrapper" *ngIf="isLoading">
-  <div class="lds-spinner">
-    <div></div><div></div><div></div><div></div>
-    <div></div><div></div><div></div><div></div>
-    <div></div><div></div><div></div><div></div>
-  </div>
-</div>
-
 <div *ngIf="!isLoading" class="row justify-content-center mt-5">
-  <div class="col-5">
+  <div class="col-8">
     <form [formGroup]="formLogin">
       <div class="col">
         <h1 class="titulo">{{ existeConfiguracion ? 'Iniciar sesión' : 'Registrar usuario' }}</h1>
@@ -16,28 +8,8 @@
       <mat-card>
         <mat-card-content>
 
-          <!-- Fila de Nombre de usuario y Contraseña (mismo comportamiento para login y registro) -->
-          <div class="row">
-            <div class="col-6">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Nombre de usuario</mat-label>
-                <input type="text" matInput [formControl]="txNombreUsuario"/>
-              </mat-form-field>
-            </div>
-            <div class="col-6">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Contraseña</mat-label>
-                <input [type]="hidePassword ? 'password' : 'text'" matInput [formControl]="txContrasena"/>
-                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
-                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
-                </button>
-              </mat-form-field>
-            </div>
-          </div>
-
           <!-- Campos adicionales solo para el registro -->
           <div *ngIf="!existeConfiguracion">
-
             <div class="row">
               <div class="col-6">
                 <mat-form-field appearance="outline" class="w-100">
@@ -52,24 +24,52 @@
                 </mat-form-field>
               </div>
             </div>
+          </div>
 
+          <!-- Fila de Nombre de usuario, Contraseña y Confirmación de Contraseña usando Flexbox -->
+          <div class="row d-flex">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Nombre de usuario</mat-label>
+                <input type="text" matInput formControlName="txNombreUsuario"/>
+              </mat-form-field>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Contraseña</mat-label>
+                <input [type]="hidePassword ? 'password' : 'text'" matInput [formControl]="txContrasena"/>
+                <button mat-icon-button matSuffix (click)="hidePassword = !hidePassword" type="button">
+                  <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="formLogin.get('txContrasena')?.hasError('required')">La contraseña es requerida</mat-error>
+                <mat-error *ngIf="formLogin.get('txContrasena')?.hasError('minlength')">La contraseña debe tener al menos 8 caracteres</mat-error>
+                <mat-error *ngIf="formLogin.get('txContrasena')?.hasError('pattern')">La contraseña debe contener al menos una letra mayúscula y un número</mat-error>
+              </mat-form-field>
+            </div>
+            <div *ngIf="!existeConfiguracion" class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Confirmar Contraseña</mat-label>
+                <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput [formControl]="txConfirmarContrasena"/>
+                <button mat-icon-button matSuffix (click)="hideConfirmPassword = !hideConfirmPassword" type="button">
+                  <mat-icon>{{ hideConfirmPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                </button>
+                <mat-error *ngIf="formLogin.get('txConfirmarContrasena')?.hasError('passwordMismatch')">Las contraseñas no coinciden</mat-error>
+              </mat-form-field>
+            </div>
           </div>
 
           <!-- Botones -->
           <div class="row text-right mb-3">
             <div class="col d-flex justify-content-end">
-              <button mat-raised-button class="btn round" color="assent" id="btnLoguearse"
+              <button mat-raised-button class="btn round" color="accent" id="btnLoguearse"
                       (click)="existeConfiguracion ? iniciarSesion() : registrarse()">
                 {{ existeConfiguracion ? 'Continuar' : 'Registrarse' }}
               </button>
             </div>
 
-            <div class="lds-spinner-wrapper" *ngIf="isValidatingPassword">
-              <div class="lds-spinner">
-                <div></div><div></div><div></div><div></div>
-                <div></div><div></div><div></div><div></div>
-                <div></div><div></div><div></div><div></div>
-              </div>
+            <!-- loading -->
+            <div class="spinner-wrapper" *ngIf="isValidatingPassword">
+              <mat-spinner></mat-spinner>
             </div>
           </div>
 

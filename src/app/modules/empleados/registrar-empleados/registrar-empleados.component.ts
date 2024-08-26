@@ -43,6 +43,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       usuario: Usuario;
       esConsulta: boolean;
       formDesactivado: boolean;
+      editar: boolean;
     }
   ) {
     this.form = new FormGroup({});
@@ -90,19 +91,14 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txApellido: ['', [Validators.required]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]], // a date
       txCodigoPostal: ['', []], // a int
-      txDNI: ['', [Validators.required, Validators.maxLength(8)]], // a int
-      txCuil: ['', [Validators.required, Validators.maxLength(11)]], // mascara
-      // txContrasena: ['', [
-      //   Validators.required,
-      //   Validators.minLength(8),
-      //   Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/) //Mayus, minus y numero.
-      // ]],
+      txDNI: ['', [Validators.maxLength(8)]], // a int
+      txCuil: ['', []], // se usa máscara
       txContrasena: ['', [Validators.required]],
       ddGenero: ['', []], // desplegable a int
-      txProvincia: [ '', []],
-      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txProvincia: [ '', [Validators.required]],
+      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
     });
   }
 
@@ -149,6 +145,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   public habilitarEdicion(){
     this.form.enable();
+    this.data.editar = true;
   }
 
   private buscarProvincias(){
@@ -236,7 +233,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
           this.dialogRef.close();
           this.referencia.buscar();
         } else {
-          this.notificacionService.openSnackBarError('Error al registrar un empleado, intentelo nuevamente');
+          this.notificacionService.openSnackBarError('Error al registrar un empleado, inténtelo nuevamente');
         }
       })
 
@@ -245,11 +242,6 @@ export class RegistrarEmpleadosComponent implements OnInit{
   }
 
   public modificarEmpleado() {
-    if (this.form.valid) {
-      console.log("A")
-    } else {
-      console.log("B")
-    }
     if (this.form.valid) {
       const domicilio: Domicilio = new Domicilio();
       this.usuario.nombreUsuario = this.txNombreUsuario.value;

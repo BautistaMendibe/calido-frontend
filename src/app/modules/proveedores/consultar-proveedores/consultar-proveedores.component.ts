@@ -87,7 +87,8 @@ export class ConsultarProveedoresComponent implements OnInit {
           proveedor: proveedor,
           esConsulta: true,
           referencia: this,
-          formDesactivado: !editar
+          formDesactivado: !editar,
+          editar: editar
         }
       }
     )

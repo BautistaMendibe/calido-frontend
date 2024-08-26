@@ -10,7 +10,6 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {MatDialog} from "@angular/material/dialog";
-import {DetalleEmpleadosComponent} from "../detalle-empleados/detalle-empleados.component";
 import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
@@ -98,7 +97,8 @@ export class ConsultarEmpleadosComponent implements OnInit {
           usuario: usuario,
           esConsulta: true,
           referencia: this,
-          formDesactivado: !editar
+          formDesactivado: !editar,
+          editar: editar
         }
       }
     )
