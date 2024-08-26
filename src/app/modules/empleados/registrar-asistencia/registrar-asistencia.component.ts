@@ -1,12 +1,12 @@
-import {Component, Inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
-import {SnackBarService} from "../../../services/snack-bar.service";
-import {AuthService} from "../../../services/auth.servicie";
-import {Router} from "@angular/router";
-import {NotificationService} from "../../../services/notificacion.service";
+import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {SnackBarService} from "../../../services/snack-bar.service";
 import {Asistencia} from "../../../models/asistencia";
+import {ConsultarAsistenciaComponent} from "../consultar-asistencia/consultar-asistencia.component";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 
 @Component({
   selector: 'app-registrar-asistencia',
@@ -14,252 +14,154 @@ import {Asistencia} from "../../../models/asistencia";
   styleUrl: './registrar-asistencia.component.scss'
 })
 export class RegistrarAsistenciaComponent implements OnInit {
-  @ViewChild('dialogoComentario') dialogoComentario!: TemplateRef<any>;
-  dialogoComentarioRef!: MatDialogRef<any>;
 
-  public nombreApellido: string = '';
-  public idUsuario: number = -1;
-  public diasDelMes: any[] = [];
-  public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
-  public fechaHoy = new Date();
-  public horaEntrada: string = '';
-  public horaSalida: string = '';
-  public presente: boolean = false;
-  public salida: boolean = false;
-  public botonPresenteDeshabilitado: boolean = false;
-  public botonSalidaDeshabilitado: boolean = false;
-  public asistencias: any[] = [];
-  public isSearchingAsistencias = true;
-  public asistencia = new Asistencia();
+
   public form: FormGroup;
-  public comentario: string = '';
+  private referencia: ConsultarAsistenciaComponent;
+
+  public listaEmpleados: Usuario[] = [];
+
+  public asistencia: Asistencia;
+  public esConsulta: boolean;
+  public formDesactivado: boolean;
 
   constructor(
-    private router: Router,
-    private notificacionService: SnackBarService,
-    private authService: AuthService,
-    private notificationDialogService: NotificationService,
-    private dialog: MatDialog,
     private fb: FormBuilder,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private dialogRef: MatDialogRef<any>,
+    private notificacionService: SnackBarService,
+    @Inject(MAT_DIALOG_DATA) public data: {
+      referencia: ConsultarAsistenciaComponent;
+      asistencia: Asistencia;
+      esConsulta: boolean;
+      formDesactivado: boolean;
+      editar: boolean;
+    }
   ) {
-    this.form = this.fb.group({
-      txComentario: ['', [Validators.maxLength(200)]]
-    });
+    this.form = new FormGroup({});
+    this.referencia = this.data.referencia;
+    this.asistencia = this.data.asistencia;
+    this.esConsulta = this.data.esConsulta;
+    this.formDesactivado = this.data.formDesactivado;
   }
 
   ngOnInit() {
-    this.authService.authenticationStatus$.subscribe(isAuthenticated => {
-      if (isAuthenticated) {
-        const token = this.authService.getToken();
-        const infoToken: any = this.authService.getDecodedAccessToken(token);
-        const idUsuario = infoToken.idusuario;
-        const nombre = infoToken.nombre;
-        const apellido = infoToken.apellido;
-        this.nombreApellido = `${nombre} ${apellido}`;
-        this.idUsuario = idUsuario;
-      }
-    });
+    this.crearFormulario();
+    this.buscarEmpleados();
 
-    this.generarDiasDelMes();
-    this.consultarAsistencias();
-  }
-
-  consultarAsistencias(): void {
-    this.usuariosService.consultarAsistencias().subscribe({
-      next: (asistencias) => {
-
-        const fechaActual = new Date();
-        const mesActual = fechaActual.getMonth() + 1;
-        const anioActual = fechaActual.getFullYear()
-
-        this.asistencias = asistencias.filter(asistencia => {
-          const fechaAsistencia = new Date(asistencia.fecha);
-          const mesAsistencia = fechaAsistencia.getMonth() + 1;
-          const anioAsistencia = fechaAsistencia.getFullYear();
-
-          return asistencia.idUsuario === this.idUsuario &&
-            mesAsistencia === mesActual &&
-            anioAsistencia === anioActual;
-        });
-
-        this.isSearchingAsistencias = false;
-        this.verificarAsistencias();
-      },
-      error: (err) => {
-        console.error('Error al consultar asistencias:', err);
-        this.notificacionService.openSnackBarError('Error al cargar asistencias. Intente nuevamente.');
-      }
-    });
-  }
-
-  buscarAsistenciaHoy(): Asistencia {
-    const fechaHoy = new Date().toISOString().split('T')[0]; // yyyy-mm-dd
-    const idUsuario = this.idUsuario;
-
-    // Buscar la asistencia para hoy del usuario
-    const asistenciaHoy = this.asistencias.find(
-      asistencia =>
-        asistencia.idUsuario === idUsuario &&
-        asistencia.fecha?.startsWith(fechaHoy)
-    );
-
-    return asistenciaHoy
-  }
-
-  /**
-   * Verifica si el usuario ya marcó su asistencia para hoy
-   */
-  verificarAsistencias(): void {
-    const asistenciaHoy = this.buscarAsistenciaHoy();
-
-    if (asistenciaHoy) {
-      // Verificar si hay hora de entrada, si la hay es porque ya marcó presente antes.
-      if (asistenciaHoy.horaEntrada) {
-        this.presente = true;
-        this.botonPresenteDeshabilitado = true;
-        this.horaEntrada = asistenciaHoy.horaEntrada;
-      } else {
-        this.presente = false;
-        this.botonPresenteDeshabilitado = false;
-      }
-
-      // Verificar si hay hora de salida, si la hay es porque ya marcó su presente y salida antes.
-      if (asistenciaHoy.horaSalida) {
-        this.salida = true;
-        this.botonPresenteDeshabilitado = true;
-        this.botonSalidaDeshabilitado = true;
-        this.horaSalida = asistenciaHoy.horaSalida;
-      } else {
-        this.salida = false;
-        this.botonSalidaDeshabilitado = false;
-      }
-    } else {
-      // Si no hay asistencia para hoy, deshabilitar el botón de salida y poner presente en false
-      this.presente = false;
-      this.botonPresenteDeshabilitado = false;
-      this.salida = false;
-      this.botonSalidaDeshabilitado = true;
+    if (this.esConsulta && this.asistencia) {
+      this.rellenarFormularioDataUsuario();
     }
   }
 
-  generarDiasDelMes(): void {
-    const fechaActual = new Date();
-    const year = fechaActual.getFullYear();
-    const month = fechaActual.getMonth();
-    const ultimoDia = new Date(year, month + 1, 0).getDate();
-
-    for (let dia = 1; dia <= ultimoDia; dia++) {
-      this.diasDelMes.push({
-        fecha: new Date(year, month, dia),
-        seleccionado: false,
-        comentario: ''
-      });
-    }
-  }
-
-  marcarPresente(): void {
-    this.notificationDialogService.confirmation(
-      `¿Desea marcar la entrada?
-      Esta acción no es reversible.`, 'Marcar Entrada')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          if (!this.botonPresenteDeshabilitado) {
-
-            this.asistencia.fecha = new Date();
-            this.asistencia.horaEntrada = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            this.asistencia.idUsuario = this.idUsuario;
-
-            this.usuariosService.registrarAsistencia(this.asistencia).subscribe({
-              next: (respuesta) => {
-                if (respuesta.mensaje === 'OK') {
-                  this.notificacionService.openSnackBarSuccess('La entrada se registró con éxito');
-                  this.presente = true;
-                  this.botonPresenteDeshabilitado = true;
-                  this.botonSalidaDeshabilitado = false;
-                  this.consultarAsistencias();
-                } else
-                {
-                  this.notificacionService.openSnackBarError('Error al registrar la entrada. Intente nuevamente');
-                }
-              },
-              error: (err) => {
-                this.notificacionService.openSnackBarError('Error al registrar la entrada. Inténtelo nuevamente');
-              }
-            });
-            }
-          }
-      });
-  }
-
-  marcarSalida(): void {
-    this.notificationDialogService.confirmation(
-      `¿Desea marcar la salida?
-      Esta acción no es reversible.`, 'Marcar Salida')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          if (!this.botonSalidaDeshabilitado) {
-
-            const asistenciaHoy = this.buscarAsistenciaHoy();
-            asistenciaHoy.horaSalida = new Date().toLocaleTimeString('en-GB', { hour12: false });
-
-            this.usuariosService.modificarAsistencia(asistenciaHoy).subscribe({
-              next: (respuesta) => {
-                if (respuesta.mensaje === 'OK') {
-                  this.notificacionService.openSnackBarSuccess('La salida se registró con éxito');
-                  this.salida = true;
-                  this.botonPresenteDeshabilitado = true;
-                  this.botonSalidaDeshabilitado = true;
-                  this.consultarAsistencias();
-                } else {
-                  this.notificacionService.openSnackBarError('Error al registrar la salida. Intente nuevamente');
-                }
-              },
-              error: (err) => {
-                this.notificacionService.openSnackBarError('Error al registrar la salida. Inténtelo nuevamente');
-              }
-            });
-            }
-          }
-      });
-  }
-
-  abrirDialogComentario(): void {
-    this.dialogoComentarioRef = this.dialog.open(this.dialogoComentario, {
-      width: '75%',
-      autoFocus: false
+  private buscarEmpleados(){
+    this.usuariosService.consultarUsuarios(new FiltrosEmpleados()).subscribe((usuarios) => {
+      this.listaEmpleados = usuarios;
     });
   }
 
-  guardarComentario(): void {
+  private crearFormulario() {
+    this.form = this.fb.group({
+      txEmpleados: ['', [Validators.required]],
+      txFecha: ['', [Validators.required]],
+      txHoraEntrada: ['', [Validators.required]],
+      txHoraSalida: ['', [Validators.required]],
+      txComentario: ['', [Validators.maxLength(200)]],
+    });
+  }
+
+
+  private rellenarFormularioDataUsuario() {
+
+    this.txEmpleados.setValue(this.asistencia.idUsuario);
+    this.txFecha.setValue(this.asistencia.fecha);
+    this.txHoraEntrada.setValue(this.asistencia.horaEntrada);
+    this.txHoraSalida.setValue(this.asistencia.horaSalida);
+    this.txComentario.setValue(this.asistencia.comentario);
+
+    if (this.formDesactivado) {
+      this.form.disable();
+    }
+  }
+
+  public habilitarEdicion(){
+    this.form.enable();
+    this.data.editar = true;
+  }
+
+  public registrarNuevaAsistencia() {
+
     if (this.form.valid) {
-      this.comentario = this.form.get('txComentario')?.value;
+      const asistencia: Asistencia = new Asistencia();
 
-      const asistenciaHoy = this.buscarAsistenciaHoy();
-      asistenciaHoy.comentario = this.comentario;
+      asistencia.idUsuario = this.txEmpleados.value;
+      asistencia.fecha = this.txFecha.value;
+      asistencia.horaEntrada = this.txHoraEntrada.value;
+      asistencia.horaSalida = this.txHoraSalida.value;
+      asistencia.comentario = this.txComentario.value;
 
-      this.usuariosService.modificarAsistencia(asistenciaHoy).subscribe({
-        next: (respuesta) => {
-          if (respuesta.mensaje === 'OK') {
-            this.notificacionService.openSnackBarSuccess('Asistencia modificada con éxito');
-            this.consultarAsistencias();
-            this.dialogoComentarioRef.close();
-          } else {
-            this.notificacionService.openSnackBarError('Error al modificar la asistencia');
-            this.dialogoComentarioRef.close();
-          }
-        },
-        error: () => {
-          this.notificacionService.openSnackBarError('Error al modificar la asistencia');
-          this.dialogoComentarioRef.close();
+
+      this.usuariosService.registrarAsistencia(asistencia).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('La asistencia se registró con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError('Error al registrar una asistencia, inténtelo nuevamente');
         }
-      });
+      })
+
     }
+
+  }
+
+  public modificarAsistencia() {
+    if (this.form.valid) {
+      const asistencia: Asistencia = new Asistencia();
+      asistencia.id = this.data.asistencia.id;
+      asistencia.idUsuario = this.data.asistencia.idUsuario;
+      asistencia.fecha = this.txFecha.value.split('T')[0];
+      asistencia.horaEntrada = this.txHoraEntrada.value;
+      asistencia.horaSalida = this.txHoraSalida.value;
+      asistencia.comentario = this.txComentario.value;
+
+      this.usuariosService.modificarAsistencia(asistencia).subscribe((res) => {
+        if (res.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('Asistencia modificada con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar la asistencia');
+        }
+      })
+    }
+  }
+
+
+  public cancelar() {
+    this.dialogRef.close();
+  }
+
+  // Getters
+
+  get txFecha(): FormControl {
+    return this.form.get('txFecha') as FormControl;
+  }
+
+  get txHoraEntrada(): FormControl {
+    return this.form.get('txHoraEntrada') as FormControl;
+  }
+
+  get txHoraSalida(): FormControl {
+    return this.form.get('txHoraSalida') as FormControl;
   }
 
   get txComentario(): FormControl {
     return this.form.get('txComentario') as FormControl;
   }
+
+  get txEmpleados(): FormControl {
+    return this.form.get('txEmpleados') as FormControl;
+  }
+
 }

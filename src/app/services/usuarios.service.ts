@@ -6,6 +6,7 @@ import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
 import {Asistencia} from "../models/asistencia";
+import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando";
 
 @Injectable({
   providedIn: 'root'
@@ -44,8 +45,8 @@ export class UsuariosService {
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-superusuario`, usuario);
   }
 
-  public consultarAsistencias(): Observable<Asistencia[]>{
-    return this.http.get<Asistencia[]>(`${this.urlBackend}/${this.controllerName}/consultar-asistencias`);
+  public consultarAsistencias(filtro: FiltrosAsistencias): Observable<Asistencia[]>{
+    return this.http.post<Asistencia[]>(`${this.urlBackend}/${this.controllerName}/consultar-asistencias`, filtro);
   }
 
   public registrarAsistencia(asistencia: Asistencia): Observable<SpResult>{
@@ -54,6 +55,10 @@ export class UsuariosService {
 
   public modificarAsistencia(asistencia: Asistencia): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-asistencia`, asistencia);
+  }
+
+  public eliminarAsistencia(idAsistencia: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-asistencia/${idAsistencia}`);
   }
 
 }

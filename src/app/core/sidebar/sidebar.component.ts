@@ -31,7 +31,7 @@ export class SidebarComponent {
       {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
       {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, subMenu: []}
     ]},
-    {id: 8, nombre: 'Asistencia', path:'/registrar-asistencia', icon: 'event_available', activo: false, subMenu: []},
+    {id: 8, nombre: 'Asistencia', path:'/marcar-asistencia', icon: 'event_available', activo: false, subMenu: []},
     {id: 9, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
   ];
   isExpanded = true;

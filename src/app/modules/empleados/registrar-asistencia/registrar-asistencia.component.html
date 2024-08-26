@@ -1,194 +1,89 @@
 <div class="container py-3 col-xl-11">
-
-  <mat-card class="mat-elevation-z12 p-4">
-    <div class="row">
-      <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Asistencia</p>
-      </div>
-    </div>
-
-    <mat-divider></mat-divider>
-
-    <br>
-    <h4 style="color: grey">¡Bienvenido {{ nombreApellido }}!</h4>
-
-    <br>
-
-    <!-- Mat-card asistencia del día -->
-    <div class="d-flex justify-content-center">
-      <mat-card class="asistencia-card p-4">
-        <h2>{{ fechaHoy | date: 'dd/MM/yyyy' }}</h2>
-
-        <p *ngIf="presente">
-          Indicaste tu entrada a las {{ horaEntrada }}
-        </p>
-        <p *ngIf="!presente">
-          ¡Recuerda marcar tu asistencia!
-        </p>
-
-        <p *ngIf="salida">
-          Indicaste tu salida a las {{ horaSalida }}
-        </p>
-        <p *ngIf="presente && !salida">
-          ¡Recuerda marcar tu salida!
-        </p>
-
-        <div class="d-flex justify-content-between mt-4 button-group">
-          <button mat-icon-button class="button-check" (click)="marcarPresente()" [disabled]="botonPresenteDeshabilitado" matTooltip="Marcar Entrada">
-            <mat-icon>check</mat-icon>
-          </button>
-          <button mat-icon-button class="button-logout" (click)="marcarSalida()" [disabled]="botonSalidaDeshabilitado" matTooltip="Marcar Salida">
-            <mat-icon>logout</mat-icon>
-          </button>
-          <!-- Botón que despliega el menú -->
-          <button mat-icon-button [matMenuTriggerFor]="commentMenu" class="button-comment" matTooltip="Otras Opciones">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-
-          <!-- Definición del menú -->
-          <mat-menu #commentMenu="matMenu">
-            <button mat-menu-item (click)="abrirDialogComentario()">
-              <span>Añadir comentario</span>
-            </button>
-          </mat-menu>
-
-          <!-- Diálogo para añadir comentario -->
-          <ng-template #dialogoComentario>
-            <div class="container py-3 col-xl-11">
-              <br>
-              <div class="row">
-                <div class="col d-flex justify-content-between align-items-center">
-                  <p class="titulo">Añadir Comentario</p>
-                </div>
-              </div>
-
-              <br>
-              <mat-divider></mat-divider>
-
-
-              <div mat-dialog-content>
-                <form [formGroup]="form">
-                  <div class="row pt-4">
-                    <div class="col-md-12">
-                      <mat-form-field appearance="outline" class="w-100">
-                        <mat-label>Comentario</mat-label>
-                        <input type="text" matInput [formControl]="txComentario"/>
-                      </mat-form-field>
-                    </div>
-                  </div>
-                </form>
-              </div>
-
-              <mat-divider></mat-divider>
-              <br>
-
-              <div mat-dialog-actions>
-                <div class="row text-right">
-                  <div class="col d-flex justify-content-end">
-                    <button mat-button color="warn" class="btn round" (click)="dialogoComentarioRef.close()" id="btnLimpiarFiltro">Cancelar</button>
-                    <button mat-raised-button color="primary" class="btn round" (click)="guardarComentario()" id="btnBuscar2">Guardar</button>
-                  </div>
-                </div>
-              </div>
-
-              <br>
-            </div>
-          </ng-template>
-
-        </div>
-      </mat-card>
-    </div>
-
-  </mat-card>
-
   <br>
-
-  <mat-card-header class="header-card">
-    <h2 style="color: grey">Asistencias encontradas</h2>
-  </mat-card-header>
-
-  <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="isSearchingAsistencias">
-    <mat-spinner></mat-spinner>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar Asistencia' : 'Registrar Asistencia'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
   </div>
 
-  <mat-card *ngIf="!isSearchingAsistencias">
-    <mat-card-content>
-      <!-- Tabla existente -->
-      <div class="row">
-        <div class="col-md-12">
-          <mat-table [dataSource]="asistencias" matSort>
+  <mat-divider></mat-divider>
 
-            <!-- Nombre del empleado -->
-            <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>Empleado</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="nombre-cell">
-                <mat-icon class="person-icon">person</mat-icon>{{ nombreApellido }}
-              </mat-cell>
-            </ng-container>
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
 
-            <!-- Fecha -->
-            <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="fecha-cell">
-                {{ asistencia.fecha | date: 'dd/MM/yyyy' }}
-              </mat-cell>
-            </ng-container>
-
-            <!-- Hora de entrada -->
-            <ng-container matColumnDef="horaEntrada">
-              <mat-header-cell *matHeaderCellDef>Hora de entrada</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="hora-entrada-cell">
-                {{ asistencia.horaEntrada }}
-              </mat-cell>
-            </ng-container>
-
-            <!-- Hora de salida -->
-            <ng-container matColumnDef="horaSalida">
-              <mat-header-cell *matHeaderCellDef>Hora de salida</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="hora-salida-cell">
-                {{ asistencia.horaSalida }}
-              </mat-cell>
-            </ng-container>
-
-            <!-- Comentario -->
-            <ng-container matColumnDef="comentario">
-              <mat-header-cell *matHeaderCellDef>Comentario</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="comentario-cell">
-                {{ asistencia.comentario }}
-              </mat-cell>
-            </ng-container>
-
-            <!-- Acciones -->
-            <ng-container matColumnDef="acciones">
-              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="acciones-cell">
-                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Añadir Comentario">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="abrirDialogComentario()">Añadir comentario</button>
-                </mat-menu>
-              </mat-cell>
-            </ng-container>
-
-            <!-- Definir las filas y las columnas -->
-            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
-
-          </mat-table>
-
-          <h6 *ngIf="!this.asistencias.length" class="alert alert-secondary text-center">
-            No se encuentran asistencias para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.asistencias.length > 0"
-                         [length]="this.asistencias.length"
-                         [pageSize]="10"
-                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-
-        </div>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Empleado</mat-label>
+          <mat-select [formControl]="txEmpleados">
+            <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id">
+              {{ empleado.nombre + ' ' + empleado.apellido }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </div>
-    </mat-card-content>
-  </mat-card>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha</mat-label>
+          <input matInput [matDatepicker]="picker" [formControl]="txFecha" />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Hora de Entrada</mat-label>
+          <input type="time" step="1" matInput [formControl]="txHoraEntrada"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Hora de Salida</mat-label>
+          <input type="time" step="1" matInput [formControl]="txHoraSalida"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+
+    <div class="row pt-4">
+
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Comentario</mat-label>
+          <input type="text" matInput [formControl]="txComentario"/>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+      </button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaAsistencia()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarAsistencia()" id="btnBuscar2">Modificar</button>
+    </div>
+  </div>
+
+  <br>
 </div>
+
+
+

@@ -13,7 +13,7 @@ import {
   ConsultarConfiguracionesComponent
 } from "./modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component";
 import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asistencia/consultar-asistencia.component";
-import {RegistrarAsistenciaComponent} from "./modules/empleados/registrar-asistencia/registrar-asistencia.component";
+import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/marcar-asistencia.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -27,7 +27,7 @@ const routes: Routes = [
   {path:'notificar-promocion', component: NotificarPromocionComponent},
   {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
-  {path:'registrar-asistencia', component: RegistrarAsistenciaComponent}
+  {path:'marcar-asistencia', component: MarcarAsistenciaComponent}
 
 ];
 

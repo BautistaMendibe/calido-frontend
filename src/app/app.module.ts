@@ -32,10 +32,11 @@ import { MessagesComponent } from './shared/messages/messages.component';
 import {MatDialogClose} from "@angular/material/dialog";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
-import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
+import { MarcarAsistenciaComponent } from './modules/empleados/marcar-asistencia/marcar-asistencia.component';
 import { ConsultarAsistenciaComponent } from './modules/empleados/consultar-asistencia/consultar-asistencia.component';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
+import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -60,8 +61,9 @@ registerLocaleData(localeEs, 'es');
     ConsultarProductosComponent,
     RegistrarProductoComponent,
     ConsultarConfiguracionesComponent,
-    RegistrarAsistenciaComponent,
-    ConsultarAsistenciaComponent
+    MarcarAsistenciaComponent,
+    ConsultarAsistenciaComponent,
+    RegistrarAsistenciaComponent
   ],
   imports: [
     BrowserModule,
