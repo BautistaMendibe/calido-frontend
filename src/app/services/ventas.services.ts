@@ -5,6 +5,7 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FormaDePago} from "../models/formaDePago.model";
+import {Venta} from "../models/venta.model";
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +15,10 @@ export class VentasService {
   private controllerName = 'ventas';
 
   constructor(private http: HttpClient) {}
+
+  public registrarVenta(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-venta`, venta);
+  }
 
   public buscarUsuariosClientes(): Observable<Usuario[]>{
     return this.http.get<Usuario[]>(`${this.urlBackend}/${this.controllerName}/buscar-usuarios-clientes`);

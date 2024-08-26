@@ -8,6 +8,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
+import {DetalleVenta} from "../../../models/detalleVenta.model";
+import {SnackBarService} from "../../../services/snack-bar.service";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -29,7 +31,8 @@ export class RegistrarVentaComponent implements OnInit{
     private fb: FormBuilder,
     private productosService: ProductosService,
     private notificationDialogService: NotificationService,
-    private ventasService: VentasService
+    private ventasService: VentasService,
+    private notificacionService: SnackBarService
   ) {
     this.form = new FormGroup({});
   }
@@ -164,7 +167,28 @@ export class RegistrarVentaComponent implements OnInit{
     const venta: Venta = new Venta();
 
     // Seteamos valores de la venta
+    venta.usuario = this.txCliente.value ? this.txCliente.value : null;
+    venta.fecha = new Date();
+    venta.formaDePago = this.txFormaDePago.value;
+    venta.montoTotal = this.totalVenta;
+    venta.detalleVenta = [];
+    venta.productos = this.productosSeleccionados;
 
+    //this.productosSeleccionados.map((producto: Producto) => {
+    //    const detalleVenta: DetalleVenta = new DetalleVenta();
+    //    detalleVenta.producto = producto;
+    //    detalleVenta.subTotal = producto.costo * producto.cantidadSeleccionada;
+    //    detalleVenta.cantidad = producto.cantidadSeleccionada;
+    //    venta.detalleVenta.push(detalleVenta);
+    //});
+
+    this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
+      if (respuesta.mensaje == 'OK') {
+        this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+      } else {
+        this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
+      }
+    });
 
   }
 
