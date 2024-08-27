@@ -29,7 +29,7 @@ const routes: Routes = [
   {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
   {path:'marcar-asistencia', component: MarcarAsistenciaComponent},
-  {path:'registar-venta', component: RegistrarVentaComponent}
+  {path:'registrar-venta', component: RegistrarVentaComponent}
 
 ];
 
