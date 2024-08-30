@@ -1,47 +1,104 @@
-<div class="sidenavContainer" (mouseenter)="onSinenavToggle()" (mouseleave)="onSinenavToggle()"
+<div class="sidenavContainer"
+     (mouseenter)="onSinenavToggle()"
+     (mouseleave)="onSinenavToggle()"
      [@onSideNavChange]="sideNavState ? 'open' : 'close'">
-  <mat-nav-list *ngIf="!showFiller">
-    <div class="parent" *ngFor="let item of menuItems">
-      <mat-list-item (click)="navigate(item); activarItem(item)" class="parent" [class.activo]="item.activo">
-        <mat-icon>{{item.icon ? item.icon : 'gavel'}}
-        </mat-icon>
-        <span class="full-width" *ngIf="isExpanded || isShowing" [ngClass]="{'active' : item.activo}"
-              (click)="navigate(item)"
-              [@animateText]="linkText ? 'show' : 'hide'"
-              [@animateTextTraslate]="linkText ? 'in' : 'void'">
-          {{capitalize(item.nombre)}}
-        </span>
-        <mat-icon class="menu-button" [ngClass]="{'rotated' : item.activo}"
-                  *ngIf="item.subMenu && item.subMenu.length != 0"
-                  [@animateText]="linkText ? 'show' : 'hide'">expand_more
-        </mat-icon>
-      </mat-list-item>
-      <div class="submenu" [ngClass]="{'expanded' : item.activo && sideNavState}" *ngIf="isShowing || isExpanded &&
-         item.subMenu && item.subMenu.length">
-        <div *ngFor="let subItem of item.subMenu" [@animateSubText]="linkText ? 'show' : 'hide'">
-          <mat-list-item *ngIf="item.activo "
-                         [class.subMenuActivo]="subItem.activo && subItem.subMenu && subItem.subMenu.length"
-                         (click)="navigate(subItem); activarSubItem(subItem)">
-            <span class="full-width">
-              {{capitalize(subItem.nombre)}}</span>
 
-            <mat-icon class="menu-button" [ngClass]="{'rotated' : subItem.activo}"
-                      *ngIf="subItem.subMenu && subItem.subMenu.length != 0"
-                      [@animateText]="linkText ? 'show' : 'hide'">expand_more
-            </mat-icon>
-          </mat-list-item>
-          <div class="subSubMenu submenu" [ngClass]="{'expanded' : subItem.activo && sideNavState}" *ngIf="isShowing || isExpanded &&
-         subItem.subMenu && subItem.subMenu.length">
-            <div *ngFor="let subSubItem of subItem.subMenu" [@animateSubText]="linkText ? 'show' : 'hide'">
-              <mat-list-item *ngIf="subItem.activo && item.activo"
-                             (click)="navigate(subSubItem)">
-            <span class="full-width">
-              {{capitalize(subSubItem.nombre)}}</span>
+  <mat-nav-list *ngIf="!showFiller">
+
+    <!-- Recorre los elementos del menú -->
+    <div class="parent" *ngFor="let item of menuItems">
+
+      <!-- Verifica si el ítem requiere rol de administrador o si el usuario tiene rol de administrador -->
+      <ng-container *ngIf="!item.requiresAdmin || tieneRol('Administrador')">
+
+        <!-- Ítem principal del menú -->
+        <mat-list-item
+          (click)="navigate(item); activarItem(item)"
+          class="parent"
+          [class.activo]="item.activo">
+
+          <mat-icon>{{ item.icon ? item.icon : 'gavel' }}</mat-icon>
+
+          <span class="full-width"
+                *ngIf="isExpanded || isShowing"
+                [ngClass]="{'active': item.activo}"
+                (click)="navigate(item)"
+                [@animateText]="linkText ? 'show' : 'hide'"
+                [@animateTextTraslate]="linkText ? 'in' : 'void'">
+            {{ capitalize(item.nombre) }}
+          </span>
+
+          <mat-icon
+            class="menu-button"
+            [ngClass]="{'rotated': item.activo}"
+            *ngIf="item.subMenu && item.subMenu.length != 0"
+            [@animateText]="linkText ? 'show' : 'hide'">
+            expand_more
+          </mat-icon>
+
+        </mat-list-item>
+
+        <!-- Submenú, si existe y si el usuario tiene rol de administrador o el ítem no lo requiere -->
+        <div class="submenu"
+             [ngClass]="{'expanded': item.activo && sideNavState}"
+             *ngIf="isShowing || isExpanded && item.subMenu && item.subMenu.length">
+
+          <!-- Recorre los subítems del menú -->
+          <div *ngFor="let subItem of item.subMenu"
+               [@animateSubText]="linkText ? 'show' : 'hide'">
+
+            <!-- Verifica si el subítem requiere rol de administrador o si el usuario tiene rol de administrador -->
+            <ng-container *ngIf="!subItem.requiresAdmin || tieneRol('Administrador')">
+
+              <!-- Ítem del submenú -->
+              <mat-list-item
+                *ngIf="item.activo"
+                [class.subMenuActivo]="subItem.activo && subItem.subMenu && subItem.subMenu.length"
+                (click)="navigate(subItem); activarSubItem(subItem)">
+
+                <span class="full-width">
+                  {{ capitalize(subItem.nombre) }}
+                </span>
+
+                <mat-icon
+                  class="menu-button"
+                  [ngClass]="{'rotated': subItem.activo}"
+                  *ngIf="subItem.subMenu && subItem.subMenu.length != 0"
+                  [@animateText]="linkText ? 'show' : 'hide'">
+                  expand_more
+                </mat-icon>
+
               </mat-list-item>
-            </div>
+
+              <!-- Sub-submenú, si existe y si el usuario tiene rol de administrador o el ítem no lo requiere -->
+              <div class="subSubMenu submenu"
+                   [ngClass]="{'expanded': subItem.activo && sideNavState}"
+                   *ngIf="isShowing || isExpanded && subItem.subMenu && subItem.subMenu.length">
+
+                <!-- Recorre los sub-subítems del submenú -->
+                <div *ngFor="let subSubItem of subItem.subMenu"
+                     [@animateSubText]="linkText ? 'show' : 'hide'">
+
+                  <!-- Verifica si el sub-subítem requiere rol de administrador o si el usuario tiene rol de administrador -->
+                  <ng-container *ngIf="!subSubItem.requiresAdmin || tieneRol('Administrador')">
+
+                    <!-- Ítem del sub-submenú -->
+                    <mat-list-item
+                      *ngIf="subItem.activo && item.activo"
+                      (click)="navigate(subSubItem)">
+
+                      <span class="full-width">
+                        {{ capitalize(subSubItem.nombre) }}
+                      </span>
+
+                    </mat-list-item>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
           </div>
         </div>
-      </div>
+      </ng-container>
     </div>
   </mat-nav-list>
 </div>

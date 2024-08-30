@@ -7,6 +7,7 @@ import {
   onSideNavChange
 } from '../../shared/animations';
 import {Router} from "@angular/router";
+import {AuthService} from "../../services/auth.service";
 
 @Component({
   selector: 'app-sidebar',
@@ -31,10 +32,10 @@ export class SidebarComponent {
     {id: 6, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
     {id: 7, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
       {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
-      {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, subMenu: []}
+      {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, requiresAdmin: true, subMenu: []}
     ]},
     {id: 8, nombre: 'Asistencia', path:'/marcar-asistencia', icon: 'event_available', activo: false, subMenu: []},
-    {id: 9, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
+    {id: 9, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;
@@ -42,8 +43,10 @@ export class SidebarComponent {
   public sideNavState = false;
   public linkText = false;
 
-  constructor(private router: Router) {
-  }
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) { }
 
 
   onSinenavToggle() {
@@ -69,6 +72,12 @@ export class SidebarComponent {
       }
     });
     item.activo = !item.activo;
+  }
+
+  tieneRol(nombreRol: string): boolean {
+    const token = this.authService.getToken();
+    const infoToken: any = this.authService.getDecodedAccessToken(token);
+    return infoToken.roles.includes(nombreRol);
   }
 
   capitalize(word?: string): string {

@@ -10,7 +10,7 @@ import {
 } from "@angular/forms";
 import {UsuariosService} from "../../services/usuarios.service";
 import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.servicie";
+import {AuthService} from "../../services/auth.service";
 import {SnackBarService} from "../../services/snack-bar.service";
 import {ConfiguracionesService} from "../../services/configuraciones.service";
 import {Usuario} from "../../models/usuario.model";

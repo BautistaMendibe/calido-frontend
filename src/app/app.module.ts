@@ -15,7 +15,7 @@ import { HomeComponent } from './modules/home/home.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
-import {AuthService} from "./services/auth.servicie";
+import {AuthService} from "./services/auth.service";
 import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
 import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
 import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';

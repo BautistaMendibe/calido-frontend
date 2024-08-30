@@ -55,10 +55,6 @@ export class AuthService {
 
       const isTokenExpired = currentDate > expirationDate;
 
-      if (isTokenExpired) {
-        this.notificacionService.openSnackBarError('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.');
-      }
-
       return !isTokenExpired;
       }
 
