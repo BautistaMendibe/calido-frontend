@@ -164,12 +164,12 @@
           <div class="summary-container">
             <div class="summary-row">
               <span>Subtotal</span>
-              <span class="text-summary">$ {{ subTotal }}</span>
+              <span class="text-summary">$ {{ subTotal.toFixed(2) }}</span>
             </div>
             <div class="dotted-line"></div>
             <div class="summary-row">
               <span>IVA (21.00%)</span>
-              <span class="text-summary">$ {{ impuestoIva }}</span>
+              <span class="text-summary">$ {{ impuestoIva.toFixed(2) }}</span>
             </div>
           </div>
         </div>
@@ -184,7 +184,7 @@
         <div class="container mt-4">
           <button class="btn btn-custom" [disabled]="totalVenta == 0" (click)="confirmarVenta()">
             <span>Confirmar venta</span>
-            <span class="text-right">$ {{this.totalVenta}}</span>
+            <span class="text-right">$ {{ this.totalVenta.toFixed(2) }}</span>
           </button>
           <div class="d-flex justify-content-between mt-3">
             <span class="text-small">{{ productosSeleccionados.length }} Producto</span>
