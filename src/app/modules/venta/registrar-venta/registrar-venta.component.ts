@@ -25,6 +25,7 @@ export class RegistrarVentaComponent implements OnInit{
   public form: FormGroup;
   public usuarios: Usuario[] = [];
   public formasDePago: FormaDePago[] = [];
+  public registrandoVenta: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -173,11 +174,15 @@ export class RegistrarVentaComponent implements OnInit{
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
 
+    this.registrandoVenta = true;
+
     this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+        this.registrandoVenta = false;
       } else {
         this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
+        this.registrandoVenta = false;
       }
     });
 
