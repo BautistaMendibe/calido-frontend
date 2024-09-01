@@ -23,19 +23,20 @@ export class SidebarComponent {
     {id: 2, nombre: 'Ventas', path:'registrar-venta', icon: 'sell', activo: false, subMenu: [
         {id: 1, nombre: 'Registrar venta', path:'/registar-venta', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 3, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
+    {id: 3, nombre: 'Pedidos', path:'consultar-pedidos', icon: 'receipt', activo: false, requiresAdmin: true, subMenu: []},
+    {id: 4, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 4, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
-    {id: 5, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
-    {id: 6, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
-    {id: 7, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
+    {id: 5, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
+    {id: 6, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
+    {id: 7, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
+    {id: 8, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
       {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
       {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, requiresAdmin: true, subMenu: []}
     ]},
-    {id: 8, nombre: 'Asistencia', path:'/marcar-asistencia', icon: 'event_available', activo: false, subMenu: []},
-    {id: 9, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
+    {id: 9, nombre: 'Asistencia', path:'/marcar-asistencia', icon: 'event_available', activo: false, subMenu: []},
+    {id: 10, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;
@@ -74,10 +75,15 @@ export class SidebarComponent {
     item.activo = !item.activo;
   }
 
-  tieneRol(nombreRol: string): boolean {
+  /**
+   * Verifica si el usuario tiene alguno de los roles pasados por parámetro.
+   * Compara si el rol del usuario está incluido en la lista.
+   * @param nombresRol lista con roles. Ejemplo: ['Administrador', 'Vendedor']
+   */
+  tieneRol(nombresRol: string[]): boolean {
     const token = this.authService.getToken();
     const infoToken: any = this.authService.getDecodedAccessToken(token);
-    return infoToken.roles.includes(nombreRol);
+    return nombresRol.some(nombreRol => infoToken.roles.includes(nombreRol));
   }
 
   capitalize(word?: string): string {

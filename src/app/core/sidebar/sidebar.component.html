@@ -9,7 +9,7 @@
     <div class="parent" *ngFor="let item of menuItems">
 
       <!-- Verifica si el ítem requiere rol de administrador o si el usuario tiene rol de administrador -->
-      <ng-container *ngIf="!item.requiresAdmin || tieneRol('Administrador')">
+      <ng-container *ngIf="!item.requiresAdmin || tieneRol(['Administrador'])">
 
         <!-- Ítem principal del menú -->
         <mat-list-item
@@ -48,7 +48,7 @@
                [@animateSubText]="linkText ? 'show' : 'hide'">
 
             <!-- Verifica si el subítem requiere rol de administrador o si el usuario tiene rol de administrador -->
-            <ng-container *ngIf="!subItem.requiresAdmin || tieneRol('Administrador')">
+            <ng-container *ngIf="!subItem.requiresAdmin || tieneRol(['Administrador'])">
 
               <!-- Ítem del submenú -->
               <mat-list-item
@@ -80,7 +80,7 @@
                      [@animateSubText]="linkText ? 'show' : 'hide'">
 
                   <!-- Verifica si el sub-subítem requiere rol de administrador o si el usuario tiene rol de administrador -->
-                  <ng-container *ngIf="!subSubItem.requiresAdmin || tieneRol('Administrador')">
+                  <ng-container *ngIf="!subSubItem.requiresAdmin || tieneRol(['Administrador'])">
 
                     <!-- Ítem del sub-submenú -->
                     <mat-list-item

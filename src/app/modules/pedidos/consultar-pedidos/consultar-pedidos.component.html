@@ -1,0 +1,137 @@
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">Pedidos</p>
+        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoPedido()">Registrar nuevo pedido</button>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <h4 style="color: grey">Filtros de búsqueda</h4>
+
+    <form [formGroup]="form">
+      <div class="row pt-4">
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Número de Pedido</mat-label>
+            <input type="text" matInput [formControl]="txPedido"/>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Proveedor</mat-label>
+            <mat-select [formControl]="txProveedor">
+              <mat-option *ngFor="let proveedor of listaProveedor" [value]="proveedor.id">
+                {{ proveedor.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha de Emisión</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="txFechaEmision" />
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+
+
+    <!-- Btn de buscar y limpiar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+          <mat-icon>autorenew</mat-icon>
+          Limpiar
+        </button>
+        <button mat-raised-button color="accent" class="btn round" (click)="buscar()" id="btnBuscar">Buscar</button>
+      </div>
+    </div>
+
+  </mat-card>
+
+  <br>
+
+
+  <mat-card-header class="header-card">
+    <h2 style="color: grey">Pedidos encontrados</h2>
+  </mat-card-header>
+
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="pedidos.length == 0">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card *ngIf="pedidos.length > 0">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort>
+            <ng-container matColumnDef="numeroPedido">
+              <mat-header-cell *matHeaderCellDef>Numero de Pedido</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Pedido">{{ pedido.id }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="proveedor">
+              <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
+              <mat-cell *matCellDef="let proveedor" data-label="Proveedor">{{ proveedor.nombre }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaEmision">
+              <mat-header-cell *matHeaderCellDef>Fecha de Emisión</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="fechaEntrega">
+              <mat-header-cell *matHeaderCellDef>Fecha de Entrega</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Fecha de entrega">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="total">
+              <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Subtotal">{{ pedido.total }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Acciones">
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verPedido(pedido, false)">
+                  <mat-icon class="ver">visibility</mat-icon>
+                </button>
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verPedido(pedido, true)">
+                  <mat-icon class="editar">edit</mat-icon>
+                </button>
+                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarPedido(pedido.id)">
+                  <mat-icon class="eliminar">delete</mat-icon>
+                </button>
+              </mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
+          </mat-table>
+
+          <h6 *ngIf="!this.pedidos.length" class="alert alert-secondary text-center">
+            No se encuentran pedidos para mostrar, realice una nueva búsqueda.
+          </h6>
+
+          <mat-paginator *ngIf="this.pedidos.length > 0"
+                         [length]="this.pedidos.length"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+

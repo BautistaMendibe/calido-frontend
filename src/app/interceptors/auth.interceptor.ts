@@ -41,7 +41,6 @@ export class AuthInterceptor implements HttpInterceptor {
           // No está autentificado o su token expiró, desloguear y llevar a login
           this.authService.logOut();
           this.router.navigate(['/login']);
-          this.notificacionService.openSnackBarError('Tu sesión ha expirado. Por favor, inicia sesión nuevamente.')
         } else if (error.status === 403) {
           // No tiene permiso de entrar por rol insuficiente, llevar a home
           this.router.navigate(['/']);
