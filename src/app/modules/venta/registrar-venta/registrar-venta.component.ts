@@ -8,7 +8,6 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
-import {DetalleVenta} from "../../../models/detalleVenta.model";
 import {SnackBarService} from "../../../services/snack-bar.service";
 
 @Component({
@@ -173,14 +172,6 @@ export class RegistrarVentaComponent implements OnInit{
     venta.montoTotal = this.totalVenta;
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
-
-    //this.productosSeleccionados.map((producto: Producto) => {
-    //    const detalleVenta: DetalleVenta = new DetalleVenta();
-    //    detalleVenta.producto = producto;
-    //    detalleVenta.subTotal = producto.costo * producto.cantidadSeleccionada;
-    //    detalleVenta.cantidad = producto.cantidadSeleccionada;
-    //    venta.detalleVenta.push(detalleVenta);
-    //});
 
     this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
