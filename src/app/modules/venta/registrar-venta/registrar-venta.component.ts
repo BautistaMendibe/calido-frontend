@@ -9,6 +9,8 @@ import {Usuario} from "../../../models/usuario.model";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -32,18 +34,19 @@ export class RegistrarVentaComponent implements OnInit{
     private productosService: ProductosService,
     private notificationDialogService: NotificationService,
     private ventasService: VentasService,
-    private notificacionService: SnackBarService
+    private notificacionService: SnackBarService,
+    private dialog: MatDialog,
   ) {
     this.form = new FormGroup({});
   }
 
   ngOnInit(){
-    this.buscarProductos();
+    this.buscar();
     this.crearFormulario();
     this.buscarDataCombos();
   }
 
-  private buscarProductos() {
+  public buscar() {
     const filtros: FiltrosProductos = new FiltrosProductos();
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
@@ -186,6 +189,22 @@ export class RegistrarVentaComponent implements OnInit{
       }
     });
 
+  }
+
+  public registrarProducto() {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
+        }
+      }
+    );
   }
 
   // Region getters
