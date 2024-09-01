@@ -183,12 +183,25 @@ export class RegistrarVentaComponent implements OnInit{
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
         this.registrandoVenta = false;
+        this.limpiarVenta();
       } else {
         this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
         this.registrandoVenta = false;
       }
     });
+  }
 
+  private limpiarVenta() {
+    this.productosSeleccionados.map((producto) => {
+      producto.seleccionadoParaVenta = false;
+      producto.cantidadSeleccionada = 0;
+    });
+    this.productosSeleccionados = [];
+    this.totalVenta = 0;
+    this.subTotal = 0;
+    this.txFormaDePago.setValue(this.formasDePago[0]);
+    this.txCliente.setValue(null);
+    this.txNumeracion.setValue(null);
   }
 
   public registrarProducto() {
