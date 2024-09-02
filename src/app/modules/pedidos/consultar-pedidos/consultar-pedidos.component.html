@@ -82,22 +82,27 @@
 
             <ng-container matColumnDef="proveedor">
               <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
-              <mat-cell *matCellDef="let proveedor" data-label="Proveedor">{{ proveedor.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Proveedor">{{ pedido.proveedor.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="fechaEmision">
               <mat-header-cell *matHeaderCellDef>Fecha de Emisión</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fechaPedido | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="fechaEntrega">
               <mat-header-cell *matHeaderCellDef>Fecha de Entrega</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Fecha de entrega">{{ pedido.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Fecha de entrega">{{ pedido.fechaEntrega | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="total">
               <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Subtotal">{{ pedido.total }}</mat-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Subtotal" >{{ pedido.total | currency:'$':'symbol':'1.2-2'}}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="estado">
+              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Estado" >{{ pedido.estadoPedido.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">

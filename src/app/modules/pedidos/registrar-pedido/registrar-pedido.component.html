@@ -87,7 +87,7 @@
         </mat-form-field>
       </div>
       <div class="col-md-8">
-        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()">
+        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado">
           <mat-icon>add</mat-icon>Nuevo producto
         </button>
       </div>
@@ -100,7 +100,7 @@
         <div class="row">
 
           <div class="col-md-12">
-            <mat-table [dataSource]="dataSourceProductos" matSort>
+            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado">
               <ng-container matColumnDef="imgProducto">
                 <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
@@ -153,6 +153,7 @@
             </h6>
             <mat-paginator *ngIf="this.productos.length > 0"
                            [length]="this.productos.length"
+                           [disabled]="formDesactivado"
                            [pageSize]="10"
                            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </div>

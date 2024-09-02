@@ -37,3 +37,7 @@
   width: 40px;
 }
 
+.disabled-table {
+  pointer-events: none;
+  opacity: 0.6;
+}

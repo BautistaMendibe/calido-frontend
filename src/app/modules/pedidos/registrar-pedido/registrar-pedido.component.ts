@@ -73,10 +73,6 @@ export class RegistrarPedidoComponent implements OnInit {
     this.buscarProveedores();
     this.buscarTransportes();
 
-    if (this.esConsulta && this.pedido) {
-      this.rellenarFormularioDataPedido();
-    }
-
     // Filtra los productos por nombre.
     this.txBuscar.valueChanges.subscribe(valor => {
       this.dataSourceProductos.filter = valor.trim().toLowerCase();
@@ -124,6 +120,10 @@ export class RegistrarPedidoComponent implements OnInit {
     this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
       this.productos = productos;
       this.dataSourceProductos.data = productos;
+
+      if (this.esConsulta && this.pedido) {
+        this.rellenarFormularioDataPedido();
+      }
     });
   }
 
@@ -156,12 +156,32 @@ export class RegistrarPedidoComponent implements OnInit {
     this.txFechaPedido.setValue(this.formatDate(this.pedido.fechaPedido));
     this.txFechaEntrega.setValue(this.formatDate(this.pedido.fechaEntrega));
     this.txEstadoPedido.setValue(this.pedido.idEstadoPedido);
-    this.txTransporte.setValue(this.pedido.idTransporte);
+    this.txTransporte.setValue(this.pedido.transporte.nombre);
     this.txProveedor.setValue(this.pedido.idProveedor);
     this.txDescuento.setValue(this.pedido.descuento);
-    this.txImpuestos.setValue(this.pedido.impuesto);
+    this.txImpuestos.setValue(this.pedido.impuesto.toString());
     this.txObservaciones.setValue(this.pedido.observaciones);
     this.txTotal.setValue(this.pedido.total);
+
+    this.pedido.detallePedido.forEach((detalle: DetallePedido) => {
+      // Encuentra el producto correspondiente al idproducto
+      const producto = this.productos.find(producto => producto.id === detalle.idproducto);
+
+      if (producto) {
+        producto.cantidadSeleccionada = detalle.cantidad;
+        // Crea una copia del producto y actualiza la cantidadSeleccionada
+        const productoSeleccionado = {
+          ...producto,
+          cantidadSeleccionada: detalle.cantidad
+        };
+
+        // Agrega el producto modificado a la lista de productos seleccionados
+        this.productosSeleccionados.push(productoSeleccionado);
+      }
+    });
+
+    this.calcularSubTotal();
+    this.calcularTotal();
 
     if (this.formDesactivado) {
       this.form.disable();
@@ -174,6 +194,10 @@ export class RegistrarPedidoComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
+    this.txSubtotal.disable();
+    this.txTotal.disable();
+    this.data.formDesactivado = false;
+    this.formDesactivado = false;
     this.data.editar = true;
   }
 
@@ -301,9 +325,9 @@ export class RegistrarPedidoComponent implements OnInit {
   }
 
   private calcularTotal() {
-    const descuento = this.txDescuento.value;
+    const descuento = parseFloat(this.txDescuento.value);
     const impuestos = this.txImpuestos.value ? parseFloat(this.txImpuestos.value) : 0;
-    const costoEnvio = this.txMontoEnvio.value;
+    const costoEnvio = parseFloat(this.txMontoEnvio.value);
 
     // El descuento normalmente se aplica al subtotal (costo base de productos)
     const subtotalConDescuento = this.subTotal * (1 - descuento / 100);
