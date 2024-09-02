@@ -1,0 +1,88 @@
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4">
+    <div class="row">
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <p class="titulo">Cuentas Corrientes</p>
+         <button mat-stroked-button color="warn" class="btn round mb-3" >Registrar cuenta corriente</button>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <br>
+    <h4>Filtros de búsqueda</h4>
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Cliente</mat-label>
+            <input type="text" matInput [formControl]="txCliente"/>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Desde </mat-label>
+            <input type="text" matInput [formControl]="txCliente"/>
+            <mat-label>dias adeudados </mat-label>
+          </mat-form-field>
+        </div>
+      </div>
+    </form>
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+          <mat-icon>autorenew</mat-icon>
+          Limpiar
+        </button>
+        <button mat-raised-button color="accent" class="btn round" (click)="buscar()" id="btnBuscar">Buscar</button>
+      </div>
+    </div>
+  </mat-card>
+  <br>
+  <mat-card-header class="header-card">
+    <h2 style="color: grey">Cuentas encontradas</h2>
+  </mat-card-header>
+
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="cuentas.length == 0">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card *ngIf="cuentas.length > 0">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort>
+            <ng-container matColumnDef="imgProducto">
+            </ng-container>
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+              <mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="apellido">
+              <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+              <mat-cell *matCellDef="let usuario">{{ usuario.apellido }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="creada">
+              <mat-header-cell *matHeaderCellDef>Creada</mat-header-cell>
+              <mat-cell *matCellDef="let usuario">{{ usuario.cuentaCorriente?.fechaDesde }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="diasDeuda">
+              <mat-header-cell *matHeaderCellDef>Debiendo hace</mat-header-cell>
+              <mat-cell *matCellDef="let usuario">{{ usuario.cuentaCorriente?.diasDeuda }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="balance">
+              <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
+              <mat-cell *matCellDef="let usuario">{{ usuario.cuentaCorriente?.balanceTotal }}</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+          </mat-table>
+          <h6 *ngIf="!this.cuentas.length" class="alert alert-secondary text-center">
+            No se encuentran cuentas corrientes para mostrar, por favor realice una nueva búsqueda.
+          </h6>
+          <mat-paginator *ngIf="this.cuentas.length > 0"
+                         [length]="this.cuentas.length"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

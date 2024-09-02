@@ -38,6 +38,7 @@ import { ConsultarAsistenciaComponent } from './modules/empleados/consultar-asis
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
+import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 
 registerLocaleData(localeEs, 'es');
 
@@ -65,7 +66,8 @@ registerLocaleData(localeEs, 'es');
     MarcarAsistenciaComponent,
     ConsultarAsistenciaComponent,
     RegistrarAsistenciaComponent,
-    RegistrarVentaComponent
+    RegistrarVentaComponent,
+    ConsultarCuentasCorrientesComponent
   ],
   imports: [
     BrowserModule,

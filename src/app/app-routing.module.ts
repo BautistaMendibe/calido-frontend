@@ -15,12 +15,14 @@ import {
 import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asistencia/consultar-asistencia.component";
 import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/marcar-asistencia.component";
 import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
+import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
   {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
+  {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
