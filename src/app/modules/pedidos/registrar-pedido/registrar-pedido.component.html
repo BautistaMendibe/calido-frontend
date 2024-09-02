@@ -2,7 +2,7 @@
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar Pedido' : 'Registrar Pedido'}}</p>
+      <p class="titulo">{{esConsulta ? 'Consultar Orden de Compra' : 'Registrar Orden de Compra'}}</p>
       <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
         <mat-icon class="editar">edit</mat-icon>
       </button>
@@ -28,10 +28,15 @@
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Transporte</mat-label>
-          <input type="text" matInput [formControl]="txTransporte" [matAutocomplete]="autoCompleteTransporte" />
+          <input
+            type="text"
+            matInput
+            [formControl]="txTransporte"
+            [matAutocomplete]="autoCompleteTransporte"
+          />
         </mat-form-field>
         <mat-autocomplete #autoCompleteTransporte="matAutocomplete">
-          <mat-option *ngFor="let transporte of transportesFiltrados" [value]="transporte.id">
+          <mat-option *ngFor="let transporte of transportesFiltrados" [value]="transporte.nombre" [id]="transporte.id.toString()">
             {{transporte.nombre}}
           </mat-option>
         </mat-autocomplete>
@@ -52,6 +57,15 @@
           <input matInput [matDatepicker]="pickerEntrega" [formControl]="txFechaEntrega" />
           <mat-datepicker-toggle matSuffix [for]="pickerEntrega"></mat-datepicker-toggle>
           <mat-datepicker #pickerEntrega></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row pt-4">
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Observaciones</mat-label>
+          <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
       </div>
     </div>
@@ -121,9 +135,9 @@
                 <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.marca?.nombre }}</mat-cell>
               </ng-container>
-              <ng-container matColumnDef="acciones">
-                <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
-                <mat-cell *matCellDef="let producto" data-label="Acciones">
+              <ng-container matColumnDef="cantidad">
+                <mat-header-cell *matHeaderCellDef>Cantidad</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Cantidad">
                   <div class="d-flex align-items-center justify-content-right">
                     <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
                     <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
@@ -162,7 +176,7 @@
     </div>
     <div class="col-md">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Costo Transporte</mat-label>
+        <mat-label>Costo de Transporte</mat-label>
         <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$" thousandSeparator="," />
       </mat-form-field>
     </div>

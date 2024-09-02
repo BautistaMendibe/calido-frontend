@@ -78,8 +78,6 @@ export class RegistrarPromocionComponent implements OnInit{
 
       this.txProducto.valueChanges.subscribe((producto) => {
         this.productosFiltrados = this.filterProductos(producto);
-        // Valida que el producto seleccionado sea un producto válido.
-        this.txProducto.updateValueAndValidity();
       });
     });
   }

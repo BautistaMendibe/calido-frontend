@@ -9,9 +9,12 @@ import {ConsultarPedidosComponent} from "../consultar-pedidos/consultar-pedidos.
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
-import {Marca} from "../../../models/Marcas.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {TransportesService} from "../../../services/transportes.service";
+import {Transporte} from "../../../models/transporte.model";
+import {DetallePedido} from "../../../models/detallePedido.model";
+import {PedidosService} from "../../../services/pedidos.service";
 
 @Component({
   selector: 'app-registrar-pedido',
@@ -26,9 +29,10 @@ export class RegistrarPedidoComponent implements OnInit {
   public listaProveedores: Proveedor[] = [];
   public productos: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
-  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'costoImpuesto', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
-  public listaTransportes: Marca[] = [];
-  public transportesFiltrados: Marca[] = [];
+  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'costoImpuesto', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
+  public listaTransportes: Transporte[] = [];
+  public transportesFiltrados: Transporte[] = [];
+  private idTransporte: number = -1;
 
   public pedido: Pedido;
   public descuentos: { value: number, label: string }[] = [];
@@ -43,6 +47,8 @@ export class RegistrarPedidoComponent implements OnInit {
     private dialog: MatDialog,
     private proveedoresService: ProveedoresService,
     private productosService: ProductosService,
+    private transportesService: TransportesService,
+    private pedidosService: PedidosService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: {
@@ -65,6 +71,7 @@ export class RegistrarPedidoComponent implements OnInit {
     this.generarDescuentos();
     this.buscarProductos();
     this.buscarProveedores();
+    this.buscarTransportes();
 
     if (this.esConsulta && this.pedido) {
       this.rellenarFormularioDataPedido();
@@ -96,7 +103,7 @@ export class RegistrarPedidoComponent implements OnInit {
       txMontoEnvio: ['', [Validators.required]],
       txFechaPedido: ['', [Validators.required]],
       txFechaEntrega: ['', [Validators.required]],
-      txEstadoPedido: ['', [Validators.required]],
+      txEstadoPedido: ['', []],
       txTransporte: ['', [Validators.required]],
       txProveedor: ['', [Validators.required]],
       txDescuento: [0, [Validators.required]],
@@ -117,6 +124,30 @@ export class RegistrarPedidoComponent implements OnInit {
     this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
       this.productos = productos;
       this.dataSourceProductos.data = productos;
+    });
+  }
+
+  private buscarTransportes() {
+    this.transportesService.buscarTransportes().subscribe((transportes) => {
+      this.listaTransportes = transportes;
+
+      // Filtra los transportes por nombre.
+      // Si encuentra un transporte válido, asigna su ID.
+      // Si no encuentra un transporte válido, asigna -1 para su creación futura.
+      this.txTransporte.valueChanges.subscribe((transporte) => {
+        if (transporte) {
+          this.transportesFiltrados = this.filterTransportes(transporte);
+          const transporteValido = this.listaTransportes.some(t => t.nombre === transporte);
+
+          if (transporteValido) {
+            this.idTransporte = this.listaTransportes.find(t => t.nombre === transporte)?.id || -1;
+          } else {
+            this.idTransporte = -1;
+          }
+        } else {
+          this.idTransporte = -1;
+        }
+      });
     });
   }
 
@@ -150,20 +181,43 @@ export class RegistrarPedidoComponent implements OnInit {
 
     if (this.form.valid) {
       const pedido: Pedido = new Pedido();
-      //const detallePedido: DetallePedido = new DetallePedido();
+      const transporte: Transporte = new Transporte();
 
       pedido.montoEnvio = this.txMontoEnvio.value;
       pedido.fechaPedido = this.txFechaPedido.value;
       pedido.fechaEntrega = this.txFechaEntrega.value;
-      pedido.idEstadoPedido = this.txEstadoPedido.value;
-      pedido.idTransporte = this.txTransporte.value;
+      pedido.idEstadoPedido = 1; // Estado 'pendiente' al registrar.
+      pedido.idTransporte = this.idTransporte;
       pedido.idProveedor = this.txProveedor.value;
       pedido.descuento = this.txDescuento.value;
       pedido.impuesto = this.txImpuestos.value;
       pedido.observaciones = this.txObservaciones.value;
       pedido.total = this.txTotal.value;
+      transporte.nombre = this.txTransporte.value;
+      pedido.transporte = transporte;
 
-      // TODO: Detalles Pedido
+      // Por cada producto seleccionado, creamos un detalle de pedido.
+      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
+        const detalle = new DetallePedido();
+        detalle.cantidad = producto.cantidadSeleccionada;
+        detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
+        detalle.idpedido = pedido.id;
+        detalle.idproducto = producto.id;
+
+        return detalle;
+      });
+
+      pedido.detallePedido = detallesPedido;
+
+      this.pedidosService.registrarPedido(pedido).subscribe((respuesta) => {
+        if (respuesta.mensaje === 'OK') {
+          this.notificacionService.openSnackBarSuccess('El pedido se registró con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError('Error al registrar un pedido, inténtelo nuevamente');
+        }
+      });
     }
   }
 
@@ -276,6 +330,13 @@ export class RegistrarPedidoComponent implements OnInit {
           formDesactivado: false
         }
       }
+    );
+  }
+
+  private filterTransportes(valor: string): Transporte[] {
+    const valorFiltrado = valor.toLowerCase();
+    return this.listaTransportes.filter(transporte =>
+      transporte.nombre.toLowerCase().includes(valorFiltrado)
     );
   }
 
