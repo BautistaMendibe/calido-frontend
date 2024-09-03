@@ -150,7 +150,7 @@ export class ConsultarPedidosComponent implements OnInit {
   }
 
   public eliminarPedido(idPedido: number) {
-    this.notificationDialogService.confirmation('¿Desea eliminar el pedido?', 'Eliminar Pedido') //Está seguro?
+    this.notificationDialogService.confirmation('¿Desea eliminar la orden de compra?', 'Eliminar Orden de Compra') //Está seguro?
       .afterClosed()
       .subscribe((value) => {
         if (value) {
