@@ -4,7 +4,11 @@ export class Configuracion {
   id: number;
   idUsuario: number;
   razonSocial: string;
-  domicilioComercial: string;
+  calle: string;
+  numero: number;
+  ciudad: string;
+  provincia: string;
+  codigoPostal: number;
   cuit: string;
   fechaInicioActividades: string;
   condicionIva: string;
@@ -17,19 +21,22 @@ export class Configuracion {
     id?: number,
     idUsuario?: number,
     razonSocial?: string,
-    domicilioComercial?: string,
     cuit?: string,
     fechaInicioActividades?: string,
     condicionIva?: string,
     logo?: string | null,
     contrasenaInstagram?: string,
     usuarioInstagram?: string,
-    usuario?: Usuario
+    usuario?: Usuario,
+    calle?: string,
+    numero?: number,
+    ciudad?: string,
+    provincia?: string,
+    codigoPostal?: number
   ) {
     this.id = id!;
     this.idUsuario = idUsuario!;
     this.razonSocial = razonSocial!;
-    this.domicilioComercial = domicilioComercial!;
     this.cuit = cuit!;
     this.fechaInicioActividades = fechaInicioActividades!;
     this.condicionIva = condicionIva!;
@@ -37,5 +44,10 @@ export class Configuracion {
     this.contrasenaInstagram = contrasenaInstagram!;
     this.usuarioInstagram = usuarioInstagram!;
     this.usuario = usuario!;
+    this.calle = calle!;
+    this.numero = numero!;
+    this.ciudad = ciudad!;
+    this.provincia = provincia!;
+    this.codigoPostal = codigoPostal!;
   }
 }

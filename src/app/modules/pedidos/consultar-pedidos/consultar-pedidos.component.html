@@ -90,11 +90,6 @@
               <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fechaPedido | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="fechaEntrega">
-              <mat-header-cell *matHeaderCellDef>Fecha de Entrega</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Fecha de entrega">{{ pedido.fechaEntrega | date: 'dd/MM/yyyy' }}</mat-cell>
-            </ng-container>
-
             <ng-container matColumnDef="total">
               <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Subtotal" >{{ pedido.total | currency:'$':'symbol':'1.2-2'}}</mat-cell>
@@ -116,6 +111,9 @@
                 </button>
                 <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarPedido(pedido.id)">
                   <mat-icon class="eliminar">delete</mat-icon>
+                </button>
+                <button mat-icon-button color="primary"  matTooltip="Imprimir" (click)="imprimirPedido(pedido)">
+                  <mat-icon class="imprimir">print</mat-icon>
                 </button>
               </mat-cell>
             </ng-container>

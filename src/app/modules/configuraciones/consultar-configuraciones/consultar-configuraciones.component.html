@@ -47,10 +47,37 @@
             <input type="text" matInput [formControl]="razonSocial" />
           </mat-form-field>
         </div>
-        <div class="col-md-6">
+      </div>
+
+      <div class="row pt-4">
+        <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Domicilio Comercial</mat-label>
-            <input type="text" matInput [formControl]="domicilioComercial" />
+            <mat-label>Calle</mat-label>
+            <input type="text" matInput [formControl]="calle" />
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Número</mat-label>
+            <input type="text" matInput [formControl]="numero" />
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Ciudad</mat-label>
+            <input type="text" matInput [formControl]="ciudad" />
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Provincia</mat-label>
+            <input type="text" matInput [formControl]="provincia" />
+          </mat-form-field>
+        </div>
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Código Postal</mat-label>
+            <input type="text" matInput [formControl]="codigoPostal" />
           </mat-form-field>
         </div>
       </div>

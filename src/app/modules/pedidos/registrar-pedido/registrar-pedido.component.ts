@@ -15,6 +15,7 @@ import {TransportesService} from "../../../services/transportes.service";
 import {Transporte} from "../../../models/transporte.model";
 import {DetallePedido} from "../../../models/detallePedido.model";
 import {PedidosService} from "../../../services/pedidos.service";
+import {EstadoPedido} from "../../../models/estadoPedido";
 
 @Component({
   selector: 'app-registrar-pedido',
@@ -33,6 +34,7 @@ export class RegistrarPedidoComponent implements OnInit {
   public listaTransportes: Transporte[] = [];
   public transportesFiltrados: Transporte[] = [];
   private idTransporte: number = -1;
+  public listaEstadosPedido: EstadoPedido[] = [];
 
   public pedido: Pedido;
   public descuentos: { value: number, label: string }[] = [];
@@ -72,6 +74,7 @@ export class RegistrarPedidoComponent implements OnInit {
     this.buscarProductos();
     this.buscarProveedores();
     this.buscarTransportes();
+    this.buscarEstadosPedido();
 
     // Filtra los productos por nombre.
     this.txBuscar.valueChanges.subscribe(valor => {
@@ -99,7 +102,7 @@ export class RegistrarPedidoComponent implements OnInit {
       txMontoEnvio: ['', [Validators.required]],
       txFechaPedido: ['', [Validators.required]],
       txFechaEntrega: ['', [Validators.required]],
-      txEstadoPedido: ['', []],
+      txEstadoPedido: ['', [Validators.required]],
       txTransporte: ['', [Validators.required]],
       txProveedor: ['', [Validators.required]],
       txDescuento: [0, [Validators.required]],
@@ -107,6 +110,12 @@ export class RegistrarPedidoComponent implements OnInit {
       txObservaciones: ['', [Validators.maxLength(200)]],
       txSubtotal: [ {value: '', disabled: true}, [Validators.required]],
       txTotal: [ {value: '', disabled: true}, [Validators.required]],
+    });
+  }
+
+  private buscarEstadosPedido() {
+    this.pedidosService.obtenerEstadosPedido().subscribe((estados) => {
+      this.listaEstadosPedido = estados;
     });
   }
 
@@ -248,26 +257,44 @@ export class RegistrarPedidoComponent implements OnInit {
   public modificarPedido() {
     if (this.form.valid) {
       const pedido: Pedido = new Pedido();
+      const transporte: Transporte = new Transporte();
+
+      pedido.id = this.data.pedido?.id;
       pedido.montoEnvio = this.txMontoEnvio.value;
       pedido.fechaPedido = this.txFechaPedido.value;
       pedido.fechaEntrega = this.txFechaEntrega.value;
       pedido.idEstadoPedido = this.txEstadoPedido.value;
-      pedido.idTransporte = this.txTransporte.value;
+      pedido.idTransporte = this.idTransporte;
       pedido.idProveedor = this.txProveedor.value;
       pedido.descuento = this.txDescuento.value;
       pedido.impuesto = this.txImpuestos.value;
       pedido.observaciones = this.txObservaciones.value;
       pedido.total = this.txTotal.value;
+      transporte.nombre = this.txTransporte.value;
+      pedido.transporte = transporte;
 
-      //this.pedidosService.modificarPedido(pedido).subscribe((res) => {
-      //  if (res.mensaje == 'OK') {
-      //    this.notificacionService.openSnackBarSuccess('Pedido modificado con éxito');
-      //    this.dialogRef.close();
-      //    this.referencia.buscar();
-      //  } else {
-      //    this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar el pedido');
-      //  }
-    //  });
+      // Por cada producto seleccionado, creamos un detalle de pedido.
+      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
+        const detalle = new DetallePedido();
+        detalle.cantidad = producto.cantidadSeleccionada;
+        detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
+        detalle.idpedido = pedido.id;
+        detalle.idproducto = producto.id;
+
+        return detalle;
+      });
+
+      pedido.detallePedido = detallesPedido;
+
+      this.pedidosService.modificarPedido(pedido).subscribe((res) => {
+        if (res.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('Pedido modificado con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar el pedido');
+        }
+      });
     }
   }
 

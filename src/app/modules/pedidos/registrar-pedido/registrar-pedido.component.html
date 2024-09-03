@@ -68,6 +68,16 @@
           <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
       </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Estado</mat-label>
+          <mat-select [formControl]="txEstadoPedido">
+            <mat-option *ngFor="let estado of listaEstadosPedido" [value]="estado.id">
+              {{ estado.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
     </div>
 
     <mat-divider class="my-3"></mat-divider>

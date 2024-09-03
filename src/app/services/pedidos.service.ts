@@ -5,6 +5,7 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
 import {Pedido} from "../models/pedido.model";
 import {FiltrosPedidos} from "../models/comandos/FiltrosPedidos.comando";
+import {EstadoPedido} from "../models/estadoPedido";
 
 
 @Injectable({
@@ -22,5 +23,17 @@ export class PedidosService {
 
   public consultarPedidos(filtro: FiltrosPedidos): Observable<Pedido[]>{
     return this.http.post<Pedido[]>(`${this.urlBackend}/${this.controllerName}/consultar-pedidos`, filtro);
+  }
+
+  public eliminarPedido(idPedido: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-pedido/${idPedido}`);
+  }
+
+  public obtenerEstadosPedido(): Observable<EstadoPedido[]>{
+    return this.http.get<EstadoPedido[]>(`${this.urlBackend}/${this.controllerName}/buscar-estados-pedido`);
+  }
+
+  public modificarPedido(pedido: Pedido): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-pedido`, pedido);
   }
 }
