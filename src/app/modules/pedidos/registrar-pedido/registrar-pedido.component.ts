@@ -100,9 +100,9 @@ export class RegistrarPedidoComponent implements OnInit {
     this.form = this.fb.group({
       txBuscar: ['', []],
       txMontoEnvio: ['', [Validators.required]],
-      txFechaPedido: ['', [Validators.required]],
+      txFechaPedido: [new Date(), [Validators.required]],
       txFechaEntrega: ['', [Validators.required]],
-      txEstadoPedido: ['', [Validators.required]],
+      txEstadoPedido: [1, [Validators.required]],
       txTransporte: ['', [Validators.required]],
       txProveedor: ['', [Validators.required]],
       txDescuento: [0, [Validators.required]],
@@ -320,7 +320,7 @@ export class RegistrarPedidoComponent implements OnInit {
 
   public disminuirCantidad(producto: Producto) {
     // Decrementamos la cantidad del producto seleccionado.
-    producto.cantidadSeleccionada--;
+    (producto.cantidadSeleccionada > 0) ? producto.cantidadSeleccionada-- : producto.cantidadSeleccionada = 0;
 
     // Buscamos si el producto esta en la lista de productos seleccionados o no.
     const productoEnLista = this.productosSeleccionados.find(p => p.id === producto.id);
