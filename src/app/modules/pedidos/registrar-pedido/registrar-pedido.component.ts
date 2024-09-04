@@ -75,16 +75,7 @@ export class RegistrarPedidoComponent implements OnInit {
     this.buscarProveedores();
     this.buscarTransportes();
     this.buscarEstadosPedido();
-
-    // Filtra los productos por nombre.
-    this.txBuscar.valueChanges.subscribe(valor => {
-      this.dataSourceProductos.filter = valor.trim().toLowerCase();
-    });
-
-    // Suscripciones para actualizar subtotal y total.
-    this.txDescuento.valueChanges.subscribe(() => this.calcularTotal());
-    this.txImpuestos.valueChanges.subscribe(() => this.calcularTotal());
-    this.txMontoEnvio.valueChanges.subscribe(() => this.calcularTotal());
+    this.filtrosSuscripciones();
   }
 
   public generarDescuentos() {
@@ -389,6 +380,37 @@ export class RegistrarPedidoComponent implements OnInit {
     return this.listaTransportes.filter(transporte =>
       transporte.nombre.toLowerCase().includes(valorFiltrado)
     );
+  }
+
+  private filtrosSuscripciones() {
+    const filtro = {
+      idProveedor: this.txProveedor.value,
+      textoBusqueda: ''
+    };
+
+    // Filtrar por proveedor
+    this.txProveedor.valueChanges.subscribe(proveedorId => {
+      filtro.idProveedor = proveedorId;
+      this.dataSourceProductos.filter = JSON.stringify(filtro);
+    });
+
+    // Filtrar por texto de búsqueda
+    this.txBuscar.valueChanges.subscribe(valor => {
+      filtro.textoBusqueda = valor.trim().toLowerCase();
+      this.dataSourceProductos.filter = JSON.stringify(filtro);
+    });
+
+    this.dataSourceProductos.filterPredicate = (producto, filter: string) => {
+      const filtro = JSON.parse(filter);
+      const coincideProveedor = filtro.idProveedor ? producto.proveedor.id === filtro.idProveedor : true;
+      const coincideTexto = producto.nombre.toLowerCase().includes(filtro.textoBusqueda);
+      return coincideProveedor && coincideTexto;
+    };
+
+    // Suscripciones para actualizar subtotal y total.
+    this.txDescuento.valueChanges.subscribe(() => this.calcularTotal());
+    this.txImpuestos.valueChanges.subscribe(() => this.calcularTotal());
+    this.txMontoEnvio.valueChanges.subscribe(() => this.calcularTotal());
   }
 
   public cancelar() {
