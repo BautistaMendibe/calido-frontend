@@ -17,9 +17,8 @@
             <input type="text" matInput [formControl]="txCliente"/>
           </mat-form-field>
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Desde </mat-label>
-            <input type="text" matInput [formControl]="txCliente"/>
-            <mat-label>dias adeudados </mat-label>
+            <mat-label>Desde Monto adeudado </mat-label>
+            <input type="number" matInput [formControl]="txDesdeMonto"/>
           </mat-form-field>
         </div>
       </div>
@@ -49,27 +48,27 @@
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
-            <ng-container matColumnDef="imgProducto">
+            <ng-container matColumnDef="idCuenta">
+              <mat-header-cell *matHeaderCellDef>Id</mat-header-cell>
+              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.id }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="nombre">
               <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-              <mat-cell *matCellDef="let usuario">{{ usuario.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.nombre }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="apellido">
-              <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
-              <mat-cell *matCellDef="let usuario">{{ usuario.apellido }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>Apellido</mat-header-cell>
+              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.apellido }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="creada">
               <mat-header-cell *matHeaderCellDef>Creada</mat-header-cell>
-              <mat-cell *matCellDef="let usuario">{{ usuario.cuentaCorriente?.fechaDesde }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="diasDeuda">
-              <mat-header-cell *matHeaderCellDef>Debiendo hace</mat-header-cell>
-              <mat-cell *matCellDef="let usuario">{{ usuario.cuentaCorriente?.diasDeuda }}</mat-cell>
+              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.fechaDesde | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="balance">
               <mat-header-cell *matHeaderCellDef>Balance</mat-header-cell>
-              <mat-cell *matCellDef="let usuario">{{ usuario.cuentaCorriente?.balanceTotal }}</mat-cell>
+              <mat-cell *matCellDef="let cuentaCorriente">
+                {{ cuentaCorriente.balanceTotal | currency:'' : 'symbol':'1.2-2':'en' }}
+              </mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
@@ -80,7 +79,8 @@
           <mat-paginator *ngIf="this.cuentas.length > 0"
                          [length]="this.cuentas.length"
                          [pageSize]="10"
-                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+          </mat-paginator>
         </div>
       </div>
     </mat-card-content>

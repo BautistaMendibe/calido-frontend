@@ -1,4 +1,4 @@
 export class FiltrosCuentasCorrientes {
   cliente?: string;
-  diasDeuda?: number;
+  desdeMonto?: number;
 }

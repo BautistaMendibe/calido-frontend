@@ -9,7 +9,11 @@ import {NotificationService} from "../../../services/notificacion.service";
 import {takeUntil} from "rxjs/operators";
 import {Usuario} from "../../../models/usuario.model";
 //import {RegistrarCuentaCorriente} from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
-import {CuentasCorrientesService} from "../../../services/cuentasCorrientes.service";
+import {TipoProducto} from "../../../models/tipoProducto.model";
+import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
+import {ProductosService} from "../../../services/productos.service";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 @Component({
   selector: 'app-consultar-cuentas-corrientes',
   templateUrl: './consultar-cuentas-corrientes.component.html',
@@ -18,10 +22,10 @@ import {CuentasCorrientesService} from "../../../services/cuentasCorrientes.serv
 
 export class ConsultarCuentasCorrientesComponent implements OnInit{
 
-  public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
+  public tableDataSource: MatTableDataSource<CuentaCorriente> = new MatTableDataSource<CuentaCorriente>([]);
   public form: FormGroup;
-  public cuentas: Usuario[] = [];
-  public columnas: string[] = ['nombre', 'apellido','creada','diasDeuda','balance'];
+  public cuentas: CuentaCorriente[] = [];
+  public columnas: string[] = ['idCuenta','nombre', 'apellido','creada','balance'];
   private filtros: FiltrosCuentasCorrientes;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -30,10 +34,10 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
     private dialog: MatDialog,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
-    private cuentasCorrientesService: CuentasCorrientesService) {
+    private usuariosService: UsuariosService) {
     this.form = this.fb.group({
       txCliente: [''],
-      txDiasDeuda: ['']
+      txDesdeMonto: ['']
     });
     this.filtros = new FiltrosCuentasCorrientes();
   }
@@ -45,7 +49,8 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
 
   private createForm() {
     this.form = this.fb.group({
-      txCliente: ['']
+      txCliente: [''],
+      txDesdeMonto:['']
     });
   }
 
@@ -53,18 +58,19 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
     this.form.reset();
   }
 
+
   public buscar() {
     this.filtros = {
       cliente: this.txCliente.value,
-      diasDeuda: this.txDiasDeuda.value
+      desdeMonto: this.txDesdeMonto.value
     };
 
-    this.cuentasCorrientesService.consultarCuentasCorrientes(this.filtros)
+    this.usuariosService.consultarCuentasCorrientesxUsuario(this.filtros)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (cuentas) => {
           this.cuentas = cuentas;
-          this.tableDataSource.data = cuentas;
+          this.tableDataSource.data= cuentas;
         },
         error: (err) => {
           console.error('Error al consultar cuentas corrientes:', err);
@@ -76,8 +82,8 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
     return this.form.get('txCliente') as FormControl;
   }
 
-  get txDiasDeuda(): FormControl {
-    return this.form.get('txDiasDeuda') as FormControl;
+  get txDesdeMonto(): FormControl {
+    return this.form.get('txDesdeMonto') as FormControl;
   }
  /*
   public registrarNuevaCuenta() {

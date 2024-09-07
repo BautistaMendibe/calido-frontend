@@ -1,7 +1,6 @@
 import {TipoUsuario} from "./tipoUsuario.model";
 import {Genero} from "./genero.model";
 import {Domicilio} from "./domicilio.model";
-import {CuentaCorriente} from "./cuentaCorriente.model";
 
 export class Usuario {
   id: number;
@@ -16,7 +15,6 @@ export class Usuario {
   dni: string;
   cuil: string;
   contrasena: string;
-  cuentaCorriente: CuentaCorriente;
 
   constructor(
     id?: number,
@@ -30,8 +28,7 @@ export class Usuario {
     domicilio?: Domicilio,
     dni?: string,
     cuil?: string,
-    contrasena?: string,
-    cuentaCorriente?: CuentaCorriente
+    contrasena?: string
   ) {
     this.id = id!;
     this.nombreUsuario = nombreUsuario!;
@@ -45,6 +42,5 @@ export class Usuario {
     this.dni = dni!;
     this.cuil = cuil!;
     this.contrasena = contrasena!;
-    this.cuentaCorriente = cuentaCorriente!;
   }
 }
