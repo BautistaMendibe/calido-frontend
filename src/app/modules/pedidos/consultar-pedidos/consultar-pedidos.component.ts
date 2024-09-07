@@ -238,20 +238,6 @@ export class ConsultarPedidosComponent implements OnInit {
                         }
                       ]
                     },
-                    {
-                      columns: [
-                        {
-                          text: 'Fecha Entrega',
-                          style: 'invoiceSubTitle',
-                          width: '*'
-                        },
-                        {
-                          text: fechaEntrega,
-                          style: 'invoiceSubValue',
-                          width: 100
-                        }
-                      ]
-                    }
                   ],
                 }
               ],
@@ -398,8 +384,7 @@ export class ConsultarPedidosComponent implements OnInit {
                       style: 'signatureName'
                     }
                   ],
-                  width: 180,
-                  pageBreak: 'before',
+                  width: 180
                 }
               ]
             }
