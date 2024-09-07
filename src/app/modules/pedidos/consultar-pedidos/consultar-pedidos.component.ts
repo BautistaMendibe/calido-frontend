@@ -2,9 +2,8 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {Form, FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
-import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
@@ -39,7 +38,7 @@ export class ConsultarPedidosComponent implements OnInit {
   public productos: Producto[] = [];
   public listaProveedor: Proveedor[] = [];
   public configuracion: Configuracion = new Configuracion();
-  public columnas: string[] = ['numeroPedido', "proveedor", 'fechaEmision', 'total', 'estado', 'acciones'];
+  public columnas: string[] = ['fechaEmision', 'numeroPedido', "proveedor", 'total', 'estado', 'acciones'];
 
   private filtros: FiltrosPedidos;
 
@@ -63,7 +62,6 @@ export class ConsultarPedidosComponent implements OnInit {
     this.form = new FormGroup({});
     this.filtros = new FiltrosPedidos();
     this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
@@ -79,7 +77,8 @@ export class ConsultarPedidosComponent implements OnInit {
     this.form = this.fb.group({
       txPedido: ['', []],
       txProveedor: ['', []],
-      txFechaEmision: ['', []],
+      txFechaEmisionDesde: ['', []],
+      txFechaEmisionHasta: ['', []]
     });
   }
 
@@ -92,7 +91,8 @@ export class ConsultarPedidosComponent implements OnInit {
     this.filtros = {
       pedido: this.txPedido.value,
       proveedor: this.txProveedor.value,
-      fechaEmision: this.txFechaEmision.value
+      fechaEmisionDesde: this.txFechaEmisionDesde.value,
+      fechaEmisionHasta: this.txFechaEmisionHasta.value
     };
 
     this.pedidosService.consultarPedidos(this.filtros).subscribe((pedidos) => {
@@ -110,6 +110,7 @@ export class ConsultarPedidosComponent implements OnInit {
   public buscarProductos() {
     this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
       this.productos = productos;
+      this.tableDataSource.sort = this.sort;
     });
   }
 
@@ -186,7 +187,7 @@ export class ConsultarPedidosComponent implements OnInit {
     const impuesto = this.formatter.format((subtotalNoFormat * pedido.impuesto / 100));
     const descuento = this.formatter.format((-subtotalNoFormat * pedido.descuento / 100));
     const montoEnvio = this.formatter.format(pedido.montoEnvio);
-    const fechaPedido = new Date(pedido.fechaPedido).toLocaleDateString('es-AR');
+    const fechaPedido = new Date(pedido.fechaEmision).toLocaleDateString('es-AR');
     const fechaEntrega = new Date(pedido.fechaEntrega).toLocaleDateString('es-AR');
     const calleNumeroProveedor: string = `${pedido.proveedor.domicilio.calle} ${pedido.proveedor.domicilio.numero}`
     const ciudadCpProveedor: string = `${pedido.proveedor.domicilio.localidad.nombre}, ${pedido.proveedor.domicilio.localidad.provincia.nombre}, ${pedido.proveedor.domicilio.localidad.codigoPostal}`
@@ -260,7 +261,7 @@ export class ConsultarPedidosComponent implements OnInit {
         {
           stack: [
             {
-              text: `${this.configuracion.razonSocial}\n${this.configuracion.calle} ${this.configuracion.numero}\n${this.configuracion.ciudad} ${this.configuracion.codigoPostal}\nArgentina`,
+              text: `${this.configuracion.razonSocial}\n${this.configuracion.calle} ${this.configuracion.numero}\n${this.configuracion.ciudad}, ${this.configuracion.provincia}, ${this.configuracion.codigoPostal}\nArgentina`,
               style: 'companyDetails',
             }
           ],
@@ -268,7 +269,7 @@ export class ConsultarPedidosComponent implements OnInit {
         {
           columns: [
             {
-              text: 'VENDEDOR',
+              text: 'PROVEEDOR',
               style: 'invoiceBillingTitle'
             },
             {
@@ -317,19 +318,21 @@ export class ConsultarPedidosComponent implements OnInit {
         {
           table: {
             headerRows: 1,
-            widths: ['*', 50, 'auto', 80],
+            widths: [40, '*', 50, 'auto', 80],
             body: [
               // Encabezado de la tabla
               [
-                { text: 'Producto', style: 'itemsHeader' },
+                { text: 'Prod. #', style: 'itemsHeader' },
+                { text: 'Descripción', style: 'itemsHeader' },
                 { text: 'Cantidad', style: ['itemsHeader', 'center'] },
-                { text: 'Precio', style: ['itemsHeader', 'center'] },
+                { text: 'P/U', style: ['itemsHeader', 'center'] },
                 { text: 'Total', style: ['itemsHeader', 'center'] }
               ],
               // Items
               ...pedido.detallePedido.map(detalle => {
                 const producto = productos.find(p => p.id === detalle.idproducto);
                 return [
+                  { text: producto?.id || 'N/A', style: 'itemNumber' },
                   {
                     stack: [
                       { text: producto?.nombre || 'Producto no encontrado', style: 'itemTitle' },
@@ -375,23 +378,31 @@ export class ConsultarPedidosComponent implements OnInit {
           layout: 'lightHorizontalLines'
         },
         {
-          columns: [
+          stack: [
             {
-              text:'',
+              text: ''
             },
             {
-              stack: [
+              columns: [
                 {
-                  text: '_________________________________',
-                  style: 'signaturePlaceholder'
+                  text: '',
                 },
                 {
-                  text: 'Firma',
-                  style: 'signatureName'
+                  stack: [
+                    {
+                      text: '_________________________________',
+                      style: 'signaturePlaceholder'
+                    },
+                    {
+                      text: 'Firma',
+                      style: 'signatureName'
+                    }
+                  ],
+                  width: 180,
+                  pageBreak: 'before',
                 }
-              ],
-              width: 180,
-            },
+              ]
+            }
           ]
         },
         {
@@ -403,6 +414,16 @@ export class ConsultarPedidosComponent implements OnInit {
           style: 'notesText'
         }
       ],
+      footer: (currentPage, pageCount) => {
+        return {
+          columns: [
+            {
+              text: `Página ${currentPage} de ${pageCount}`,
+              style: 'documentFooterRight'
+            }
+          ]
+        };
+      },
       styles: {
         documentHeaderLeft: {
           fontSize: 10,
@@ -431,7 +452,7 @@ export class ConsultarPedidosComponent implements OnInit {
         },
         documentFooterRight: {
           fontSize: 10,
-          margin: [5, 5, 5, 5],
+          margin: [5, 5, 40, 5],
           alignment: 'right'
         },
         companyDetails: {
@@ -515,11 +536,6 @@ export class ConsultarPedidosComponent implements OnInit {
           bold: true,
           alignment: 'center'
         },
-        signatureJobTitle: {
-          italics: true,
-          fontSize: 10,
-          alignment: 'center'
-        },
         notesTitle: {
           fontSize: 10,
           bold: true,
@@ -556,8 +572,12 @@ export class ConsultarPedidosComponent implements OnInit {
     return this.form.get('txProveedor') as FormControl;
   }
 
-  get txFechaEmision(): FormControl {
-    return this.form.get('txFechaEmision') as FormControl;
+  get txFechaEmisionDesde(): FormControl {
+    return this.form.get('txFechaEmisionDesde') as FormControl;
+  }
+
+  get txFechaEmisionHasta(): FormControl {
+    return this.form.get('txFechaEmisionHasta') as FormControl
   }
 
 }

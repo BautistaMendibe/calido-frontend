@@ -83,6 +83,11 @@ export class SidebarComponent {
   tieneRol(nombresRol: string[]): boolean {
     const token = this.authService.getToken();
     const infoToken: any = this.authService.getDecodedAccessToken(token);
+
+    if (!infoToken || !infoToken.roles) {
+      return false;
+    }
+
     return nombresRol.some(nombreRol => infoToken.roles.includes(nombreRol));
   }
 

@@ -117,20 +117,14 @@
                   <img [src]="producto.imgProducto" class="img-thumbnail"/>
                 </mat-cell>
               </ng-container>
-              <ng-container matColumnDef="nombre">
-                <mat-header-cell *matHeaderCellDef>Nombre</mat-header-cell>
+              <ng-container matColumnDef="producto">
+                <mat-header-cell *matHeaderCellDef>Producto</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="costo">
                 <mat-header-cell *matHeaderCellDef>Costo</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
-                  {{ producto.costo | currency:'$':'symbol':'1.2-2' }}
-                </mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="costoImpuesto">
-                <mat-header-cell *matHeaderCellDef>Costo Impuestos</mat-header-cell>
-                <mat-cell *matCellDef="let producto">
-                  {{ producto.costoImpuesto | currency:'$':'symbol':'1.2-2' }}
+                  $ {{ producto.costo | number:'1.2-2':'es-AR' }}
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="tipoProducto">
@@ -198,7 +192,6 @@
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Impuestos</mat-label>
         <mat-select [formControl]="txImpuestos">
-          <mat-option value="0">Ninguno (0%)</mat-option>
           <mat-option value="21">IVA (21%)</mat-option>
         </mat-select>
       </mat-form-field>

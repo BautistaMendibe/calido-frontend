@@ -6,7 +6,7 @@ import {EstadoPedido} from "./estadoPedido";
 export class Pedido {
   id: number;
   montoEnvio: number;
-  fechaPedido: Date;
+  fechaEmision: Date;
   fechaEntrega: Date;
   idEstadoPedido: number;
   idTransporte: number;
@@ -40,7 +40,7 @@ export class Pedido {
   ) {
     this.id = id!;
     this.montoEnvio = montoEnvio!;
-    this.fechaPedido = fechaPedido!;
+    this.fechaEmision = fechaPedido!;
     this.fechaEntrega = fechaEntrega!;
     this.idEstadoPedido = idEstadoPedido!;
     this.idTransporte = idTransporte!;

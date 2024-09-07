@@ -35,10 +35,19 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Fecha de Emisión</mat-label>
-            <input matInput [matDatepicker]="picker" [formControl]="txFechaEmision" />
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-label>Fecha Desde</mat-label>
+            <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaEmisionDesde" />
+            <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+            <mat-datepicker #pickerDesde></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha Hasta</mat-label>
+            <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaEmisionHasta" />
+            <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+            <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
         </div>
       </div>
@@ -75,8 +84,13 @@
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
+            <ng-container matColumnDef="fechaEmision">
+              <mat-header-cell *matHeaderCellDef>Fecha de Emisión</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fechaEmision | date: 'dd/MM/yyyy' }}</mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="numeroPedido">
-              <mat-header-cell *matHeaderCellDef>Numero de Orden</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>Número de Orden</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Pedido">{{ pedido.id }}</mat-cell>
             </ng-container>
 
@@ -85,14 +99,9 @@
               <mat-cell *matCellDef="let pedido" data-label="Proveedor">{{ pedido.proveedor.nombre }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="fechaEmision">
-              <mat-header-cell *matHeaderCellDef>Fecha de Emisión</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fechaPedido | date: 'dd/MM/yyyy' }}</mat-cell>
-            </ng-container>
-
             <ng-container matColumnDef="total">
               <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Subtotal" >{{ pedido.total | currency:'$':'symbol':'1.2-2'}}</mat-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Subtotal" >$ {{ pedido.total | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="estado">

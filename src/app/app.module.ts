@@ -40,6 +40,8 @@ import localeEs from '@angular/common/locales/es';
 import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
 import { RegistrarPedidoComponent } from './modules/pedidos/registrar-pedido/registrar-pedido.component';
 import { ConsultarPedidosComponent } from './modules/pedidos/consultar-pedidos/consultar-pedidos.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
 
 registerLocaleData(localeEs, 'es');
 
@@ -73,6 +75,8 @@ registerLocaleData(localeEs, 'es');
   ],
   imports: [
     BrowserModule,
+    MatTableModule,
+    MatSortModule,
     AppRoutingModule,
     MaterialModule,
     BrowserAnimationsModule,

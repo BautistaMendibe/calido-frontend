@@ -30,7 +30,7 @@ export class RegistrarPedidoComponent implements OnInit {
   public listaProveedores: Proveedor[] = [];
   public productos: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
-  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'costoImpuesto', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
+  public columnas: string[] = ['imgProducto', 'producto', 'costo', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
   public listaTransportes: Transporte[] = [];
   public transportesFiltrados: Transporte[] = [];
   private idTransporte: number = -1;
@@ -153,7 +153,7 @@ export class RegistrarPedidoComponent implements OnInit {
 
   private rellenarFormularioDataPedido() {
     this.txMontoEnvio.setValue(this.pedido.montoEnvio);
-    this.txFechaPedido.setValue(this.formatDate(this.pedido.fechaPedido));
+    this.txFechaPedido.setValue(this.formatDate(this.pedido.fechaEmision));
     this.txFechaEntrega.setValue(this.formatDate(this.pedido.fechaEntrega));
     this.txEstadoPedido.setValue(this.pedido.idEstadoPedido);
     this.txTransporte.setValue(this.pedido.transporte.nombre);
@@ -208,7 +208,7 @@ export class RegistrarPedidoComponent implements OnInit {
       const transporte: Transporte = new Transporte();
 
       pedido.montoEnvio = this.txMontoEnvio.value;
-      pedido.fechaPedido = this.txFechaPedido.value;
+      pedido.fechaEmision = this.txFechaPedido.value;
       pedido.fechaEntrega = this.txFechaEntrega.value;
       pedido.idEstadoPedido = 1; // Estado 'pendiente' al registrar.
       pedido.idTransporte = this.idTransporte;
@@ -252,7 +252,7 @@ export class RegistrarPedidoComponent implements OnInit {
 
       pedido.id = this.data.pedido?.id;
       pedido.montoEnvio = this.txMontoEnvio.value;
-      pedido.fechaPedido = this.txFechaPedido.value;
+      pedido.fechaEmision = this.txFechaPedido.value;
       pedido.fechaEntrega = this.txFechaEntrega.value;
       pedido.idEstadoPedido = this.txEstadoPedido.value;
       pedido.idTransporte = this.idTransporte;
