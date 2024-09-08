@@ -92,9 +92,9 @@ export class RegistrarPedidoComponent implements OnInit {
       txBuscar: ['', []],
       txMontoEnvio: ['', [Validators.required]],
       txFechaPedido: [new Date(), [Validators.required]],
-      txFechaEntrega: ['', [Validators.required]],
+      txFechaEntrega: [''],
       txEstadoPedido: [1, [Validators.required]],
-      txTransporte: ['', [Validators.required]],
+      txTransporte: [''],
       txProveedor: ['', [Validators.required]],
       txDescuento: [0, [Validators.required]],
       txImpuestos: ['21', [Validators.required]], // Valor por defecto IVA
@@ -235,11 +235,11 @@ export class RegistrarPedidoComponent implements OnInit {
 
       this.pedidosService.registrarPedido(pedido).subscribe((respuesta) => {
         if (respuesta.mensaje === 'OK') {
-          this.notificacionService.openSnackBarSuccess('El pedido se registró con éxito');
+          this.notificacionService.openSnackBarSuccess('La orden de compra se registró con éxito');
           this.dialogRef.close();
           this.referencia.buscar();
         } else {
-          this.notificacionService.openSnackBarError('Error al registrar un pedido, inténtelo nuevamente');
+          this.notificacionService.openSnackBarError('Error al registrar una orden de compra, inténtelo nuevamente');
         }
       });
     }
@@ -279,11 +279,11 @@ export class RegistrarPedidoComponent implements OnInit {
 
       this.pedidosService.modificarPedido(pedido).subscribe((res) => {
         if (res.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('Pedido modificado con éxito');
+          this.notificacionService.openSnackBarSuccess('Orden de compra modificada con éxito');
           this.dialogRef.close();
           this.referencia.buscar();
         } else {
-          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar el pedido');
+          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar la orden de compra');
         }
       });
     }
