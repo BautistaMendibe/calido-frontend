@@ -9,6 +9,7 @@ import {Provincia} from "../../../models/provincia.model";
 import {Localidad} from "../../../models/localidad.model";
 import {DomicilioService} from "../../../services/domicilio.service";
 import {Domicilio} from "../../../models/domicilio.model";
+import {Rol} from "../../../models/Rol";
 
 
 @Component({
@@ -27,6 +28,8 @@ export class RegistrarEmpleadosComponent implements OnInit{
   public provinciasFiltradas: Provincia[] = [];
   public listaLocalidades: Localidad[] = [];
   public localidadesFiltradas: Localidad[] = [];
+
+  public roles: Rol[] = [];
 
   public usuario: Usuario;
   public esConsulta: boolean;
@@ -58,6 +61,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
   ngOnInit() {
     this.crearFormulario();
     this.buscarProvincias();
+    this.buscarRoles();
 
     if (this.esConsulta && this.usuario) {
       this.rellenarFormularioDataUsuario();
@@ -95,10 +99,11 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txCuil: ['', []], // se usa máscara
       txContrasena: ['', [Validators.required]],
       ddGenero: ['', []], // desplegable a int
-      txProvincia: [ '', [Validators.required]],
-      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txProvincia: ['', [Validators.required]],
+      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txRoles: [[], [Validators.required]]
     });
   }
 
@@ -128,6 +133,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
     this.txLocalidad.setValue(this.usuario.domicilio?.localidad?.nombre);
     this.txCalle.setValue(this.usuario.domicilio?.calle);
     this.txNumero.setValue(this.usuario.domicilio?.numero);
+    this.txRoles.setValue(this.usuario.roles.map(rol => rol.id));
 
     if (this.usuario.domicilio?.localidad){
       this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id);
@@ -154,6 +160,12 @@ export class RegistrarEmpleadosComponent implements OnInit{
       this.txProvincia.valueChanges.subscribe((provincia) => {
         this.provinciasFiltradas = this.filterProvincias(provincia);
       });
+    });
+  }
+
+  private buscarRoles() {
+    this.usuariosService.obtenerRoles().subscribe((roles) => {
+      this.roles = roles;
     });
   }
 
@@ -224,6 +236,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       empleado.domicilio.localidad.id =  this.idLocalidad;
       empleado.domicilio.calle =  this.txCalle.value;
       empleado.domicilio.numero =  this.txNumero.value;
+      empleado.roles = this.txRoles.value;
       // empleado.tipoUsuario.id = 1; // no se usa, asigno empleado (1) en back
 
 
@@ -258,9 +271,10 @@ export class RegistrarEmpleadosComponent implements OnInit{
       }
       this.usuario.idGenero = this.ddGenero.value;
       this.usuario.domicilio = domicilio;
-      this.usuario.domicilio.localidad.id =  this.idLocalidad;
-      this.usuario.domicilio.calle =  this.txCalle.value;
-      this.usuario.domicilio.numero =  this.txNumero.value;
+      this.usuario.domicilio.localidad.id = this.idLocalidad;
+      this.usuario.domicilio.calle = this.txCalle.value;
+      this.usuario.domicilio.numero = this.txNumero.value;
+      this.usuario.roles = this.txRoles.value;
 
       this.usuariosService.modificarUsuario(this.usuario).subscribe((res) => {
         if (res.mensaje == 'OK') {
@@ -330,6 +344,10 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   get txNumero(): FormControl {
     return this.form.get('txNumero') as FormControl;
+  }
+
+  get txRoles(): FormControl {
+    return this.form.get('txRoles') as FormControl;
   }
 
 }

@@ -1,6 +1,6 @@
 import {TipoUsuario} from "./tipoUsuario.model";
-import {Genero} from "./genero.model";
 import {Domicilio} from "./domicilio.model";
+import {Rol} from "./Rol";
 
 export class Usuario {
   id: number;
@@ -15,6 +15,7 @@ export class Usuario {
   dni: string;
   cuil: string;
   contrasena: string;
+  roles: Rol[];
 
   constructor(
     id?: number,
@@ -29,6 +30,7 @@ export class Usuario {
     dni?: string,
     cuil?: string,
     contrasena?: string,
+    roles?: Rol[]
   ) {
     this.id = id!;
     this.nombreUsuario = nombreUsuario!;
@@ -42,5 +44,6 @@ export class Usuario {
     this.dni = dni!;
     this.cuil = cuil!;
     this.contrasena = contrasena!;
+    this.roles = roles!;
   }
 }

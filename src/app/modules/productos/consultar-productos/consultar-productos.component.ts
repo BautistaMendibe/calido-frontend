@@ -26,7 +26,7 @@ export class ConsultarProductosComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
   public productos: Producto[] = [];
-  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'costoImpuesto', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
+  public columnas: string[] = ['imgProducto', 'producto', 'costoCompra', 'precioBase', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
   private filtros: FiltrosProductos;
   public listaTipoProducto: TipoProducto[] = [];
   public listaProveedores: Proveedor[] = [];

@@ -15,7 +15,7 @@ import { HomeComponent } from './modules/home/home.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {UsuariosService} from "./services/usuarios.service";
-import {AuthService} from "./services/auth.servicie";
+import {AuthService} from "./services/auth.service";
 import { ConsultarEmpleadosComponent } from './modules/empleados/consultar-empleados/consultar-empleados.component';
 import { RegistrarEmpleadosComponent } from './modules/empleados/registrar-empleados/registrar-empleados.component';
 import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-proveedores/consultar-proveedores.component';
@@ -38,6 +38,10 @@ import { ConsultarAsistenciaComponent } from './modules/empleados/consultar-asis
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
+import { RegistrarPedidoComponent } from './modules/pedidos/registrar-pedido/registrar-pedido.component';
+import { ConsultarPedidosComponent } from './modules/pedidos/consultar-pedidos/consultar-pedidos.component';
+import {MatTableModule} from "@angular/material/table";
+import {MatSortModule} from "@angular/material/sort";
 
 registerLocaleData(localeEs, 'es');
 
@@ -65,10 +69,14 @@ registerLocaleData(localeEs, 'es');
     MarcarAsistenciaComponent,
     ConsultarAsistenciaComponent,
     RegistrarAsistenciaComponent,
-    RegistrarVentaComponent
+    RegistrarVentaComponent,
+    RegistrarPedidoComponent,
+    ConsultarPedidosComponent
   ],
   imports: [
     BrowserModule,
+    MatTableModule,
+    MatSortModule,
     AppRoutingModule,
     MaterialModule,
     BrowserAnimationsModule,
