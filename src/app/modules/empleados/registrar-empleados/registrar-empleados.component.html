@@ -36,6 +36,21 @@
               <mat-error *ngIf="form.get('txContrasena')?.hasError('pattern')">La contraseña debe contener al menos una letra mayúscula y un número</mat-error>
           </mat-form-field>
         </div>
+
+        <!-- Selector de roles múltiples -->
+        <div class="col-md-4">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Roles</mat-label>
+            <mat-select
+              [formControl]="txRoles"
+              multiple
+            >
+              <mat-option *ngFor="let rol of roles" [value]="rol.id">
+                {{ rol.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
     </div>
 
     <div class="row pt-4">

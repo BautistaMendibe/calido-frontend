@@ -7,6 +7,7 @@ import {Usuario} from "../models/usuario.model";
 import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
 import {Asistencia} from "../models/asistencia";
 import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando";
+import {Rol} from "../models/Rol";
 
 @Injectable({
   providedIn: 'root'
@@ -59,6 +60,14 @@ export class UsuariosService {
 
   public eliminarAsistencia(idAsistencia: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-asistencia/${idAsistencia}`);
+  }
+
+  public obtenerRoles(): Observable<Rol[]>{
+    return this.http.get<Rol[]>(`${this.urlBackend}/${this.controllerName}/obtener-roles`);
+  }
+
+  public obtenerRolesUsuario(idUsuario: number): Observable<Rol[]>{
+    return this.http.get<Rol[]>(`${this.urlBackend}/${this.controllerName}/obtener-roles-usuario/${idUsuario}`);
   }
 
 }

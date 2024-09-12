@@ -21,7 +21,7 @@
         <div class="row pt-4">
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Nombre</mat-label>
+              <mat-label>Producto</mat-label>
               <input type="text" matInput formControlName="txNombre"/>
               <mat-error *ngIf="txNombre.invalid">{{getErrorMessage(txNombre)}}</mat-error>
             </mat-form-field>
@@ -78,7 +78,7 @@
         <div class="row pt-4">
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Costo Base</mat-label>
+              <mat-label>Costo de Compra</mat-label>
               <input type="text" matInput formControlName="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
               <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
             </mat-form-field>
@@ -88,12 +88,13 @@
           </div>
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Impuestos</mat-label>
-              <mat-select formControlName="txImpuestos">
-                <mat-option value="0">Ninguno (0%)</mat-option>
-                <mat-option value="21">IVA (21%)</mat-option>
+              <mat-label>Margen de Ganancia</mat-label>
+              <mat-select formControlName="txMargenGanancia">
+                <mat-option *ngFor="let porcentaje of listaPorcentajesGanancia" [value]="porcentaje.value">
+                  {{ porcentaje.label }}
+                </mat-option>
               </mat-select>
-              <mat-error *ngIf="txImpuestos.invalid">{{getErrorMessage(txImpuestos)}}</mat-error>
+              <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
             </mat-form-field>
           </div>
           <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
@@ -101,7 +102,7 @@
           </div>
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Costo Final</mat-label>
+              <mat-label>Precio sin IVA</mat-label>
               <input type="text" matInput formControlName="txCostoFinal" mask="separator.2" prefix="$" thousandSeparator="," />
             </mat-form-field>
           </div>
