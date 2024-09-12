@@ -10,6 +10,7 @@ import {Provincia} from "../../../models/provincia.model";
 import {DomicilioService} from "../../../services/domicilio.service";
 import {Localidad} from "../../../models/localidad.model";
 import {Domicilio} from "../../../models/domicilio.model";
+import {firstValueFrom} from "rxjs";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -89,9 +90,15 @@ export class RegistrarProveedorComponent implements OnInit{
     this.txCalle.setValue(this.proveedor.domicilio?.calle);
     this.txNumero.setValue(this.proveedor.domicilio?.calle);
 
-    if (this.proveedor.domicilio?.localidad){
-      this.obtenerLocalidadesPorProvincia(this.proveedor.domicilio.localidad.provincia.id);
-      this.localidadesFiltradas = this.filterLocalidades(this.proveedor.domicilio.localidad.nombre);
+    if (this.proveedor.domicilio?.localidad) {
+      this.obtenerLocalidadesPorProvincia(this.proveedor.domicilio.localidad.provincia.id)
+        .then(() => {
+          this.localidadesFiltradas = this.filterLocalidades(this.proveedor.domicilio.localidad.nombre);
+          return this.buscarIdLocalidad(this.proveedor.domicilio.localidad.nombre);
+        })
+        .then((id) => {
+          this.idLocalidad = id;
+        })
     }
 
     if (this.formDesactivado) {
@@ -160,10 +167,12 @@ export class RegistrarProveedorComponent implements OnInit{
     return localidad ? localidad.id : 0;
   }
 
-  public obtenerLocalidadesPorProvincia(idProvincia: number){
-    this.domicilioService.obtenerLocalidadesPorProvincia(idProvincia).subscribe((localidades) => {
-      this.listaLocalidades = localidades;
-    });
+  public async obtenerLocalidadesPorProvincia(idProvincia: number): Promise<Localidad[]> {
+    return firstValueFrom(this.domicilioService.obtenerLocalidadesPorProvincia(idProvincia))
+      .then((localidades) => {
+        this.listaLocalidades = localidades;
+        return localidades;
+      });
   }
 
     private buscarTiposProveedores() {
@@ -207,7 +216,6 @@ export class RegistrarProveedorComponent implements OnInit{
   }
 
   public modificarProveedor() {
-    console.log("a")
     if (this.form.valid) {
 
       this.proveedor.tipoProveedor.id = this.txTipoProveedor.value;

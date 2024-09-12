@@ -10,6 +10,7 @@ import {Localidad} from "../../../models/localidad.model";
 import {DomicilioService} from "../../../services/domicilio.service";
 import {Domicilio} from "../../../models/domicilio.model";
 import {Rol} from "../../../models/Rol";
+import {firstValueFrom} from "rxjs";
 
 
 @Component({
@@ -135,9 +136,15 @@ export class RegistrarEmpleadosComponent implements OnInit{
     this.txNumero.setValue(this.usuario.domicilio?.numero);
     this.txRoles.setValue(this.usuario.roles.map(rol => rol.id));
 
-    if (this.usuario.domicilio?.localidad){
-      this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id);
-      this.localidadesFiltradas = this.filterLocalidades(this.usuario.domicilio.localidad.nombre);
+    if (this.usuario.domicilio?.localidad) {
+      this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id)
+        .then(() => {
+          this.localidadesFiltradas = this.filterLocalidades(this.usuario.domicilio.localidad.nombre);
+          return this.buscarIdLocalidad(this.usuario.domicilio.localidad.nombre);
+        })
+        .then((id) => {
+          this.idLocalidad = id;
+        })
     }
 
     if (this.formDesactivado) {
@@ -204,10 +211,12 @@ export class RegistrarEmpleadosComponent implements OnInit{
     return localidad ? localidad.id : 0;
   }
 
-  public obtenerLocalidadesPorProvincia(idProvincia: number){
-    this.domicilioService.obtenerLocalidadesPorProvincia(idProvincia).subscribe((localidades) => {
-      this.listaLocalidades = localidades;
-    });
+  public async obtenerLocalidadesPorProvincia(idProvincia: number): Promise<Localidad[]> {
+    return firstValueFrom(this.domicilioService.obtenerLocalidadesPorProvincia(idProvincia))
+      .then((localidades) => {
+        this.listaLocalidades = localidades;
+        return localidades;
+      });
   }
 
   private filterProvincias(busqueda: string) {
