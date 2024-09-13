@@ -51,6 +51,19 @@
           </mat-form-field>
         </div>
       </div>
+
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Estado</mat-label>
+            <mat-select [formControl]="txEstado">
+              <mat-option *ngFor="let estado of listaEstadosPedido" [value]="estado.id">
+                {{ estado.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
     </form>
 
 

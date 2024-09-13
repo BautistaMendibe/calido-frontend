@@ -21,6 +21,7 @@ import {ConfiguracionesService} from "../../../services/configuraciones.service"
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {EstadoPedido} from "../../../models/estadoPedido";
 
 @Component({
   selector: 'app-consultar-pedidos',
@@ -37,6 +38,7 @@ export class ConsultarPedidosComponent implements OnInit {
   public pedidos: Pedido[] = [];
   public productos: Producto[] = [];
   public listaProveedor: Proveedor[] = [];
+  public listaEstadosPedido: EstadoPedido[] = [];
   public configuracion: Configuracion = new Configuracion();
   public columnas: string[] = ['fechaEmision', 'numeroPedido', "proveedor", 'total', 'estado', 'acciones'];
 
@@ -68,6 +70,7 @@ export class ConsultarPedidosComponent implements OnInit {
   ngOnInit() {
     this.crearFormulario();
     this.buscarProveedores();
+    this.buscarEstadosPedido();
     this.buscarConfiguraciones();
     this.buscarProductos();
     this.buscar();
@@ -78,7 +81,8 @@ export class ConsultarPedidosComponent implements OnInit {
       txPedido: ['', []],
       txProveedor: ['', []],
       txFechaEmisionDesde: ['', []],
-      txFechaEmisionHasta: ['', []]
+      txFechaEmisionHasta: ['', []],
+      txEstado: [1, []],
     });
   }
 
@@ -92,7 +96,8 @@ export class ConsultarPedidosComponent implements OnInit {
       pedido: this.txPedido.value,
       proveedor: this.txProveedor.value,
       fechaEmisionDesde: this.txFechaEmisionDesde.value,
-      fechaEmisionHasta: this.txFechaEmisionHasta.value
+      fechaEmisionHasta: this.txFechaEmisionHasta.value,
+      estado: this.txEstado.value
     };
 
     this.pedidosService.consultarPedidos(this.filtros).subscribe((pedidos) => {
@@ -104,6 +109,12 @@ export class ConsultarPedidosComponent implements OnInit {
   public buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedor = proveedores;
+    });
+  }
+
+  private buscarEstadosPedido() {
+    this.pedidosService.obtenerEstadosPedido().subscribe((estados) => {
+      this.listaEstadosPedido = estados;
     });
   }
 
@@ -160,7 +171,7 @@ export class ConsultarPedidosComponent implements OnInit {
               this.notificacionService.openSnackBarSuccess('Pedido eliminado con éxito');
               this.buscar();
             } else {
-              this.notificacionService.openSnackBarError('Error al eliminar el pedido');
+              this.notificacionService.openSnackBarError('Error al eliminar la orden de compra');
             }
           });
         }
@@ -563,6 +574,10 @@ export class ConsultarPedidosComponent implements OnInit {
 
   get txFechaEmisionHasta(): FormControl {
     return this.form.get('txFechaEmisionHasta') as FormControl
+  }
+
+  get txEstado(): FormControl {
+    return this.form.get('txEstado') as FormControl;
   }
 
 }
