@@ -76,6 +76,11 @@ export class RegistrarClientesComponent {
     });
   }
 
+  public habilitarEdicion(){
+    this.form.enable();
+    this.data.editar = true;
+  }
+
   // Validar que la fecha de nacimiento sea menor a la de hoy
   fechaMenorQueHoy(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -189,6 +194,14 @@ export class RegistrarClientesComponent {
 
   public cancelar() {
     this.dialogRef.close();
+  }
+
+  public registrarNuevoCliente(){
+
+  }
+
+  public modificarCliente(){
+
   }
 
   // Getters
