@@ -98,27 +98,27 @@
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="fechaEmision">
-              <mat-header-cell *matHeaderCellDef>Fecha de Emisión</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>FECHA DE EMISIÓN</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Fecha de emision">{{ comprobante.fechaEmision | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="numeroComprobante">
-              <mat-header-cell *matHeaderCellDef>Número de Comprobante</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>NÚMERO COMPROBANTE</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Comprobante">{{ comprobante.numero }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="proveedor">
-              <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>PROVEEDOR</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Proveedor">{{ comprobante.proveedor.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="responsable">
-              <mat-header-cell *matHeaderCellDef>Responsable</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>RESPONSABLE</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Responsable" >{{ comprobante.responsable.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="total">
-              <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>TOTAL</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Subtotal" >$ {{ comprobante.total | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 

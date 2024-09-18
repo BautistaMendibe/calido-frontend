@@ -112,35 +112,35 @@
           <div class="col-md-12">
             <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado">
               <ng-container matColumnDef="imgProducto">
-                <mat-header-cell *matHeaderCellDef>Imagen</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   <img [src]="producto.imgProducto" class="img-thumbnail"/>
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="producto">
-                <mat-header-cell *matHeaderCellDef>Producto</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="costo">
-                <mat-header-cell *matHeaderCellDef>Costo de Compra</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>COSTO COMPRA</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   $ {{ producto.costo | number:'1.2-2':'es-AR' }}
                 </mat-cell>
               </ng-container>
               <ng-container matColumnDef="tipoProducto">
-                <mat-header-cell *matHeaderCellDef>Tipo Producto</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>TIPO PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.tipoProducto?.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="proveedor">
-                <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>PROVEEDOR</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.proveedor?.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="marca">
-                <mat-header-cell *matHeaderCellDef>Marca</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>MARCA</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.marca?.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="cantidad">
-                <mat-header-cell *matHeaderCellDef>Cantidad</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="Cantidad">
                   <div class="d-flex align-items-center justify-content-right">
                     <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
