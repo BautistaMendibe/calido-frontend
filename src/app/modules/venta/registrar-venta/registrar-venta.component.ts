@@ -11,6 +11,7 @@ import {VentasService} from "../../../services/ventas.services";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 import {MatDialog} from "@angular/material/dialog";
+import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -215,6 +216,22 @@ export class RegistrarVentaComponent implements OnInit{
           referencia: this,
           esConsulta: false,
           formDesactivado: false
+        }
+      }
+    );
+  }
+
+  public registrarCliente() {
+    this.dialog.open(
+      RegistrarClientesComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          esConsulta: false,
+          formDesactivado: false,
+
         }
       }
     );

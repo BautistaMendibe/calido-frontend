@@ -32,14 +32,9 @@
 
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de nacimiento</mat-label>
-          <input type="date" matInput [formControl]="txFechaNacimiento"/>
+          <mat-label>Mail</mat-label>
+          <input type="text" matInput [formControl]="txMail"/>
         </mat-form-field>
-        <div *ngIf="form.get('txFechaNacimiento')?.touched || form.get('txFechaNacimiento')?.dirty">
-          <div *ngIf="form.get('txFechaNacimiento')?.hasError('fechaInvalida')">
-            La fecha de nacimiento debe ser anterior a hoy.
-          </div>
-        </div>
       </div>
     </div>
 
@@ -61,6 +56,18 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input type="date" matInput [formControl]="txFechaNacimiento"/>
+        </mat-form-field>
+        <div *ngIf="form.get('txFechaNacimiento')?.touched || form.get('txFechaNacimiento')?.dirty">
+          <div *ngIf="form.get('txFechaNacimiento')?.hasError('fechaInvalida')">
+            La fecha de nacimiento debe ser anterior a hoy.
+          </div>
+        </div>
       </div>
     </div>
 

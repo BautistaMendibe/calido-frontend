@@ -214,6 +214,10 @@ export class RegistrarClientesComponent {
     return this.form.get('txApellido') as FormControl;
   }
 
+  get txMail(): FormControl {
+    return this.form.get('txMail') as FormControl;
+  }
+
   get txFechaNacimiento(): FormControl {
     return this.form.get('txFechaNacimiento') as FormControl;
   }
