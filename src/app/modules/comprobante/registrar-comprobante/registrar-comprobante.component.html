@@ -199,6 +199,12 @@
         <input type="text" matInput [formControl]="txCantidadProductos" />
       </mat-form-field>
     </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Subtotal</mat-label>
+        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
+      </mat-form-field>
+    </div>
   </div>
 
   <mat-divider class="my-3"></mat-divider>
@@ -209,8 +215,8 @@
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
         {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
       </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoPedido()" id="btnBuscar">Registrar</button>
-      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarPedido()" id="btnBuscar2">Modificar</button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoComprobante()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarComprobante()" id="btnBuscar2">Modificar</button>
     </div>
   </div>
 

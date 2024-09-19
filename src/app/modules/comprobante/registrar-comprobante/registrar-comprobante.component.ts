@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Proveedor} from "../../../models/proveedores.model";
 import {Producto} from "../../../models/producto.model";
-import {Transporte} from "../../../models/transporte.model";
 import {Pedido} from "../../../models/pedido.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -41,6 +40,7 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   public comprobante: Comprobante;
   public cantidadProductos: number = 0;
+  public subtotalProductos: number = 0;
   public esConsulta: boolean;
   public numeroOrdenSeleccionada: number | null = null;
   public ordenSeleccionada: boolean = false;
@@ -90,7 +90,8 @@ export class RegistrarComprobanteComponent implements OnInit {
       txTipoComprobante: ['', [Validators.required]],
       txResponsable: ['', [Validators.required]],
       txReceptor: ['', [Validators.required]],
-      txCantidadProductos: [ {value: '', disabled: true}, [Validators.required]]
+      txCantidadProductos: [ {value: '', disabled: true}, [Validators.required]],
+      txTotal: [ {value: '', disabled: true}, [Validators.required]],
     });
   }
 
@@ -117,7 +118,7 @@ export class RegistrarComprobanteComponent implements OnInit {
       this.productos = productos;
 
       if (this.esConsulta && this.comprobante) {
-        this.rellenarFormularioDataPedido();
+        this.rellenarFormularioDataComprobante();
       }
     });
   }
@@ -161,12 +162,16 @@ export class RegistrarComprobanteComponent implements OnInit {
       // Actualiza el dataSource de la tabla con los productos seleccionados
       this.dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
       this.calcularCantidadProductos();
+      this.calcularTotalProductos();
     }
   }
 
-  private rellenarFormularioDataPedido() {
-    this.txFechaEmision.setValue(this.formatDate(this.comprobante.fechaEmision));
+  private rellenarFormularioDataComprobante() {
     this.txProveedor.setValue(this.comprobante.idProveedor);
+    this.txTipoComprobante.setValue(this.comprobante.idTipoComprobante);
+    this.txResponsable.setValue(this.comprobante.idResponsable);
+    this.txReceptor.setValue(this.comprobante.idReceptor);
+    this.txFechaEmision.setValue(this.formatDate(this.comprobante.fechaEmision));
     this.txObservaciones.setValue(this.comprobante.observaciones);
 
     this.comprobante.detalleComprobante.forEach((detalle: DetalleComprobante) => {
@@ -187,6 +192,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     });
 
     this.calcularCantidadProductos();
+    this.calcularTotalProductos();
 
     if (this.formDesactivado) {
       this.form.disable();
@@ -199,79 +205,88 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
+    this.txCantidadProductos.disable();
+    this.txTotal.disable();
     this.data.formDesactivado = false;
     this.formDesactivado = false;
     this.data.editar = true;
   }
 
-  public registrarNuevoPedido() {
+  public registrarNuevoComprobante() {
 
     if (this.form.valid) {
-      const pedido: Pedido = new Pedido();
-      const transporte: Transporte = new Transporte();
+      const comprobante: Comprobante = new Comprobante();
 
-      pedido.fechaEmision = this.txFechaEmision.value;
-      pedido.idEstadoPedido = 1; // Estado 'pendiente' al registrar.
-      pedido.idProveedor = this.txProveedor.value;
-      pedido.observaciones = this.txObservaciones.value;
-      pedido.transporte = transporte;
+      comprobante.numerocomprobante = this.txNumeroComprobante.value;
+      comprobante.fechaEmision = this.txFechaEmision.value;
+      comprobante.idProveedor = this.txProveedor.value;
+      comprobante.observaciones = this.txObservaciones.value;
+      comprobante.total = this.txTotal.value;
+      comprobante.idResponsable = this.txResponsable.value;
+      comprobante.idReceptor = this.txReceptor.value;
+      comprobante.idTipoComprobante = this.txTipoComprobante.value;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
-      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
-        const detalle = new DetallePedido();
+      const detallesComprobante: DetalleComprobante[] = this.productosSeleccionados.map((producto) => {
+        const detalle = new DetalleComprobante();
         detalle.cantidad = producto.cantidadSeleccionada;
+        detalle.costoIndividual = producto.costo;
         detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
-        detalle.idpedido = pedido.id;
+        detalle.idcomprobante = comprobante.id;
         detalle.idproducto = producto.id;
 
         return detalle;
       });
 
-      pedido.detallePedido = detallesPedido;
+      comprobante.detalleComprobante = detallesComprobante;
 
-      this.pedidosService.registrarPedido(pedido).subscribe((respuesta) => {
+      this.comprobantesService.registrarComprobante(comprobante).subscribe((respuesta) => {
         if (respuesta.mensaje === 'OK') {
-          this.notificacionService.openSnackBarSuccess('La orden de compra se registró con éxito');
+          this.notificacionService.openSnackBarSuccess('El comprobante se registró con éxito');
           this.dialogRef.close();
           this.referencia.buscar();
         } else {
-          this.notificacionService.openSnackBarError('Error al registrar una orden de compra, inténtelo nuevamente');
+          this.notificacionService.openSnackBarError('Error al registrar un comprobante, inténtelo nuevamente');
         }
       });
     }
   }
 
-  public modificarPedido() {
+  public modificarComprobante() {
     if (this.form.valid) {
-      const pedido: Pedido = new Pedido();
-      const transporte: Transporte = new Transporte();
+      const comprobante: Comprobante = new Comprobante();
 
-      pedido.id = this.data.comprobante?.id;
-      pedido.fechaEmision = this.txFechaEmision.value;
-      pedido.idProveedor = this.txProveedor.value;
-      pedido.observaciones = this.txObservaciones.value;
-      pedido.transporte = transporte;
+      comprobante.id = this.data.comprobante?.id;
+      comprobante.numerocomprobante = this.txNumeroComprobante.value;
+      comprobante.fechaEmision = this.txFechaEmision.value;
+      comprobante.idProveedor = this.txProveedor.value;
+      comprobante.observaciones = this.txObservaciones.value;
+      comprobante.total = this.txTotal.value;
+      comprobante.idResponsable = this.txResponsable.value;
+      comprobante.idReceptor = this.txReceptor.value;
+      comprobante.idTipoComprobante = this.txTipoComprobante.value;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
-      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
-        const detalle = new DetallePedido();
+      const detallesComprobante: DetalleComprobante[] = this.productosSeleccionados.map((producto) => {
+        const detalle = new DetalleComprobante();
         detalle.cantidad = producto.cantidadSeleccionada;
+        detalle.costoIndividual = producto.costo;
         detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
-        detalle.idpedido = pedido.id;
+        detalle.idcomprobante = comprobante.id;
         detalle.idproducto = producto.id;
 
         return detalle;
       });
 
-      pedido.detallePedido = detallesPedido;
+      comprobante.detalleComprobante = detallesComprobante;
 
-      this.pedidosService.modificarPedido(pedido).subscribe((res) => {
+      this.comprobantesService.modificarComprobante(comprobante).subscribe((res) => {
         if (res.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('Orden de compra modificada con éxito');
+          this.notificacionService.openSnackBarSuccess('Comprobante modificado con éxito');
           this.dialogRef.close();
           this.referencia.buscar();
         } else {
-          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar la orden de compra');
+          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar comprobante');
         }
       });
     }
@@ -294,6 +309,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     }
 
     this.calcularCantidadProductos();
+    this.calcularTotalProductos();
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -318,6 +334,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     }
 
     this.calcularCantidadProductos();
+    this.calcularTotalProductos();
   }
 
   private calcularCantidadProductos() {
@@ -325,6 +342,14 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.productosSeleccionados.forEach((producto) => {
       this.cantidadProductos += producto.cantidadSeleccionada;
       this.txCantidadProductos.setValue(this.cantidadProductos);
+    });
+  }
+
+  private calcularTotalProductos() {
+    this.subtotalProductos = 0;
+    this.productosSeleccionados.forEach((producto) => {
+      this.subtotalProductos += producto.cantidadSeleccionada * producto.costo;
+      this.txTotal.setValue(this.subtotalProductos);
     });
   }
 
@@ -393,5 +418,13 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   get txCantidadProductos(): FormControl {
     return this.form.get('txCantidadProductos') as FormControl;
+  }
+
+  get txTotal(): FormControl {
+    return this.form.get('txTotal') as FormControl;
+  }
+
+  get txNumeroComprobante(): FormControl {
+    return this.form.get('txNumeroComprobante') as FormControl;
   }
 }
