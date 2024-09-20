@@ -8,6 +8,8 @@ import {Provincia} from "../../../models/provincia.model";
 import {Localidad} from "../../../models/localidad.model";
 import {Usuario} from "../../../models/usuario.model";
 import {firstValueFrom} from "rxjs";
+import {Domicilio} from "../../../models/domicilio.model";
+import {TipoUsuario} from "../../../models/tipoUsuario.model";
 
 @Component({
   selector: 'app-registrar-clientes',
@@ -84,6 +86,10 @@ export class RegistrarClientesComponent {
   // Validar que la fecha de nacimiento sea menor a la de hoy
   fechaMenorQueHoy(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        // Si el campo está vacío o nulo, no se realiza ninguna validación (es opcional).
+        return null;
+      }
       const today = new Date();
       const birthDate = new Date(control.value);
       return birthDate < today ? null : { 'fechaInvalida': true };
@@ -197,7 +203,35 @@ export class RegistrarClientesComponent {
   }
 
   public registrarNuevoCliente(){
+    if (this.form.valid) {
+      const cliente: Usuario = new Usuario();
+      const domicilio: Domicilio = new Domicilio();
+      const tipoUsuario: TipoUsuario = new TipoUsuario();
+      cliente.nombre = this.txNombre.value;
+      cliente.apellido = this.txApellido.value;
+      cliente.fechaNacimiento = this.txFechaNacimiento.value;
+      cliente.codigoPostal = this.txCodigoPostal.value;
+      cliente.dni = this.txDNI.value;
+      cliente.idGenero = this.ddGenero.value;
+      cliente.domicilio = domicilio;
+      cliente.domicilio.localidad.id =  this.idLocalidad;
+      cliente.domicilio.calle =  this.txCalle.value;
+      cliente.domicilio.numero =  this.txNumero.value;
+      cliente.mail = this.txMail.value;
+      cliente.tipoUsuario = tipoUsuario;
+      cliente.tipoUsuario.id = 2;
 
+
+      this.usuariosService.registrarUsuario(cliente).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('El cliente se registró con éxito');
+          this.dialogRef.close(cliente);
+        } else {
+          this.notificacionService.openSnackBarError('Error al registrar el cliente, inténtelo nuevamente');
+        }
+      })
+
+    }
   }
 
   public modificarCliente(){
