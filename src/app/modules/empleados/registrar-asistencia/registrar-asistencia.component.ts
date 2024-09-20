@@ -55,7 +55,7 @@ export class RegistrarAsistenciaComponent implements OnInit {
   }
 
   private buscarEmpleados(){
-    this.usuariosService.consultarUsuarios(new FiltrosEmpleados()).subscribe((usuarios) => {
+    this.usuariosService.consultarEmpleados(new FiltrosEmpleados()).subscribe((usuarios) => {
       this.listaEmpleados = usuarios;
     });
   }

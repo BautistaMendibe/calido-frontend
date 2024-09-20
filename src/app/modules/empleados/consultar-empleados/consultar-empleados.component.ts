@@ -23,7 +23,6 @@ export class ConsultarEmpleadosComponent implements OnInit {
   @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
-  // Ver. Crear tabla empleados que cada uno tenga un usuario
   public empleados: Usuario[] = [];
   public columnas: string[] = ['nombreUsuario', "nombre",'apellido', 'cuil', 'acciones'];
 
@@ -65,7 +64,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
 
-    this.usuariosService.consultarUsuarios(this.filtros).subscribe((empleados) => {
+    this.usuariosService.consultarEmpleados(this.filtros).subscribe((empleados) => {
       this.empleados = empleados;
       this.tableDataSource.data = empleados;
     });

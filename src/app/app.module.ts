@@ -43,6 +43,7 @@ import { ConsultarPedidosComponent } from './modules/pedidos/consultar-pedidos/c
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
 import { RegistrarClientesComponent } from './modules/clientes/registrar-clientes/registrar-clientes.component';
+import { ConsultarClientesComponent } from './modules/clientes/consultar-clientes/consultar-clientes.component';
 
 registerLocaleData(localeEs, 'es');
 
@@ -73,7 +74,8 @@ registerLocaleData(localeEs, 'es');
     RegistrarVentaComponent,
     RegistrarPedidoComponent,
     ConsultarPedidosComponent,
-    RegistrarClientesComponent
+    RegistrarClientesComponent,
+    ConsultarClientesComponent
   ],
   imports: [
     BrowserModule,
