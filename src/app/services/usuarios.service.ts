@@ -31,7 +31,7 @@ export class UsuariosService {
   }
 
   public consultarUsuarios(filtro: FiltrosEmpleados): Observable<Usuario[]>{
-    return this.http.post<Usuario[]>(`${this.urlBackend}/${this.controllerName}/consultar-usuarios`, filtro);
+    return this.http.post<Usuario[]>(`${this.urlBackend}/${this.controllerName}/consultar-empleados`, filtro);
   }
 
   public modificarUsuario(usuario: Usuario): Observable<SpResult>{
