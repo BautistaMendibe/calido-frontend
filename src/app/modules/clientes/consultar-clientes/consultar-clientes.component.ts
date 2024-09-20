@@ -10,6 +10,7 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
+import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
 
 @Component({
   selector: 'app-consultar-clientes',
@@ -67,6 +68,29 @@ export class ConsultarClientesComponent {
     this.usuariosService.consultarClientes(this.filtros).subscribe((clientes) => {
       this.clientes = clientes;
       this.tableDataSource.data = clientes;
+    });
+  }
+
+  public registrarNuevoCliente() {
+    const ref = this.dialog.open(
+      RegistrarClientesComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
+        }
+      }
+    )
+
+    ref.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscar();
+      }
     });
   }
 
