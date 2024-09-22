@@ -10,6 +10,7 @@ import {Usuario} from "../../../models/usuario.model";
 import {firstValueFrom} from "rxjs";
 import {Domicilio} from "../../../models/domicilio.model";
 import {TipoUsuario} from "../../../models/tipoUsuario.model";
+import {SpResult} from "../../../models/resultadoSp.model";
 
 @Component({
   selector: 'app-registrar-clientes',
@@ -222,9 +223,10 @@ export class RegistrarClientesComponent {
       cliente.tipoUsuario.id = 2;
 
 
-      this.usuariosService.registrarUsuario(cliente).subscribe((respuesta) => {
+      this.usuariosService.registrarUsuario(cliente).subscribe((respuesta: SpResult) => {
         if (respuesta.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('El cliente se registró con éxito');
+          cliente.id = respuesta.id!;
           this.dialogRef.close(cliente);
         } else {
           this.notificacionService.openSnackBarError('Error al registrar el cliente, inténtelo nuevamente');

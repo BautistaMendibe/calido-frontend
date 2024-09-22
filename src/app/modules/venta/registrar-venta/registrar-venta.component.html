@@ -128,8 +128,8 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cliente</mat-label>
               <mat-select [formControl]="txCliente">
-                <mat-option *ngFor="let cliente of this.usuarios" [value]="cliente.id">
-                  {{ cliente.nombre }}
+                <mat-option *ngFor="let cliente of this.clientes" [value]="cliente.id">
+                  {{ cliente.nombre + ' ' + cliente.apellido }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

@@ -12,6 +12,8 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -26,7 +28,7 @@ export class RegistrarVentaComponent implements OnInit{
   public cargandoProductos: boolean = true;
   public totalVenta: number = 0;
   public form: FormGroup;
-  public usuarios: Usuario[] = [];
+  public clientes: Usuario[] = [];
   public formasDePago: FormaDePago[] = [];
   public registrandoVenta: boolean = false;
 
@@ -37,6 +39,7 @@ export class RegistrarVentaComponent implements OnInit{
     private ventasService: VentasService,
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
+    private usuariosService: UsuariosService,
   ) {
     this.form = new FormGroup({});
   }
@@ -69,8 +72,9 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private buscarUsuariosClientes() {
-    this.ventasService.buscarUsuariosClientes().subscribe((usuarios) => {
-      this.usuarios = usuarios;
+    const filtro: FiltrosEmpleados = new FiltrosEmpleados();
+    this.usuariosService.consultarClientes(filtro).subscribe((usuarios) => {
+      this.clientes = usuarios;
     });
   }
 
@@ -222,7 +226,7 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public registrarCliente() {
-    this.dialog.open(
+    const ref = this.dialog.open(
       RegistrarClientesComponent,
       {
         width: '75%',
@@ -231,10 +235,16 @@ export class RegistrarVentaComponent implements OnInit{
         data: {
           esConsulta: false,
           formDesactivado: false,
-
         }
       }
     );
+
+    ref.afterClosed().subscribe((res: Usuario) => {
+      if (res) {
+        this.clientes.push(res);
+        this.txCliente.setValue(res.id);
+      }
+    });
   }
 
   // Region getters
