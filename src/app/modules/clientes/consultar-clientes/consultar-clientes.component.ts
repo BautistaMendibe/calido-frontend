@@ -94,6 +94,25 @@ export class ConsultarClientesComponent {
     });
   }
 
+  public eliminarUsuario(idUsuario: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar el cliente?', 'Eliminar Cliente') //Está seguro?
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuariosService.eliminarUsuario(idUsuario).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Cliente eliminado con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar el cliente');
+            }
+          });
+        }
+      });
+  }
+
+
+
 
 
   // Regios getters

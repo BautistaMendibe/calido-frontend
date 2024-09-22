@@ -86,7 +86,7 @@
                 <button class="btn" mat-icon-button matTooltip="Modificar">
                   <mat-icon class="editar">edit</mat-icon>
                 </button>
-                <button mat-icon-button color="primary"  matTooltip="Eliminar">
+                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarUsuario(usuario.id)">
                   <mat-icon class="eliminar">delete</mat-icon>
                 </button>
               </mat-cell>
