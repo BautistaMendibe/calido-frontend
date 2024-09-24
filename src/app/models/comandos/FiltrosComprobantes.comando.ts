@@ -1,10 +1,10 @@
 import {Proveedor} from "../proveedores.model";
-import {EstadoPedido} from "../estadoPedido";
+import {Usuario} from "../usuario.model";
 
-export class FiltrosPedidos {
-  pedido?: number;
+export class FiltrosComprobantes {
+  comprobante?: number;
   proveedor?: Proveedor;
   fechaEmisionDesde?: Date;
   fechaEmisionHasta?: Date;
-  estado?: EstadoPedido;
+  responsable?: Usuario;
 }

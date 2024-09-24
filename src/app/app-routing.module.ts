@@ -16,6 +16,9 @@ import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asiste
 import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/marcar-asistencia.component";
 import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
 import {ConsultarPedidosComponent} from "./modules/pedidos/consultar-pedidos/consultar-pedidos.component";
+import {
+  ConsultarComprobanteComponent
+} from "./modules/comprobante/consultar-comprobante/consultar-comprobante.component";
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {
   RegistrarCuentaCorrienteComponent
@@ -38,6 +41,7 @@ const routes: Routes = [
   {path:'marcar-asistencia', component: MarcarAsistenciaComponent},
   {path:'registrar-venta', component: RegistrarVentaComponent},
   {path:'consultar-pedidos', component: ConsultarPedidosComponent},
+  {path:'consultar-comprobante', component: ConsultarComprobanteComponent},
 ];
 
 @NgModule({

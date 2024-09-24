@@ -2,7 +2,7 @@
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar Orden de Compra' : 'Registrar Orden de Compra'}}</p>
+      <p class="titulo">{{esConsulta ? 'Consultar Comprobante' : 'Registrar Comprobante'}}</p>
       <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
         <mat-icon class="editar">edit</mat-icon>
       </button>
@@ -17,7 +17,7 @@
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Proveedor</mat-label>
-          <mat-select [formControl]="txProveedor">
+          <mat-select [formControl]="txProveedor" (selectionChange)="ObtenerPedidosPorProveedor()">
             <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
               {{ proveedor.nombre }}
             </mat-option>
@@ -27,68 +27,96 @@
 
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Transporte</mat-label>
-          <input
-            type="text"
-            matInput
-            [formControl]="txTransporte"
-            [matAutocomplete]="autoCompleteTransporte"
-          />
-        </mat-form-field>
-        <mat-autocomplete #autoCompleteTransporte="matAutocomplete">
-          <mat-option *ngFor="let transporte of transportesFiltrados" [value]="transporte.nombre" [id]="transporte.id.toString()">
-            {{transporte.nombre}}
-          </mat-option>
-        </mat-autocomplete>
-      </div>
-
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de Pedido</mat-label>
-          <input matInput [matDatepicker]="pickerPedido" [formControl]="txFechaPedido" />
-          <mat-datepicker-toggle matSuffix [for]="pickerPedido"></mat-datepicker-toggle>
-          <mat-datepicker #pickerPedido></mat-datepicker>
+          <mat-label>Tipo Comprobante</mat-label>
+          <mat-select [formControl]="txTipoComprobante">
+            <mat-option *ngFor="let tipoComprobante of listaTiposComprobantes" [value]="tipoComprobante.id">
+              {{ tipoComprobante.nombre }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
 
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de Entrega</mat-label>
-          <input matInput [matDatepicker]="pickerEntrega" [formControl]="txFechaEntrega" />
-          <mat-datepicker-toggle matSuffix [for]="pickerEntrega"></mat-datepicker-toggle>
-          <mat-datepicker #pickerEntrega></mat-datepicker>
+          <mat-label>Responsable</mat-label>
+          <mat-select [formControl]="txResponsable">
+            <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
+              {{ usuario.nombre + " " + usuario.apellido }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
       </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Recibido por</mat-label>
+          <mat-select [formControl]="txReceptor">
+            <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
+              {{ usuario.nombre + " " + usuario.apellido }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
     </div>
 
     <div class="row pt-4">
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de Emisión</mat-label>
+          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
+          <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
+          <mat-datepicker #pickerEmision></mat-datepicker>
+        </mat-form-field>
+      </div>
+
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Observaciones</mat-label>
           <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
       </div>
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Estado</mat-label>
-          <mat-select [formControl]="txEstadoPedido">
-            <mat-option *ngFor="let estado of listaEstadosPedido" [value]="estado.id">
-              {{ estado.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+    </div>
+
+    <!-- Selector de órdenes de compra para ese proveedor -->
+    <div class="row" *ngFor="let filaPedidos of agruparPedidos(listaPedidosPorProveedor, 4)">
+      <div class="col-12 col-md-6 col-lg-3 p-4" *ngFor="let pedido of filaPedidos"> <!-- 4 columnas por fila -->
+        <div
+          class="card pedido-card"
+          [ngClass]="{ 'selected-pedido-card': pedido.id === numeroOrdenSeleccionada }"
+          (click)="seleccionarPedido(pedido.id)"
+        >
+          <!-- Contenido del pedido -->
+          <div class="row align-items-center text-center my-3 pedido-id">
+            <div class="col">
+              <strong>Orden de compra:</strong> {{ pedido.id }}
+            </div>
+          </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-fecha">
+            <div class="col">
+              <strong>Fecha Emisión:</strong> {{ pedido.fechaEmision | date:'shortDate' }}
+            </div>
+          </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-total">
+            <div class="col">
+              <strong>Total:</strong> ${{ pedido.total }}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
     <mat-divider class="my-3"></mat-divider>
-    <br *ngIf="productos.length == 0">
+    <br *ngIf="!ordenSeleccionada">
 
     <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="productos.length == 0">
+    <div class="spinner-wrapper" *ngIf="!ordenSeleccionada">
       <mat-spinner></mat-spinner>
     </div>
 
-    <div class="row pt-4" *ngIf="productos.length > 0">
+    <div class="row pt-4" *ngIf="productos.length > 0 && ordenSeleccionada">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Producto</mat-label>
@@ -96,16 +124,11 @@
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
       </div>
-      <div class="col-md-8">
-        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado">
-          <mat-icon>add</mat-icon>Nuevo producto
-        </button>
-      </div>
     </div>
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0">
+    <mat-card *ngIf="productos.length > 0 && ordenSeleccionada">
       <mat-card-content>
         <div class="row">
 
@@ -170,51 +193,15 @@
   <mat-divider></mat-divider>
 
   <div class="row pt-4">
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Costo de Compra</mat-label>
-        <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$" thousandSeparator="," />
-      </mat-form-field>
-    </div>
-    <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
-      <span>+</span>
-    </div>
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Costo de Transporte</mat-label>
-        <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$" thousandSeparator="," />
-      </mat-form-field>
-    </div>
-    <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
-      <span>+</span>
-    </div>
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Impuestos</mat-label>
-        <mat-select [formControl]="txImpuestos">
-          <mat-option value="21">IVA (21%)</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
-      <span>-</span>
-    </div>
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Descuentos a productos</mat-label>
-        <mat-select [formControl]="txDescuento">
-          <mat-option *ngFor="let descuento of descuentos" [value]="descuento.value">
-            {{ descuento.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="row pt-4 justify-content-center">
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Total</mat-label>
+        <mat-label>Cantidad de Productos</mat-label>
+        <input type="text" matInput [formControl]="txCantidadProductos" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Subtotal</mat-label>
         <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
       </mat-form-field>
     </div>
@@ -228,8 +215,8 @@
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
         {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
       </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoPedido()" id="btnBuscar">Registrar</button>
-      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarPedido()" id="btnBuscar2">Modificar</button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoComprobante()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarComprobante()" id="btnBuscar2">Modificar</button>
     </div>
   </div>
 
