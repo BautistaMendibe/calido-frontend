@@ -18,7 +18,6 @@
   border-radius: 10px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
   position: relative;
-  height: 150px;
   padding: 10px;
 }
 
@@ -47,7 +46,7 @@
 
 /* Precio del producto */
 .product-price {
-  font-size: 16px;
+  font-size: 18px;
   color: grey;
 }
 
@@ -183,4 +182,15 @@
 
 .iconos-editar-eliminar i:hover {
   color: #343a40; /* Color más oscuro al hacer hover */
+}
+
+.product-img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+  height: 180px; /* Aumenta el tamaño de la imagen */
+}
+
+.product-icon {
+  font-size: 120px; /* Aumenta el tamaño del icono si no hay imagen */
 }

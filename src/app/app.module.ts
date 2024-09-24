@@ -42,6 +42,8 @@ import { RegistrarPedidoComponent } from './modules/pedidos/registrar-pedido/reg
 import { ConsultarPedidosComponent } from './modules/pedidos/consultar-pedidos/consultar-pedidos.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
+import { RegistrarClientesComponent } from './modules/clientes/registrar-clientes/registrar-clientes.component';
+import { ConsultarClientesComponent } from './modules/clientes/consultar-clientes/consultar-clientes.component';
 import { RegistrarComprobanteComponent } from './modules/comprobante/registrar-comprobante/registrar-comprobante.component';
 import { ConsultarComprobanteComponent } from './modules/comprobante/consultar-comprobante/consultar-comprobante.component';
 
@@ -79,7 +81,9 @@ registerLocaleData(localeEs, 'es');
     RegistrarComprobanteComponent,
     ConsultarComprobanteComponent,
     ConsultarCuentasCorrientesComponent,
-    RegistrarCuentaCorrienteComponent
+    RegistrarCuentaCorrienteComponent,
+    RegistrarClientesComponent,
+    ConsultarClientesComponent
   ],
   imports: [
     BrowserModule,

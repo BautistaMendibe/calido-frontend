@@ -1,30 +1,30 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
-import {Usuario} from "../../../models/usuario.model";
+import {Component, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {RegistrarEmpleadosComponent} from "../../empleados/registrar-empleados/registrar-empleados.component";
+import {Usuario} from "../../../models/usuario.model";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {MatDialog} from "@angular/material/dialog";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {MatDialog} from "@angular/material/dialog";
 import {NotificationService} from "../../../services/notificacion.service";
+import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
 
 @Component({
-  selector: 'app-consultar-empleados',
-  templateUrl: './consultar-empleados.component.html',
-  styleUrl: './consultar-empleados.component.scss'
+  selector: 'app-consultar-clientes',
+  templateUrl: './consultar-clientes.component.html',
+  styleUrl: './consultar-clientes.component.scss'
 })
-export class ConsultarEmpleadosComponent implements OnInit {
+export class ConsultarClientesComponent {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
-  public empleados: Usuario[] = [];
-  public columnas: string[] = ['nombreUsuario', "nombre",'apellido', 'cuil', 'acciones'];
+  public clientes: Usuario[] = [];
+  public columnas: string[] = ['nombre', 'mail', 'acciones'];
 
   private filtros: FiltrosEmpleados;
 
@@ -49,10 +49,9 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombreUsuario: ['', []],
       txNombre: ['', []],
       txApellido: ['', []],
-      txCuil: ['', []],
+      txMail: ['', []],
     });
   }
 
@@ -63,16 +62,18 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
+    this.filtros.apellido = this.txApellido.value;
+    this.filtros.mail = this.txMail.value;
 
-    this.usuariosService.consultarEmpleados(this.filtros).subscribe((empleados) => {
-      this.empleados = empleados;
-      this.tableDataSource.data = empleados;
+    this.usuariosService.consultarClientes(this.filtros).subscribe((clientes) => {
+      this.clientes = clientes;
+      this.tableDataSource.data = clientes;
     });
   }
 
-  public registrarNuevoEmpleado() {
-    this.dialog.open(
-      RegistrarEmpleadosComponent,
+  public registrarNuevoCliente() {
+    const ref = this.dialog.open(
+      RegistrarClientesComponent,
       {
         width: '75%',
         autoFocus: false,
@@ -85,42 +86,33 @@ export class ConsultarEmpleadosComponent implements OnInit {
         }
       }
     )
-  }
 
-  public verEmpleado(usuario: Usuario, editar: boolean) {
-    this.dialog.open(
-      RegistrarEmpleadosComponent,
-      {
-        width: '75%',
-        height: 'auto',
-        autoFocus: false,
-        data: {
-          usuario: usuario,
-          esConsulta: true,
-          referencia: this,
-          formDesactivado: !editar,
-          editar: editar
-        }
+    ref.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscar();
       }
-    )
+    });
   }
 
   public eliminarUsuario(idUsuario: number) {
-    this.notificationDialogService.confirmation('¿Desea eliminar el usuario?', 'Eliminar Usuario') //Está seguro?
+    this.notificationDialogService.confirmation('¿Desea eliminar el cliente?', 'Eliminar Cliente') //Está seguro?
       .afterClosed()
       .subscribe((value) => {
         if (value) {
           this.usuariosService.eliminarUsuario(idUsuario).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Usuario eliminado con éxito');
+              this.notificacionService.openSnackBarSuccess('Cliente eliminado con éxito');
               this.buscar();
             } else {
-              this.notificacionService.openSnackBarError('Error al eliminar el usuario');
+              this.notificacionService.openSnackBarError('Error al eliminar el cliente');
             }
           });
         }
       });
   }
+
+
+
 
 
   // Regios getters
@@ -132,12 +124,9 @@ export class ConsultarEmpleadosComponent implements OnInit {
     return this.form.get('txApellido') as FormControl;
   }
 
-  get txDNI(): FormControl {
-    return this.form.get('txDNI') as FormControl;
+  get txMail(): FormControl {
+    return this.form.get('txMail') as FormControl;
   }
 
-  get txGenero(): FormControl {
-    return this.form.get('txGenero') as FormControl;
-  }
 
 }

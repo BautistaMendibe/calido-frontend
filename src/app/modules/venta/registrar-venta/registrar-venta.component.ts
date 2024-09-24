@@ -8,8 +8,12 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
-import {DetalleVenta} from "../../../models/detalleVenta.model";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {MatDialog} from "@angular/material/dialog";
+import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -24,26 +28,29 @@ export class RegistrarVentaComponent implements OnInit{
   public cargandoProductos: boolean = true;
   public totalVenta: number = 0;
   public form: FormGroup;
-  public usuarios: Usuario[] = [];
+  public clientes: Usuario[] = [];
   public formasDePago: FormaDePago[] = [];
+  public registrandoVenta: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private productosService: ProductosService,
     private notificationDialogService: NotificationService,
     private ventasService: VentasService,
-    private notificacionService: SnackBarService
+    private notificacionService: SnackBarService,
+    private dialog: MatDialog,
+    private usuariosService: UsuariosService,
   ) {
     this.form = new FormGroup({});
   }
 
   ngOnInit(){
-    this.buscarProductos();
+    this.buscar();
     this.crearFormulario();
     this.buscarDataCombos();
   }
 
-  private buscarProductos() {
+  public buscar() {
     const filtros: FiltrosProductos = new FiltrosProductos();
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
@@ -65,8 +72,9 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private buscarUsuariosClientes() {
-    this.ventasService.buscarUsuariosClientes().subscribe((usuarios) => {
-      this.usuarios = usuarios;
+    const filtro: FiltrosEmpleados = new FiltrosEmpleados();
+    this.usuariosService.consultarClientes(filtro).subscribe((usuarios) => {
+      this.clientes = usuarios;
     });
   }
 
@@ -174,22 +182,69 @@ export class RegistrarVentaComponent implements OnInit{
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
 
-    //this.productosSeleccionados.map((producto: Producto) => {
-    //    const detalleVenta: DetalleVenta = new DetalleVenta();
-    //    detalleVenta.producto = producto;
-    //    detalleVenta.subTotal = producto.costo * producto.cantidadSeleccionada;
-    //    detalleVenta.cantidad = producto.cantidadSeleccionada;
-    //    venta.detalleVenta.push(detalleVenta);
-    //});
+    this.registrandoVenta = true;
 
     this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+        this.registrandoVenta = false;
+        this.limpiarVenta();
       } else {
         this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
+        this.registrandoVenta = false;
       }
     });
+  }
 
+  private limpiarVenta() {
+    this.productosSeleccionados.map((producto) => {
+      producto.seleccionadoParaVenta = false;
+      producto.cantidadSeleccionada = 0;
+    });
+    this.productosSeleccionados = [];
+    this.totalVenta = 0;
+    this.subTotal = 0;
+    this.txFormaDePago.setValue(this.formasDePago[0]);
+    this.txCliente.setValue(null);
+    this.txNumeracion.setValue(null);
+  }
+
+  public registrarProducto() {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
+        }
+      }
+    );
+  }
+
+  public registrarCliente() {
+    const ref = this.dialog.open(
+      RegistrarClientesComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          esConsulta: false,
+          formDesactivado: false,
+        }
+      }
+    );
+
+    ref.afterClosed().subscribe((res: Usuario) => {
+      if (res) {
+        this.clientes.push(res);
+        this.txCliente.setValue(res.id);
+      }
+    });
   }
 
   // Region getters

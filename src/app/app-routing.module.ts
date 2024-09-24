@@ -16,6 +16,7 @@ import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asiste
 import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/marcar-asistencia.component";
 import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
 import {ConsultarPedidosComponent} from "./modules/pedidos/consultar-pedidos/consultar-pedidos.component";
+import {ConsultarClientesComponent} from "./modules/clientes/consultar-clientes/consultar-clientes.component";
 import {
   ConsultarComprobanteComponent
 } from "./modules/comprobante/consultar-comprobante/consultar-comprobante.component";
@@ -28,6 +29,7 @@ const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
+  {path:'consultar-clientes', component: ConsultarClientesComponent},
   {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
   {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
   {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},

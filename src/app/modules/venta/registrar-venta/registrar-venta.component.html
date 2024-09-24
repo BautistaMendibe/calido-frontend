@@ -28,7 +28,7 @@
 
           <!-- Botón de 'Nuevo producto' -->
           <div class="col-3">
-            <button mat-stroked-button color="warn" class="btn round new-product-btn">
+            <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarProducto()">
               <mat-icon>add</mat-icon>Nuevo producto
             </button>
           </div>
@@ -38,7 +38,7 @@
 
         <!-- Lista de productos a seleccionar -->
         <div class="row">
-          <div class="col-4 p-3" *ngFor="let producto of productos">
+          <div class="col-12 col-md-6 col-lg-4 p-4" *ngFor="let producto of productos"> <!-- Ajustar columnas para pantallas pequeñas -->
             <div class="card product-card"
                  [ngClass]="{'selected-card': producto.seleccionadoParaVenta}"
                  (click)="seleccionarProducto(producto)">
@@ -49,15 +49,25 @@
                 {{ producto.cantidadSeleccionada }}
               </div>
 
-              <div class="row h-50 d-flex justify-content-center align-items-center">
-                <mat-icon class="product-icon">loyalty</mat-icon>
+              <!-- Imagen del producto o icono si no hay imagen -->
+              <div class="row h-75 d-flex justify-content-center align-items-center">
+                <ng-container *ngIf="producto.imgProducto; else showIcon">
+                  <img [src]="producto.imgProducto" alt="{{producto.nombre}}" class="product-img">
+                </ng-container>
+                <ng-template #showIcon>
+                  <mat-icon class="product-icon">loyalty</mat-icon>
+                </ng-template>
               </div>
-              <div class="row align-items-center text-center my-2">
+
+              <!-- Nombre del producto -->
+              <div class="row align-items-center text-center my-3">
                 <div class="col">
                   {{producto.nombre}}
                 </div>
               </div>
-              <div class="row align-items-center text-center mb-2 my-1">
+
+              <!-- Precio del producto -->
+              <div class="row align-items-center text-center mb-3">
                 <div class="col">
                   <strong class="product-price">${{producto.costo}}</strong>
                 </div>
@@ -118,14 +128,14 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cliente</mat-label>
               <mat-select [formControl]="txCliente">
-                <mat-option *ngFor="let cliente of this.usuarios" [value]="cliente.id">
-                  {{ cliente.nombre }}
+                <mat-option *ngFor="let cliente of this.clientes" [value]="cliente.id">
+                  {{ cliente.nombre + ' ' + cliente.apellido }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
           </div>
           <div class="col-3">
-            <button mat-stroked-button color="warn" class="btn round new-client-btn">
+            <button mat-stroked-button color="warn" class="btn round new-client-btn" (click)="registrarCliente()">
               <mat-icon>add</mat-icon> Nuevo
             </button>
           </div>
@@ -164,12 +174,12 @@
           <div class="summary-container">
             <div class="summary-row">
               <span>Subtotal</span>
-              <span class="text-summary">$ {{ subTotal }}</span>
+              <span class="text-summary">$ {{ subTotal.toFixed(2) }}</span>
             </div>
             <div class="dotted-line"></div>
             <div class="summary-row">
               <span>IVA (21.00%)</span>
-              <span class="text-summary">$ {{ impuestoIva }}</span>
+              <span class="text-summary">$ {{ impuestoIva.toFixed(2) }}</span>
             </div>
           </div>
         </div>
@@ -182,10 +192,18 @@
 
         <!-- Botones -->
         <div class="container mt-4">
-          <button class="btn btn-custom" [disabled]="totalVenta == 0" (click)="confirmarVenta()">
+          <button class="btn btn-custom" [disabled]="totalVenta == 0 || registrandoVenta" (click)="confirmarVenta()">
             <span>Confirmar venta</span>
-            <span class="text-right">$ {{this.totalVenta}}</span>
+            <span class="text-right">$ {{ this.totalVenta.toFixed(2) }}</span>
           </button>
+          <!-- loading -->
+          <div *ngIf="registrandoVenta">
+            <br>
+            <div class="spinner-wrapper">
+              <mat-spinner></mat-spinner>
+            </div>
+            <br>
+          </div>
           <div class="d-flex justify-content-between mt-3">
             <span class="text-small">{{ productosSeleccionados.length }} Producto</span>
             <a (click)="cancelarVenta()" class="text-small btn-cancelar">Cancelar</a>
