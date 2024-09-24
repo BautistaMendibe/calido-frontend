@@ -7,6 +7,8 @@ import {Usuario} from "../models/usuario.model";
 import {FiltrosEmpleados} from "../models/comandos/FiltrosEmpleados.comando";
 import {Asistencia} from "../models/asistencia";
 import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando";
+import {FiltrosCuentasCorrientes} from "../models/comandos/FiltrosCuentasCorrientes";
+import {CuentaCorriente} from "../models/cuentaCorriente.model";
 import {Rol} from "../models/Rol";
 
 @Injectable({
@@ -70,4 +72,23 @@ export class UsuariosService {
     return this.http.get<Rol[]>(`${this.urlBackend}/${this.controllerName}/obtener-roles-usuario/${idUsuario}`);
   }
 
+  public consultarCuentasCorrientesxUsuario(filtro: FiltrosCuentasCorrientes): Observable<CuentaCorriente[]>{
+    return this.http.post<CuentaCorriente[]>(`${this.urlBackend}/${this.controllerName}/consultar-usuarios-cuenta-corriente`, filtro);
+  }
+
+  public registrarCuentaCorriente(cuentaCorriente: CuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-cuenta-corriente`, cuentaCorriente);
+  }
+
+  public modificarCuentaCorriente(cuentaCorriente: CuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-cuenta-corriente`, cuentaCorriente);
+  }
+
+  public consultarAllUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.urlBackend}/${this.controllerName}/consultar-all-usuarios`);
+  }
+
+  public eliminarCuentaCorriente(idCuentaCorriente: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-cuenta-corriente/${idCuentaCorriente}`);
+  }
 }
