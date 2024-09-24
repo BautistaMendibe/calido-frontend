@@ -31,18 +31,16 @@ export class SidebarComponent {
     {id: 5, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
     {id: 6, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
     {id: 7, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
-    {id: 8, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
-    {id: 9, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
-    {id: 10, nombre: 'Cuentas Corrientes', path:'consultar-cuentas-corrientes', icon: 'account_balance', activo: false, subMenu: []},
-    {id: 11, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
-    {id: 12, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
-    {id: 7, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
-      {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
-      {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, requiresAdmin: true, subMenu: []},
+    {id: 8, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
+    {id: 9, nombre: 'Estadisticas', path:'/', icon: 'data_usage', activo: false, subMenu: []},
+
+    {id: 10, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, requiresAdmin: true, subMenu: []},
     ]},
-    {id: 13, nombre: 'Asistencia', path:'/marcar-asistencia', icon: 'event_available', activo: false, subMenu: []},
-    {id: 14, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []},
-  ]}];
+    {id: 11, nombre: 'Cuentas Corrientes', path:'consultar-cuentas-corrientes', icon: 'account_balance', activo: false, subMenu: []},
+    {id: 12, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []},
+  ];
   isExpanded = true;
   isShowing = false;
   showFiller = false;
