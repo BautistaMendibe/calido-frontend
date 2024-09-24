@@ -1,34 +1,43 @@
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { ConsultarCuentasCorrientesComponent } from "../consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
+import { CuentaCorriente } from "../../../models/cuentaCorriente.model";
 import { SnackBarService } from "../../../services/snack-bar.service";
 import { Usuario } from "../../../models/usuario.model";
-import { CuentaCorrienteService } from "../../../services/cuenta-corriente.service";
+import { UsuariosService } from "../../../services/usuarios.service";
+import {Producto} from "../../../models/producto.model";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
   templateUrl: './registrar-cuenta-corriente.component.html',
   styleUrls: ['./registrar-cuenta-corriente.component.scss']
 })
-export class RegistrarCuentaCorrienteComponent {
+export class RegistrarCuentaCorrienteComponent implements OnInit {
+
   public form: FormGroup;
   public listaUsuarios: Usuario[] = [];
+  public usuariosFiltrados: Usuario[] = [];
   public esConsulta: boolean;
+  private referencia: ConsultarCuentasCorrientesComponent;
 
   constructor(
     private fb: FormBuilder,
-    private cuentaCorrienteService: CuentaCorrienteService,
+    private usuarioService: UsuariosService,
     private dialogRef: MatDialogRef<RegistrarCuentaCorrienteComponent>,
     private notificacionService: SnackBarService,
     @Inject(MAT_DIALOG_DATA) public data: {
+      referencia: ConsultarCuentasCorrientesComponent;
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
-      cuentaCorriente: any;
+      cuentaCorriente: CuentaCorriente;
     }
   ) {
     this.form = new FormGroup({});
     this.esConsulta = this.data.esConsulta;
+    this.referencia = this.data.referencia;
   }
 
   ngOnInit() {
@@ -50,15 +59,25 @@ export class RegistrarCuentaCorrienteComponent {
       txUsuario: [this.data.cuentaCorriente?.usuario?.id || '', [Validators.required]],
       txNombre: [this.data.cuentaCorriente?.usuario?.nombre || '', [Validators.required]],
       txApellido: [this.data.cuentaCorriente?.usuario?.apellido || '', [Validators.required]],
-      txCreada: [this.data.cuentaCorriente?.creada || '', [Validators.required]],
-      txBalance: [this.data.cuentaCorriente?.balance || '', [Validators.required, Validators.pattern('^[0-9]+$')]]
+      txCreada: [{ value: this.data.cuentaCorriente?.fechaDesde || '', disabled: true }, [Validators.required]],
+      txBalance: [this.data.cuentaCorriente?.balanceTotal || '', [Validators.required, Validators.pattern('^[0-9]+$')]]
     });
   }
 
   private buscarUsuarios() {
-    this.cuentaCorrienteService.buscarUsuarios().subscribe((usuarios) => {
+    this.usuarioService.consultarAllUsuarios().subscribe((usuarios) => {
       this.listaUsuarios = usuarios;
+      this.txUsuario.valueChanges.subscribe((usuario) => {
+        this.usuariosFiltrados = this.filtrarLista(usuario, this.listaUsuarios);
+      });
     });
+  }
+
+  private filtrarLista(busqueda: string, lista: any[]): any[] {
+    if (typeof busqueda !== 'string') {
+      return lista;
+    }
+    return lista.filter((value) => value.nombre.toLowerCase().startsWith(busqueda.toLowerCase()));
   }
 
   private actualizarNombreApellido() {
@@ -73,30 +92,32 @@ export class RegistrarCuentaCorrienteComponent {
   public registrarCuentaCorriente() {
     if (this.form.valid) {
       const cuentaCorriente = this.construirCuentaCorriente();
-      this.cuentaCorrienteService.registrarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
+      this.usuarioService.registrarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
         this.gestionarRespuesta(respuesta, 'La cuenta corriente se registró con éxito');
       });
     }
   }
 
   public modificarCuentaCorriente() {
+    
     if (this.form.valid) {
       const cuentaCorriente = this.construirCuentaCorriente(this.data.cuentaCorriente?.id);
-      this.cuentaCorrienteService.modificarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
+      this.usuarioService.modificarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
         this.gestionarRespuesta(respuesta, 'La cuenta corriente se modificó con éxito');
+        this.referencia.buscar();
       });
     }
   }
 
   private construirCuentaCorriente(id?: number): any {
-    return {
+    const cuentaCorriente = {
       id: id || undefined,
-      usuario: { id: this.txUsuario.value },
-      creada: this.txCreada.value,
-      balance: parseFloat(this.txBalance.value) || 0
-    };
+      usuario: { id: this.txUsuario.value } || 0,
+      fechaDesde: this.txCreada.value ,
+      balanceTotal: parseFloat(this.txBalance.value) || 0
+    } as CuentaCorriente;
+    return cuentaCorriente;
   }
-
   private gestionarRespuesta(respuesta: any, mensajeExito: string) {
     if (respuesta.mensaje === 'OK') {
       this.notificacionService.openSnackBarSuccess(mensajeExito);
@@ -116,32 +137,18 @@ export class RegistrarCuentaCorrienteComponent {
     this.txApellido.disable();
     this.data.formDesactivado = false;
     this.data.editar = true;
+    this.txUsuario.disable();
   }
 
   public getErrorMessage(control: FormControl): string {
     if (control.hasError('required')) return 'Este campo es obligatorio';
-    if (control.hasError('pattern')) return 'Formato inválido';
+    if (control.hasError('pattern')) return 'Valor no válido';
     return '';
   }
 
-  get txUsuario(): FormControl {
-    return this.form.get('txUsuario') as FormControl;
-  }
-
-  get txNombre(): FormControl {
-    return this.form.get('txNombre') as FormControl;
-  }
-
-  get txApellido(): FormControl {
-    return this.form.get('txApellido') as FormControl;
-  }
-
-  get txCreada(): FormControl {
-    return this.form.get('txCreada') as FormControl;
-  }
-
-  get txBalance(): FormControl {
-    return this.form.get('txBalance') as FormControl;
-  }
+  get txUsuario() { return this.form.get('txUsuario') as FormControl; }
+  get txNombre() { return this.form.get('txNombre') as FormControl; }
+  get txApellido() { return this.form.get('txApellido') as FormControl; }
+  get txCreada() { return this.form.get('txCreada') as FormControl; }
+  get txBalance() { return this.form.get('txBalance') as FormControl; }
 }
-

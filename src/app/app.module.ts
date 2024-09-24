@@ -39,7 +39,7 @@ import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
-
+import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -67,7 +67,8 @@ registerLocaleData(localeEs, 'es');
     ConsultarAsistenciaComponent,
     RegistrarAsistenciaComponent,
     RegistrarVentaComponent,
-    ConsultarCuentasCorrientesComponent
+    ConsultarCuentasCorrientesComponent,
+    RegistrarCuentaCorrienteComponent
   ],
   imports: [
     BrowserModule,

@@ -15,71 +15,69 @@
   <div class="row">
     <!-- Columna de Inputs -->
     <div class="col-md-8">
-      <form [formGroup]="form">
-        <!-- Primera línea: Nombre del producto y Código de Barras -->
+      <form [formGroup]="form"> <!-- Asegúrate de que el form está cerrado correctamente -->
+        <!-- Primera línea: Usuario, Nombre y Apellido -->
         <div class="row pt-4">
           <div class="col-md-4">
-              <mat-form-field appearance="outline" class="w-100">
-                <mat-label>Usuario</mat-label>
-                <mat-select formControlName="txUsuario">
-                  <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
-                    {{usuario.nombreUsuario}}
-                  </mat-option>
-                </mat-select>
-                <mat-error *ngIf="txUsuario.invalid">{{getErrorMessage(txUsuario)}}</mat-error>
-              </mat-form-field>
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Usuario</mat-label>
+              <mat-select formControlName="txUsuario" >
+                <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
+                  {{usuario.nombreUsuario}}
+                </mat-option>
+              </mat-select>
+              <mat-error *ngIf="txUsuario.invalid">{{getErrorMessage(txUsuario)}}</mat-error>
+            </mat-form-field>
           </div>
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Nombre</mat-label>
-              <input matInput [formControl]="txNombre" placeholder="Nombre" readonly>
+              <input matInput formControlName="txNombre" placeholder="Nombre" readonly>
             </mat-form-field>
           </div>
 
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Apellido</mat-label>
-              <input matInput [formControl]="txApellido" placeholder="Apellido" readonly>
+              <input matInput formControlName="txApellido" placeholder="Apellido" readonly>
             </mat-form-field>
           </div>
+        </div>
 
-          </div>
-        <!-- Segunda línea: Tipo Producto, Marca, Proveedor -->
+        <!-- Segunda línea: Fecha de Creación y Balance -->
         <div class="row pt-4">
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Creada</mat-label>
-              <textarea matInput formControlName="txCreada" rows="3"></textarea>
-              <mat-error *ngIf="txCreada.invalid">{{getErrorMessage(txCreada)}}</mat-error>
+              <input matInput [matDatepicker]="picker" formControlName="txCreada" placeholder="Creada">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
             </mat-form-field>
           </div>
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Balance</mat-label>
-              <mat-select formControlName="txBalance">
-              </mat-select>
+              <input matInput formControlName="txBalance" type="number" placeholder="Balance">
               <mat-error *ngIf="txBalance.invalid">{{getErrorMessage(txBalance)}}</mat-error>
             </mat-form-field>
           </div>
-      </form>
-    </div>
+        </div>
+      </form> <!-- Cierre correcto del formulario -->
 
-    <mat-divider></mat-divider>
-    <br>
-    <div class="row text-right">
+      <mat-divider></mat-divider>
+      <br>
 
-      <!-- Btn de cancelar, registrar y modificar -->
+      <!-- Botones de acción: Cancelar, Registrar, Modificar -->
       <div class="row text-right">
         <div class="col d-flex justify-content-end">
           <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
             {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
           </button>
-          <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProducto()" id="btnBuscar">Registrar</button>
-          <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">Modificar</button>
+          <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarCuentaCorriente()" id="btnBuscar">Registrar</button>
+          <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarCuentaCorriente()" id="btnBuscar2">Modificar</button>
         </div>
       </div>
-
     </div>
-    <br>
   </div>
 </div>
+

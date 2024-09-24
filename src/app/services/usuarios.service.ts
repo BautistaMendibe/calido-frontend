@@ -63,7 +63,25 @@ export class UsuariosService {
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-asistencia/${idAsistencia}`);
   }
 
+  // CUENTAS CORRIENTES
+
   public consultarCuentasCorrientesxUsuario(filtro: FiltrosCuentasCorrientes): Observable<CuentaCorriente[]>{
     return this.http.post<CuentaCorriente[]>(`${this.urlBackend}/${this.controllerName}/consultar-usuarios-cuenta-corriente`, filtro);
+  }
+
+  public registrarCuentaCorriente(cuentaCorriente: CuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-cuenta-corriente`, cuentaCorriente);
+  }
+
+  public modificarCuentaCorriente(cuentaCorriente: CuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-cuenta-corriente`, cuentaCorriente);
+  }
+
+  public consultarAllUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(`${this.urlBackend}/${this.controllerName}/consultar-all-usuarios`);
+  }
+
+  public eliminarCuentaCorriente(idCuentaCorriente: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-cuenta-corriente/${idCuentaCorriente}`);
   }
 }

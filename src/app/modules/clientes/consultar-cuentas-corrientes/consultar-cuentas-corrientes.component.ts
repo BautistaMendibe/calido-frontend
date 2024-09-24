@@ -14,6 +14,7 @@ import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 import {ProductosService} from "../../../services/productos.service";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {RegistrarCuentaCorrienteComponent} from "../registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 @Component({
   selector: 'app-consultar-cuentas-corrientes',
   templateUrl: './consultar-cuentas-corrientes.component.html',
@@ -25,7 +26,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   public tableDataSource: MatTableDataSource<CuentaCorriente> = new MatTableDataSource<CuentaCorriente>([]);
   public form: FormGroup;
   public cuentas: CuentaCorriente[] = [];
-  public columnas: string[] = ['idCuenta','nombre', 'apellido','creada','balance'];
+  public columnas: string[] = ['idCuenta','nombre', 'apellido','creada','balance','acciones'];
   private filtros: FiltrosCuentasCorrientes;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -71,6 +72,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
         next: (cuentas) => {
           this.cuentas = cuentas;
           this.tableDataSource.data= cuentas;
+          console.log(cuentas);
         },
         error: (err) => {
           console.error('Error al consultar cuentas corrientes:', err);
@@ -85,7 +87,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   get txDesdeMonto(): FormControl {
     return this.form.get('txDesdeMonto') as FormControl;
   }
- /*
+
   public registrarNuevaCuenta() {
     this.dialog.open(
       RegistrarCuentaCorrienteComponent,
@@ -102,7 +104,42 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
     );
   }
 
-  public eliminarProducto(idProducto: number) {
+  public verCuentaCorriente(cuentaCorriente: CuentaCorriente, editar: boolean) {
+    this.dialog.open(
+      RegistrarCuentaCorrienteComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          cuentaCorriente: cuentaCorriente,
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar,
+          editar: editar
+        }
+      }
+    );
+  }
+
+  public eliminarCuentaCorriente(idCuentaCorriente: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar la Cuenta Corriente?', 'Eliminar Cuenta Corriente')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuariosService.eliminarCuentaCorriente(idCuentaCorriente).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Cuenta Corriente eliminada con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar Cuenta Corriente');
+            }
+          });
+        }
+      });
+  }
+
+  /*public eliminarProducto(idProducto: number) {
     this.notificationDialogService.confirmation('¿Desea eliminar el producto?', 'Eliminar producto')
       .afterClosed()
       .subscribe((value) => {
@@ -117,12 +154,6 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
           });
         }
       });
-  }
-
-  private buscarTiposProductos() {
-    this.productosService.buscarTiposProductos().subscribe((tipoProductos) => {
-      this.listaTipoProducto = tipoProductos;
-    });
   }
   */
 
