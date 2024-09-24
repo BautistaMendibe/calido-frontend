@@ -6,7 +6,7 @@ export class Producto {
   id: number;
   nombre: string;
   costo: number;
-  costoImpuesto: number;
+  precioSinIVA: number;
   tipoProducto: TipoProducto;
   proveedor: Proveedor;
   marca: Marca;
@@ -21,7 +21,7 @@ export class Producto {
     id?: number,
     nombre?: string,
     costo?: number,
-    costoImpuesto?: number,
+    precioSinIVA?: number,
     tipoProducto?: TipoProducto,
     proveedor?: Proveedor,
     seleccionadoParaVenta?: boolean,
@@ -35,7 +35,7 @@ export class Producto {
     this.id = id!;
     this.nombre = nombre!;
     this.costo = costo!;
-    this.costoImpuesto = costoImpuesto!;
+    this.precioSinIVA = precioSinIVA!;
     this.tipoProducto = tipoProducto!;
     this.proveedor = proveedor!;
     this.marca = marca!;

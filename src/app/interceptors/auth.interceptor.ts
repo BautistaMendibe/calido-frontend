@@ -3,12 +3,13 @@ import { HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import {AuthService} from "../services/auth.servicie";
+import {AuthService} from "../services/auth.service";
+import {SnackBarService} from "../services/snack-bar.service";
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(private authService: AuthService, private router: Router, private notificacionService: SnackBarService) {}
 
   /**
    * Intercepta las peticiones HTTP y añade el token de autenticación
@@ -34,12 +35,16 @@ export class AuthInterceptor implements HttpInterceptor {
       }
     }
 
-    // En caso de que el backend le envíe un ERROR 401 (Unauthorized) hace logout() y redirige al login.
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
+          // No está autentificado o su token expiró, desloguear y llevar a login
           this.authService.logOut();
           this.router.navigate(['/login']);
+        } else if (error.status === 403) {
+          // No tiene permiso de entrar por rol insuficiente, llevar a home
+          this.router.navigate(['/']);
+          this.notificacionService.openSnackBarError('No tienes permisos para acceder a esta página.')
         }
         return throwError(() => new Error(error.message));
       })

@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import {Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { ConsultarProductosComponent } from "../consultar-productos/consultar-productos.component";
 import { Proveedor } from "../../../models/proveedores.model";
 import { MAT_DIALOG_DATA, MatDialogRef } from "@angular/material/dialog";
@@ -28,6 +28,7 @@ export class RegistrarProductoComponent implements OnInit {
   public productoImg: string | ArrayBuffer | null = null;
   private selectedFile: File | null = null;
   public esConsulta: boolean;
+  public listaPorcentajesGanancia: { value: number, label: string }[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -57,12 +58,22 @@ export class RegistrarProductoComponent implements OnInit {
       this.form.disable();
     }
 
+    this.generarPorcentajes();
     this.buscarTiposProductos();
     this.buscarMarcas();
     this.buscarProveedores();
 
     this.form.get('txCosto')?.valueChanges.subscribe(() => this.calcularCostoFinal());
-    this.form.get('txImpuestos')?.valueChanges.subscribe(() => this.calcularCostoFinal());
+    this.form.get('txMargenGanancia')?.valueChanges.subscribe(() => this.calcularCostoFinal());
+  }
+
+  public generarPorcentajes() {
+    for (let i = 0; i <= 100; i += 5) {
+      this.listaPorcentajesGanancia.push({
+        value: i,
+        label: i === 0 ? 'Ninguno (0%)' : `(${i}%)`
+      });
+    }
   }
 
   private crearFormulario() {
@@ -73,16 +84,16 @@ export class RegistrarProductoComponent implements OnInit {
       txTipoProducto: [this.data.producto?.tipoProducto?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
-      txImpuestos: ['21', [Validators.required]], // Valor por defecto IVA
-      txCostoFinal: [{ value: this.data.producto?.costoImpuesto || '', disabled: true }, [Validators.required]],
+      txMargenGanancia: [10, [Validators.required]], // Margen por defecto: 10%
+      txCostoFinal: [{ disabled: true }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]]
     });
   }
 
   private calcularCostoFinal() {
     const costo = parseFloat(this.txCosto.value) || 0;
-    const impuestos = parseFloat(this.txImpuestos.value) || 0;
-    const costoFinal = costo * (1 + impuestos / 100);
+    const margenGanancia = parseFloat(this.txMargenGanancia.value) || 0;
+    const costoFinal = costo * (1 + margenGanancia / 100);
     this.txCostoFinal.setValue(costoFinal.toFixed(2), { emitEvent: false });
   }
 
@@ -137,7 +148,7 @@ export class RegistrarProductoComponent implements OnInit {
       id: id || undefined,
       nombre: this.txNombre.value,
       costo: parseFloat(this.txCosto.value) || 0,
-      costoImpuesto: parseFloat(this.txCostoFinal.value) || 0,
+      precioSinIVA: parseFloat(this.txCostoFinal.value) || 0,
       descripcion: this.txDescripcion.value,
       codigoBarra: this.txCodigoBarras.value,
       imgProducto: this.productoImg as string,
@@ -260,10 +271,6 @@ export class RegistrarProductoComponent implements OnInit {
     return this.form.get('txProveedor') as FormControl;
   }
 
-  get txImpuestos(): FormControl {
-    return this.form.get('txImpuestos') as FormControl;
-  }
-
   get txCostoFinal(): FormControl {
     return this.form.get('txCostoFinal') as FormControl;
   }
@@ -274,5 +281,9 @@ export class RegistrarProductoComponent implements OnInit {
 
   get txCodigoBarras(): FormControl {
     return this.form.get('txCodigoBarras') as FormControl;
+  }
+
+  get txMargenGanancia(): FormControl {
+    return this.form.get('txMargenGanancia') as FormControl;
   }
 }

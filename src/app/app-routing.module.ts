@@ -15,6 +15,7 @@ import {
 import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asistencia/consultar-asistencia.component";
 import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/marcar-asistencia.component";
 import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
+import {ConsultarPedidosComponent} from "./modules/pedidos/consultar-pedidos/consultar-pedidos.component";
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {
   RegistrarCuentaCorrienteComponent
@@ -35,8 +36,8 @@ const routes: Routes = [
   {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
   {path:'marcar-asistencia', component: MarcarAsistenciaComponent},
-  {path:'registrar-venta', component: RegistrarVentaComponent}
-
+  {path:'registrar-venta', component: RegistrarVentaComponent},
+  {path:'consultar-pedidos', component: ConsultarPedidosComponent},
 ];
 
 @NgModule({

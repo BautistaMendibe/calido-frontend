@@ -9,6 +9,7 @@ import {Asistencia} from "../models/asistencia";
 import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando";
 import {FiltrosCuentasCorrientes} from "../models/comandos/FiltrosCuentasCorrientes";
 import {CuentaCorriente} from "../models/cuentaCorriente.model";
+import {Rol} from "../models/Rol";
 
 @Injectable({
   providedIn: 'root'
@@ -63,7 +64,13 @@ export class UsuariosService {
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-asistencia/${idAsistencia}`);
   }
 
-  // CUENTAS CORRIENTES
+  public obtenerRoles(): Observable<Rol[]>{
+    return this.http.get<Rol[]>(`${this.urlBackend}/${this.controllerName}/obtener-roles`);
+  }
+
+  public obtenerRolesUsuario(idUsuario: number): Observable<Rol[]>{
+    return this.http.get<Rol[]>(`${this.urlBackend}/${this.controllerName}/obtener-roles-usuario/${idUsuario}`);
+  }
 
   public consultarCuentasCorrientesxUsuario(filtro: FiltrosCuentasCorrientes): Observable<CuentaCorriente[]>{
     return this.http.post<CuentaCorriente[]>(`${this.urlBackend}/${this.controllerName}/consultar-usuarios-cuenta-corriente`, filtro);

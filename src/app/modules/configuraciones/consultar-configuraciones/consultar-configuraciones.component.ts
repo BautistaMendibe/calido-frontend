@@ -4,6 +4,7 @@ import { SnackBarService } from "../../../services/snack-bar.service";
 import {ConfiguracionesService} from "../../../services/configuraciones.service";
 import {Configuracion} from "../../../models/configuracion.model";
 import {NotificationService} from "../../../services/notificacion.service";
+import {Usuario} from "../../../models/usuario.model";
 
 @Component({
   selector: 'app-consultar-configuraciones',
@@ -40,7 +41,11 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       idUsuario: [{ value: '', disabled: true }],
       nombreUsuario: [{ value: '', disabled: true }],
       razonSocial: [''],
-      domicilioComercial: [''],
+      calle: [''],
+      numero: [''],
+      ciudad: [''],
+      provincia: [''],
+      codigoPostal: [''],
       cuit: [''],
       fechaInicioActividades: [''],
       condicionIva: [''],
@@ -61,7 +66,11 @@ export class ConsultarConfiguracionesComponent implements OnInit {
           idUsuario: configuracion.idUsuario,
           nombreUsuario: configuracion.usuario.nombreUsuario,
           razonSocial: configuracion.razonSocial,
-          domicilioComercial: configuracion.domicilioComercial,
+          calle: configuracion.calle,
+          numero: configuracion.numero,
+          ciudad: configuracion.ciudad,
+          provincia: configuracion.provincia,
+          codigoPostal: configuracion.codigoPostal,
           cuit: configuracion.cuit,
           fechaInicioActividades: configuracion.fechaInicioActividades,
           condicionIva: configuracion.condicionIva,
@@ -144,13 +153,18 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       this.configuracion.id,
       this.configuracion.idUsuario,
       this.razonSocial.value,
-      this.domicilioComercial.value,
       this.cuit.value,
       this.fechaInicioActividades.value,
       this.condicionIva.value,
       logoBase64,
       this.contrasenaInstagram.value,
-      this.usuarioInstagram.value
+      this.usuarioInstagram.value,
+      this.configuracion.usuario = new Usuario(),
+      this.calle.value,
+      this.numero.value,
+      this.ciudad.value,
+      this.provincia.value,
+      this.codigoPostal.value,
     );
   }
 
@@ -218,8 +232,24 @@ export class ConsultarConfiguracionesComponent implements OnInit {
     return this.form.get('razonSocial') as FormControl;
   }
 
-  get domicilioComercial(): FormControl {
-    return this.form.get('domicilioComercial') as FormControl;
+  get calle(): FormControl {
+    return this.form.get('calle') as FormControl;
+  }
+
+  get numero(): FormControl {
+    return this.form.get('numero') as FormControl;
+  }
+
+  get ciudad(): FormControl {
+    return this.form.get('ciudad') as FormControl;
+  }
+
+  get provincia(): FormControl {
+    return this.form.get('provincia') as FormControl;
+  }
+
+  get codigoPostal(): FormControl {
+    return this.form.get('codigoPostal') as FormControl;
   }
 
   get cuit(): FormControl {

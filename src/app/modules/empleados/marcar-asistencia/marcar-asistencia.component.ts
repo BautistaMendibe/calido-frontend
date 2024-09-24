@@ -2,7 +2,7 @@ import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {AuthService} from "../../../services/auth.servicie";
+import {AuthService} from "../../../services/auth.service";
 import {Router} from "@angular/router";
 import {NotificationService} from "../../../services/notificacion.service";
 import {UsuariosService} from "../../../services/usuarios.service";
