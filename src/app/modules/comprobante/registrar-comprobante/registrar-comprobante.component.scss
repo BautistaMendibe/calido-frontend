@@ -1,0 +1,64 @@
+.pedido-total {
+  font-size: 18px;
+  color: grey;
+}
+
+.pedido-fecha {
+  font-size: 18px;
+  color: grey;
+}
+
+.pedido-id {
+  font-size: 18px;
+  color: grey;
+}
+
+.pedido-card {
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+  position: relative;
+  padding: 10px;
+}
+
+.selected-pedido-card {
+  border: 2px solid #e15b35;
+}
+
+.dialog-container {
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.custom-spacing {
+  margin-right: 25px;
+}
+
+.img-thumbnail {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  margin: 5px 0;
+}
+
+.symbol-cost {
+  font-size: 24px;
+  color: #e15b35;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  line-height: 2.2;
+}
+
+.quantity-input {
+  width: 40px;
+}
+
+.disabled-table {
+  pointer-events: none;
+  opacity: 0.6;
+}
+
+

@@ -121,7 +121,7 @@
 
             <!-- Nombre del empleado -->
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>Empleado</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" class="nombre-cell">
                 <mat-icon class="person-icon">person</mat-icon>{{ nombreApellido }}
               </mat-cell>
@@ -129,7 +129,7 @@
 
             <!-- Fecha -->
             <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" class="fecha-cell">
                 {{ asistencia.fecha | date: 'dd/MM/yyyy' }}
               </mat-cell>
@@ -137,7 +137,7 @@
 
             <!-- Hora de entrada -->
             <ng-container matColumnDef="horaEntrada">
-              <mat-header-cell *matHeaderCellDef>Hora de entrada</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" class="hora-entrada-cell">
                 {{ asistencia.horaEntrada }}
               </mat-cell>
@@ -145,7 +145,7 @@
 
             <!-- Hora de salida -->
             <ng-container matColumnDef="horaSalida">
-              <mat-header-cell *matHeaderCellDef>Hora de salida</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" class="hora-salida-cell">
                 {{ asistencia.horaSalida }}
               </mat-cell>
@@ -153,7 +153,7 @@
 
             <!-- Comentario -->
             <ng-container matColumnDef="comentario">
-              <mat-header-cell *matHeaderCellDef>Comentario</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" class="comentario-cell">
                 {{ asistencia.comentario }}
               </mat-cell>

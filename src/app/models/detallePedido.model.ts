@@ -1,6 +1,3 @@
-import {Producto} from "./producto.model";
-import {Pedido} from "./pedido.model";
-
 export class DetallePedido {
   id: number;
   cantidad: number;

@@ -16,7 +16,7 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Promoción</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
         </div>
@@ -55,12 +55,12 @@
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
-              <mat-cell *matCellDef="let promocion" data-label="Nombre">{{ promocion.nombre }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>PROMOCIÓN</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Promoción">{{ promocion.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="porcentajeDescuento">
-              <mat-header-cell *matHeaderCellDef>PORCENTAJE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>% DESCUENTO</mat-header-cell>
               <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
             </ng-container>
 

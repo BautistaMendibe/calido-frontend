@@ -17,6 +17,13 @@ import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/m
 import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
 import {ConsultarPedidosComponent} from "./modules/pedidos/consultar-pedidos/consultar-pedidos.component";
 import {ConsultarClientesComponent} from "./modules/clientes/consultar-clientes/consultar-clientes.component";
+import {
+  ConsultarComprobanteComponent
+} from "./modules/comprobante/consultar-comprobante/consultar-comprobante.component";
+import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
+import {
+  RegistrarCuentaCorrienteComponent
+} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -24,6 +31,8 @@ const routes: Routes = [
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
   {path:'consultar-clientes', component: ConsultarClientesComponent},
   {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
+  {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
+  {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
@@ -34,6 +43,7 @@ const routes: Routes = [
   {path:'marcar-asistencia', component: MarcarAsistenciaComponent},
   {path:'registrar-venta', component: RegistrarVentaComponent},
   {path:'consultar-pedidos', component: ConsultarPedidosComponent},
+  {path:'consultar-comprobante', component: ConsultarComprobanteComponent},
 ];
 
 @NgModule({
