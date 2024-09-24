@@ -45,6 +45,8 @@ import {MatSortModule} from "@angular/material/sort";
 import { RegistrarComprobanteComponent } from './modules/comprobante/registrar-comprobante/registrar-comprobante.component';
 import { ConsultarComprobanteComponent } from './modules/comprobante/consultar-comprobante/consultar-comprobante.component';
 
+import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
+import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -75,7 +77,9 @@ registerLocaleData(localeEs, 'es');
     RegistrarPedidoComponent,
     ConsultarPedidosComponent,
     RegistrarComprobanteComponent,
-    ConsultarComprobanteComponent
+    ConsultarComprobanteComponent,
+    ConsultarCuentasCorrientesComponent,
+    RegistrarCuentaCorrienteComponent
   ],
   imports: [
     BrowserModule,

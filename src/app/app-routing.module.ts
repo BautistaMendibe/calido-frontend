@@ -19,12 +19,18 @@ import {ConsultarPedidosComponent} from "./modules/pedidos/consultar-pedidos/con
 import {
   ConsultarComprobanteComponent
 } from "./modules/comprobante/consultar-comprobante/consultar-comprobante.component";
+import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
+import {
+  RegistrarCuentaCorrienteComponent
+} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
   {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
+  {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
+  {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
