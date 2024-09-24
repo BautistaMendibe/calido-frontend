@@ -108,7 +108,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   }
 
   private buscarUsuarios() {
-    this.usuariosService.consultarUsuarios(new FiltrosEmpleados()).subscribe((usuarios) => {
+    this.usuariosService.consultarEmpleados(new FiltrosEmpleados()).subscribe((usuarios) => {
       this.listaUsuarios = usuarios;
     });
   }
