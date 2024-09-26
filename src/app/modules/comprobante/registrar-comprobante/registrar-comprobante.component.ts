@@ -128,7 +128,8 @@ export class RegistrarComprobanteComponent implements OnInit {
     filtroProveedor.proveedor = this.txProveedor.value;
 
     this.pedidosService.consultarPedidos(filtroProveedor).subscribe((pedidos) => {
-      this.listaPedidosPorProveedor = pedidos;
+      // Filtrar los pedidos que estén en estado 1 (Pendiente) o 3 (Recibido con diferencias)
+      this.listaPedidosPorProveedor = pedidos.filter(pedido => pedido.idEstadoPedido === 1 || pedido.idEstadoPedido === 3);
     });
   }
 
@@ -142,20 +143,24 @@ export class RegistrarComprobanteComponent implements OnInit {
     // Recorrer los detalles del pedido y buscar los productos
     if (pedido) {
       pedido.detallePedido.forEach((detalle: DetallePedido) => {
-        // Encuentra el producto correspondiente al idproducto
-        const producto = this.productos.find(producto => producto.id === detalle.idproducto);
 
-        if (producto) {
-          producto.cantidadSeleccionada = detalle.cantidad;
+        // Solamente mostrar los detalle pedido que sean diferentes a 2 (EstadoPedido: Sin Diferencias)
+        if (detalle.idestadodetallepedido !== 2) {
+          // Encuentra el producto correspondiente al idproducto
+          const producto = this.productos.find(producto => producto.id === detalle.idproducto);
 
-          // Crea una copia del producto y actualiza la cantidadSeleccionada
-          const productoSeleccionado = {
-            ...producto,
-            cantidadSeleccionada: detalle.cantidad
-          };
+          if (producto) {
+            producto.cantidadSeleccionada = detalle.cantidad;
 
-          // Agrega el producto modificado a la lista de productos seleccionados
-          this.productosSeleccionados.push(productoSeleccionado);
+            // Crea una copia del producto y actualiza la cantidadSeleccionada
+            const productoSeleccionado = {
+              ...producto,
+              cantidadSeleccionada: detalle.cantidad
+            };
+
+            // Agrega el producto modificado a la lista de productos seleccionados
+            this.productosSeleccionados.push(productoSeleccionado);
+          }
         }
       });
 
