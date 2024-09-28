@@ -156,7 +156,9 @@ export class ConsultarComprobanteComponent implements OnInit {
   }
 
   public eliminarComprobante(idComprobante: number) {
-    this.notificationDialogService.confirmation('¿Desea eliminar el comprobante?', 'Eliminar Comprobante') //Está seguro?
+    this.notificationDialogService.confirmation(`¿Desea eliminar el comprobante?
+    ¡El inventario será modificado!.
+    Esta acción no es reversible.`, 'Eliminar Comprobante') //Está seguro?
       .afterClosed()
       .subscribe((value) => {
         if (value) {

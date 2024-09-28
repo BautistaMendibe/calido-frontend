@@ -21,6 +21,7 @@ import {ConsultarComprobanteComponent} from "../consultar-comprobante/consultar-
 import {DetalleComprobante} from "../../../models/detalleComprobante.model";
 import {FiltrosPedidos} from "../../../models/comandos/FiltrosPedidos.comando";
 import {FiltrosComprobantes} from "../../../models/comandos/FiltrosComprobantes.comando";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-registrar-comprobante',
@@ -59,6 +60,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     private usuariosService: UsuariosService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarComprobanteComponent
       comprobante: Comprobante;
@@ -265,15 +267,24 @@ export class RegistrarComprobanteComponent implements OnInit {
 
       comprobante.detalleComprobante = detallesComprobante;
 
-      this.comprobantesService.registrarComprobante(comprobante).subscribe((respuesta) => {
-        if (respuesta.mensaje === 'OK') {
-          this.notificacionService.openSnackBarSuccess('El comprobante se registró con éxito');
-          this.dialogRef.close();
-          this.referencia.buscar();
-        } else {
-          this.notificacionService.openSnackBarError('Error al registrar un comprobante, inténtelo nuevamente');
-        }
-      });
+      this.notificationDialogService.confirmation(`¿Desea registrar el comprobante?
+        ¡El inventario será modificado!.
+        Esta acción no es reversible.`, 'Registrar Comprobante') // Está seguro?
+        .afterClosed()
+        .subscribe((value) => {
+            if (value) {
+              this.comprobantesService.registrarComprobante(comprobante).subscribe((res) => {
+                if (res.mensaje == 'OK') {
+                  this.notificacionService.openSnackBarSuccess('Comprobante registrado con éxito');
+                  this.dialogRef.close();
+                  this.referencia.buscar();
+                } else {
+                  this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al registrar comprobante');
+                }
+              });
+            }
+          }
+        );
     }
   }
 
@@ -306,15 +317,24 @@ export class RegistrarComprobanteComponent implements OnInit {
 
       comprobante.detalleComprobante = detallesComprobante;
 
-      this.comprobantesService.modificarComprobante(comprobante).subscribe((res) => {
-        if (res.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('Comprobante modificado con éxito');
-          this.dialogRef.close();
-          this.referencia.buscar();
-        } else {
-          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar comprobante');
+      this.notificationDialogService.confirmation(`¿Desea modificar el comprobante?
+        ¡El inventario será modificado!.
+        Esta acción no es reversible.`, 'Modificar Comprobante') // Está seguro?
+        .afterClosed()
+        .subscribe((value) => {
+          if (value) {
+            this.comprobantesService.modificarComprobante(comprobante).subscribe((res) => {
+              if (res.mensaje == 'OK') {
+                this.notificacionService.openSnackBarSuccess('Comprobante modificado con éxito');
+                this.dialogRef.close();
+                this.referencia.buscar();
+              } else {
+                this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar comprobante');
+              }
+            });
+          }
         }
-      });
+      );
     }
   }
 
