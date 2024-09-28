@@ -48,6 +48,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public numeroOrdenSeleccionada: number | null = null;
   public ordenSeleccionada: boolean = false;
   public formDesactivado: boolean;
+  public tablaProductosDesactivada: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
 
@@ -84,6 +85,13 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.buscarComprobantes();
     this.buscarTiposComprobantes();
     this.filtrosSuscripciones();
+
+    if (this.data.editar) {
+      this.tablaProductosDesactivada = true;
+      this.txTipoComprobante.disable();
+      this.txProveedor.disable();
+      this.txBuscar.disable();
+    }
   }
 
   private crearFormulario() {
@@ -233,6 +241,10 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.form.enable();
     this.txCantidadProductos.disable();
     this.txTotal.disable();
+    this.tablaProductosDesactivada = true;
+    this.txTipoComprobante.disable();
+    this.txProveedor.disable();
+    this.txBuscar.disable();
     this.data.formDesactivado = false;
     this.formDesactivado = false;
     this.data.editar = true;
@@ -268,7 +280,7 @@ export class RegistrarComprobanteComponent implements OnInit {
       comprobante.detalleComprobante = detallesComprobante;
 
       this.notificationDialogService.confirmation(`¿Desea registrar el comprobante?
-        ¡El inventario será modificado!.
+        ¡El inventario será modificado!
         Esta acción no es reversible.`, 'Registrar Comprobante') // Está seguro?
         .afterClosed()
         .subscribe((value) => {
@@ -317,24 +329,15 @@ export class RegistrarComprobanteComponent implements OnInit {
 
       comprobante.detalleComprobante = detallesComprobante;
 
-      this.notificationDialogService.confirmation(`¿Desea modificar el comprobante?
-        ¡El inventario será modificado!.
-        Esta acción no es reversible.`, 'Modificar Comprobante') // Está seguro?
-        .afterClosed()
-        .subscribe((value) => {
-          if (value) {
-            this.comprobantesService.modificarComprobante(comprobante).subscribe((res) => {
-              if (res.mensaje == 'OK') {
-                this.notificacionService.openSnackBarSuccess('Comprobante modificado con éxito');
-                this.dialogRef.close();
-                this.referencia.buscar();
-              } else {
-                this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar comprobante');
-              }
-            });
-          }
+      this.comprobantesService.modificarComprobante(comprobante).subscribe((res) => {
+        if (res.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('Comprobante modificado con éxito');
+          this.dialogRef.close();
+          this.referencia.buscar();
+        } else {
+          this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar comprobante');
         }
-      );
+      });
     }
   }
 

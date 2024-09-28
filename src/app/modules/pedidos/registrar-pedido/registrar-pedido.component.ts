@@ -41,6 +41,7 @@ export class RegistrarPedidoComponent implements OnInit {
   public subTotal: number = 0;
   public esConsulta: boolean;
   public formDesactivado: boolean;
+  public listaProductosDeshabilitada: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productos);
 
@@ -76,6 +77,11 @@ export class RegistrarPedidoComponent implements OnInit {
     this.buscarTransportes();
     this.buscarEstadosPedido();
     this.filtrosSuscripciones();
+
+    if (this.data.editar && (this.pedido.idEstadoPedido === 2 || this.pedido.idEstadoPedido === 3)) {
+      this.listaProductosDeshabilitada = true;
+      this.txBuscar.disable();
+    }
   }
 
   public generarDescuentos() {
@@ -199,6 +205,11 @@ export class RegistrarPedidoComponent implements OnInit {
     this.data.formDesactivado = false;
     this.formDesactivado = false;
     this.data.editar = true;
+
+    if (this.pedido.idEstadoPedido === 2 || this.pedido.idEstadoPedido === 3) {
+      this.listaProductosDeshabilitada = true;
+      this.txBuscar.disable();
+    }
   }
 
   public registrarNuevoPedido() {
