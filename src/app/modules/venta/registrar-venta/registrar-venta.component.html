@@ -113,10 +113,10 @@
           </div>
           <div class="col">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Numeración</mat-label>
-              <mat-select [formControl]="txNumeracion">
-                <mat-option>
-
+              <mat-label>Tipo de Facturación</mat-label>
+              <mat-select [formControl]="txTipoFacturacion">
+                <mat-option *ngFor="let tp of this.tiposDeFacturacion" [value]="tp.id">
+                  {{ tp.nombre }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

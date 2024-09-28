@@ -14,6 +14,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {TipoFactura} from "../../../models/tipoFactura.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -31,6 +32,7 @@ export class RegistrarVentaComponent implements OnInit{
   public clientes: Usuario[] = [];
   public formasDePago: FormaDePago[] = [];
   public registrandoVenta: boolean = false;
+  public tiposDeFacturacion: TipoFactura[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -61,7 +63,7 @@ export class RegistrarVentaComponent implements OnInit{
   private crearFormulario() {
     this.form = this.fb.group({
       txFormaDePago: ['', []],
-      txNumeracion: ['', []],
+      txTipoFacturacion: ['', []],
       txCliente: ['', []],
     });
   }
@@ -69,6 +71,7 @@ export class RegistrarVentaComponent implements OnInit{
   private buscarDataCombos() {
     this.buscarUsuariosClientes();
     this.buscarFormasDePago();
+    this.buscarTiposFactura();
   }
 
   private buscarUsuariosClientes() {
@@ -82,6 +85,13 @@ export class RegistrarVentaComponent implements OnInit{
     this.ventasService.buscarFormasDePago().subscribe((formasDePago) => {
       this.formasDePago = formasDePago;
       this.txFormaDePago.setValue(this.formasDePago[0].id);
+    });
+  }
+
+  private buscarTiposFactura() {
+    this.ventasService.buscarTiposFactura().subscribe((tiposFacturacion) => {
+      this.tiposDeFacturacion = tiposFacturacion;
+      this.txTipoFacturacion.setValue(tiposFacturacion[1].id);
     });
   }
 
@@ -206,7 +216,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.subTotal = 0;
     this.txFormaDePago.setValue(this.formasDePago[0]);
     this.txCliente.setValue(null);
-    this.txNumeracion.setValue(null);
+    this.txTipoFacturacion.setValue(null);
   }
 
   public registrarProducto() {
@@ -253,8 +263,8 @@ export class RegistrarVentaComponent implements OnInit{
     return this.form.get('txFormaDePago') as FormControl;
   }
 
-  get txNumeracion(): FormControl {
-    return this.form.get('txNumeracion') as FormControl;
+  get txTipoFacturacion(): FormControl {
+    return this.form.get('txTipoFacturacion') as FormControl;
   }
 
   get txCliente(): FormControl {

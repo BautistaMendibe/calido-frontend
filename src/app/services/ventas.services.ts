@@ -7,6 +7,7 @@ import {Usuario} from "../models/usuario.model";
 import {FormaDePago} from "../models/formaDePago.model";
 import {Venta} from "../models/venta.model";
 import {CondicionIva} from "../models/CondicionIva.model";
+import {TipoFactura} from "../models/tipoFactura.model";
 
 @Injectable({
   providedIn: 'root'
@@ -33,4 +34,7 @@ export class VentasService {
     return this.http.get<CondicionIva[]>(`${this.urlBackend}/${this.controllerName}/obtener-condiciones-iva`);
   }
 
+  public buscarTiposFactura(): Observable<TipoFactura[]>{
+    return this.http.get<TipoFactura[]>(`${this.urlBackend}/${this.controllerName}/obtener-tipos-facturacion`);
+  }
 }
