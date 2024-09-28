@@ -177,7 +177,10 @@ export class RegistrarClientesComponent {
 
   private buscarCategorias() {
     this.ventaServive.buscarCategorias().subscribe((categorias) => {
-      this.condicionesIva = categorias;
+      if (categorias.length > 0) {
+        this.condicionesIva = categorias;
+        this.txCondicionIva.setValue(categorias[0].id);
+      }
     });
   }
 
