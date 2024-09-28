@@ -35,6 +35,7 @@ export class RegistrarClientesComponent {
 
   public esConsulta: boolean;
   public formDesactivado: boolean;
+  public isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -238,14 +239,21 @@ export class RegistrarClientesComponent {
       cliente.tipoUsuario.id = 2;
       cliente.idCondicionIva = this.txCondicionIva.value;
 
+      this.isLoading = true;
+      this.form.disable();
+
 
       this.usuariosService.registrarUsuario(cliente).subscribe((respuesta: SpResult) => {
         if (respuesta.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('El cliente se registró con éxito');
           cliente.id = respuesta.id!;
+          this.isLoading = false;
+          this.form.enable();
           this.dialogRef.close(cliente);
         } else {
           this.notificacionService.openSnackBarError('Error al registrar el cliente, inténtelo nuevamente');
+          this.isLoading = false;
+          this.form.enable();
         }
       })
 
