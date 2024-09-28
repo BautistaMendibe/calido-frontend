@@ -17,7 +17,7 @@ export class Usuario {
   contrasena: string;
   roles: Rol[];
   mail: string;
-  condicionIva: number;
+  idCondicionIva: number;
 
   constructor(
     id?: number,
@@ -34,7 +34,7 @@ export class Usuario {
     contrasena?: string,
     roles?: Rol[],
     mail?: string,
-    condicionIva?: number
+    idCondicionIva?: number
   ) {
     this.id = id!;
     this.nombreUsuario = nombreUsuario!;
@@ -50,6 +50,6 @@ export class Usuario {
     this.contrasena = contrasena!;
     this.roles = roles!;
     this.mail = mail!;
-    this.condicionIva = condicionIva!;
+    this.idCondicionIva = idCondicionIva!;
   }
 }

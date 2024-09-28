@@ -179,7 +179,7 @@ export class RegistrarClientesComponent {
     this.ventaServive.buscarCategorias().subscribe((categorias) => {
       if (categorias.length > 0) {
         this.condicionesIva = categorias;
-        this.txCondicionIva.setValue(categorias[0].id);
+        this.txCondicionIva.setValue(categorias[2].id);
       }
     });
   }
@@ -236,7 +236,7 @@ export class RegistrarClientesComponent {
       cliente.mail = this.txMail.value;
       cliente.tipoUsuario = tipoUsuario;
       cliente.tipoUsuario.id = 2;
-      cliente.condicionIva = this.txCondicionIva.value;
+      cliente.idCondicionIva = this.txCondicionIva.value;
 
 
       this.usuariosService.registrarUsuario(cliente).subscribe((respuesta: SpResult) => {
