@@ -6,6 +6,7 @@ import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FormaDePago} from "../models/formaDePago.model";
 import {Venta} from "../models/venta.model";
+import {CondicionIva} from "../models/CondicionIva.model";
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,10 @@ export class VentasService {
 
   public buscarFormasDePago(): Observable<FormaDePago[]>{
     return this.http.get<FormaDePago[]>(`${this.urlBackend}/${this.controllerName}/buscar-formas-de-pago`);
+  }
+
+  public buscarCategorias(): Observable<CondicionIva[]>{
+    return this.http.get<CondicionIva[]>(`${this.urlBackend}/${this.controllerName}/obtener-condiciones-iva`);
   }
 
 }

@@ -11,6 +11,8 @@ import {firstValueFrom} from "rxjs";
 import {Domicilio} from "../../../models/domicilio.model";
 import {TipoUsuario} from "../../../models/tipoUsuario.model";
 import {SpResult} from "../../../models/resultadoSp.model";
+import {CondicionIva} from "../../../models/CondicionIva.model";
+import {VentasService} from "../../../services/ventas.services";
 
 @Component({
   selector: 'app-registrar-clientes',
@@ -29,6 +31,7 @@ export class RegistrarClientesComponent {
   public listaLocalidades: Localidad[] = [];
   public localidadesFiltradas: Localidad[] = [];
   public usuario: Usuario;
+  public condicionesIva: CondicionIva[] = [];
 
   public esConsulta: boolean;
   public formDesactivado: boolean;
@@ -39,6 +42,7 @@ export class RegistrarClientesComponent {
     private domicilioService: DomicilioService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private ventaServive: VentasService,
     @Inject(MAT_DIALOG_DATA) public data: {
       esConsulta: boolean;
       formDesactivado: boolean;
@@ -57,6 +61,7 @@ export class RegistrarClientesComponent {
   ngOnInit() {
     this.crearFormulario();
     this.buscarProvincias();
+    this.buscarCategorias();
 
     if (this.esConsulta && this.usuario) {
       this.rellenarFormularioDataUsuario();
@@ -68,6 +73,7 @@ export class RegistrarClientesComponent {
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
       txMail: ['', [Validators.required]],
+      txCondicionIva: ['', [Validators.required]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
       txCodigoPostal: ['', []],
       txDNI: ['', [Validators.maxLength(8)]],
@@ -169,6 +175,12 @@ export class RegistrarClientesComponent {
     this.txNumero.enable();
   }
 
+  private buscarCategorias() {
+    this.ventaServive.buscarCategorias().subscribe((categorias) => {
+      this.condicionesIva = categorias;
+    });
+  }
+
   private buscarProvincias(){
     this.domicilioService.obtenerProvincias().subscribe((provincias) => {
       this.listaProvincias = provincias;
@@ -221,6 +233,7 @@ export class RegistrarClientesComponent {
       cliente.mail = this.txMail.value;
       cliente.tipoUsuario = tipoUsuario;
       cliente.tipoUsuario.id = 2;
+      cliente.condicionIva = this.txCondicionIva.value;
 
 
       this.usuariosService.registrarUsuario(cliente).subscribe((respuesta: SpResult) => {
@@ -252,6 +265,10 @@ export class RegistrarClientesComponent {
 
   get txMail(): FormControl {
     return this.form.get('txMail') as FormControl;
+  }
+
+  get txCondicionIva(): FormControl {
+    return this.form.get('txCondicionIva') as FormControl;
   }
 
   get txFechaNacimiento(): FormControl {

@@ -230,8 +230,9 @@ export class RegistrarVentaComponent implements OnInit{
       RegistrarClientesComponent,
       {
         width: '75%',
-        height: 'auto',
+        height: '85vh',
         autoFocus: false,
+        panelClass: 'custom-dialog-container',
         data: {
           esConsulta: false,
           formDesactivado: false,

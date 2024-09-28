@@ -39,6 +39,16 @@
     </div>
 
     <div class="row pt-4">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Categoría ante IVA</mat-label>
+          <mat-select [formControl]="txCondicionIva">
+            <mat-option *ngFor="let categoria of condicionesIva" [value]="categoria.id">
+              {{ categoria.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
 
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
@@ -57,7 +67,9 @@
           </mat-select>
         </mat-form-field>
       </div>
+    </div>
 
+    <div class="row pt-4">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de nacimiento</mat-label>
