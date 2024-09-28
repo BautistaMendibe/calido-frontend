@@ -22,10 +22,6 @@ export class VentasService {
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-venta`, venta);
   }
 
-  public buscarUsuariosClientes(): Observable<Usuario[]>{
-    return this.http.get<Usuario[]>(`${this.urlBackend}/${this.controllerName}/buscar-usuarios-clientes`);
-  }
-
   public buscarFormasDePago(): Observable<FormaDePago[]>{
     return this.http.get<FormaDePago[]>(`${this.urlBackend}/${this.controllerName}/buscar-formas-de-pago`);
   }
