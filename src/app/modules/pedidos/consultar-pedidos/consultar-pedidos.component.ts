@@ -82,7 +82,7 @@ export class ConsultarPedidosComponent implements OnInit {
       txProveedor: ['', []],
       txFechaEmisionDesde: ['', []],
       txFechaEmisionHasta: ['', []],
-      txEstado: [1, []],
+      txEstado: ['', []],
     });
   }
 
@@ -199,7 +199,6 @@ export class ConsultarPedidosComponent implements OnInit {
     const descuento = this.formatter.format((-subtotalNoFormat * pedido.descuento / 100));
     const montoEnvio = this.formatter.format(pedido.montoEnvio);
     const fechaPedido = new Date(pedido.fechaEmision).toLocaleDateString('es-AR');
-    const fechaEntrega = new Date(pedido.fechaEntrega).toLocaleDateString('es-AR');
     const calleNumeroProveedor: string = `${pedido.proveedor.domicilio.calle} ${pedido.proveedor.domicilio.numero}`
     const ciudadCpProveedor: string = `${pedido.proveedor.domicilio.localidad.nombre}, ${pedido.proveedor.domicilio.localidad.provincia.nombre}, ${pedido.proveedor.domicilio.localidad.codigoPostal}`
 
@@ -557,6 +556,16 @@ export class ConsultarPedidosComponent implements OnInit {
     this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
       this.configuracion = configuracion;
     });
+  }
+
+  public getWarningMessage(estadoId: number): string {
+    if (estadoId === 1) {
+      return 'Debe asociar un Remito a esta Orden de Compra o cambiar su estado manualmente.';
+    } else if (estadoId === 3) {
+      return 'La orden se recibió con diferencias, debe generar un nuevo remito para esta Orden de Compra con la diferencia o cambiar su estado manualmente.';
+    } else {
+      return '';
+    }
   }
 
   // Regios getters

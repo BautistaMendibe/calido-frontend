@@ -20,6 +20,7 @@ import {Comprobante} from "../../../models/comprobante.model";
 import {ConsultarComprobanteComponent} from "../consultar-comprobante/consultar-comprobante.component";
 import {DetalleComprobante} from "../../../models/detalleComprobante.model";
 import {FiltrosPedidos} from "../../../models/comandos/FiltrosPedidos.comando";
+import {FiltrosComprobantes} from "../../../models/comandos/FiltrosComprobantes.comando";
 
 @Component({
   selector: 'app-registrar-comprobante',
@@ -37,6 +38,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public listaTiposComprobantes: TipoComprobante[] = [];
   public listaUsuarios: Usuario[] = [];
   public listaPedidosPorProveedor: Pedido[] = [];
+  public listaComprobantes: Comprobante[] = [];
 
   public comprobante: Comprobante;
   public cantidadProductos: number = 0;
@@ -46,7 +48,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public ordenSeleccionada: boolean = false;
   public formDesactivado: boolean;
 
-  public dataSourceProductos = new MatTableDataSource(this.productos);
+  public dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
 
   constructor(
     private fb: FormBuilder,
@@ -77,6 +79,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.buscarProductos();
     this.buscarProveedores();
     this.buscarUsuarios();
+    this.buscarComprobantes();
     this.buscarTiposComprobantes();
     this.filtrosSuscripciones();
   }
@@ -84,14 +87,21 @@ export class RegistrarComprobanteComponent implements OnInit {
   private crearFormulario() {
     this.form = this.fb.group({
       txBuscar: ['', []],
+      txNumeroComprobante: ['', [Validators.required, Validators.maxLength(16)]],
       txFechaEmision: [new Date(), [Validators.required]],
       txProveedor: ['', [Validators.required]],
       txObservaciones: ['', [Validators.maxLength(200)]],
-      txTipoComprobante: ['', [Validators.required]],
+      txTipoComprobante: [1, [Validators.required]],
       txResponsable: ['', [Validators.required]],
       txReceptor: ['', [Validators.required]],
       txCantidadProductos: [ {value: '', disabled: true}, [Validators.required]],
       txTotal: [ {value: '', disabled: true}, [Validators.required]],
+    });
+  }
+
+  private buscarComprobantes() {
+    this.comprobantesService.consultarComprobantes(new FiltrosComprobantes()).subscribe((comprobantes) => {
+      this.listaComprobantes = comprobantes;
     });
   }
 
@@ -140,26 +150,33 @@ export class RegistrarComprobanteComponent implements OnInit {
 
     const pedido = this.listaPedidosPorProveedor.find(p => p.id === idPedido);
 
-    // Recorrer los detalles del pedido y buscar los productos
     if (pedido) {
       pedido.detallePedido.forEach((detalle: DetallePedido) => {
-
-        // Solamente mostrar los detalle pedido que sean diferentes a 2 (EstadoPedido: Sin Diferencias)
         if (detalle.idestadodetallepedido !== 2) {
-          // Encuentra el producto correspondiente al idproducto
-          const producto = this.productos.find(producto => producto.id === detalle.idproducto);
+          const producto = this.productos.find(p => p.id === detalle.idproducto);
 
           if (producto) {
-            producto.cantidadSeleccionada = detalle.cantidad;
+            // Inicializa cantidad faltante con la cantidad total del pedido
+            let cantidadFaltante = detalle.cantidad;
 
-            // Crea una copia del producto y actualiza la cantidadSeleccionada
-            const productoSeleccionado = {
-              ...producto,
-              cantidadSeleccionada: detalle.cantidad
-            };
+            // 1. Buscar todos los comprobantes asociados al pedido para el producto
+            this.listaComprobantes?.forEach(comprobante => {
+              comprobante.detalleComprobante.forEach(detalleComp => {
+                if (detalleComp.idproducto === producto.id && comprobante.idPedido === idPedido) {
+                  // 2. Resta acumulativa de la cantidad registrada en cada comprobante
+                  cantidadFaltante -= detalleComp.cantidad;
+                }
+              });
+            });
 
-            // Agrega el producto modificado a la lista de productos seleccionados
-            this.productosSeleccionados.push(productoSeleccionado);
+            // Si la cantidad faltante es mayor a 0, agregar el producto
+            if (cantidadFaltante > 0) {
+              const productoSeleccionado = {
+                ...producto,
+                cantidadSeleccionada: cantidadFaltante
+              };
+              this.productosSeleccionados.push(productoSeleccionado);
+            }
           }
         }
       });
@@ -173,11 +190,13 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   private rellenarFormularioDataComprobante() {
     this.txProveedor.setValue(this.comprobante.idProveedor);
+    this.txNumeroComprobante.setValue(this.comprobante.numeroComprobante);
     this.txTipoComprobante.setValue(this.comprobante.idTipoComprobante);
     this.txResponsable.setValue(this.comprobante.idResponsable);
     this.txReceptor.setValue(this.comprobante.idReceptor);
     this.txFechaEmision.setValue(this.formatDate(this.comprobante.fechaEmision));
     this.txObservaciones.setValue(this.comprobante.observaciones);
+    this.ordenSeleccionada = true; // Para mostrar tabla producto, si registró comprobante debería existir siempre.
 
     this.comprobante.detalleComprobante.forEach((detalle: DetalleComprobante) => {
       // Encuentra el producto correspondiente al idproducto
@@ -222,7 +241,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     if (this.form.valid) {
       const comprobante: Comprobante = new Comprobante();
 
-      comprobante.numerocomprobante = this.txNumeroComprobante.value;
+      comprobante.numeroComprobante = this.txNumeroComprobante.value;
       comprobante.fechaEmision = this.txFechaEmision.value;
       comprobante.idProveedor = this.txProveedor.value;
       comprobante.observaciones = this.txObservaciones.value;
@@ -230,6 +249,7 @@ export class RegistrarComprobanteComponent implements OnInit {
       comprobante.idResponsable = this.txResponsable.value;
       comprobante.idReceptor = this.txReceptor.value;
       comprobante.idTipoComprobante = this.txTipoComprobante.value;
+      comprobante.idPedido = this.numeroOrdenSeleccionada!;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
       const detallesComprobante: DetalleComprobante[] = this.productosSeleccionados.map((producto) => {
@@ -262,7 +282,7 @@ export class RegistrarComprobanteComponent implements OnInit {
       const comprobante: Comprobante = new Comprobante();
 
       comprobante.id = this.data.comprobante?.id;
-      comprobante.numerocomprobante = this.txNumeroComprobante.value;
+      comprobante.numeroComprobante = this.txNumeroComprobante.value;
       comprobante.fechaEmision = this.txFechaEmision.value;
       comprobante.idProveedor = this.txProveedor.value;
       comprobante.observaciones = this.txObservaciones.value;
@@ -270,6 +290,7 @@ export class RegistrarComprobanteComponent implements OnInit {
       comprobante.idResponsable = this.txResponsable.value;
       comprobante.idReceptor = this.txReceptor.value;
       comprobante.idTipoComprobante = this.txTipoComprobante.value;
+      comprobante.idPedido = this.numeroOrdenSeleccionada!;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
       const detallesComprobante: DetalleComprobante[] = this.productosSeleccionados.map((producto) => {
@@ -358,26 +379,22 @@ export class RegistrarComprobanteComponent implements OnInit {
     });
   }
 
-  // TODO: Implementar lógica de filtros
   private filtrosSuscripciones() {
-    this.dataSourceProductos.filterPredicate = (data: Producto, filter: string) => {
-      const filtro = JSON.parse(filter);
-      const textoBusqueda = filtro.textoBusqueda;
+    const filtro = { textoBusqueda: '' };
 
-      // Lógica de comparación por nombre de producto
-      return data.nombre.toLowerCase().includes(textoBusqueda);
+    // Filtrar por texto de búsqueda
+    this.txBuscar.valueChanges.subscribe(valor => {
+      filtro.textoBusqueda = valor.trim().toLowerCase();
+      this.dataSourceProductos.filter = filtro.textoBusqueda;
+
+      if (this.dataSourceProductos.paginator) {
+        this.dataSourceProductos.paginator.firstPage();
+      }
+    });
+
+    this.dataSourceProductos.filterPredicate = (producto: Producto, filter: string) => {
+      return producto.nombre.toLowerCase().includes(filter);
     };
-
-    const controlBuscar = this.form.get('txBuscar');
-
-    if (controlBuscar) {
-      controlBuscar.valueChanges.subscribe(valor => {
-        const filtro = {
-          textoBusqueda: valor.trim().toLowerCase()
-        };
-        this.dataSourceProductos.filter = JSON.stringify(filtro);
-      });
-    }
   }
 
   public agruparPedidos(listaPedidos: Pedido[], cantidadPorFila: number): any[][] {

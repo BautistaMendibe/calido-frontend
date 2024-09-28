@@ -16,17 +16,6 @@
     <div class="row pt-4">
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Proveedor</mat-label>
-          <mat-select [formControl]="txProveedor" (selectionChange)="ObtenerPedidosPorProveedor()">
-            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
-              {{ proveedor.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Tipo Comprobante</mat-label>
           <mat-select [formControl]="txTipoComprobante">
             <mat-option *ngFor="let tipoComprobante of listaTiposComprobantes" [value]="tipoComprobante.id">
@@ -38,6 +27,37 @@
 
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número de Comprobante</mat-label>
+          <input type="text" matInput [formControl]="txNumeroComprobante"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Proveedor</mat-label>
+          <mat-select [formControl]="txProveedor" (selectionChange)="ObtenerPedidosPorProveedor()">
+            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
+              {{ proveedor.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de Emisión</mat-label>
+          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
+          <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
+          <mat-datepicker #pickerEmision></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Responsable</mat-label>
           <mat-select [formControl]="txResponsable">
             <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
@@ -47,7 +67,7 @@
         </mat-form-field>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Recibido por</mat-label>
           <mat-select [formControl]="txReceptor">
@@ -55,18 +75,6 @@
               {{ usuario.nombre + " " + usuario.apellido }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
-      </div>
-
-    </div>
-
-    <div class="row pt-4">
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de Emisión</mat-label>
-          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
-          <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
-          <mat-datepicker #pickerEmision></mat-datepicker>
         </mat-form-field>
       </div>
 

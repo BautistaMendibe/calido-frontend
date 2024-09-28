@@ -35,7 +35,7 @@ export class ConsultarComprobanteComponent implements OnInit {
   public productos: Producto[] = [];
   public listaProveedor: Proveedor[] = [];
   public listaUsuarios: Usuario[] = [];
-  public columnas: string[] = ['fechaEmision', 'numeroComprobante', "proveedor", 'responsable', 'total', 'acciones'];
+  public columnas: string[] = ['fechaEmision', 'numeroComprobante', 'tipoComprobante', 'proveedor', 'responsable', 'total', 'acciones'];
 
   private filtros: FiltrosComprobantes;
 
@@ -71,11 +71,12 @@ export class ConsultarComprobanteComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txPedido: ['', []],
+      txComprobante: ['', []],
+      txTipoComprobante: ['', []],
       txProveedor: ['', []],
       txFechaEmisionDesde: ['', []],
       txFechaEmisionHasta: ['', []],
-      txEstado: [1, []],
+      txResponsable: ['', []]
     });
   }
 
@@ -174,6 +175,10 @@ export class ConsultarComprobanteComponent implements OnInit {
   // Region getters
   get txComprobante(): FormControl {
     return this.form.get('txComprobante') as FormControl;
+  }
+
+  get txTipoComprobante(): FormControl {
+    return this.form.get('txTipoComprobante') as FormControl;
   }
 
   get txProveedor(): FormControl {

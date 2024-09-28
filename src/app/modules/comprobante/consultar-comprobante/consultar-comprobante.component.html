@@ -103,8 +103,13 @@
             </ng-container>
 
             <ng-container matColumnDef="numeroComprobante">
-              <mat-header-cell *matHeaderCellDef>NÚMERO COMPROBANTE</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante" data-label="Comprobante">{{ comprobante.numero }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>NUM. COMPROBANTE</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante" data-label="Comprobante">{{ comprobante.numeroComprobante }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="tipoComprobante">
+              <mat-header-cell *matHeaderCellDef>TIPO COMPROBANTE</mat-header-cell>
+              <mat-cell *matCellDef="let comprobante" data-label="TipoComprobante">{{ comprobante.tipoComprobante.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="proveedor">
@@ -114,7 +119,9 @@
 
             <ng-container matColumnDef="responsable">
               <mat-header-cell *matHeaderCellDef>RESPONSABLE</mat-header-cell>
-              <mat-cell *matCellDef="let comprobante" data-label="Responsable" >{{ comprobante.responsable.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let comprobante" data-label="Responsable" >
+                {{ comprobante.responsable.nombre + ' ' + comprobante.responsable.apellido }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="total">
