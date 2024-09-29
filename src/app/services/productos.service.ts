@@ -5,10 +5,9 @@ import {environmentDEV} from "../../environments/environment-dev";
 import {Producto} from "../models/producto.model";
 import {SpResult} from "../models/resultadoSp.model";
 import {FiltrosProductos} from "../models/comandos/FiltrosProductos.comando";
-import {TipoProveedor} from "../models/tipoProveedor.model";
 import {TipoProducto} from "../models/tipoProducto.model";
-import {Marca} from "../models/Marcas.model";
-import {Proveedor} from "../models/proveedores.model";
+import {DetalleProducto} from "../models/detalleProducto";
+import {FiltrosDetallesProductos} from "../models/comandos/FiltrosDetallesProductos";
 
 @Injectable({
   providedIn: 'root'
@@ -39,4 +38,19 @@ export class ProductosService {
     return this.http.get<TipoProducto[]>(`${this.urlBackend}/${this.controllerName}/buscar-tipo-productos`);
   }
 
+  public registrarDetalleProducto(detalle: DetalleProducto): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-detalle-producto`, detalle);
+  }
+
+  public modificarDetalleProducto(detalle: DetalleProducto): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-detalle-producto`, detalle);
+  }
+
+  public consultarDetallesProductos(filtro: FiltrosDetallesProductos): Observable<DetalleProducto[]>{
+    return this.http.post<DetalleProducto[]>(`${this.urlBackend}/${this.controllerName}/consultar-detalles-productos`, filtro);
+  }
+
+  public eliminarDetalleProducto(idDetalleProducto: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-detalle-producto/${idDetalleProducto}`);
+  }
 }

@@ -49,6 +49,8 @@ import { ConsultarComprobanteComponent } from './modules/comprobante/consultar-c
 
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
+import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -83,7 +85,9 @@ registerLocaleData(localeEs, 'es');
     ConsultarCuentasCorrientesComponent,
     RegistrarCuentaCorrienteComponent,
     RegistrarClientesComponent,
-    ConsultarClientesComponent
+    ConsultarClientesComponent,
+    ConsultarInventarioComponent,
+    RegistrarInventarioComponent
   ],
   imports: [
     BrowserModule,

@@ -25,7 +25,8 @@ export class SidebarComponent {
       ]},
     {id: 3, nombre: 'Ordenes de Compra', path:'consultar-pedidos', icon: 'receipt', activo: false, requiresAdmin: true, subMenu: []},
     {id: 4, nombre: 'Inventario', path:'consultar-comprobante', icon: 'add_box', activo: false, requiresAdmin: true, subMenu: [
-        {id: 1, nombre: 'Consultar comprobantes', path:'/consultar-comprobante', icon: '', activo: false, subMenu: []}
+        {id: 1, nombre: 'Consultar comprobantes', path:'/consultar-comprobante', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar inventario', path:'/consultar-inventario', icon: '', activo: false, subMenu: []}
       ]},
     {id: 5, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},

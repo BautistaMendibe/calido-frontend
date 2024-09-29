@@ -116,13 +116,8 @@
       </div>
     </div>
 
-    <mat-divider class="my-3"></mat-divider>
-    <br *ngIf="!ordenSeleccionada">
-
-    <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="!ordenSeleccionada">
-      <mat-spinner></mat-spinner>
-    </div>
+    <mat-divider class="my-3" *ngIf="ordenSeleccionada"></mat-divider>
+    <br *ngIf="ordenSeleccionada">
 
     <div class="row pt-4" *ngIf="productos.length > 0 && ordenSeleccionada">
       <div class="col-md-4">

@@ -418,6 +418,12 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.dataSourceProductos.filterPredicate = (producto: Producto, filter: string) => {
       return producto.nombre.toLowerCase().includes(filter);
     };
+
+    // Sacar la selección y resaltado de la orden si el proveedor cambió
+    this.txProveedor.valueChanges.subscribe(() => {
+      this.ordenSeleccionada = false;
+      this.numeroOrdenSeleccionada = null;
+    });
   }
 
   public agruparPedidos(listaPedidos: Pedido[], cantidadPorFila: number): any[][] {
