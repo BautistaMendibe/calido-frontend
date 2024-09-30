@@ -217,6 +217,7 @@ export class RegistrarPedidoComponent implements OnInit {
     if (this.form.valid) {
       const pedido: Pedido = new Pedido();
       const transporte: Transporte = new Transporte();
+      this.calcularSubTotal();
 
       pedido.montoEnvio = this.txMontoEnvio.value;
       pedido.fechaEmision = this.txFechaPedido.value;
@@ -232,7 +233,9 @@ export class RegistrarPedidoComponent implements OnInit {
       pedido.transporte = transporte;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
-      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
+      const detallesPedido: DetallePedido[] = this.productosSeleccionados
+        .filter(producto => producto.proveedor.id === pedido.idProveedor)
+        .map((producto) => {
         const detalle = new DetallePedido();
         detalle.cantidad = producto.cantidadSeleccionada;
         detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
@@ -260,6 +263,7 @@ export class RegistrarPedidoComponent implements OnInit {
     if (this.form.valid) {
       const pedido: Pedido = new Pedido();
       const transporte: Transporte = new Transporte();
+      this.calcularSubTotal();
 
       pedido.id = this.data.pedido?.id;
       pedido.montoEnvio = this.txMontoEnvio.value;
@@ -276,7 +280,9 @@ export class RegistrarPedidoComponent implements OnInit {
       pedido.transporte = transporte;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
-      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
+      const detallesPedido: DetallePedido[] = this.productosSeleccionados
+        .filter(producto => producto.proveedor.id === pedido.idProveedor)
+        .map((producto) => {
         const detalle = new DetallePedido();
         detalle.cantidad = producto.cantidadSeleccionada;
         detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
@@ -347,8 +353,11 @@ export class RegistrarPedidoComponent implements OnInit {
 
   private calcularSubTotal() {
     this.subTotal = 0;
+    const pedidoProveedor = this.txProveedor.value;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+      if (producto.proveedor.id === pedidoProveedor || !pedidoProveedor) {
+        this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+      }
     });
     this.txSubtotal.setValue(this.subTotal, { emitEvent: false });
   }
