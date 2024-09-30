@@ -171,7 +171,23 @@ export class RegistrarVentaComponent implements OnInit{
     this.totalVenta = this.subTotal + this.impuestoIva;
   }
 
-  public editarProductoEnVenta(producto: Producto){}
+  public editarProductoEnVenta(producto: Producto){
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          producto: producto,
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: false,
+          editar: true
+        }
+      }
+    );
+  }
 
   public eliminarProductoDeVenta(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);

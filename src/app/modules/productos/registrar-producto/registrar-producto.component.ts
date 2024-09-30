@@ -161,8 +161,7 @@ export class RegistrarProductoComponent implements OnInit {
   private gestionarRespuesta(respuesta: any, mensajeExito: string) {
     if (respuesta.mensaje === 'OK') {
       this.notificacionService.openSnackBarSuccess(mensajeExito);
-      this.dialogRef.close();
-      this.referencia.buscar();
+      this.dialogRef.close(true);
     } else {
       this.notificacionService.openSnackBarError('Error al procesar la solicitud, intentelo nuevamente');
     }
