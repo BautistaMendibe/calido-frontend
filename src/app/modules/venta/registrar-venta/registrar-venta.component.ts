@@ -172,7 +172,7 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public editarProductoEnVenta(producto: Producto){
-    this.dialog.open(
+    const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
         width: '75%',
@@ -180,13 +180,25 @@ export class RegistrarVentaComponent implements OnInit{
         autoFocus: false,
         data: {
           producto: producto,
+          editarPrecioDeVenta: true,
+          formDesactivado: true,
+          editar: true,
           esConsulta: true,
-          referencia: this,
-          formDesactivado: false,
-          editar: true
         }
       }
     );
+
+    ref.afterClosed().subscribe((respusta: Producto) => {
+      if (respusta) {
+        this.productosSeleccionados.map((producto: Producto) => {
+          if (producto.id == respusta.id) {
+            producto.costo = respusta.costo;
+          }
+        })
+        this.notificacionService.openSnackBarSuccess('Precio modificado para esta venta.');
+        this.calcularSubTotal();
+      }
+    });
   }
 
   public eliminarProductoDeVenta(producto: Producto) {
