@@ -252,7 +252,7 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   public registrarNuevoComprobante() {
 
-    if (this.form.valid) {
+    if (this.form.valid && this.ordenSeleccionada && this.productosSeleccionados.length > 0) {
       const comprobante: Comprobante = new Comprobante();
 
       comprobante.numeroComprobante = this.txNumeroComprobante.value;
