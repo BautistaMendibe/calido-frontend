@@ -130,7 +130,8 @@ export class ConsultarComprobanteComponent implements OnInit {
         data: {
           referencia: this,
           esConsulta: false,
-          formDesactivado: false
+          formDesactivado: false,
+          esRegistro: true
         }
       }
     )
@@ -156,9 +157,19 @@ export class ConsultarComprobanteComponent implements OnInit {
   }
 
   public eliminarComprobante(idComprobante: number) {
-    this.notificationDialogService.confirmation(`¿Desea eliminar el comprobante?
-    ¡El inventario será modificado!.
-    Esta acción no es reversible.`, 'Eliminar Comprobante') //Está seguro?
+    const comprobante = this.comprobantes.find(comprobante => comprobante.id === idComprobante);
+
+    if (!comprobante) {
+      this.notificacionService.openSnackBarError('Comprobante no encontrado');
+      return;
+    }
+
+    this.notificationDialogService.confirmation(
+      `¿Desea eliminar el comprobante?
+        ${comprobante.idTipoComprobante === 1 ? '¡El inventario será modificado!' : ''}
+        Esta acción no es reversible.`,
+      'Eliminar Comprobante'
+    ) //Está seguro?
       .afterClosed()
       .subscribe((value) => {
         if (value) {

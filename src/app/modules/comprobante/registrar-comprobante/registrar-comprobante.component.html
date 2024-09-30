@@ -116,10 +116,9 @@
       </div>
     </div>
 
-    <mat-divider class="my-3" *ngIf="ordenSeleccionada"></mat-divider>
-    <br *ngIf="ordenSeleccionada">
+    <mat-divider class="my-3" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)"></mat-divider>
 
-    <div class="row pt-4" *ngIf="productos.length > 0 && ordenSeleccionada">
+    <div class="row pt-4" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Producto</mat-label>
@@ -131,7 +130,7 @@
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0 && ordenSeleccionada">
+    <mat-card *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
       <mat-card-content>
         <div class="row">
 

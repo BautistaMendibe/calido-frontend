@@ -119,10 +119,10 @@ export class ConsultarInventarioComponent implements OnInit {
         if (value) {
           this.productosService.eliminarDetalleProducto(idDetalleProducto).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Producto eliminado con éxito');
+              this.notificacionService.openSnackBarSuccess('Producto eliminado del inventario con éxito');
               this.buscar();
             } else {
-              this.notificacionService.openSnackBarError('Error al eliminar el producto');
+              this.notificacionService.openSnackBarError('Error al eliminar el producto del inventario');
             }
           });
         }

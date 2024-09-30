@@ -68,6 +68,7 @@ export class RegistrarComprobanteComponent implements OnInit {
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
+      esRegistro: boolean;
     }
   ) {
     this.form = new FormGroup({});
@@ -206,7 +207,6 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.txReceptor.setValue(this.comprobante.idReceptor);
     this.txFechaEmision.setValue(this.formatDate(this.comprobante.fechaEmision));
     this.txObservaciones.setValue(this.comprobante.observaciones);
-    this.ordenSeleccionada = true; // Para mostrar tabla producto, si registró comprobante debería existir siempre.
 
     this.comprobante.detalleComprobante.forEach((detalle: DetalleComprobante) => {
       // Encuentra el producto correspondiente al idproducto
@@ -279,24 +279,26 @@ export class RegistrarComprobanteComponent implements OnInit {
 
       comprobante.detalleComprobante = detallesComprobante;
 
-      this.notificationDialogService.confirmation(`¿Desea registrar el comprobante?
-        ¡El inventario será modificado!
-        Esta acción no es reversible.`, 'Registrar Comprobante') // Está seguro?
+      this.notificationDialogService.confirmation(
+        `¿Desea registrar el comprobante?
+        ${comprobante.idTipoComprobante === 1 ? '¡El inventario será modificado!' : ''}
+        Esta acción no es reversible.`,
+        'Registrar Comprobante'
+      )
         .afterClosed()
         .subscribe((value) => {
-            if (value) {
-              this.comprobantesService.registrarComprobante(comprobante).subscribe((res) => {
-                if (res.mensaje == 'OK') {
-                  this.notificacionService.openSnackBarSuccess('Comprobante registrado con éxito');
-                  this.dialogRef.close();
-                  this.referencia.buscar();
-                } else {
-                  this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al registrar comprobante');
-                }
-              });
-            }
+          if (value) {
+            this.comprobantesService.registrarComprobante(comprobante).subscribe((res) => {
+              if (res.mensaje == 'OK') {
+                this.notificacionService.openSnackBarSuccess('Comprobante registrado con éxito');
+                this.dialogRef.close();
+                this.referencia.buscar();
+              } else {
+                this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al registrar comprobante');
+              }
+            });
           }
-        );
+        });
     }
   }
 
