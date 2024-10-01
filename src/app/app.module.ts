@@ -51,6 +51,7 @@ import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-
 import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
 import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
+import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -87,7 +88,8 @@ registerLocaleData(localeEs, 'es');
     RegistrarClientesComponent,
     ConsultarClientesComponent,
     ConsultarInventarioComponent,
-    RegistrarInventarioComponent
+    RegistrarInventarioComponent,
+    BuscarProductosComponent
   ],
   imports: [
     BrowserModule,

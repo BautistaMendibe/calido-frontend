@@ -35,11 +35,13 @@ export class RegistrarPedidoComponent implements OnInit {
   public transportesFiltrados: Transporte[] = [];
   private idTransporte: number = -1;
   public listaEstadosPedido: EstadoPedido[] = [];
+  public estadosPedidoFiltrados: EstadoPedido[] = [];
 
   public pedido: Pedido;
   public descuentos: { value: number, label: string }[] = [];
   public subTotal: number = 0;
   public esConsulta: boolean;
+  public esRegistro: boolean;
   public formDesactivado: boolean;
   public listaProductosDeshabilitada: boolean = false;
 
@@ -60,12 +62,14 @@ export class RegistrarPedidoComponent implements OnInit {
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
+      esRegistro: boolean;
     }
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
     this.pedido = this.data.pedido;
     this.esConsulta = this.data.esConsulta;
+    this.esRegistro = this.data.esRegistro;
     this.formDesactivado = this.data.formDesactivado;
   }
 
@@ -113,7 +117,19 @@ export class RegistrarPedidoComponent implements OnInit {
   private buscarEstadosPedido() {
     this.pedidosService.obtenerEstadosPedido().subscribe((estados) => {
       this.listaEstadosPedido = estados;
+      this.actualizarListaEstados();
     });
+  }
+
+  public actualizarListaEstados() {
+    if (this.data.esRegistro) {
+      // Solo toma el estado con id = 1 para el registro, siempre será pendiente
+      this.estadosPedidoFiltrados = this.listaEstadosPedido.filter(estado => estado.id === 1);
+      this.txEstadoPedido.setValue(this.estadosPedidoFiltrados[0]?.id);
+    } else {
+      // Toma todos los estados, para que el usuario decida al modificar
+      this.estadosPedidoFiltrados = this.listaEstadosPedido;
+    }
   }
 
   private buscarProveedores() {

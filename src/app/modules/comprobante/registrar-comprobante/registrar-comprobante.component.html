@@ -112,6 +112,12 @@
               <strong>Total:</strong> ${{ pedido.total }}
             </div>
           </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-estado">
+            <div class="col">
+              <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -125,6 +131,11 @@
           <input type="text" matInput [formControl]="txBuscar"/>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
+      </div>
+      <div class="col-md-8">
+        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado || tablaProductosDesactivada">
+          <mat-icon>add</mat-icon>Nuevo producto
+        </button>
       </div>
     </div>
 

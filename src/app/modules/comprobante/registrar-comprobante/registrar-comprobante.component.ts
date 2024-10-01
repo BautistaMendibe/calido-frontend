@@ -4,7 +4,7 @@ import {Proveedor} from "../../../models/proveedores.model";
 import {Producto} from "../../../models/producto.model";
 import {Pedido} from "../../../models/pedido.model";
 import {MatTableDataSource} from "@angular/material/table";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {ProductosService} from "../../../services/productos.service";
 import {PedidosService} from "../../../services/pedidos.service";
@@ -22,6 +22,7 @@ import {DetalleComprobante} from "../../../models/detalleComprobante.model";
 import {FiltrosPedidos} from "../../../models/comandos/FiltrosPedidos.comando";
 import {FiltrosComprobantes} from "../../../models/comandos/FiltrosComprobantes.comando";
 import {NotificationService} from "../../../services/notificacion.service";
+import {BuscarProductosComponent} from "../../productos/buscar-productos/buscar-productos.component";
 
 @Component({
   selector: 'app-registrar-comprobante',
@@ -59,6 +60,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     private pedidosService: PedidosService,
     private comprobantesService: ComprobantesService,
     private usuariosService: UsuariosService,
+    private dialog: MatDialog,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
@@ -434,6 +436,47 @@ export class RegistrarComprobanteComponent implements OnInit {
       filas.push(listaPedidos.slice(i, i + cantidadPorFila));
     }
     return filas;
+  }
+
+  public registrarNuevoProducto() {
+    const dialogRef: MatDialogRef<BuscarProductosComponent> = this.dialog.open(
+      BuscarProductosComponent,
+      {
+        width: '70%',
+        height: 'auto',
+        maxHeight: '70vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
+        data: {
+          proveedorId: this.txProveedor.value
+        }
+      }
+    );
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.agregarNuevosProductosComprobante(result);
+      }
+    });
+  }
+
+  private agregarNuevosProductosComprobante(listaNuevosProductos: Producto[]) {
+    if (listaNuevosProductos.length !== 0 && listaNuevosProductos) {
+      listaNuevosProductos.forEach((producto) => {
+        const productoEnLista = this.productosSeleccionados.find(p => p.id === producto.id);
+
+        if (productoEnLista) {
+          productoEnLista.cantidadSeleccionada++;
+        } else {
+          const productoClonado = { ...producto, cantidadSeleccionada: 1 };
+          this.productosSeleccionados.push(productoClonado);
+        }
+      });
+
+      this.dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
+      this.calcularCantidadProductos();
+      this.calcularTotalProductos();
+    }
   }
 
   public cancelar() {

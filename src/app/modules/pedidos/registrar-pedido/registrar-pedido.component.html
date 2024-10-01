@@ -72,7 +72,7 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Estado</mat-label>
           <mat-select [formControl]="txEstadoPedido">
-            <mat-option *ngFor="let estado of listaEstadosPedido" [value]="estado.id">
+            <mat-option *ngFor="let estado of estadosPedidoFiltrados" [value]="estado.id">
               {{ estado.nombre }}
             </mat-option>
           </mat-select>

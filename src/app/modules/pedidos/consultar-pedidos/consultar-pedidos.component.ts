@@ -136,7 +136,8 @@ export class ConsultarPedidosComponent implements OnInit {
         data: {
           referencia: this,
           esConsulta: false,
-          formDesactivado: false
+          formDesactivado: false,
+          esRegistro: true,
         }
       }
     )
