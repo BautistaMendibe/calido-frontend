@@ -215,7 +215,7 @@ export class RegistrarVentaComponent implements OnInit{
     // Seteamos valores de la venta
     venta.usuario = this.txCliente.value ? this.txCliente.value : null;
     venta.fecha = new Date();
-    venta.formaDePago = this.txFormaDePago.value;
+    venta.formaDePago.id = this.txFormaDePago.value;
     venta.montoTotal = this.totalVenta;
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
@@ -225,6 +225,9 @@ export class RegistrarVentaComponent implements OnInit{
     this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+        this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
+
+        })
         this.registrandoVenta = false;
         this.limpiarVenta();
       } else {

@@ -33,4 +33,8 @@ export class VentasService {
   public buscarTiposFactura(): Observable<TipoFactura[]>{
     return this.http.get<TipoFactura[]>(`${this.urlBackend}/${this.controllerName}/obtener-tipos-facturacion`);
   }
+
+  public facturarVentaConAfip(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/facturar-venta`, venta);
+  }
 }
