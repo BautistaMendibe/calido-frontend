@@ -19,6 +19,7 @@ import {Comprobante} from "../../../models/comprobante.model";
 import {ComprobantesService} from "../../../services/comprobantes.service";
 import {FiltrosComprobantes} from "../../../models/comandos/FiltrosComprobantes.comando";
 import {RegistrarComprobanteComponent} from "../registrar-comprobante/registrar-comprobante.component";
+import {TipoComprobante} from "../../../models/tipoComprobante.model";
 
 @Component({
   selector: 'app-consultar-comprobante',
@@ -35,6 +36,7 @@ export class ConsultarComprobanteComponent implements OnInit {
   public productos: Producto[] = [];
   public listaProveedor: Proveedor[] = [];
   public listaUsuarios: Usuario[] = [];
+  public listaTiposComprobantes: TipoComprobante[] = [];
   public columnas: string[] = ['fechaEmision', 'numeroComprobante', 'tipoComprobante', 'proveedor', 'responsable', 'total', 'acciones'];
 
   private filtros: FiltrosComprobantes;
@@ -66,6 +68,7 @@ export class ConsultarComprobanteComponent implements OnInit {
     this.buscarProveedores();
     this.buscarUsuarios();
     this.buscarProductos();
+    this.buscarTiposComprobantes();
     this.buscar();
   }
 
@@ -91,7 +94,8 @@ export class ConsultarComprobanteComponent implements OnInit {
       proveedor: this.txProveedor.value,
       fechaEmisionDesde: this.txFechaEmisionDesde.value,
       fechaEmisionHasta: this.txFechaEmisionHasta.value,
-      responsable: this.txResponsable.value
+      responsable: this.txResponsable.value,
+      tipoComprobante: this.txTipoComprobante.value,
     };
 
     this.comprobantesService.consultarComprobantes(this.filtros).subscribe((comprobantes) => {
@@ -116,6 +120,12 @@ export class ConsultarComprobanteComponent implements OnInit {
     this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
       this.productos = productos;
       this.tableDataSource.sort = this.sort;
+    });
+  }
+
+  private buscarTiposComprobantes() {
+    this.comprobantesService.obtenerTiposComprobantes().subscribe((tiposComprobantes) => {
+      this.listaTiposComprobantes = tiposComprobantes;
     });
   }
 

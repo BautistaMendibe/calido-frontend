@@ -7,4 +7,5 @@ export class FiltrosComprobantes {
   fechaEmisionDesde?: Date;
   fechaEmisionHasta?: Date;
   responsable?: Usuario;
+  tipoComprobante?: number;
 }

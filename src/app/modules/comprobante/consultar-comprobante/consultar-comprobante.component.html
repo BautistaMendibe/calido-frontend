@@ -24,6 +24,17 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tipo Comprobante</mat-label>
+            <mat-select [formControl]="txTipoComprobante">
+              <mat-option *ngFor="let tipoComprobante of listaTiposComprobantes" [value]="tipoComprobante.id">
+                {{ tipoComprobante.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Proveedor</mat-label>
             <mat-select [formControl]="txProveedor">
               <mat-option *ngFor="let proveedor of listaProveedor" [value]="proveedor.id">
@@ -33,6 +44,19 @@
           </mat-form-field>
         </div>
 
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Responsable</mat-label>
+            <mat-select [formControl]="txResponsable">
+              <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
+                {{ usuario.nombre + " " + usuario.apellido }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Desde</mat-label>
@@ -48,19 +72,6 @@
             <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaEmisionHasta" />
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </div>
-
-      <div class="row pt-4">
-        <div class="col-md-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Responsable</mat-label>
-            <mat-select [formControl]="txResponsable">
-              <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
-                {{ usuario.nombre + " " + usuario.apellido }}
-              </mat-option>
-            </mat-select>
           </mat-form-field>
         </div>
       </div>
