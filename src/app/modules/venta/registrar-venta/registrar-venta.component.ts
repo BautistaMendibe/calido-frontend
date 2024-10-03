@@ -211,10 +211,12 @@ export class RegistrarVentaComponent implements OnInit{
 
   public confirmarVenta() {
     const venta: Venta = new Venta();
+    const formaDePago: FormaDePago = new FormaDePago();
 
     // Seteamos valores de la venta
     venta.usuario = this.txCliente.value ? this.txCliente.value : null;
     venta.fecha = new Date();
+    venta.formaDePago = formaDePago;
     venta.formaDePago.id = this.txFormaDePago.value;
     venta.montoTotal = this.totalVenta;
     venta.detalleVenta = [];
