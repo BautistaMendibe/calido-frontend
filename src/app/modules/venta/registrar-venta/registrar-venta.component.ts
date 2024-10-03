@@ -247,7 +247,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosSeleccionados = [];
     this.totalVenta = 0;
     this.subTotal = 0;
-    this.txFormaDePago.setValue(this.formasDePago[0]);
+    this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txCliente.setValue(null);
     this.txTipoFacturacion.setValue(null);
   }
