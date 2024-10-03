@@ -35,12 +35,15 @@ export class RegistrarPedidoComponent implements OnInit {
   public transportesFiltrados: Transporte[] = [];
   private idTransporte: number = -1;
   public listaEstadosPedido: EstadoPedido[] = [];
+  public estadosPedidoFiltrados: EstadoPedido[] = [];
 
   public pedido: Pedido;
   public descuentos: { value: number, label: string }[] = [];
   public subTotal: number = 0;
   public esConsulta: boolean;
+  public esRegistro: boolean;
   public formDesactivado: boolean;
+  public listaProductosDeshabilitada: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productos);
 
@@ -59,12 +62,14 @@ export class RegistrarPedidoComponent implements OnInit {
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
+      esRegistro: boolean;
     }
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
     this.pedido = this.data.pedido;
     this.esConsulta = this.data.esConsulta;
+    this.esRegistro = this.data.esRegistro;
     this.formDesactivado = this.data.formDesactivado;
   }
 
@@ -76,6 +81,11 @@ export class RegistrarPedidoComponent implements OnInit {
     this.buscarTransportes();
     this.buscarEstadosPedido();
     this.filtrosSuscripciones();
+
+    if (this.data.editar && (this.pedido.idEstadoPedido === 2 || this.pedido.idEstadoPedido === 3)) {
+      this.listaProductosDeshabilitada = true;
+      this.txBuscar.disable();
+    }
   }
 
   public generarDescuentos() {
@@ -107,7 +117,19 @@ export class RegistrarPedidoComponent implements OnInit {
   private buscarEstadosPedido() {
     this.pedidosService.obtenerEstadosPedido().subscribe((estados) => {
       this.listaEstadosPedido = estados;
+      this.actualizarListaEstados();
     });
+  }
+
+  public actualizarListaEstados() {
+    if (this.data.esRegistro) {
+      // Solo toma el estado con id = 1 para el registro, siempre será pendiente
+      this.estadosPedidoFiltrados = this.listaEstadosPedido.filter(estado => estado.id === 1);
+      this.txEstadoPedido.setValue(this.estadosPedidoFiltrados[0]?.id);
+    } else {
+      // Toma todos los estados, para que el usuario decida al modificar
+      this.estadosPedidoFiltrados = this.listaEstadosPedido;
+    }
   }
 
   private buscarProveedores() {
@@ -199,6 +221,11 @@ export class RegistrarPedidoComponent implements OnInit {
     this.data.formDesactivado = false;
     this.formDesactivado = false;
     this.data.editar = true;
+
+    if (this.pedido.idEstadoPedido === 2 || this.pedido.idEstadoPedido === 3) {
+      this.listaProductosDeshabilitada = true;
+      this.txBuscar.disable();
+    }
   }
 
   public registrarNuevoPedido() {
@@ -206,6 +233,7 @@ export class RegistrarPedidoComponent implements OnInit {
     if (this.form.valid) {
       const pedido: Pedido = new Pedido();
       const transporte: Transporte = new Transporte();
+      this.calcularSubTotal();
 
       pedido.montoEnvio = this.txMontoEnvio.value;
       pedido.fechaEmision = this.txFechaPedido.value;
@@ -221,7 +249,9 @@ export class RegistrarPedidoComponent implements OnInit {
       pedido.transporte = transporte;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
-      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
+      const detallesPedido: DetallePedido[] = this.productosSeleccionados
+        .filter(producto => producto.proveedor.id === pedido.idProveedor)
+        .map((producto) => {
         const detalle = new DetallePedido();
         detalle.cantidad = producto.cantidadSeleccionada;
         detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
@@ -249,6 +279,7 @@ export class RegistrarPedidoComponent implements OnInit {
     if (this.form.valid) {
       const pedido: Pedido = new Pedido();
       const transporte: Transporte = new Transporte();
+      this.calcularSubTotal();
 
       pedido.id = this.data.pedido?.id;
       pedido.montoEnvio = this.txMontoEnvio.value;
@@ -265,7 +296,9 @@ export class RegistrarPedidoComponent implements OnInit {
       pedido.transporte = transporte;
 
       // Por cada producto seleccionado, creamos un detalle de pedido.
-      const detallesPedido: DetallePedido[] = this.productosSeleccionados.map((producto) => {
+      const detallesPedido: DetallePedido[] = this.productosSeleccionados
+        .filter(producto => producto.proveedor.id === pedido.idProveedor)
+        .map((producto) => {
         const detalle = new DetallePedido();
         detalle.cantidad = producto.cantidadSeleccionada;
         detalle.subTotal = producto.cantidadSeleccionada * producto.costo;
@@ -336,8 +369,11 @@ export class RegistrarPedidoComponent implements OnInit {
 
   private calcularSubTotal() {
     this.subTotal = 0;
+    const pedidoProveedor = this.txProveedor.value;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+      if (producto.proveedor.id === pedidoProveedor || !pedidoProveedor) {
+        this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+      }
     });
     this.txSubtotal.setValue(this.subTotal, { emitEvent: false });
   }

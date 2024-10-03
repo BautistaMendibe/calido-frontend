@@ -119,7 +119,16 @@
 
             <ng-container matColumnDef="estado">
               <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Estado" >{{ pedido.estadoPedido.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Estado">
+                <mat-icon
+                  *ngIf="pedido.estadoPedido.id === 1 || pedido.estadoPedido.id === 3"
+                  class="warning-icon"
+                  matTooltip="{{ getWarningMessage(pedido.estadoPedido.id) }}"
+                >
+                  warning
+                </mat-icon>
+                {{ pedido.estadoPedido.nombre }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">

@@ -1,10 +1,12 @@
 import {Usuario} from "./usuario.model";
 import {DetalleComprobante} from "./detalleComprobante.model";
 import {TipoComprobante} from "./tipoComprobante.model";
+import {Pedido} from "./pedido.model";
+import {Proveedor} from "./proveedores.model";
 
 export class Comprobante {
   id: number;
-  numerocomprobante: number;
+  numeroComprobante: number;
   fechaEmision: Date;
   idProveedor: number;
   observaciones: string;
@@ -12,15 +14,18 @@ export class Comprobante {
   idResponsable: number;
   idReceptor: number;
   idTipoComprobante: number;
+  idPedido: number;
 
   detalleComprobante: DetalleComprobante[];
   responsable: Usuario;
   receptor: Usuario;
   tipoComprobante: TipoComprobante;
+  pedido: Pedido;
+  proveedor: Proveedor;
 
   constructor(
     id?: number,
-    numerocomprobante?: number,
+    numeroComprobante?: number,
     fechaEmision?: Date,
     idProveedor?: number,
     observaciones?: string,
@@ -31,10 +36,13 @@ export class Comprobante {
     responsable?: Usuario,
     receptor?: Usuario,
     idTipoComprobante?: number,
-    tipoComprobante?: TipoComprobante
+    tipoComprobante?: TipoComprobante,
+    idPedido?: number,
+    pedido?: Pedido,
+    proveedor?: Proveedor
   ) {
     this.id = id!;
-    this.numerocomprobante = numerocomprobante!;
+    this.numeroComprobante = numeroComprobante!;
     this.fechaEmision = fechaEmision!;
     this.idProveedor = idProveedor!;
     this.observaciones = observaciones!;
@@ -46,5 +54,8 @@ export class Comprobante {
     this.receptor = receptor!;
     this.idTipoComprobante = idTipoComprobante!;
     this.tipoComprobante = tipoComprobante!;
+    this.idPedido = idPedido!
+    this.pedido = pedido!;
+    this.proveedor = proveedor!;
   }
 }

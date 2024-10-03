@@ -19,6 +19,7 @@ import {Comprobante} from "../../../models/comprobante.model";
 import {ComprobantesService} from "../../../services/comprobantes.service";
 import {FiltrosComprobantes} from "../../../models/comandos/FiltrosComprobantes.comando";
 import {RegistrarComprobanteComponent} from "../registrar-comprobante/registrar-comprobante.component";
+import {TipoComprobante} from "../../../models/tipoComprobante.model";
 
 @Component({
   selector: 'app-consultar-comprobante',
@@ -35,7 +36,8 @@ export class ConsultarComprobanteComponent implements OnInit {
   public productos: Producto[] = [];
   public listaProveedor: Proveedor[] = [];
   public listaUsuarios: Usuario[] = [];
-  public columnas: string[] = ['fechaEmision', 'numeroComprobante', "proveedor", 'responsable', 'total', 'acciones'];
+  public listaTiposComprobantes: TipoComprobante[] = [];
+  public columnas: string[] = ['fechaEmision', 'numeroComprobante', 'tipoComprobante', 'proveedor', 'responsable', 'total', 'acciones'];
 
   private filtros: FiltrosComprobantes;
 
@@ -66,16 +68,18 @@ export class ConsultarComprobanteComponent implements OnInit {
     this.buscarProveedores();
     this.buscarUsuarios();
     this.buscarProductos();
+    this.buscarTiposComprobantes();
     this.buscar();
   }
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txPedido: ['', []],
+      txComprobante: ['', []],
+      txTipoComprobante: ['', []],
       txProveedor: ['', []],
       txFechaEmisionDesde: ['', []],
       txFechaEmisionHasta: ['', []],
-      txEstado: [1, []],
+      txResponsable: ['', []]
     });
   }
 
@@ -90,7 +94,8 @@ export class ConsultarComprobanteComponent implements OnInit {
       proveedor: this.txProveedor.value,
       fechaEmisionDesde: this.txFechaEmisionDesde.value,
       fechaEmisionHasta: this.txFechaEmisionHasta.value,
-      responsable: this.txResponsable.value
+      responsable: this.txResponsable.value,
+      tipoComprobante: this.txTipoComprobante.value,
     };
 
     this.comprobantesService.consultarComprobantes(this.filtros).subscribe((comprobantes) => {
@@ -118,6 +123,12 @@ export class ConsultarComprobanteComponent implements OnInit {
     });
   }
 
+  private buscarTiposComprobantes() {
+    this.comprobantesService.obtenerTiposComprobantes().subscribe((tiposComprobantes) => {
+      this.listaTiposComprobantes = tiposComprobantes;
+    });
+  }
+
   public registrarNuevoComprobante() {
     this.dialog.open(
       RegistrarComprobanteComponent,
@@ -129,7 +140,8 @@ export class ConsultarComprobanteComponent implements OnInit {
         data: {
           referencia: this,
           esConsulta: false,
-          formDesactivado: false
+          formDesactivado: false,
+          esRegistro: true
         }
       }
     )
@@ -155,7 +167,19 @@ export class ConsultarComprobanteComponent implements OnInit {
   }
 
   public eliminarComprobante(idComprobante: number) {
-    this.notificationDialogService.confirmation('¿Desea eliminar el comprobante?', 'Eliminar Comprobante') //Está seguro?
+    const comprobante = this.comprobantes.find(comprobante => comprobante.id === idComprobante);
+
+    if (!comprobante) {
+      this.notificacionService.openSnackBarError('Comprobante no encontrado');
+      return;
+    }
+
+    this.notificationDialogService.confirmation(
+      `¿Desea eliminar el comprobante?
+        ${comprobante.idTipoComprobante === 1 ? '¡El inventario será modificado!' : ''}
+        Esta acción no es reversible.`,
+      'Eliminar Comprobante'
+    ) //Está seguro?
       .afterClosed()
       .subscribe((value) => {
         if (value) {
@@ -174,6 +198,10 @@ export class ConsultarComprobanteComponent implements OnInit {
   // Region getters
   get txComprobante(): FormControl {
     return this.form.get('txComprobante') as FormControl;
+  }
+
+  get txTipoComprobante(): FormControl {
+    return this.form.get('txTipoComprobante') as FormControl;
   }
 
   get txProveedor(): FormControl {

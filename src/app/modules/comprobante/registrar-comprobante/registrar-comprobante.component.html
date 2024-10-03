@@ -16,17 +16,6 @@
     <div class="row pt-4">
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Proveedor</mat-label>
-          <mat-select [formControl]="txProveedor" (selectionChange)="ObtenerPedidosPorProveedor()">
-            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
-              {{ proveedor.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Tipo Comprobante</mat-label>
           <mat-select [formControl]="txTipoComprobante">
             <mat-option *ngFor="let tipoComprobante of listaTiposComprobantes" [value]="tipoComprobante.id">
@@ -38,6 +27,37 @@
 
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número de Comprobante</mat-label>
+          <input type="text" matInput [formControl]="txNumeroComprobante"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Proveedor</mat-label>
+          <mat-select [formControl]="txProveedor" (selectionChange)="ObtenerPedidosPorProveedor()">
+            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
+              {{ proveedor.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de Emisión</mat-label>
+          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
+          <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
+          <mat-datepicker #pickerEmision></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Responsable</mat-label>
           <mat-select [formControl]="txResponsable">
             <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
@@ -47,7 +67,7 @@
         </mat-form-field>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Recibido por</mat-label>
           <mat-select [formControl]="txReceptor">
@@ -55,18 +75,6 @@
               {{ usuario.nombre + " " + usuario.apellido }}
             </mat-option>
           </mat-select>
-        </mat-form-field>
-      </div>
-
-    </div>
-
-    <div class="row pt-4">
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de Emisión</mat-label>
-          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
-          <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
-          <mat-datepicker #pickerEmision></mat-datepicker>
         </mat-form-field>
       </div>
 
@@ -104,19 +112,19 @@
               <strong>Total:</strong> ${{ pedido.total }}
             </div>
           </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-estado">
+            <div class="col">
+              <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <mat-divider class="my-3"></mat-divider>
-    <br *ngIf="!ordenSeleccionada">
+    <mat-divider class="my-3" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)"></mat-divider>
 
-    <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="!ordenSeleccionada">
-      <mat-spinner></mat-spinner>
-    </div>
-
-    <div class="row pt-4" *ngIf="productos.length > 0 && ordenSeleccionada">
+    <div class="row pt-4" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Producto</mat-label>
@@ -124,16 +132,21 @@
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
       </div>
+      <div class="col-md-8">
+        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado || tablaProductosDesactivada">
+          <mat-icon>add</mat-icon>Nuevo producto
+        </button>
+      </div>
     </div>
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0 && ordenSeleccionada">
+    <mat-card *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
       <mat-card-content>
         <div class="row">
 
           <div class="col-md-12">
-            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado">
+            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado || tablaProductosDesactivada">
               <ng-container matColumnDef="imgProducto">
                 <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                 <mat-cell *matCellDef="let producto">

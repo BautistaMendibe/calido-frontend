@@ -3,6 +3,11 @@
   color: grey;
 }
 
+.pedido-estado {
+  font-size: 18px;
+  color: grey;
+}
+
 .pedido-fecha {
   font-size: 18px;
   color: grey;
@@ -61,4 +66,9 @@
   opacity: 0.6;
 }
 
-
+.new-product-btn {
+  height: 75%;
+  float: right;
+  margin-top: auto;
+  margin-bottom: auto;
+}
