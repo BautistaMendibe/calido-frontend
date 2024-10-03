@@ -25,6 +25,7 @@ import {
   RegistrarCuentaCorrienteComponent
 } from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import {ConsultarInventarioComponent} from "./modules/inventario/consultar-inventario/consultar-inventario.component";
+import {ConsultarTarjetasComponent} from "./modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -46,6 +47,7 @@ const routes: Routes = [
   {path:'consultar-pedidos', component: ConsultarPedidosComponent},
   {path:'consultar-comprobante', component: ConsultarComprobanteComponent},
   {path:'consultar-inventario', component:ConsultarInventarioComponent},
+  {path:'consultar-tarjetas', component:ConsultarTarjetasComponent},
 ];
 
 @NgModule({
