@@ -10,6 +10,8 @@ import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando"
 import {RegistrarTarjetaComponent} from "../registrar-tarjeta/registrar-tarjeta.component";
 import {TarjetasService} from "../../../services/tarjetas.service";
 import {TipoTarjeta} from "../../../models/tipoTarjeta.model";
+import {join} from "@angular/compiler-cli";
+import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
 
 @Component({
   selector: 'app-consultar-tarjetas',
@@ -20,9 +22,8 @@ export class ConsultarTarjetasComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Tarjeta> = new MatTableDataSource<Tarjeta>([]);
   public form: FormGroup;
   public tarjetas: Tarjeta[] = [];
-  public columnas: string[] = ['imgTarjeta', 'tarjeta', 'tipoTarjeta', 'acciones'];
+  public columnas: string[] = ['tarjeta', 'tipoTarjeta', 'cuotas', 'acciones'];
   private filtros: FiltrosTarjetas;
-  public listaTarjetas: Tarjeta[] = [];
   public listaTiposTarjetas: TipoTarjeta[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -41,15 +42,14 @@ export class ConsultarTarjetasComponent implements OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.buscarTarjetas();
     this.buscarTiposTarjetas();
     this.buscar();
   }
 
   private createForm() {
     this.form = this.fb.group({
-      txProducto: [''],
-      txProveedor: [''],
+      txTarjeta: [''],
+      txTipoTarjeta: [''],
     });
   }
 
@@ -62,6 +62,12 @@ export class ConsultarTarjetasComponent implements OnInit {
       nombre: this.txTarjeta.value,
       tipoTarjeta: this.txTipoTarjeta.value,
     };
+
+    this.tarjetasService.consultarTarjetas(this.filtros).subscribe((tarjetas) => {
+      this.tarjetas = tarjetas;
+      this.tableDataSource.data = tarjetas;
+      console.log(tarjetas);
+    });
   }
 
   public registrarNuevaTarjeta() {
@@ -116,16 +122,14 @@ export class ConsultarTarjetasComponent implements OnInit {
       });
   }
 
-  private buscarTarjetas() {
-    this.tarjetasService.consultarTarjetas(this.filtros).subscribe((tarjetas) => {
-      this.listaTarjetas = tarjetas;
-    });
-  }
-
   private buscarTiposTarjetas() {
     this.tarjetasService.buscarTiposTarjetas().subscribe((tiposTarjetas) => {
       this.listaTiposTarjetas = tiposTarjetas;
     });
+  }
+
+  public getCuotas(cuotaPorTarjeta: CuotaPorTarjeta[]) {
+    return cuotaPorTarjeta.map(item => item.cuota.cantidadCuotas).join(', ');
   }
 
   get txTarjeta(): FormControl {

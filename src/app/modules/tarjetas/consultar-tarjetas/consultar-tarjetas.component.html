@@ -66,11 +66,6 @@
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
-            <ng-container matColumnDef="imgTarjeta">
-              <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
-              <mat-cell *matCellDef="let tarjeta" data-label="Imagen">{{ tarjeta.imagen }}</mat-cell>
-            </ng-container>
-
             <ng-container matColumnDef="tarjeta">
               <mat-header-cell *matHeaderCellDef>TARJETA</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="Tarjeta">{{ tarjeta.nombre }}</mat-cell>
@@ -79,6 +74,15 @@
             <ng-container matColumnDef="tipoTarjeta">
               <mat-header-cell *matHeaderCellDef>TIPO DE TARJETA</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="TipoTarjeta">{{ tarjeta.tipoTarjeta.nombre }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="cuotas">
+              <mat-header-cell *matHeaderCellDef>CUOTAS</mat-header-cell>
+              <mat-cell *matCellDef="let tarjeta" data-label="Cuotas">
+                {{
+                  (tarjeta.cuotaPorTarjeta && tarjeta.cuotaPorTarjeta.length > 0) ? getCuotas(tarjeta.cuotaPorTarjeta) : 'Sin cuotas'
+                }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">
