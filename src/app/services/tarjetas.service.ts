@@ -6,6 +6,7 @@ import {SpResult} from "../models/resultadoSp.model";
 import {FiltrosTarjetas} from "../models/comandos/FiltrosTarjetas.comando";
 import {Tarjeta} from "../models/tarjeta.model";
 import {TipoTarjeta} from "../models/tipoTarjeta.model";
+import {Cuota} from "../models/Cuota.model";
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +35,9 @@ export class TarjetasService {
 
   public buscarTiposTarjetas(): Observable<TipoTarjeta[]>{
     return this.http.get<TipoTarjeta[]>(`${this.urlBackend}/${this.controllerName}/buscar-tipo-tarjetas`);
+  }
+
+  public buscarCuotas(): Observable<Cuota[]>{
+    return this.http.get<Cuota[]>(`${this.urlBackend}/${this.controllerName}/buscar-cuotas`);
   }
 }

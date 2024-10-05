@@ -75,6 +75,7 @@ export class ConsultarTarjetasComponent implements OnInit {
       RegistrarTarjetaComponent,
       {
         width: '75%',
+        maxHeight: '80vh',
         height: 'auto',
         autoFocus: false,
         data: {
