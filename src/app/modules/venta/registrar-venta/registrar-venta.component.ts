@@ -218,6 +218,10 @@ export class RegistrarVentaComponent implements OnInit{
     venta.fecha = new Date();
     venta.formaDePago = new FormaDePago();
     venta.formaDePago.id = this.txFormaDePago.value;
+    venta.facturacion = new TipoFactura();
+    venta.facturacion.id = this.txTipoFacturacion.value;
+    const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
+    venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
     venta.montoTotal = this.totalVenta;
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
@@ -227,6 +231,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+        venta.id = respuesta.id;
         this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
 
         })
@@ -248,8 +253,8 @@ export class RegistrarVentaComponent implements OnInit{
     this.totalVenta = 0;
     this.subTotal = 0;
     this.txFormaDePago.setValue(this.formasDePago[0].id);
+    this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
     this.txCliente.setValue(null);
-    this.txTipoFacturacion.setValue(null);
   }
 
   public registrarProducto() {
