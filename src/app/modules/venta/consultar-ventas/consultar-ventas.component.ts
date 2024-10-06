@@ -85,6 +85,7 @@ export class ConsultarVentasComponent {
     this.armarFiltro();
     this.ventasService.buscarVentas(this.filtros).subscribe((ventas) => {
       this.ventas = ventas;
+      this.tableDataSource.data = ventas;
       this.isLoading = false;
     })
   }
@@ -95,6 +96,7 @@ export class ConsultarVentasComponent {
 
   public limpiarFiltros() {
     this.form.reset();
+    this.buscarVentas();
   }
 
   public verVenta(venta: Venta) {
