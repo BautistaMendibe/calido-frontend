@@ -97,11 +97,11 @@ export class ConsultarVentasComponent {
     this.form.reset();
   }
 
-  public verVenta() {
+  public verVenta(venta: Venta) {
 
   }
 
-  public deshacerVenta() {
+  public desHacerVenta(venta: Venta) {
 
   }
 
