@@ -10,8 +10,8 @@ import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando"
 import {RegistrarTarjetaComponent} from "../registrar-tarjeta/registrar-tarjeta.component";
 import {TarjetasService} from "../../../services/tarjetas.service";
 import {TipoTarjeta} from "../../../models/tipoTarjeta.model";
-import {join} from "@angular/compiler-cli";
 import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
+import {Cuota} from "../../../models/Cuota.model";
 
 @Component({
   selector: 'app-consultar-tarjetas',
@@ -25,6 +25,7 @@ export class ConsultarTarjetasComponent implements OnInit {
   public columnas: string[] = ['tarjeta', 'tipoTarjeta', 'cuotas', 'acciones'];
   private filtros: FiltrosTarjetas;
   public listaTiposTarjetas: TipoTarjeta[] = [];
+  public listaCuotas: Cuota[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();
 
   constructor(
@@ -43,6 +44,7 @@ export class ConsultarTarjetasComponent implements OnInit {
   ngOnInit() {
     this.createForm();
     this.buscarTiposTarjetas();
+    this.buscarCuotas();
     this.buscar();
   }
 
@@ -66,7 +68,6 @@ export class ConsultarTarjetasComponent implements OnInit {
     this.tarjetasService.consultarTarjetas(this.filtros).subscribe((tarjetas) => {
       this.tarjetas = tarjetas;
       this.tableDataSource.data = tarjetas;
-      console.log(tarjetas);
     });
   }
 
@@ -93,6 +94,7 @@ export class ConsultarTarjetasComponent implements OnInit {
       RegistrarTarjetaComponent,
       {
         width: '75%',
+        maxHeight: '80vh',
         height: 'auto',
         autoFocus: false,
         data: {
@@ -129,10 +131,27 @@ export class ConsultarTarjetasComponent implements OnInit {
     });
   }
 
-  public getCuotas(cuotaPorTarjeta: CuotaPorTarjeta[]) {
-    return cuotaPorTarjeta.map(item => item.cuota.cantidadCuotas).join(', ');
+  private buscarCuotas() {
+    this.tarjetasService.buscarCuotas().subscribe((cuotas) => {
+      this.listaCuotas = cuotas;
+    });
   }
 
+  public getCuotas(cuotaPorTarjeta: CuotaPorTarjeta[]) {
+    return cuotaPorTarjeta
+      .map(item => this.listaCuotas.find(cuota => cuota.id === item.idCuota)?.cantidadCuotas || 'Sin Cuotas')
+      // Eliminar duplicados
+      .filter((value, index, self) => self.indexOf(value) === index)
+      // Ordenar de menor a mayor
+      .sort((a, b) => {
+        const aNum = a === 'Sin Cuotas' ? Infinity : Number(a);
+        const bNum = b === 'Sin Cuotas' ? Infinity : Number(b);
+        return aNum - bNum;
+      })
+      .join(', ');
+  }
+
+  // Región getters
   get txTarjeta(): FormControl {
     return this.form.get('txTarjeta') as FormControl;
   }
@@ -140,4 +159,5 @@ export class ConsultarTarjetasComponent implements OnInit {
   get txTipoTarjeta(): FormControl {
     return this.form.get('txTipoTarjeta') as FormControl;
   }
+  // end region
 }

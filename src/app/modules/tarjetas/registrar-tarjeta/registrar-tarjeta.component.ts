@@ -1,7 +1,7 @@
-import {ChangeDetectorRef, Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
-import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarTarjetasComponent} from "../consultar-tarjetas/consultar-tarjetas.component";
 import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
@@ -16,7 +16,7 @@ import {Cuota} from "../../../models/Cuota.model";
   templateUrl: './registrar-tarjeta.component.html',
   styleUrl: './registrar-tarjeta.component.scss'
 })
-export class RegistrarTarjetaComponent {
+export class RegistrarTarjetaComponent implements OnInit {
 
   public form: FormGroup;
   private referencia: ConsultarTarjetasComponent;
@@ -24,23 +24,23 @@ export class RegistrarTarjetaComponent {
   public tarjetas: Tarjeta[] = [];
   public listaCuotas: Cuota[] = [];
   public cuotasSeleccionadas: CuotaPorTarjeta[] = [];
-  public columnas: string[] = ['seleccionar', 'cuota', 'recargo', 'descuento'];
+  public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'recargo', 'descuento'];
   public listaTiposTarjetas: TipoTarjeta[] = [];
 
   public tarjeta: Tarjeta;
   public esConsulta: boolean;
   public esRegistro: boolean;
   public formDesactivado: boolean;
+  public listaCuotasDeshabilitada: boolean = false;
+  protected readonly Math = Math;
 
   public dataSourceCuotas = new MatTableDataSource(this.listaCuotas);
 
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog,
     private tarjetasService: TarjetasService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
-    private cdr: ChangeDetectorRef,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarTarjetasComponent
       tarjeta: Tarjeta;
@@ -63,6 +63,10 @@ export class RegistrarTarjetaComponent {
     this.buscarTarjetas();
     this.buscarTiposTarjetas();
     this.buscarCuotas();
+
+    if (this.data.editar) {
+      this.listaCuotasDeshabilitada = false;
+    }
   }
 
   private crearFormulario() {
@@ -83,7 +87,7 @@ export class RegistrarTarjetaComponent {
       this.tarjetas = tarjetas;
 
       if (this.esConsulta && this.tarjetas) {
-        this.rellenarFormularioDataPedido();
+        this.rellenarFormularioDataTarjeta();
       }
     });
   }
@@ -92,17 +96,36 @@ export class RegistrarTarjetaComponent {
     this.tarjetasService.buscarCuotas().subscribe((cuotas) => {
       this.listaCuotas = cuotas;
       this.dataSourceCuotas.data = this.listaCuotas;
-      this.cdr.detectChanges();
     });
   }
 
-  private rellenarFormularioDataPedido() {
+  private rellenarFormularioDataTarjeta() {
     this.txTarjeta.setValue(this.tarjeta.nombre);
     this.txTipoTarjeta.setValue(this.tarjeta.idTipoTarjeta);
 
     this.tarjeta.cuotaPorTarjeta.forEach((cuota: CuotaPorTarjeta) => {
-      // TODO
+      const cuotaEncontrada = this.listaCuotas.find(item => item.id === cuota.idCuota);
+
+      if (cuotaEncontrada) {
+        // Encuentra la fila en dataSourceCuotas que coincide con la cantidad de cuotas.
+        const fila = this.dataSourceCuotas.data.find(f => f.cantidadCuotas === cuotaEncontrada.cantidadCuotas);
+
+        // Rellena los datos de las filas
+        if (fila) {
+          (fila as any).selected = true;
+          (fila as any).interes = cuota.interes;
+          (fila as any).recargo = cuota.recargo;
+          (fila as any).descuento = cuota.descuento;
+
+          // Simula una selección, para agregar la cuota a la lista de cuotas seleccionadas
+          const event = { checked: true };
+          this.toggleSelection(event, fila);
+        }
+      }
     });
+
+    // Actualiza el dataSourceCuotas para que se reflejen los cambios
+    this.dataSourceCuotas.data = [...this.dataSourceCuotas.data];
 
     if (this.formDesactivado) {
       this.form.disable();
@@ -123,11 +146,19 @@ export class RegistrarTarjetaComponent {
 
       tarjeta.nombre = this.txTarjeta.value;
       tarjeta.idTipoTarjeta = this.txTipoTarjeta.value;
+      tarjeta.cuotaPorTarjeta = [];
 
-      // Por cada cuota seleccionado, creamos una cuota por tarjeta.
-      // TODO
+      this.cuotasSeleccionadas.forEach((cuotaSeleccionada) => {
+        const cuotaPorTarjeta: CuotaPorTarjeta = new CuotaPorTarjeta();
 
-      //tarjeta.cuotaPorTarjeta = cuotaPorTarjeta;
+        cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
+        cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
+        cuotaPorTarjeta.recargo = cuotaSeleccionada.recargo;
+        cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
+
+        // Agregar la cuota a la lista de la tarjeta
+        tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
+      });
 
       this.tarjetasService.registrarTarjeta(tarjeta).subscribe((respuesta) => {
         if (respuesta.mensaje === 'OK') {
@@ -148,11 +179,20 @@ export class RegistrarTarjetaComponent {
       tarjeta.id = this.data.tarjeta?.id;
       tarjeta.nombre = this.txTarjeta.value;
       tarjeta.idTipoTarjeta = this.txTipoTarjeta.value;
+      tarjeta.cuotaPorTarjeta = [];
 
-      // Por cada cuota seleccionado, creamos una cuota por tarjeta.
-      // TODO
+      this.cuotasSeleccionadas.forEach((cuotaSeleccionada) => {
+        const cuotaPorTarjeta: CuotaPorTarjeta = new CuotaPorTarjeta();
 
-      //tarjeta.cuotaPorTarjeta = cuotaPorTarjeta;
+        cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
+        cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
+        cuotaPorTarjeta.idTarjeta = cuotaSeleccionada.idTarjeta;
+        cuotaPorTarjeta.recargo = cuotaSeleccionada.recargo;
+        cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
+
+        // Agregar la cuota a la lista de la tarjeta
+        tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
+      });
 
       this.tarjetasService.modificarTarjeta(tarjeta).subscribe((res) => {
         if (res.mensaje == 'OK') {
@@ -166,40 +206,62 @@ export class RegistrarTarjetaComponent {
     }
   }
 
-  // Método para seleccionar o deseleccionar una cuota
-  toggleSelection(event: any, cuota: any): void {
-    cuota.selected = event.checked;
+  // Método para guardar cuotas seleccionadas en lista
+  public toggleSelection(event: any, cuota: any) {
+    if (event.checked) {
+      cuota.selected = true;
+
+      const cuotaEncontrada = this.listaCuotas.find(c => c.cantidadCuotas === cuota.cantidadCuotas);
+
+      if (!cuotaEncontrada) {
+        return; // No encontró la cuota correspondiente.
+      }
+
+      const idCuota = cuotaEncontrada.id
+
+      // Crear el objeto CuotaPorTarjeta basado en los datos de la cuota seleccionada
+      const cuotaPorTarjeta: CuotaPorTarjeta = {
+        id: cuota.id,
+        interes: cuota.interes,
+        idCuota: idCuota,
+        idTarjeta: this.tarjeta.id,
+        recargo: cuota.recargo,
+        descuento: cuota.descuento
+      };
+
+      // Agregar a la lista de cuotas seleccionadas
+      this.cuotasSeleccionadas.push(cuotaPorTarjeta);
+    } else {
+      // Eliminar la cuota de la lista si se quita selección
+      this.cuotasSeleccionadas = this.cuotasSeleccionadas.filter(c => c.id !== cuota.id);
+      cuota.selected = false;
+    }
   }
 
-  // Verificar si la cuota está seleccionada
-  isSelected(cuota: any): boolean {
+  // Método para verificar si una cuota está seleccionada
+  public isSelected(cuota: any): boolean {
     return cuota.selected;
   }
 
-  // Método para actualizar el valor de recargo
-  onRecargoChange(tarjeta: any, recargo: number): void {
-    tarjeta.cuotaPorTarjeta.recargo = recargo;
-  }
-
-  // Método para actualizar el valor de descuento
-  onDescuentoChange(tarjeta: any, descuento: number): void {
-    tarjeta.cuotaPorTarjeta.descuento = descuento;
-  }
-
-  enableEdit(cuota: any, field: string) {
-    if (field === 'recargo') {
-      cuota.isEditingRecargo = true;
-    } else if (field === 'descuento') {
-      cuota.isEditingDescuento = true;
+  // Método para habilitar la edición de un campo en la cuota seleccionada
+  public toggleEdit(cuota: any, campo: string): void {
+    if (this.isSelected(cuota)) {
+      cuota[`isEditing${this.capitalize(campo)}`] = true;
     }
   }
 
-  disableEdit(cuota: any, field: string) {
-    if (field === 'recargo') {
-      cuota.isEditingRecargo = false;
-    } else if (field === 'descuento') {
-      cuota.isEditingDescuento = false;
+  // Método para guardar los cambios en la cuota seleccionada
+  public disableEdit(cuota: any, campo: string): void {
+    cuota[`isEditing${this.capitalize(campo)}`] = false;
+
+    const cuotaSeleccionada = this.cuotasSeleccionadas.find(c => c.id === cuota.id);
+    if (cuotaSeleccionada) {
+      cuotaSeleccionada[campo as keyof CuotaPorTarjeta] = cuota[campo as keyof CuotaPorTarjeta];
     }
+  }
+
+  private capitalize(str: string): string {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
   public cancelar() {

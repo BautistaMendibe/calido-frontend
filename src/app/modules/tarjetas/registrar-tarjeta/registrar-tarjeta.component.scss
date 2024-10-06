@@ -4,6 +4,9 @@
   align-items: center;
   width: 100%;
   cursor: pointer;
+  background-color: rgba(230, 230, 230, 0.2);
+  border-radius: 5px;
+  padding: 10px;
 
   .full-width-input {
     width: 100%;
@@ -19,4 +22,10 @@
       outline: none;
     }
   }
+}
+
+
+.disabled-table {
+  pointer-events: none;
+  opacity: 0.6;
 }
