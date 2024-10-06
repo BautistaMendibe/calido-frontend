@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Producto} from "../../../models/producto.model";
-import {FormBuilder, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {MarcasService} from "../../../services/marcas.service";
@@ -29,6 +29,7 @@ export class ConsultarVentasComponent {
 
   public formasDePago: FormaDePago[] = [];
   public tiposFactura: TipoFactura[] = [];
+  public ventas: Venta[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -68,6 +69,40 @@ export class ConsultarVentasComponent {
     });
   }
 
-  private buscarVentas() {}
+  private armarFiltro() {
+    this.filtros.numero = this.txNumero.value;
+    this.filtros.fechaDesde = this.txFechaDesde.value;
+    this.filtros.fechaHasta = this.txFechaHasta.value;
+    this.filtros.formaDePago = this.txFormaDePago.value;
+    this.filtros.tipoFacturacion = this.txTiposFactura.value;
+  }
+
+  private buscarVentas() {
+    this.armarFiltro();
+    this.ventasService.buscarVentas(this.filtros).subscribe((ventas) => {
+      this.ventas = ventas;
+    })
+  }
+
+
+  get txNumero(): FormControl {
+    return this.form.get('txNumero') as FormControl;
+  }
+
+  get txFechaDesde(): FormControl {
+    return this.form.get('txFechaDesde') as FormControl;
+  }
+
+  get txFechaHasta(): FormControl {
+    return this.form.get('txFechaHasta') as FormControl;
+  }
+
+  get txFormaDePago(): FormControl {
+    return this.form.get('txFormaDePago') as FormControl;
+  }
+
+  get txTiposFactura(): FormControl {
+    return this.form.get('txTiposFactura') as FormControl;
+  }
 
 }

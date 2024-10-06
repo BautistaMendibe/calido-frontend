@@ -3,4 +3,5 @@ export class FiltrosVentas {
   fechaDesde?: Date;
   fechaHasta?: Date;
   formaDePago?: number;
+  tipoFacturacion?: number;
 }
