@@ -14,6 +14,7 @@ import {FiltrosVentas} from "../../../models/comandos/FiltrosVentas.comando";
 import {VentasService} from "../../../services/ventas.services";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {TipoFactura} from "../../../models/tipoFactura.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-consultar-ventas',
@@ -30,12 +31,14 @@ export class ConsultarVentasComponent {
   public formasDePago: FormaDePago[] = [];
   public tiposFactura: TipoFactura[] = [];
   public ventas: Venta[] = [];
+  public isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
     private notificacionService: SnackBarService,
-    private ventasService: VentasService) {
+    private ventasService: VentasService,
+    private router: Router) {
     this.filtros = new FiltrosVentas();
     this.form = new FormGroup({});
   }
@@ -77,14 +80,32 @@ export class ConsultarVentasComponent {
     this.filtros.tipoFacturacion = this.txTiposFactura.value;
   }
 
-  private buscarVentas() {
+  public buscarVentas() {
+    this.isLoading = false;
     this.armarFiltro();
     this.ventasService.buscarVentas(this.filtros).subscribe((ventas) => {
       this.ventas = ventas;
+      this.isLoading = false;
     })
   }
 
+  public registrarNuevaVenta() {
+    this.router.navigate(['/registrar-venta']);
+  }
 
+  public limpiarFiltros() {
+    this.form.reset();
+  }
+
+  public verVenta() {
+
+  }
+
+  public deshacerVenta() {
+
+  }
+
+  // Getters
   get txNumero(): FormControl {
     return this.form.get('txNumero') as FormControl;
   }
