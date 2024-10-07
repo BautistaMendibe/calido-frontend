@@ -35,7 +35,7 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { RegistrarVentaComponent } from './modules/venta/registrar-venta/registrar-venta.component';
 import { MarcarAsistenciaComponent } from './modules/empleados/marcar-asistencia/marcar-asistencia.component';
 import { ConsultarAsistenciaComponent } from './modules/empleados/consultar-asistencia/consultar-asistencia.component';
-import { registerLocaleData } from '@angular/common';
+import {DatePipe, registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
 import { RegistrarPedidoComponent } from './modules/pedidos/registrar-pedido/registrar-pedido.component';
@@ -121,6 +121,7 @@ registerLocaleData(localeEs, 'es');
     AuthService,
     provideAnimationsAsync(),
     provideNgxMask(),
+    DatePipe,
     {
       provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
     },

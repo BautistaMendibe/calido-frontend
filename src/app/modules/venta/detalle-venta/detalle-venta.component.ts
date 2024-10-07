@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Venta} from "../../../models/venta.model";
+import {DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -17,6 +18,7 @@ export class DetalleVentaComponent implements OnInit{
     private fb: FormBuilder,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<any>,
+    private datePipe: DatePipe,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta
     }
@@ -43,18 +45,20 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   private setearDatos() {
-
-  }
-
-  public desHacerVenta() {
-    this.txFecha.setValue(this.venta.fecha);
+    this.txFecha.setValue(this.formatDate(this.venta.fecha));
     this.txFormaDePago.setValue(this.venta.formaDePago.nombre);
-    this.txTipoFactura.setValue(this.venta.facturacion.nombre);
+    this.txTipoFactura.setValue(this.venta.comprobanteAfip.comprobante_tipo);
     this.txCliente.setValue(this.venta.usuario.nombre);
     this.txDniCliente.setValue(this.venta.usuario.dni);
     this.txMailCliente.setValue(this.venta.usuario.mail);
     this.txCondicionIvaCliente.setValue(this.venta.usuario.idCondicionIva);
   }
+
+  private formatDate(fecha: Date): string | null {
+    return this.datePipe.transform(fecha, 'dd/MM/yyyy HH:mm');
+  }
+
+  public desHacerVenta() {}
 
   public imprimirComprobante() {
     const url = this.venta.comprobanteAfip.comprobante_pdf_url;
