@@ -133,6 +133,9 @@
                 <button mat-icon-button color="primary" matTooltip="Deshacer verta" (click)="desHacerVenta(venta)">
                   <mat-icon class="eliminar">settings_backup_restore</mat-icon>
                 </button>
+                <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante(venta)">
+                  <mat-icon class="imprimir">print</mat-icon>
+                </button>
               </mat-cell>
             </ng-container>
 

@@ -107,6 +107,11 @@ export class ConsultarVentasComponent {
 
   }
 
+  public imprimirComprobante(venta: Venta) {
+    const url = venta.comprobanteAfip.comprobante_pdf_url;
+    window.open(url, '_blank');
+  }
+
   public getNombresProductos(productos: Producto[]): string {
     return productos.map(producto => producto.nombre).join(', ');
   }
