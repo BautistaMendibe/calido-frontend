@@ -3,6 +3,8 @@ import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Venta} from "../../../models/venta.model";
 import {DatePipe} from "@angular/common";
+import {MatTableDataSource} from "@angular/material/table";
+import {Producto} from "../../../models/producto.model";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -13,6 +15,10 @@ export class DetalleVentaComponent implements OnInit{
 
   public form: FormGroup;
   public venta: Venta;
+  public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
+  public columnas: string[] = ['imgProducto', 'producto', 'cantidad', 'subTotal'];
+
+
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +36,8 @@ export class DetalleVentaComponent implements OnInit{
   ngOnInit() {
     this.crearFormulario();
     this.setearDatos();
+    this.form.disable();
+    this.tableDataSource.data = this.venta.productos;
   }
 
   private crearFormulario() {
@@ -37,6 +45,7 @@ export class DetalleVentaComponent implements OnInit{
       txFecha: ['', []],
       txFormaDePago: ['', []],
       txTipoFactura: ['', []],
+      txMontoTotal: ['', []],
       txCliente: ['', []],
       txDniCliente: ['', []],
       txMailCliente: ['', []],
@@ -48,6 +57,7 @@ export class DetalleVentaComponent implements OnInit{
     this.txFecha.setValue(this.formatDate(this.venta.fecha));
     this.txFormaDePago.setValue(this.venta.formaDePago.nombre);
     this.txTipoFactura.setValue(this.venta.comprobanteAfip.comprobante_tipo);
+    this.txMontoTotal.setValue(this.venta.montoTotal);
     this.txCliente.setValue(this.venta.usuario.nombre);
     this.txDniCliente.setValue(this.venta.usuario.dni);
     this.txMailCliente.setValue(this.venta.usuario.mail);
@@ -81,6 +91,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txTipoFactura(): FormControl {
     return this.form.get('txTipoFactura') as FormControl;
+  }
+
+  get txMontoTotal(): FormControl {
+    return this.form.get('txMontoTotal') as FormControl;
   }
 
   get txCliente(): FormControl {

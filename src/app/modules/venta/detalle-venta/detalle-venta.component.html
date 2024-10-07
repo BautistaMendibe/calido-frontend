@@ -16,11 +16,12 @@
     </div>
   </div>
 
+  <mat-divider></mat-divider>
   <br>
+
   <form [formGroup]="form">
     <div class="row">
-      <h3>Datos generales:</h3>
-      <mat-divider></mat-divider>
+      <h3 class="subtitulo">Datos generales:</h3>
       <br>
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
@@ -43,210 +44,89 @@
         </mat-form-field>
       </div>
     </div>
-
     <div class="row">
-      <h3>Cliente:</h3>
-      <mat-divider></mat-divider>
-      <br>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Cliente</mat-label>
-          <input type="text" matInput [formControl]="txCliente"/>
-        </mat-form-field>
-      </div>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Dni</mat-label>
-          <input type="text" matInput [formControl]="txDniCliente"/>
-        </mat-form-field>
-      </div>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Mail</mat-label>
-          <input type="text" matInput [formControl]="txMailCliente"/>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <!--
-    <div class="row pt-4">
-      <h3>Datos generales:</h3>
-      <mat-divider></mat-divider>
-      <br>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Cliente</mat-label>
-          <input type="text" matInput [formControl]="txCliente"/>
-        </mat-form-field>
-      </div>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Dni</mat-label>
-          <input type="text" matInput [formControl]="txDniCliente"/>
-        </mat-form-field>
-      </div>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Mail</mat-label>
-          <input type="text" matInput [formControl]="txMailCliente"/>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <mat-divider class="my-3"></mat-divider>
-
-
-    <div class="spinner-wrapper" *ngIf="productos.length == 0">
-      <mat-spinner></mat-spinner>
-    </div>
-
-    <div class="row pt-4" *ngIf="productos.length > 0">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Producto</mat-label>
-          <input type="text" matInput [formControl]="txBuscar"/>
-          <mat-icon matPrefix>search</mat-icon>
+          <mat-label>Monto total</mat-label>
+          <input type="text" matInput [formControl]="txMontoTotal"/>
         </mat-form-field>
-      </div>
-      <div class="col-md-8">
-        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado || listaProductosDeshabilitada">
-          <mat-icon>add</mat-icon>Nuevo producto
-        </button>
       </div>
     </div>
 
+    <mat-divider></mat-divider>
     <br>
 
-    <mat-card *ngIf="productos.length > 0">
+    <div class="row">
+      <h3 class="subtitulo">Cliente:</h3>
+      <br>
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cliente</mat-label>
+          <input type="text" matInput [formControl]="txCliente"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Dni</mat-label>
+          <input type="text" matInput [formControl]="txDniCliente"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Mail</mat-label>
+          <input type="text" matInput [formControl]="txMailCliente"/>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <br>
+
+    <h3 class="subtitulo">Productos vendidos:</h3>
+    <mat-card>
       <mat-card-content>
         <div class="row">
-
           <div class="col-md-12">
-            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
+            <mat-table [dataSource]="tableDataSource" matSort>
               <ng-container matColumnDef="imgProducto">
                 <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   <img [src]="producto.imgProducto" class="img-thumbnail"/>
                 </mat-cell>
               </ng-container>
+
               <ng-container matColumnDef="producto">
                 <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
-                <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
+                <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
-              <ng-container matColumnDef="costo">
-                <mat-header-cell *matHeaderCellDef>COSTO COMPRA</mat-header-cell>
-                <mat-cell *matCellDef="let producto">
-                  $ {{ producto.costo | number:'1.2-2':'es-AR' }}
-                </mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="tipoProducto">
-                <mat-header-cell *matHeaderCellDef>TIPO PRODUCTO</mat-header-cell>
-                <mat-cell *matCellDef="let producto">{{ producto.tipoProducto?.nombre }}</mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="proveedor">
-                <mat-header-cell *matHeaderCellDef>PROVEEDOR</mat-header-cell>
-                <mat-cell *matCellDef="let producto">{{ producto.proveedor?.nombre }}</mat-cell>
-              </ng-container>
-              <ng-container matColumnDef="marca">
-                <mat-header-cell *matHeaderCellDef>MARCA</mat-header-cell>
-                <mat-cell *matCellDef="let producto">{{ producto.marca?.nombre }}</mat-cell>
-              </ng-container>
+
               <ng-container matColumnDef="cantidad">
                 <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
-                <mat-cell *matCellDef="let producto" data-label="Cantidad">
-                  <div class="d-flex align-items-center justify-content-right">
-                    <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
-                    <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
-                    <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)">+</button>
-                  </div>
-                </mat-cell>
+                <mat-cell *matCellDef="let producto" data-label="Cantidad">{{ producto.cantidadSeleccionada }}</mat-cell>
               </ng-container>
+
+              <ng-container matColumnDef="subTotal">
+                <mat-header-cell *matHeaderCellDef>SUBTOTAL</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta }}</mat-cell>
+              </ng-container>
+
+
               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+              <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
             </mat-table>
-            <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
-              No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-            </h6>
-            <mat-paginator *ngIf="this.productos.length > 0"
-                           [length]="this.productos.length"
-                           [disabled]="formDesactivado"
+
+
+            <mat-paginator *ngIf="this.venta.productos.length > 0"
+                           [length]="this.venta.productos.length"
                            [pageSize]="10"
                            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
           </div>
         </div>
       </mat-card-content>
     </mat-card>
-  </form>
 
-  <br>
-  <mat-divider></mat-divider>
-
-  <div class="row pt-4">
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Costo de Compra</mat-label>
-        <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$" thousandSeparator="," />
-      </mat-form-field>
-    </div>
-    <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
-      <span>+</span>
-    </div>
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Costo de Transporte</mat-label>
-        <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$" thousandSeparator="," />
-      </mat-form-field>
-    </div>
-    <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
-      <span>+</span>
-    </div>
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Impuestos</mat-label>
-        <mat-select [formControl]="txImpuestos">
-          <mat-option value="21">IVA (21%)</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
-      <span>-</span>
-    </div>
-    <div class="col-md">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Descuentos a productos</mat-label>
-        <mat-select [formControl]="txDescuento">
-          <mat-option *ngFor="let descuento of descuentos" [value]="descuento.value">
-            {{ descuento.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-  </div>
-
-  <div class="row pt-4 justify-content-center">
-    <div class="col-md-3">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Total</mat-label>
-        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
-      </mat-form-field>
-    </div>
-  </div>
-
-  <mat-divider class="my-3"></mat-divider>
-
-
-  <div class="row text-right">
-    <div class="col d-flex justify-content-end">
-      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
-      </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoPedido()" id="btnBuscar">Registrar</button>
-      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarPedido()" id="btnBuscar2">Modificar</button>
-    </div>
-  </div>
-  <br>
-
-  -->
+    <br><br>
     <div class="row text-right">
       <div class="col d-flex justify-content-end">
         <button mat-button color="accent" class="btn round" (click)="cerrar()" id="btnLimpiarFiltro">
