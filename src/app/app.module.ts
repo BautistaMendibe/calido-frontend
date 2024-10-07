@@ -55,6 +55,7 @@ import { BuscarProductosComponent } from './modules/productos/buscar-productos/b
 import { ConsultarTarjetasComponent } from './modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component';
 import { RegistrarTarjetaComponent } from './modules/tarjetas/registrar-tarjeta/registrar-tarjeta.component';
 import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consultar-ventas.component';
+import { DetalleVentaComponent } from './modules/venta/detalle-venta/detalle-venta.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -95,7 +96,8 @@ registerLocaleData(localeEs, 'es');
     BuscarProductosComponent,
     ConsultarTarjetasComponent,
     RegistrarTarjetaComponent,
-    ConsultarVentasComponent
+    ConsultarVentasComponent,
+    DetalleVentaComponent
   ],
   imports: [
     BrowserModule,

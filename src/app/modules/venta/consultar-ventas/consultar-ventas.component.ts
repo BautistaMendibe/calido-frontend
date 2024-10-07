@@ -1,27 +1,23 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Producto} from "../../../models/producto.model";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {MarcasService} from "../../../services/marcas.service";
-import {ProveedoresService} from "../../../services/proveedores.service";
-import {NotificationService} from "../../../services/notificacion.service";
-import {ProductosService} from "../../../services/productos.service";
-import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {Venta} from "../../../models/venta.model";
 import {FiltrosVentas} from "../../../models/comandos/FiltrosVentas.comando";
 import {VentasService} from "../../../services/ventas.services";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {TipoFactura} from "../../../models/tipoFactura.model";
 import {Router} from "@angular/router";
+import {DetalleVentaComponent} from "../detalle-venta/detalle-venta.component";
 
 @Component({
   selector: 'app-consultar-ventas',
   templateUrl: './consultar-ventas.component.html',
   styleUrl: './consultar-ventas.component.scss'
 })
-export class ConsultarVentasComponent {
+export class ConsultarVentasComponent implements OnInit{
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public form: FormGroup;
@@ -100,7 +96,18 @@ export class ConsultarVentasComponent {
   }
 
   public verVenta(venta: Venta) {
-
+    this.dialog.open(
+      DetalleVentaComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          venta: venta,
+        }
+      }
+    )
   }
 
   public desHacerVenta(venta: Venta) {
