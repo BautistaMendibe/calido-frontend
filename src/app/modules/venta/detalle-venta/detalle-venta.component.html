@@ -1,37 +1,42 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-    <div class="col d-flex justify-content-between align-items-center">
+    <div class="col-sm-6 mt-2">
       <p class="titulo">Consultar venta N° {{venta.id}}</p>
-      <button mat-icon-button color="primary" matTooltip="Deshacer verta" (click)="desHacerVenta()">
-        <mat-icon class="eliminar">settings_backup_restore</mat-icon>
-      </button>
-      <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
-        <mat-icon class="imprimir">print</mat-icon>
-      </button>
+    </div>
+    <div class="col-sm-6">
+      <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
+        <button mat-icon-button color="primary" matTooltip="Deshacer verta" (click)="desHacerVenta()">
+          <mat-icon class="eliminar">settings_backup_restore</mat-icon>
+        </button>
+        <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
+          <mat-icon class="imprimir">print</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 
-  <mat-divider></mat-divider>
-
   <br>
   <form [formGroup]="form">
-    <div class="row pt-4">
-      <div class="col-md-3">
+    <div class="row">
+      <h3>Datos generales:</h3>
+      <mat-divider></mat-divider>
+      <br>
+      <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de venta</mat-label>
           <input type="text" matInput [formControl]="txFecha"/>
         </mat-form-field>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Forma de pago</mat-label>
           <input type="text" matInput [formControl]="txFormaDePago"/>
         </mat-form-field>
       </div>
 
-      <div class="col-md-3">
+      <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Tipo de factura</mat-label>
           <input type="text" matInput [formControl]="txTipoFactura"/>
@@ -39,8 +44,8 @@
       </div>
     </div>
 
-    <div class="row pt-4">
-      <h3>Datos generales:</h3>
+    <div class="row">
+      <h3>Cliente:</h3>
       <mat-divider></mat-divider>
       <br>
       <div class="col-md">
