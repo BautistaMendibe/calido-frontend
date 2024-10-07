@@ -29,6 +29,7 @@ export class RegistrarProductoComponent implements OnInit {
   private selectedFile: File | null = null;
   public esConsulta: boolean;
   public listaPorcentajesGanancia: { value: number, label: string }[] = [];
+  public editarPrecioDeVenta: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -43,12 +44,14 @@ export class RegistrarProductoComponent implements OnInit {
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
+      editarPrecioDeVenta: boolean
     }
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
     this.productoImg = this.data.producto?.imgProducto || null;
     this.esConsulta = this.data.esConsulta;
+    this.editarPrecioDeVenta = this.data.editarPrecioDeVenta;
   }
 
   ngOnInit() {
@@ -56,6 +59,11 @@ export class RegistrarProductoComponent implements OnInit {
 
     if (this.data.formDesactivado) {
       this.form.disable();
+
+      // Solo permitir modificar precio de ser necesario
+      if (this.editarPrecioDeVenta) {
+        this.txCosto.enable();
+      }
     }
 
     this.buscarTiposProductos();
@@ -128,9 +136,13 @@ export class RegistrarProductoComponent implements OnInit {
   public modificarProducto() {
     if (this.form.valid) {
       const producto = this.construirProducto(this.data.producto?.id);
-      this.productosService.modificarProducto(producto).subscribe((respuesta) => {
-        this.gestionarRespuesta(respuesta, 'El producto se modificó con éxito');
-      });
+      if (!this.editarPrecioDeVenta) {
+        this.productosService.modificarProducto(producto).subscribe((respuesta) => {
+          this.gestionarRespuesta(respuesta, 'El producto se modificó con éxito');
+        });
+      } else {
+        this.dialogRef.close(producto);
+      }
     }
   }
 
@@ -153,8 +165,7 @@ export class RegistrarProductoComponent implements OnInit {
   private gestionarRespuesta(respuesta: any, mensajeExito: string) {
     if (respuesta.mensaje === 'OK') {
       this.notificacionService.openSnackBarSuccess(mensajeExito);
-      this.dialogRef.close();
-      this.referencia.buscar();
+      this.dialogRef.close(true);
     } else {
       this.notificacionService.openSnackBarError('Error al procesar la solicitud, intentelo nuevamente');
     }

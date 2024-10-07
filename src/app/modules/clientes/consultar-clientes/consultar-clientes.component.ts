@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
 import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
+import {fakeAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'app-consultar-clientes',
@@ -25,6 +26,7 @@ export class ConsultarClientesComponent {
   public form: FormGroup;
   public clientes: Usuario[] = [];
   public columnas: string[] = ['nombre', 'mail', 'acciones'];
+  public isLoading: boolean = false;
 
   private filtros: FiltrosEmpleados;
 
@@ -64,10 +66,12 @@ export class ConsultarClientesComponent {
     this.filtros.nombre = this.txNombre.value;
     this.filtros.apellido = this.txApellido.value;
     this.filtros.mail = this.txMail.value;
+    this.isLoading = true;
 
     this.usuariosService.consultarClientes(this.filtros).subscribe((clientes) => {
       this.clientes = clientes;
       this.tableDataSource.data = clientes;
+      this.isLoading = false;
     });
   }
 

@@ -22,7 +22,8 @@ export class SidebarComponent implements OnInit {
   menuItems: Menu[] = [
     {id: 1, nombre: 'Inicio', path:'', icon: 'home', activo: false, subMenu: []},
     {id: 2, nombre: 'Ventas', path:'registrar-venta', icon: 'sell', activo: false, subMenu: [
-        {id: 1, nombre: 'Registrar venta', path:'/registar-venta', icon: '', activo: false, subMenu: []}
+        {id: 1, nombre: 'Registrar venta', path:'/registrar-venta', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar ventas', path:'/consultar-ventas', icon: '', activo: false, subMenu: []}
       ]},
     {id: 3, nombre: 'Ordenes de Compra', path:'consultar-pedidos', icon: 'receipt', activo: false, requiresAdmin: true, subMenu: []},
     {id: 4, nombre: 'Inventario', path:'consultar-comprobante', icon: 'add_box', activo: false, requiresAdmin: true, subMenu: [

@@ -93,7 +93,7 @@ export class ConsultarProductosComponent implements OnInit {
   }
 
   public registrarNuevoProducto() {
-    this.dialog.open(
+    const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
         width: '75%',
@@ -106,10 +106,16 @@ export class ConsultarProductosComponent implements OnInit {
         }
       }
     );
+
+    ref.afterClosed().subscribe((respusta) => {
+      if (respusta) {
+        this.buscar();
+      }
+    });
   }
 
   public verProducto(producto: Producto, editar: boolean) {
-    this.dialog.open(
+    const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
         width: '75%',
@@ -124,6 +130,12 @@ export class ConsultarProductosComponent implements OnInit {
         }
       }
     );
+
+    ref.afterClosed().subscribe((respusta) => {
+      if (respusta) {
+        this.buscar();
+      }
+    });
   }
 
   public eliminarProducto(idProducto: number) {

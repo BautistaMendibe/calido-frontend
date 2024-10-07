@@ -14,6 +14,7 @@ import {MatDialog} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {TipoFactura} from "../../../models/tipoFactura.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -31,6 +32,7 @@ export class RegistrarVentaComponent implements OnInit{
   public clientes: Usuario[] = [];
   public formasDePago: FormaDePago[] = [];
   public registrandoVenta: boolean = false;
+  public tiposDeFacturacion: TipoFactura[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -61,7 +63,7 @@ export class RegistrarVentaComponent implements OnInit{
   private crearFormulario() {
     this.form = this.fb.group({
       txFormaDePago: ['', []],
-      txNumeracion: ['', []],
+      txTipoFacturacion: ['', []],
       txCliente: ['', []],
     });
   }
@@ -69,6 +71,7 @@ export class RegistrarVentaComponent implements OnInit{
   private buscarDataCombos() {
     this.buscarUsuariosClientes();
     this.buscarFormasDePago();
+    this.buscarTiposFactura();
   }
 
   private buscarUsuariosClientes() {
@@ -82,6 +85,13 @@ export class RegistrarVentaComponent implements OnInit{
     this.ventasService.buscarFormasDePago().subscribe((formasDePago) => {
       this.formasDePago = formasDePago;
       this.txFormaDePago.setValue(this.formasDePago[0].id);
+    });
+  }
+
+  private buscarTiposFactura() {
+    this.ventasService.buscarTiposFactura().subscribe((tiposFacturacion) => {
+      this.tiposDeFacturacion = tiposFacturacion;
+      this.txTipoFacturacion.setValue(tiposFacturacion[1].id);
     });
   }
 
@@ -161,7 +171,35 @@ export class RegistrarVentaComponent implements OnInit{
     this.totalVenta = this.subTotal + this.impuestoIva;
   }
 
-  public editarProductoEnVenta(producto: Producto){}
+  public editarProductoEnVenta(producto: Producto){
+    const ref = this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          producto: producto,
+          editarPrecioDeVenta: true,
+          formDesactivado: true,
+          editar: true,
+          esConsulta: true,
+        }
+      }
+    );
+
+    ref.afterClosed().subscribe((respusta: Producto) => {
+      if (respusta) {
+        this.productosSeleccionados.map((producto: Producto) => {
+          if (producto.id == respusta.id) {
+            producto.costo = respusta.costo;
+          }
+        })
+        this.notificacionService.openSnackBarSuccess('Precio modificado para esta venta.');
+        this.calcularSubTotal();
+      }
+    });
+  }
 
   public eliminarProductoDeVenta(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
@@ -175,9 +213,15 @@ export class RegistrarVentaComponent implements OnInit{
     const venta: Venta = new Venta();
 
     // Seteamos valores de la venta
-    venta.usuario = this.txCliente.value ? this.txCliente.value : null;
+    venta.usuario = new Usuario();
+    venta.usuario.id = this.txCliente.value ? this.txCliente.value : null;
     venta.fecha = new Date();
-    venta.formaDePago = this.txFormaDePago.value;
+    venta.formaDePago = new FormaDePago();
+    venta.formaDePago.id = this.txFormaDePago.value;
+    venta.facturacion = new TipoFactura();
+    venta.facturacion.id = this.txTipoFacturacion.value;
+    const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
+    venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
     venta.montoTotal = this.totalVenta;
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
@@ -187,6 +231,10 @@ export class RegistrarVentaComponent implements OnInit{
     this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+        venta.id = respuesta.id;
+        this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
+
+        })
         this.registrandoVenta = false;
         this.limpiarVenta();
       } else {
@@ -204,9 +252,9 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosSeleccionados = [];
     this.totalVenta = 0;
     this.subTotal = 0;
-    this.txFormaDePago.setValue(this.formasDePago[0]);
+    this.txFormaDePago.setValue(this.formasDePago[0].id);
+    this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
     this.txCliente.setValue(null);
-    this.txNumeracion.setValue(null);
   }
 
   public registrarProducto() {
@@ -230,8 +278,9 @@ export class RegistrarVentaComponent implements OnInit{
       RegistrarClientesComponent,
       {
         width: '75%',
-        height: 'auto',
+        height: '85vh',
         autoFocus: false,
+        panelClass: 'custom-dialog-container',
         data: {
           esConsulta: false,
           formDesactivado: false,
@@ -252,8 +301,8 @@ export class RegistrarVentaComponent implements OnInit{
     return this.form.get('txFormaDePago') as FormControl;
   }
 
-  get txNumeracion(): FormControl {
-    return this.form.get('txNumeracion') as FormControl;
+  get txTipoFacturacion(): FormControl {
+    return this.form.get('txTipoFacturacion') as FormControl;
   }
 
   get txCliente(): FormControl {

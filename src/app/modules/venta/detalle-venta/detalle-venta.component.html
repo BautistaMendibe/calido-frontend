@@ -1,0 +1,139 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col-sm-6 mt-2">
+      <p class="titulo">Consultar venta N° {{venta.id}}</p>
+    </div>
+    <div class="col-sm-6">
+      <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
+        <button mat-icon-button color="primary" matTooltip="Deshacer verta" (click)="desHacerVenta()">
+          <mat-icon class="eliminar">settings_backup_restore</mat-icon>
+        </button>
+        <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
+          <mat-icon class="imprimir">print</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <form [formGroup]="form">
+    <div class="row">
+      <h3 class="subtitulo">Datos generales:</h3>
+      <br>
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de venta</mat-label>
+          <input type="text" matInput [formControl]="txFecha"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Forma de pago</mat-label>
+          <input type="text" matInput [formControl]="txFormaDePago"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Tipo de factura</mat-label>
+          <input type="text" matInput [formControl]="txTipoFactura"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Monto total</mat-label>
+          <input type="text" matInput [formControl]="txMontoTotal"/>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <br>
+
+    <div class="row">
+      <h3 class="subtitulo">Cliente:</h3>
+      <br>
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cliente</mat-label>
+          <input type="text" matInput [formControl]="txCliente"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Dni</mat-label>
+          <input type="text" matInput [formControl]="txDniCliente"/>
+        </mat-form-field>
+      </div>
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Mail</mat-label>
+          <input type="text" matInput [formControl]="txMailCliente"/>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+    <br>
+
+    <h3 class="subtitulo">Productos vendidos:</h3>
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-table [dataSource]="tableDataSource" matSort>
+              <ng-container matColumnDef="imgProducto">
+                <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
+                <mat-cell *matCellDef="let producto">
+                  <img [src]="producto.imgProducto" class="img-thumbnail"/>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="producto">
+                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="cantidad">
+                <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Cantidad">{{ producto.cantidadSeleccionada }}</mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="subTotal">
+                <mat-header-cell *matHeaderCellDef>SUBTOTAL</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta }}</mat-cell>
+              </ng-container>
+
+
+              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+              <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
+            </mat-table>
+
+
+            <mat-paginator *ngIf="this.venta.productos.length > 0"
+                           [length]="this.venta.productos.length"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <br><br>
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cerrar()" id="btnLimpiarFiltro">
+          Cerrar
+        </button>
+      </div>
+    </div>
+    <br>
+  </form>
+</div>
