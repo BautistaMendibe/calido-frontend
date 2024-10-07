@@ -22,14 +22,14 @@
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Producto</mat-label>
-              <input type="text" matInput formControlName="txNombre"/>
+              <input type="text" matInput [formControl]="txNombre"/>
               <mat-error *ngIf="txNombre.invalid">{{getErrorMessage(txNombre)}}</mat-error>
             </mat-form-field>
           </div>
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Código de Barras</mat-label>
-              <input type="text" matInput formControlName="txCodigoBarras" maxlength="13"/>
+              <input type="text" matInput [formControl]="txCodigoBarras" maxlength="13"/>
               <mat-error *ngIf="txCodigoBarras.invalid">{{getErrorMessage(txCodigoBarras)}}</mat-error>
             </mat-form-field>
           </div>
@@ -40,7 +40,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Tipo Producto</mat-label>
-              <input type="text" matInput formControlName="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto"/>
+              <input type="text" matInput [formControl]="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto"/>
               <mat-error *ngIf="txTipoProducto.invalid">{{getErrorMessage(txTipoProducto)}}</mat-error>
             </mat-form-field>
             <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
@@ -52,7 +52,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Marca</mat-label>
-              <input type="text" matInput formControlName="txMarca" [matAutocomplete]="autoCompleteMarca"/>
+              <input type="text" matInput [formControl]="txMarca" [matAutocomplete]="autoCompleteMarca"/>
               <mat-error *ngIf="txMarca.invalid">{{getErrorMessage(txMarca)}}</mat-error>
             </mat-form-field>
             <mat-autocomplete #autoCompleteMarca="matAutocomplete">
@@ -64,7 +64,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Proveedor</mat-label>
-              <mat-select formControlName="txProveedor">
+              <mat-select [formControl]="txProveedor">
                 <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
                   {{proveedor.nombre}}
                 </mat-option>
@@ -79,7 +79,7 @@
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Costo de Compra</mat-label>
-              <input type="text" matInput formControlName="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
+              <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
               <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
             </mat-form-field>
           </div>
@@ -89,11 +89,12 @@
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Margen de Ganancia</mat-label>
-              <mat-select formControlName="txMargenGanancia">
-                <mat-option *ngFor="let porcentaje of listaPorcentajesGanancia" [value]="porcentaje.value">
-                  {{ porcentaje.label }}
-                </mat-option>
-              </mat-select>
+                <input
+                  type="text"
+                  matInput
+                  mask="percent.2"
+                  suffix="%"
+                  [formControl]="txMargenGanancia"/>
               <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
             </mat-form-field>
           </div>
@@ -103,7 +104,7 @@
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Precio sin IVA</mat-label>
-              <input type="text" matInput formControlName="txCostoFinal" mask="separator.2" prefix="$" thousandSeparator="," />
+              <input type="text" matInput [formControl]="txCostoFinal" mask="separator.2" prefix="$" thousandSeparator="," />
             </mat-form-field>
           </div>
         </div>
@@ -113,7 +114,7 @@
           <div class="col-md-12">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Descripción</mat-label>
-              <textarea matInput formControlName="txDescripcion" rows="3"></textarea>
+              <textarea matInput [formControl]="txDescripcion" rows="3"></textarea>
               <mat-error *ngIf="txDescripcion.invalid">{{getErrorMessage(txDescripcion)}}</mat-error>
             </mat-form-field>
           </div>
