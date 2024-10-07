@@ -81,7 +81,7 @@ export class ConsultarVentasComponent {
   }
 
   public buscarVentas() {
-    this.isLoading = false;
+    this.isLoading = true;
     this.armarFiltro();
     this.ventasService.buscarVentas(this.filtros).subscribe((ventas) => {
       this.ventas = ventas;
@@ -105,6 +105,10 @@ export class ConsultarVentasComponent {
 
   public desHacerVenta(venta: Venta) {
 
+  }
+
+  public getNombresProductos(productos: Producto[]): string {
+    return productos.map(producto => producto.nombre).join(', ');
   }
 
   // Getters

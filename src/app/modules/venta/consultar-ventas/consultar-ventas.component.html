@@ -110,7 +110,18 @@
 
             <ng-container matColumnDef="productos">
               <mat-header-cell *matHeaderCellDef>PRODUCTOS</mat-header-cell>
-              <mat-cell *matCellDef="let venta">-</mat-cell>
+              <mat-cell *matCellDef="let venta">
+                <div class="productos-container">
+                  <ng-container *ngFor="let producto of venta.productos.slice(0, 3)">
+                    <span class="producto-circulo" [matTooltip]="producto.nombre">
+                    <img [src]="producto.imgProducto" alt="Producto" class="producto-imagen">
+                    </span>
+                  </ng-container>
+                  <span *ngIf="venta.productos.length > 3" matTooltip="{{ getNombresProductos(venta.productos) }}" class="mas-productos">
+                        +{{ venta.productos.length - 3 }}
+                  </span>
+                </div>
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">
