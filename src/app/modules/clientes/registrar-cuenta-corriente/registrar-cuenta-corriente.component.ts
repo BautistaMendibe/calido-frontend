@@ -112,7 +112,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   private construirCuentaCorriente(id?: number): any {
     const cuentaCorriente = {
       id: id || undefined,
-      usuario: { id: this.txUsuario.value } || 0,
+      usuario: { id: this.txUsuario.value },
       fechaDesde: this.txCreada.value ,
       balanceTotal: parseFloat(this.txBalance.value) || 0
     } as CuentaCorriente;

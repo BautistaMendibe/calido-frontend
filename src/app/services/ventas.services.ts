@@ -6,6 +6,7 @@ import {SpResult} from "../models/resultadoSp.model";
 import {Usuario} from "../models/usuario.model";
 import {FormaDePago} from "../models/formaDePago.model";
 import {Venta} from "../models/venta.model";
+import { FiltrosCuentasCorrientes } from "../models/comandos/FiltrosCuentasCorrientes";
 
 @Injectable({
   providedIn: 'root'
@@ -27,5 +28,10 @@ export class VentasService {
   public buscarFormasDePago(): Observable<FormaDePago[]>{
     return this.http.get<FormaDePago[]>(`${this.urlBackend}/${this.controllerName}/buscar-formas-de-pago`);
   }
+
+  public buscarVentasPorCC(filtro: FiltrosCuentasCorrientes): Observable<Venta[]> {
+    return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc`, filtro);
+  }
+  
 
 }

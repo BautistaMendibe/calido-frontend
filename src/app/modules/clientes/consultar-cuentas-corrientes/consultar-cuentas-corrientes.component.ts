@@ -15,6 +15,7 @@ import {ProductosService} from "../../../services/productos.service";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {RegistrarCuentaCorrienteComponent} from "../registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import { VentasPorCuentaCorrienteComponent } from '../ventas-por-cuenta-corriente/ventas-por-cuenta-corriente.component';
 @Component({
   selector: 'app-consultar-cuentas-corrientes',
   templateUrl: './consultar-cuentas-corrientes.component.html',
@@ -106,17 +107,14 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
 
   public verCuentaCorriente(cuentaCorriente: CuentaCorriente, editar: boolean) {
     this.dialog.open(
-      RegistrarCuentaCorrienteComponent,
+      VentasPorCuentaCorrienteComponent,
       {
         width: '75%',
         height: 'auto',
         autoFocus: false,
         data: {
           cuentaCorriente: cuentaCorriente,
-          esConsulta: true,
-          referencia: this,
-          formDesactivado: !editar,
-          editar: editar
+          referencia: this
         }
       }
     );

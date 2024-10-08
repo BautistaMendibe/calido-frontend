@@ -12,6 +12,7 @@ export class Venta {
   detalleVenta: DetalleVenta[];
   productos: Producto[];
 
+
   constructor(id?: number, montoTotal?: number, fecha?: Date, usuario?: Usuario, formaDePago?: FormaDePago, detalleVenta?: DetalleVenta[], productos?: Producto[]) {
     this.id = id!;
     this.montoTotal = montoTotal!;

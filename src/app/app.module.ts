@@ -45,6 +45,14 @@ import {MatSortModule} from "@angular/material/sort";
 
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+<<<<<<< Updated upstream
+=======
+import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
+import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
+import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
+import { VentasPorCuentaCorrienteComponent } from './modules/clientes/ventas-por-cuenta-corriente/ventas-por-cuenta-corriente.component';
+
+>>>>>>> Stashed changes
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -75,7 +83,17 @@ registerLocaleData(localeEs, 'es');
     RegistrarPedidoComponent,
     ConsultarPedidosComponent,
     ConsultarCuentasCorrientesComponent,
+<<<<<<< Updated upstream
     RegistrarCuentaCorrienteComponent
+=======
+    RegistrarCuentaCorrienteComponent,
+    RegistrarClientesComponent,
+    ConsultarClientesComponent,
+    ConsultarInventarioComponent,
+    RegistrarInventarioComponent,
+    BuscarProductosComponent,
+    VentasPorCuentaCorrienteComponent
+>>>>>>> Stashed changes
   ],
   imports: [
     BrowserModule,
