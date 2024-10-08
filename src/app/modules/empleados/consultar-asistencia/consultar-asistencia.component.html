@@ -69,28 +69,28 @@
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>Empleado</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" data-label="Empleado">
                 <mat-icon class="person-icon">person</mat-icon>{{ asistencia.usuario.nombre + ' ' + asistencia.usuario.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" data-label="Fecha">{{ asistencia.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="horaEntrada">
-              <mat-header-cell *matHeaderCellDef>Hora de entrada</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" data-label="Hora de entrada">{{ asistencia.horaEntrada }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="horaSalida">
-              <mat-header-cell *matHeaderCellDef>Hora de salida</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" data-label="Hora de salida">{{ asistencia.horaSalida }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="comentario">
-              <mat-header-cell *matHeaderCellDef>Comentario</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
               <mat-cell *matCellDef="let asistencia" data-label="Comentario">{{ asistencia.comentario }}</mat-cell>
             </ng-container>
 

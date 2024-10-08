@@ -21,6 +21,7 @@ import {ConfiguracionesService} from "../../../services/configuraciones.service"
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {EstadoPedido} from "../../../models/estadoPedido";
 
 @Component({
   selector: 'app-consultar-pedidos',
@@ -37,6 +38,7 @@ export class ConsultarPedidosComponent implements OnInit {
   public pedidos: Pedido[] = [];
   public productos: Producto[] = [];
   public listaProveedor: Proveedor[] = [];
+  public listaEstadosPedido: EstadoPedido[] = [];
   public configuracion: Configuracion = new Configuracion();
   public columnas: string[] = ['fechaEmision', 'numeroPedido', "proveedor", 'total', 'estado', 'acciones'];
 
@@ -68,6 +70,7 @@ export class ConsultarPedidosComponent implements OnInit {
   ngOnInit() {
     this.crearFormulario();
     this.buscarProveedores();
+    this.buscarEstadosPedido();
     this.buscarConfiguraciones();
     this.buscarProductos();
     this.buscar();
@@ -78,7 +81,8 @@ export class ConsultarPedidosComponent implements OnInit {
       txPedido: ['', []],
       txProveedor: ['', []],
       txFechaEmisionDesde: ['', []],
-      txFechaEmisionHasta: ['', []]
+      txFechaEmisionHasta: ['', []],
+      txEstado: ['', []],
     });
   }
 
@@ -92,7 +96,8 @@ export class ConsultarPedidosComponent implements OnInit {
       pedido: this.txPedido.value,
       proveedor: this.txProveedor.value,
       fechaEmisionDesde: this.txFechaEmisionDesde.value,
-      fechaEmisionHasta: this.txFechaEmisionHasta.value
+      fechaEmisionHasta: this.txFechaEmisionHasta.value,
+      estado: this.txEstado.value
     };
 
     this.pedidosService.consultarPedidos(this.filtros).subscribe((pedidos) => {
@@ -104,6 +109,12 @@ export class ConsultarPedidosComponent implements OnInit {
   public buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedor = proveedores;
+    });
+  }
+
+  private buscarEstadosPedido() {
+    this.pedidosService.obtenerEstadosPedido().subscribe((estados) => {
+      this.listaEstadosPedido = estados;
     });
   }
 
@@ -125,7 +136,8 @@ export class ConsultarPedidosComponent implements OnInit {
         data: {
           referencia: this,
           esConsulta: false,
-          formDesactivado: false
+          formDesactivado: false,
+          esRegistro: true,
         }
       }
     )
@@ -160,7 +172,7 @@ export class ConsultarPedidosComponent implements OnInit {
               this.notificacionService.openSnackBarSuccess('Pedido eliminado con éxito');
               this.buscar();
             } else {
-              this.notificacionService.openSnackBarError('Error al eliminar el pedido');
+              this.notificacionService.openSnackBarError('Error al eliminar la orden de compra');
             }
           });
         }
@@ -188,7 +200,6 @@ export class ConsultarPedidosComponent implements OnInit {
     const descuento = this.formatter.format((-subtotalNoFormat * pedido.descuento / 100));
     const montoEnvio = this.formatter.format(pedido.montoEnvio);
     const fechaPedido = new Date(pedido.fechaEmision).toLocaleDateString('es-AR');
-    const fechaEntrega = new Date(pedido.fechaEntrega).toLocaleDateString('es-AR');
     const calleNumeroProveedor: string = `${pedido.proveedor.domicilio.calle} ${pedido.proveedor.domicilio.numero}`
     const ciudadCpProveedor: string = `${pedido.proveedor.domicilio.localidad.nombre}, ${pedido.proveedor.domicilio.localidad.provincia.nombre}, ${pedido.proveedor.domicilio.localidad.codigoPostal}`
 
@@ -548,6 +559,16 @@ export class ConsultarPedidosComponent implements OnInit {
     });
   }
 
+  public getWarningMessage(estadoId: number): string {
+    if (estadoId === 1) {
+      return 'Debe asociar un Remito a esta Orden de Compra o cambiar su estado manualmente.';
+    } else if (estadoId === 3) {
+      return 'La orden se recibió con diferencias, debe generar un nuevo remito para esta Orden de Compra con la diferencia o cambiar su estado manualmente.';
+    } else {
+      return '';
+    }
+  }
+
   // Regios getters
   get txPedido(): FormControl {
     return this.form.get('txPedido') as FormControl;
@@ -563,6 +584,10 @@ export class ConsultarPedidosComponent implements OnInit {
 
   get txFechaEmisionHasta(): FormControl {
     return this.form.get('txFechaEmisionHasta') as FormControl
+  }
+
+  get txEstado(): FormControl {
+    return this.form.get('txEstado') as FormControl;
   }
 
 }

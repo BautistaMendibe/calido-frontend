@@ -1,0 +1,237 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar Comprobante' : 'Registrar Comprobante'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Tipo Comprobante</mat-label>
+          <mat-select [formControl]="txTipoComprobante">
+            <mat-option *ngFor="let tipoComprobante of listaTiposComprobantes" [value]="tipoComprobante.id">
+              {{ tipoComprobante.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número de Comprobante</mat-label>
+          <input type="text" matInput [formControl]="txNumeroComprobante"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Proveedor</mat-label>
+          <mat-select [formControl]="txProveedor" (selectionChange)="ObtenerPedidosPorProveedor()">
+            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
+              {{ proveedor.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de Emisión</mat-label>
+          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
+          <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
+          <mat-datepicker #pickerEmision></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+    </div>
+
+    <div class="row pt-4">
+
+      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Responsable</mat-label>
+          <mat-select [formControl]="txResponsable">
+            <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
+              {{ usuario.nombre + " " + usuario.apellido }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Recibido por</mat-label>
+          <mat-select [formControl]="txReceptor">
+            <mat-option *ngFor="let usuario of listaUsuarios" [value]="usuario.id">
+              {{ usuario.nombre + " " + usuario.apellido }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Observaciones</mat-label>
+          <input type="text" matInput [formControl]="txObservaciones"/>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Selector de órdenes de compra para ese proveedor -->
+    <div class="row" *ngFor="let filaPedidos of agruparPedidos(listaPedidosPorProveedor, 4)">
+      <div class="col-12 col-md-6 col-lg-3 p-4" *ngFor="let pedido of filaPedidos"> <!-- 4 columnas por fila -->
+        <div
+          class="card pedido-card"
+          [ngClass]="{ 'selected-pedido-card': pedido.id === numeroOrdenSeleccionada }"
+          (click)="seleccionarPedido(pedido.id)"
+        >
+          <!-- Contenido del pedido -->
+          <div class="row align-items-center text-center my-3 pedido-id">
+            <div class="col">
+              <strong>Orden de compra:</strong> {{ pedido.id }}
+            </div>
+          </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-fecha">
+            <div class="col">
+              <strong>Fecha Emisión:</strong> {{ pedido.fechaEmision | date:'shortDate' }}
+            </div>
+          </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-total">
+            <div class="col">
+              <strong>Total:</strong> ${{ pedido.total }}
+            </div>
+          </div>
+
+          <div class="row align-items-center text-center mb-3 pedido-estado">
+            <div class="col">
+              <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider class="my-3" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)"></mat-divider>
+
+    <div class="row pt-4" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Producto</mat-label>
+          <input type="text" matInput [formControl]="txBuscar"/>
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </div>
+      <div class="col-md-8">
+        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado || tablaProductosDesactivada">
+          <mat-icon>add</mat-icon>Nuevo producto
+        </button>
+      </div>
+    </div>
+
+    <br>
+
+    <mat-card *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
+      <mat-card-content>
+        <div class="row">
+
+          <div class="col-md-12">
+            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado || tablaProductosDesactivada">
+              <ng-container matColumnDef="imgProducto">
+                <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
+                <mat-cell *matCellDef="let producto">
+                  <img [src]="producto.imgProducto" class="img-thumbnail"/>
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="producto">
+                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+                <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="costo">
+                <mat-header-cell *matHeaderCellDef>COSTO COMPRA</mat-header-cell>
+                <mat-cell *matCellDef="let producto">
+                  $ {{ producto.costo | number:'1.2-2':'es-AR' }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="tipoProducto">
+                <mat-header-cell *matHeaderCellDef>TIPO PRODUCTO</mat-header-cell>
+                <mat-cell *matCellDef="let producto">{{ producto.tipoProducto?.nombre }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="proveedor">
+                <mat-header-cell *matHeaderCellDef>PROVEEDOR</mat-header-cell>
+                <mat-cell *matCellDef="let producto">{{ producto.proveedor?.nombre }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="marca">
+                <mat-header-cell *matHeaderCellDef>MARCA</mat-header-cell>
+                <mat-cell *matCellDef="let producto">{{ producto.marca?.nombre }}</mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="cantidad">
+                <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Cantidad">
+                  <div class="d-flex align-items-center justify-content-right">
+                    <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
+                    <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
+                    <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)">+</button>
+                  </div>
+                </mat-cell>
+              </ng-container>
+              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+            </mat-table>
+            <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
+              No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+            </h6>
+            <mat-paginator *ngIf="this.productos.length > 0"
+                           [length]="this.productos.length"
+                           [disabled]="formDesactivado"
+                           [pageSize]="10"
+                           [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </form>
+
+  <br>
+  <mat-divider></mat-divider>
+
+  <div class="row pt-4">
+    <div class="col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Cantidad de Productos</mat-label>
+        <input type="text" matInput [formControl]="txCantidadProductos" />
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Subtotal</mat-label>
+        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
+      </mat-form-field>
+    </div>
+  </div>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+      </button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevoComprobante()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarComprobante()" id="btnBuscar2">Modificar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

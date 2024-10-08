@@ -16,6 +16,9 @@ export class Producto {
   codigoBarra: string;
   descripcion: string;
   imgProducto: string;
+  subTotalVenta: number;
+  cantidad: number;
+  margenGanancia: number;
 
   constructor(
     id?: number,
@@ -30,7 +33,10 @@ export class Producto {
     marca?: Marca,
     codigoBarra?: string,
     descripcion?: string,
-    imgProducto?: string
+    margenGanancia?: number,
+    imgProducto?: string,
+    subTotalVenta?: number,
+    cantidad?: number,
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -45,6 +51,9 @@ export class Producto {
     this.seleccionadoParaVenta = !seleccionadoParaVenta;
     this.cantidadEnStock = cantidadEnStock!;
     this.cantidadSeleccionada = cantidadSeleccionada!;
+    this.margenGanancia = margenGanancia!;
+    this.subTotalVenta = subTotalVenta!;
+    this.cantidad = cantidad!;
   }
 }
 

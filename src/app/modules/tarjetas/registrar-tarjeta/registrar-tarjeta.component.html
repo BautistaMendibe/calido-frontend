@@ -1,0 +1,162 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar Tarjetas' : 'Registrar Tarjeta'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Tarjeta</mat-label>
+          <input type="text" matInput [formControl]="txTarjeta"/>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Tipo de Tarjeta</mat-label>
+          <mat-select [formControl]="txTipoTarjeta">
+            <mat-option *ngFor="let tipoTarjeta of listaTiposTarjetas" [value]="tipoTarjeta.id">
+              {{ tipoTarjeta.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+    <mat-divider class="my-3"></mat-divider>
+    <br>
+
+    <!-- loading -->
+    <div class="spinner-wrapper" *ngIf="listaCuotas.length == 0">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <br>
+
+      <mat-card *ngIf="listaCuotas.length > 0">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-table [dataSource]="dataSourceCuotas" matSort [class.disabled-table]="formDesactivado || listaCuotasDeshabilitada">
+
+                <!-- Columna de selección -->
+                <ng-container matColumnDef="seleccionar">
+                  <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
+                  <mat-cell *matCellDef="let cuota">
+                    <mat-checkbox (change)="toggleSelection($event, cuota)"
+                                  [checked]="isSelected(cuota)">
+                    </mat-checkbox>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna de cuotas -->
+                <ng-container matColumnDef="cuota">
+                  <mat-header-cell *matHeaderCellDef>CUOTA</mat-header-cell>
+                  <mat-cell *matCellDef="let cuota">{{ cuota.cantidadCuotas }}</mat-cell>
+                </ng-container>
+
+                <!-- Columna de interés -->
+                <ng-container matColumnDef="interes">
+                  <mat-header-cell *matHeaderCellDef>% INTERÉS</mat-header-cell>
+                  <mat-cell *matCellDef="let cuota">
+                    <div (click)="toggleEdit(cuota, 'interes')" class="editable-cell">
+                      <span *ngIf="!cuota.isEditingInteres">{{ cuota.interes }}%</span>
+                      <input *ngIf="cuota.isEditingInteres"
+                             type="number"
+                             [(ngModel)]="cuota.interes"
+                             [disabled]="!isSelected(cuota)"
+                             [ngModelOptions]="{standalone: true}"
+                             (blur)="disableEdit(cuota, 'interes')"
+                             (keydown.enter)="disableEdit(cuota, 'interes')"
+                             (input)="cuota.interes = Math.max(0, cuota.interes)"
+                             class="full-width-input" />
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna de recargo -->
+                <ng-container matColumnDef="recargo">
+                  <mat-header-cell *matHeaderCellDef>% RECARGO</mat-header-cell>
+                  <mat-cell *matCellDef="let cuota">
+                    <div (click)="toggleEdit(cuota, 'recargo')" class="editable-cell">
+                      <span *ngIf="!cuota.isEditingRecargo">{{ cuota.recargo }}%</span>
+                      <input *ngIf="cuota.isEditingRecargo"
+                             type="number"
+                             [(ngModel)]="cuota.recargo"
+                             [disabled]="!isSelected(cuota)"
+                             [ngModelOptions]="{standalone: true}"
+                             (blur)="disableEdit(cuota, 'recargo')"
+                             (keydown.enter)="disableEdit(cuota, 'recargo')"
+                             (input)="cuota.recargo = Math.max(0, cuota.recargo)"
+                             class="full-width-input" />
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna de descuento -->
+                <ng-container matColumnDef="descuento">
+                  <mat-header-cell *matHeaderCellDef>% DESCUENTO</mat-header-cell>
+                  <mat-cell *matCellDef="let cuota">
+                    <div (click)="toggleEdit(cuota, 'descuento')" class="editable-cell">
+                      <span *ngIf="!cuota.isEditingDescuento">{{ cuota.descuento }}%</span>
+                      <input *ngIf="cuota.isEditingDescuento"
+                             type="number"
+                             [(ngModel)]="cuota.descuento"
+                             [disabled]="!isSelected(cuota)"
+                             [ngModelOptions]="{standalone: true}"
+                             (blur)="disableEdit(cuota, 'descuento')"
+                             (keydown.enter)="disableEdit(cuota, 'descuento')"
+                             (input)="cuota.descuento = Math.max(0, cuota.descuento)"
+                             class="full-width-input" />
+                    </div>
+                  </mat-cell>
+                </ng-container>
+
+
+              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+              </mat-table>
+              <h6 *ngIf="!listaCuotas.length" class="alert alert-secondary text-center">
+                No se encuentran cuotas disponibles, por favor realice una nueva búsqueda.
+              </h6>
+
+              <!-- Paginador -->
+              <mat-paginator *ngIf="listaCuotas.length > 0"
+                             [length]="listaCuotas.length"
+                             [disabled]="formDesactivado"
+                             [pageSize]="10"
+                             [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+    </div>
+  </form>
+
+
+  <br>
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+      </button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaTarjeta()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarTarjeta()" id="btnBuscar2">Modificar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

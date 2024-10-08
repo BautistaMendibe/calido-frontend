@@ -29,6 +29,7 @@ export class RegistrarProductoComponent implements OnInit {
   private selectedFile: File | null = null;
   public esConsulta: boolean;
   public listaPorcentajesGanancia: { value: number, label: string }[] = [];
+  public editarPrecioDeVenta: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -43,12 +44,14 @@ export class RegistrarProductoComponent implements OnInit {
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
+      editarPrecioDeVenta: boolean
     }
   ) {
     this.form = new FormGroup({});
     this.referencia = this.data.referencia;
     this.productoImg = this.data.producto?.imgProducto || null;
     this.esConsulta = this.data.esConsulta;
+    this.editarPrecioDeVenta = this.data.editarPrecioDeVenta;
   }
 
   ngOnInit() {
@@ -56,9 +59,13 @@ export class RegistrarProductoComponent implements OnInit {
 
     if (this.data.formDesactivado) {
       this.form.disable();
+
+      // Solo permitir modificar precio de ser necesario
+      if (this.editarPrecioDeVenta) {
+        this.txCosto.enable();
+      }
     }
 
-    this.generarPorcentajes();
     this.buscarTiposProductos();
     this.buscarMarcas();
     this.buscarProveedores();
@@ -67,16 +74,8 @@ export class RegistrarProductoComponent implements OnInit {
     this.form.get('txMargenGanancia')?.valueChanges.subscribe(() => this.calcularCostoFinal());
   }
 
-  public generarPorcentajes() {
-    for (let i = 0; i <= 100; i += 5) {
-      this.listaPorcentajesGanancia.push({
-        value: i,
-        label: i === 0 ? 'Ninguno (0%)' : `(${i}%)`
-      });
-    }
-  }
-
   private crearFormulario() {
+    console.log(this.data.producto);
     this.form = this.fb.group({
       txNombre: [this.data.producto?.nombre || '', [Validators.required, Validators.pattern('^[^0-9]+$')]],
       txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13)]],
@@ -84,8 +83,8 @@ export class RegistrarProductoComponent implements OnInit {
       txTipoProducto: [this.data.producto?.tipoProducto?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
-      txMargenGanancia: [10, [Validators.required]], // Margen por defecto: 10%
-      txCostoFinal: [{ disabled: true }, [Validators.required]],
+      txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
+      txCostoFinal: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]]
     });
   }
@@ -137,9 +136,13 @@ export class RegistrarProductoComponent implements OnInit {
   public modificarProducto() {
     if (this.form.valid) {
       const producto = this.construirProducto(this.data.producto?.id);
-      this.productosService.modificarProducto(producto).subscribe((respuesta) => {
-        this.gestionarRespuesta(respuesta, 'El producto se modificó con éxito');
-      });
+      if (!this.editarPrecioDeVenta) {
+        this.productosService.modificarProducto(producto).subscribe((respuesta) => {
+          this.gestionarRespuesta(respuesta, 'El producto se modificó con éxito');
+        });
+      } else {
+        this.dialogRef.close(producto);
+      }
     }
   }
 
@@ -154,15 +157,15 @@ export class RegistrarProductoComponent implements OnInit {
       imgProducto: this.productoImg as string,
       tipoProducto: { nombre: this.txTipoProducto.value, id: this.getTipoProductoId(this.txTipoProducto.value) },
       marca: { nombre: this.txMarca.value, id: this.getMarcaId(this.txMarca.value) },
-      proveedor: { id: this.txProveedor.value }
+      proveedor: { id: this.txProveedor.value },
+      margenGanancia: parseFloat(this.txMargenGanancia.value) || 0,
     } as Producto;
   }
 
   private gestionarRespuesta(respuesta: any, mensajeExito: string) {
     if (respuesta.mensaje === 'OK') {
       this.notificacionService.openSnackBarSuccess(mensajeExito);
-      this.dialogRef.close();
-      this.referencia.buscar();
+      this.dialogRef.close(true);
     } else {
       this.notificacionService.openSnackBarError('Error al procesar la solicitud, intentelo nuevamente');
     }

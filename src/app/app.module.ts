@@ -35,24 +35,30 @@ import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { RegistrarVentaComponent } from './modules/venta/registrar-venta/registrar-venta.component';
 import { MarcarAsistenciaComponent } from './modules/empleados/marcar-asistencia/marcar-asistencia.component';
 import { ConsultarAsistenciaComponent } from './modules/empleados/consultar-asistencia/consultar-asistencia.component';
-import { registerLocaleData } from '@angular/common';
+import {DatePipe, registerLocaleData} from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { RegistrarAsistenciaComponent } from './modules/empleados/registrar-asistencia/registrar-asistencia.component';
 import { RegistrarPedidoComponent } from './modules/pedidos/registrar-pedido/registrar-pedido.component';
 import { ConsultarPedidosComponent } from './modules/pedidos/consultar-pedidos/consultar-pedidos.component';
 import {MatTableModule} from "@angular/material/table";
 import {MatSortModule} from "@angular/material/sort";
-
+import { RegistrarClientesComponent } from './modules/clientes/registrar-clientes/registrar-clientes.component';
+import { ConsultarClientesComponent } from './modules/clientes/consultar-clientes/consultar-clientes.component';
+import { RegistrarComprobanteComponent } from './modules/comprobante/registrar-comprobante/registrar-comprobante.component';
+import { ConsultarComprobanteComponent } from './modules/comprobante/consultar-comprobante/consultar-comprobante.component';
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
-<<<<<<< Updated upstream
-=======
 import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
 import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
 import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
 import { VentasPorCuentaCorrienteComponent } from './modules/clientes/ventas-por-cuenta-corriente/ventas-por-cuenta-corriente.component';
-
->>>>>>> Stashed changes
+import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
+import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
+import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
+import { ConsultarTarjetasComponent } from './modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component';
+import { RegistrarTarjetaComponent } from './modules/tarjetas/registrar-tarjeta/registrar-tarjeta.component';
+import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consultar-ventas.component';
+import { DetalleVentaComponent } from './modules/venta/detalle-venta/detalle-venta.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -82,10 +88,10 @@ registerLocaleData(localeEs, 'es');
     RegistrarVentaComponent,
     RegistrarPedidoComponent,
     ConsultarPedidosComponent,
+    RegistrarComprobanteComponent,
+    ConsultarComprobanteComponent,
     ConsultarCuentasCorrientesComponent,
-<<<<<<< Updated upstream
     RegistrarCuentaCorrienteComponent
-=======
     RegistrarCuentaCorrienteComponent,
     RegistrarClientesComponent,
     ConsultarClientesComponent,
@@ -93,7 +99,10 @@ registerLocaleData(localeEs, 'es');
     RegistrarInventarioComponent,
     BuscarProductosComponent,
     VentasPorCuentaCorrienteComponent
->>>>>>> Stashed changes
+    ConsultarTarjetasComponent,
+    RegistrarTarjetaComponent,
+    ConsultarVentasComponent,
+    DetalleVentaComponent
   ],
   imports: [
     BrowserModule,
@@ -117,6 +126,7 @@ registerLocaleData(localeEs, 'es');
     AuthService,
     provideAnimationsAsync(),
     provideNgxMask(),
+    DatePipe,
     {
       provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
     },

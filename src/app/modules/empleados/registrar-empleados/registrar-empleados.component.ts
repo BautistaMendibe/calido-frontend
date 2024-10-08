@@ -11,6 +11,7 @@ import {DomicilioService} from "../../../services/domicilio.service";
 import {Domicilio} from "../../../models/domicilio.model";
 import {Rol} from "../../../models/Rol";
 import {firstValueFrom} from "rxjs";
+import {TipoUsuario} from "../../../models/tipoUsuario.model";
 
 
 @Component({
@@ -232,6 +233,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       if (this.form.valid) {
       const empleado: Usuario = new Usuario();
       const domicilio: Domicilio = new Domicilio();
+      const tipoUsuario: TipoUsuario = new TipoUsuario();
       empleado.nombreUsuario = this.txNombreUsuario.value;
       empleado.nombre = this.txNombre.value;
       empleado.apellido = this.txApellido.value;
@@ -246,7 +248,8 @@ export class RegistrarEmpleadosComponent implements OnInit{
       empleado.domicilio.calle =  this.txCalle.value;
       empleado.domicilio.numero =  this.txNumero.value;
       empleado.roles = this.txRoles.value;
-      // empleado.tipoUsuario.id = 1; // no se usa, asigno empleado (1) en back
+      empleado.tipoUsuario = tipoUsuario;
+      empleado.tipoUsuario.id = 1;
 
 
       this.usuariosService.registrarUsuario(empleado).subscribe((respuesta) => {

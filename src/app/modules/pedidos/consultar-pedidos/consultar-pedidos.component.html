@@ -51,6 +51,19 @@
           </mat-form-field>
         </div>
       </div>
+
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Estado</mat-label>
+            <mat-select [formControl]="txEstado">
+              <mat-option *ngFor="let estado of listaEstadosPedido" [value]="estado.id">
+                {{ estado.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
     </form>
 
 
@@ -85,28 +98,37 @@
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="fechaEmision">
-              <mat-header-cell *matHeaderCellDef>Fecha de Emisión</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>FECHA DE EMISIÓN</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fechaEmision | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="numeroPedido">
-              <mat-header-cell *matHeaderCellDef>Número de Orden</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>NÚMERO DE ORDEN</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Pedido">{{ pedido.id }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="proveedor">
-              <mat-header-cell *matHeaderCellDef>Proveedor</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>PROVEEDOR</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Proveedor">{{ pedido.proveedor.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="total">
-              <mat-header-cell *matHeaderCellDef>Total</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>TOTAL</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Subtotal" >$ {{ pedido.total | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="estado">
-              <mat-header-cell *matHeaderCellDef>Estado</mat-header-cell>
-              <mat-cell *matCellDef="let pedido" data-label="Estado" >{{ pedido.estadoPedido.nombre }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+              <mat-cell *matCellDef="let pedido" data-label="Estado">
+                <mat-icon
+                  *ngIf="pedido.estadoPedido.id === 1 || pedido.estadoPedido.id === 3"
+                  class="warning-icon"
+                  matTooltip="{{ getWarningMessage(pedido.estadoPedido.id) }}"
+                >
+                  warning
+                </mat-icon>
+                {{ pedido.estadoPedido.nombre }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">

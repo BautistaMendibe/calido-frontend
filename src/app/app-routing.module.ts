@@ -16,15 +16,23 @@ import {ConsultarAsistenciaComponent} from "./modules/empleados/consultar-asiste
 import {MarcarAsistenciaComponent} from "./modules/empleados/marcar-asistencia/marcar-asistencia.component";
 import {RegistrarVentaComponent} from "./modules/venta/registrar-venta/registrar-venta.component";
 import {ConsultarPedidosComponent} from "./modules/pedidos/consultar-pedidos/consultar-pedidos.component";
+import {ConsultarClientesComponent} from "./modules/clientes/consultar-clientes/consultar-clientes.component";
+import {
+  ConsultarComprobanteComponent
+} from "./modules/comprobante/consultar-comprobante/consultar-comprobante.component";
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {
   RegistrarCuentaCorrienteComponent
 } from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import {ConsultarInventarioComponent} from "./modules/inventario/consultar-inventario/consultar-inventario.component";
+import {ConsultarTarjetasComponent} from "./modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component";
+import {ConsultarVentasComponent} from "./modules/venta/consultar-ventas/consultar-ventas.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
+  {path:'consultar-clientes', component: ConsultarClientesComponent},
   {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
   {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
   {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},
@@ -38,6 +46,10 @@ const routes: Routes = [
   {path:'marcar-asistencia', component: MarcarAsistenciaComponent},
   {path:'registrar-venta', component: RegistrarVentaComponent},
   {path:'consultar-pedidos', component: ConsultarPedidosComponent},
+  {path:'consultar-comprobante', component: ConsultarComprobanteComponent},
+  {path:'consultar-inventario', component:ConsultarInventarioComponent},
+  {path:'consultar-tarjetas', component:ConsultarTarjetasComponent},
+  {path:'consultar-ventas', component: ConsultarVentasComponent},
 ];
 
 @NgModule({

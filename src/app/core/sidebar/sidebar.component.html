@@ -1,4 +1,5 @@
 <div class="sidenavContainer"
+     [ngClass]="{'expanded': sideNavState}"
      (mouseenter)="onSinenavToggle()"
      (mouseleave)="onSinenavToggle()"
      [@onSideNavChange]="sideNavState ? 'open' : 'close'">
@@ -38,19 +39,17 @@
 
         </mat-list-item>
 
-        <!-- Submenú, si existe y si el usuario tiene rol de administrador o el ítem no lo requiere -->
+        <!-- Submenú, solo visible cuando expandido y activo -->
         <div class="submenu"
              [ngClass]="{'expanded': item.activo && sideNavState}"
-             *ngIf="isShowing || isExpanded && item.subMenu && item.subMenu.length">
+             *ngIf="item.subMenu && item.subMenu.length > 0 && (item.activo && sideNavState)">
 
           <!-- Recorre los subítems del menú -->
-          <div *ngFor="let subItem of item.subMenu"
-               [@animateSubText]="linkText ? 'show' : 'hide'">
+          <div *ngFor="let subItem of item.subMenu">
 
             <!-- Verifica si el subítem requiere rol de administrador o si el usuario tiene rol de administrador -->
             <ng-container *ngIf="!subItem.requiresAdmin || tieneRol(['Administrador'])">
 
-              <!-- Ítem del submenú -->
               <mat-list-item
                 *ngIf="item.activo"
                 [class.subMenuActivo]="subItem.activo && subItem.subMenu && subItem.subMenu.length"
@@ -70,12 +69,11 @@
 
               </mat-list-item>
 
-              <!-- Sub-submenú, si existe y si el usuario tiene rol de administrador o el ítem no lo requiere -->
+              <!-- Sub-submenú solo visible cuando corresponde -->
               <div class="subSubMenu submenu"
                    [ngClass]="{'expanded': subItem.activo && sideNavState}"
-                   *ngIf="isShowing || isExpanded && subItem.subMenu && subItem.subMenu.length">
+                   *ngIf="subItem.subMenu && subItem.subMenu.length > 0 && subItem.activo && sideNavState">
 
-                <!-- Recorre los sub-subítems del submenú -->
                 <div *ngFor="let subSubItem of subItem.subMenu"
                      [@animateSubText]="linkText ? 'show' : 'hide'">
 
