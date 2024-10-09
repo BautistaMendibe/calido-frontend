@@ -15,6 +15,7 @@ import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/regi
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {TipoFactura} from "../../../models/tipoFactura.model";
+import {PromocionesService} from "../../../services/promociones.service";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -42,6 +43,7 @@ export class RegistrarVentaComponent implements OnInit{
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
     private usuariosService: UsuariosService,
+    private promocionesService: PromocionesService
   ) {
     this.form = new FormGroup({});
   }
