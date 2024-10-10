@@ -8,6 +8,7 @@ import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-
 import {Producto} from "../../../models/producto.model";
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import {MatTableDataSource} from "@angular/material/table";
+import {BuscarProductosComponent} from "../../productos/buscar-productos/buscar-productos.component";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -19,8 +20,9 @@ export class RegistrarPromocionComponent implements OnInit{
   public form: FormGroup;
   private referencia: ConsultarPromocionesComponent;
   public listaProductos: Producto[] = [];
-  public productosFiltrados: Producto[] = [];
   private idProductoSeleccionado: number = -1;
+
+  public productosSelecionados: Producto[] = [];
 
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public columnas: string[] = ['imgProducto', 'producto', 'precio', 'seleccionar'];
@@ -43,6 +45,18 @@ export class RegistrarPromocionComponent implements OnInit{
   ngOnInit() {
     this.crearFormulario();
     this.buscarProductos();
+
+    const filtro = { textoBusqueda: '' };
+
+    // Filtrar por texto de búsqueda
+    this.txBuscar.valueChanges.subscribe(valor => {
+      filtro.textoBusqueda = valor.trim().toLowerCase();
+      this.tableDataSource.filter = filtro.textoBusqueda;
+
+      if (this.tableDataSource.paginator) {
+        this.tableDataSource.paginator.firstPage();
+      }
+    });
   }
 
   private crearFormulario() {
@@ -56,22 +70,8 @@ export class RegistrarPromocionComponent implements OnInit{
         Validators.pattern("^[0-9]*$")
         ]],
       txProducto: ['', [Validators.required]],
+      txBuscar: ['', []],
     });
-  }
-
-  /**
-   * Valida que un campo mat-autocomplete sea un objeto válido dentro de
-   * la lista de productos y no un string cualquiera.
-   * @param productos Lista de productos a comparar
-   */
-  private esProductoValido(productos: Producto[]): ValidatorFn {
-    return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value) {
-        return { productoInvalido: true };
-      }
-      const productoValido = productos.some(producto => producto.nombre === control.value);
-      return productoValido ? null : { productoInvalido: true };
-    };
   }
 
   private buscarProductos(){
@@ -80,18 +80,19 @@ export class RegistrarPromocionComponent implements OnInit{
       this.listaProductos = productos;
       this.tableDataSource.data = productos;
       this.isLoading = false;
-      // Valida que el producto seleccionado sea un producto válido.
-      //this.txProducto.setValidators([Validators.required, this.esProductoValido(this.listaProductos)]);
-      //this.txProducto.updateValueAndValidity();
-      //this.txProducto.valueChanges.subscribe((producto) => {
-      //  this.productosFiltrados = this.filterProductos(producto);
-      //});
     });
   }
 
-  filterProductos(busqueda: string) {
-    return this.listaProductos.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+  public seleccionarProducto(producto: Producto) {
+    const index = this.productosSelecionados.findIndex(p => p.id === producto.id);
+    if (index > -1) {
+      this.productosSelecionados.splice(index, 1);
+    } else {
+      this.productosSelecionados.push(producto);
+    }
   }
+
+  public registrarNuevoProducto() {}
 
   public registrarPromocion() {
 
@@ -115,14 +116,6 @@ export class RegistrarPromocionComponent implements OnInit{
 
   }
 
-  /*
-  * Método que se ejecuta cuando el usuario selecciona un producto de la lista
-  * del mat-autocomplete. Guarda el id del producto seleccionado en la variable global.
-   */
-  enSeleccionDeProducto(event: any) {
-    this.idProductoSeleccionado = event.option.id;
-  }
-
   public cancelar() {
     this.dialogRef.close();
   }
@@ -136,9 +129,8 @@ export class RegistrarPromocionComponent implements OnInit{
     return this.form.get('txPorcentajeDescuento') as FormControl;
   }
 
-  get txProducto(): FormControl {
-    return this.form.get('txProducto') as FormControl;
+  get txBuscar(): FormControl {
+    return this.form.get('txBuscar') as FormControl;
   }
-
 
 }

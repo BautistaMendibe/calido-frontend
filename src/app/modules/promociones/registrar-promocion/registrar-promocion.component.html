@@ -27,11 +27,27 @@
   <br>
 
 
-  <h3 class="subtitulo">Seleccionar productos:</h3>
+  <h3 class="subtitulo">Seleccionar los productos incluídos:</h3>
   <!-- loading -->
   <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
+
+  <div class="row pt-4" *ngIf="listaProductos.length > 0">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Producto</mat-label>
+        <input type="text" matInput [formControl]="txBuscar"/>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="col-md-8">
+      <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()">
+        <mat-icon>add</mat-icon>Nuevo producto
+      </button>
+    </div>
+  </div>
+
   <mat-card *ngIf="!isLoading && listaProductos.length > 0">
     <mat-card-content>
       <div class="row">
@@ -50,14 +66,14 @@
             </ng-container>
 
             <ng-container matColumnDef="precio">
-              <mat-header-cell *matHeaderCellDef>PRECIO</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Precio">{{ producto.cantidadSeleccionada }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>PRECIO DE VENTA</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Precio">$ {{ producto.precioFinalVenta }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="seleccionar">
               <mat-header-cell *matHeaderCellDef>SELECCIONAR</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="Seleccionar">
-
+                <mat-checkbox (change)="seleccionarProducto(producto)"></mat-checkbox>
               </mat-cell>
             </ng-container>
 
