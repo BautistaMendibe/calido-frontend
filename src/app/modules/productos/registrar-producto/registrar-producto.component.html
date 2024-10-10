@@ -5,19 +5,19 @@
     <div class="col d-flex justify-content-between align-items-center">
       <p class="titulo">{{esConsulta ? 'Consultar producto' : 'Registrar producto'}}</p>
       <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
-        <mat-icon class="editar">edit</mat-icon>
+        <mat-icon class="editar mb-3">edit</mat-icon>
       </button>
     </div>
   </div>
 
-  <mat-divider></mat-divider>
-  <br>
 
   <div class="row">
     <!-- Columna de Inputs -->
-    <div class="col-md-8">
+    <div class="col-md-9 p-2">
       <form [formGroup]="form">
-        <!-- Primera línea: Nombre del producto y Código de Barras -->
+        <mat-divider></mat-divider>
+        <br>
+        <!-- Nombre del producto y Código de Barras -->
         <div class="row pt-4">
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <!-- Segunda línea: Tipo Producto, Marca, Proveedor -->
+        <!-- Tipo Producto, Marca, Proveedor -->
         <div class="row pt-4">
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
@@ -74,7 +74,21 @@
           </div>
         </div>
 
-        <!-- Tercera línea: Costo Base, Impuestos, Costo Final -->
+        <!-- Descripción -->
+        <div class="row pt-4">
+          <div class="col-md-12">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput [formControl]="txDescripcion" rows="3"></textarea>
+              <mat-error *ngIf="txDescripcion.invalid">{{getErrorMessage(txDescripcion)}}</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+
+        <mat-divider></mat-divider>
+        <br>
+
+        <!-- Costo Base, Impuestos, Costo Final -->
         <div class="row pt-4">
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
@@ -108,22 +122,11 @@
             </mat-form-field>
           </div>
         </div>
-
-        <!-- Cuarta línea: Descripción -->
-        <div class="row pt-4">
-          <div class="col-md-12">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Descripción</mat-label>
-              <textarea matInput [formControl]="txDescripcion" rows="3"></textarea>
-              <mat-error *ngIf="txDescripcion.invalid">{{getErrorMessage(txDescripcion)}}</mat-error>
-            </mat-form-field>
-          </div>
-        </div>
       </form>
     </div>
 
     <!-- Columna de Subir Imagen -->
-    <div class="col-md-4">
+    <div class="col-md-3">
       <div class="upload-container d-flex align-items-center mb-3"
            (dragover)="onDragOver($event)"
            (drop)="onDrop($event)"

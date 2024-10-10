@@ -75,7 +75,6 @@ export class RegistrarProductoComponent implements OnInit {
   }
 
   private crearFormulario() {
-    console.log(this.data.producto);
     this.form = this.fb.group({
       txNombre: [this.data.producto?.nombre || '', [Validators.required, Validators.pattern('^[^0-9]+$')]],
       txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13)]],
@@ -85,7 +84,8 @@ export class RegistrarProductoComponent implements OnInit {
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
       txCostoFinal: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
-      txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]]
+      txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
+      txPrecioFinalVenta: [{ value: this.data.producto?.precioFinalVenta, disabled: true }, [Validators.required]],
     });
   }
 

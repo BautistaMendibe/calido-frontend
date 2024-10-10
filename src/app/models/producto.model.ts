@@ -1,4 +1,4 @@
-import { TipoProducto } from "./tipoProducto.model"
+import { TipoProducto } from "./tipoProducto.model";
 import { Proveedor } from "./proveedores.model";
 import { Marca } from "./marca.model";
 
@@ -19,6 +19,10 @@ export class Producto {
   subTotalVenta: number;
   cantidad: number;
   margenGanancia: number;
+  precioConIva: number;
+  precioFinalVenta: number;
+  descuentoPromocion: number;
+  descuentoTarjeta: number;
 
   constructor(
     id?: number,
@@ -37,6 +41,10 @@ export class Producto {
     imgProducto?: string,
     subTotalVenta?: number,
     cantidad?: number,
+    precioConIva?: number,
+    precioFinalVenta?: number,
+    descuentoPromocion?: number,
+    descuentoTarjeta?: number
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -54,6 +62,9 @@ export class Producto {
     this.margenGanancia = margenGanancia!;
     this.subTotalVenta = subTotalVenta!;
     this.cantidad = cantidad!;
+    this.precioConIva = precioConIva!;
+    this.precioFinalVenta = precioFinalVenta!;
+    this.descuentoPromocion = descuentoPromocion!;
+    this.descuentoTarjeta = descuentoTarjeta!;
   }
 }
-
