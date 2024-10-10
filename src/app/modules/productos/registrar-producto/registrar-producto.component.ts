@@ -10,6 +10,7 @@ import { Producto } from "../../../models/producto.model";
 import { ProductosService } from "../../../services/productos.service";
 import { MarcasService } from "../../../services/marcas.service";
 import { ProveedoresService } from "../../../services/proveedores.service";
+import {Promocion} from "../../../models/promociones.model";
 
 @Component({
   selector: 'app-registrar-producto',
@@ -30,6 +31,7 @@ export class RegistrarProductoComponent implements OnInit {
   public esConsulta: boolean;
   public listaPorcentajesGanancia: { value: number, label: string }[] = [];
   public editarPrecioDeVenta: boolean = false;
+  //public promocionProducto: Promocion;
 
   constructor(
     private fb: FormBuilder,
