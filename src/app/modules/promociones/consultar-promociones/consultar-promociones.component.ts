@@ -24,6 +24,7 @@ export class ConsultarPromocionesComponent implements OnInit {
   public promociones: Promocion[] = [];
   public columnas: string[] = ['nombre', 'porcentajeDescuento', 'producto', 'acciones'];
   private filtros: FiltrosPromociones;
+  public isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,10 +56,12 @@ export class ConsultarPromocionesComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
+    this.isLoading = true;
 
     this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
       this.promociones = promociones;
       this.tableDataSource.data = promociones;
+      this.isLoading = false;
     });
   }
 
@@ -66,8 +69,10 @@ export class ConsultarPromocionesComponent implements OnInit {
     this.dialog.open(
       RegistrarPromocionComponent,
       {
-        width: '75%',
+        width: '80%',
         autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
         data: {
           referencia: this
         }
@@ -82,6 +87,7 @@ export class ConsultarPromocionesComponent implements OnInit {
       {
         width: '75%',
         autoFocus: false,
+        panelClass: 'custom-dialog-container',
         data: {
           promocion: promocion,
           edit: editar,

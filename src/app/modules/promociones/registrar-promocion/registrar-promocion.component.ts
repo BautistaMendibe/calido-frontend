@@ -7,6 +7,7 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-promociones.component";
 import {Producto} from "../../../models/producto.model";
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -20,6 +21,11 @@ export class RegistrarPromocionComponent implements OnInit{
   public listaProductos: Producto[] = [];
   public productosFiltrados: Producto[] = [];
   private idProductoSeleccionado: number = -1;
+
+  public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
+  public columnas: string[] = ['imgProducto', 'producto', 'precio', 'seleccionar'];
+  public isLoading: boolean = false;
+
 
   constructor(
     private fb: FormBuilder,
@@ -69,16 +75,17 @@ export class RegistrarPromocionComponent implements OnInit{
   }
 
   private buscarProductos(){
+    this.isLoading = true;
     this.promocionesService.buscarProductos().subscribe((productos) => {
       this.listaProductos = productos;
-
+      this.tableDataSource.data = productos;
+      this.isLoading = false;
       // Valida que el producto seleccionado sea un producto válido.
-      this.txProducto.setValidators([Validators.required, this.esProductoValido(this.listaProductos)]);
-      this.txProducto.updateValueAndValidity();
-
-      this.txProducto.valueChanges.subscribe((producto) => {
-        this.productosFiltrados = this.filterProductos(producto);
-      });
+      //this.txProducto.setValidators([Validators.required, this.esProductoValido(this.listaProductos)]);
+      //this.txProducto.updateValueAndValidity();
+      //this.txProducto.valueChanges.subscribe((producto) => {
+      //  this.productosFiltrados = this.filterProductos(producto);
+      //});
     });
   }
 

@@ -266,6 +266,7 @@ export class RegistrarVentaComponent implements OnInit{
         width: '75%',
         height: 'auto',
         autoFocus: false,
+        panelClass: 'custom-dialog-container',
         data: {
           referencia: this,
           esConsulta: false,
