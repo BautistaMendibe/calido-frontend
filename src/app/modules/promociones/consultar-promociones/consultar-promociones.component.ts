@@ -88,7 +88,18 @@ export class ConsultarPromocionesComponent implements OnInit {
 
 
   public verPromocion(promocion: Promocion, editar: boolean) {
-
+    const dialog = this.dialog.open(
+      RegistrarPromocionComponent,
+      {
+        width: '80%',
+        autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          promocion: promocion
+        }
+      }
+    );
   }
 
   public getNombresProductos(productos: Producto[]): string {
@@ -97,7 +108,6 @@ export class ConsultarPromocionesComponent implements OnInit {
 
 
   public eliminarPromocion(idPromocion: number) {
-
     this.notificationDialogService.confirmation("¿Desea eliminar la promoción?", "Eliminar promoción")
       .afterClosed()
       .subscribe((value) => {

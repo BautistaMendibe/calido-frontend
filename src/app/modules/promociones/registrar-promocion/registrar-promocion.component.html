@@ -73,7 +73,7 @@
             <ng-container matColumnDef="seleccionar">
               <mat-header-cell *matHeaderCellDef>SELECCIONAR</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="Seleccionar">
-                <mat-checkbox (change)="seleccionarProducto(producto)"></mat-checkbox>
+                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
               </mat-cell>
             </ng-container>
 
@@ -82,7 +82,6 @@
             <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
 
           </mat-table>
-
 
           <mat-paginator *ngIf="this.listaProductos.length > 0"
                          [length]="this.listaProductos.length"

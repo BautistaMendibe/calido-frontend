@@ -24,6 +24,8 @@ export class Producto {
   descuentoPromocion: number;
   descuentoTarjeta: number;
 
+  estaEnPromocion: boolean;
+
   constructor(
     id?: number,
     nombre?: string,
@@ -44,7 +46,8 @@ export class Producto {
     precioConIva?: number,
     precioFinalVenta?: number,
     descuentoPromocion?: number,
-    descuentoTarjeta?: number
+    descuentoTarjeta?: number,
+    estaEnPromocion?: boolean,
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -66,5 +69,6 @@ export class Producto {
     this.precioFinalVenta = precioFinalVenta!;
     this.descuentoPromocion = descuentoPromocion!;
     this.descuentoTarjeta = descuentoTarjeta!;
+    this.estaEnPromocion = estaEnPromocion!;
   }
 }

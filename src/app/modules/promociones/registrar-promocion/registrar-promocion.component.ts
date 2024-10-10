@@ -19,15 +19,12 @@ import {RegistrarProductoComponent} from "../../productos/registrar-producto/reg
 export class RegistrarPromocionComponent implements OnInit{
 
   public form: FormGroup;
-  private referencia: ConsultarPromocionesComponent;
   public listaProductos: Producto[] = [];
-  private idProductoSeleccionado: number = -1;
-
   public productosSelecionados: Producto[] = [];
-
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public columnas: string[] = ['imgProducto', 'producto', 'precio', 'seleccionar'];
   public isLoading: boolean = false;
+  public promocion: Promocion;
 
 
   constructor(
@@ -37,11 +34,11 @@ export class RegistrarPromocionComponent implements OnInit{
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: {
-      referencia: ConsultarPromocionesComponent
+      promocion: Promocion,
     }
   ) {
     this.form = new FormGroup({});
-    this.referencia = this.data.referencia;
+    this.promocion = this.data.promocion;
   }
 
   ngOnInit() {
@@ -59,6 +56,10 @@ export class RegistrarPromocionComponent implements OnInit{
         this.tableDataSource.paginator.firstPage();
       }
     });
+
+    if (this.promocion) {
+      this.setearDatos();
+    }
   }
 
   private crearFormulario() {
@@ -79,17 +80,42 @@ export class RegistrarPromocionComponent implements OnInit{
     this.isLoading = true;
     this.promocionesService.buscarProductos().subscribe((productos) => {
       this.listaProductos = productos;
-      this.tableDataSource.data = productos;
+
+      if (this.promocion) {
+        this.identificarYActualizarProductosSeleccionados();
+      }
+
+      this.tableDataSource.data = this.listaProductos;
       this.isLoading = false;
     });
+  }
+
+  private setearDatos() {
+    this.txNombre.setValue(this.promocion.nombre);
+    this.txPorcentajeDescuento.setValue(this.promocion.porcentajeDescuento);
+    this.productosSelecionados = this.promocion.productos;
+    this.form.disable();
+  }
+
+  private identificarYActualizarProductosSeleccionados() {
+    const productosSeleccionadosIds = this.productosSelecionados.map(p => p.id);
+    this.listaProductos.forEach(producto => {
+      if (productosSeleccionadosIds.includes(producto.id)) {
+        producto.estaEnPromocion = true;
+      }
+    });
+
+    console.log(this.listaProductos);
   }
 
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSelecionados.findIndex(p => p.id === producto.id);
     if (index > -1) {
       this.productosSelecionados.splice(index, 1);
+      producto.estaEnPromocion = false;
     } else {
       this.productosSelecionados.push(producto);
+      producto.estaEnPromocion = true;
     }
   }
 
