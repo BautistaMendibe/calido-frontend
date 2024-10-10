@@ -49,7 +49,7 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="promociones.length > 0">
+  <mat-card *ngIf="promociones.length > 0 && !isLoading">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
