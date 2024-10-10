@@ -69,7 +69,7 @@
               <mat-cell *matCellDef="let promocion">
                 <div class="productos-container">
                   <ng-container *ngFor="let producto of promocion.productos.slice(0, 3)">
-                    <span class="producto-circulo" [matTooltip]="producto.nombre">
+                    <span class="producto-circulo" [matTooltip]="producto.nombre" (click)="verProducto(producto)">
                     <img [src]="producto.imgProducto" alt="Producto" class="producto-imagen">
                     </span>
                   </ng-container>

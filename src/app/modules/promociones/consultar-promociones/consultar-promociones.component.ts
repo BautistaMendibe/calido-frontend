@@ -11,6 +11,7 @@ import {MessagesComponent} from "../../../shared/messages/messages.component";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {Producto} from "../../../models/producto.model";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
   selector: 'app-consultar-promociones',
@@ -98,6 +99,24 @@ export class ConsultarPromocionesComponent implements OnInit {
         data: {
           promocion: promocion,
           esConsulta: !editar
+        }
+      }
+    );
+  }
+
+  public verProducto(producto: Producto) {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '80%',
+        autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          producto: producto,
+          esConsulta: true,
+          formDesactivado: true,
+          editar: false
         }
       }
     );
