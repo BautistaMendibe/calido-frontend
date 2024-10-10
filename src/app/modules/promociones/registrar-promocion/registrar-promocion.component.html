@@ -2,7 +2,7 @@
   <br>
   <div class="row">
     <div class="col">
-      <p class="titulo">Registrar promoción</p>
+      <p class="titulo">{{esConsulta ? 'Consultar promoción' : 'Registrar promoción'}}</p>
     </div>
   </div>
   <br>
@@ -27,7 +27,8 @@
   <br>
 
 
-  <h3 class="subtitulo">Seleccionar los productos incluídos:</h3>
+  <h3 class="subtitulo" *ngIf="promocion">Productos incluídos en la promoción:</h3>
+  <h3 class="subtitulo" *ngIf="!promocion">Seleccionar los productos incluídos:</h3>
   <!-- loading -->
   <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
@@ -42,7 +43,7 @@
       </mat-form-field>
     </div>
     <div class="col-md-8">
-      <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()">
+      <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="esConsulta">
         <mat-icon>add</mat-icon>Nuevo producto
       </button>
     </div>
@@ -52,7 +53,7 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta">
             <ng-container matColumnDef="imgProducto">
               <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
               <mat-cell *matCellDef="let producto">
@@ -100,7 +101,8 @@
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
         Cancelar
       </button>
-      <button mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registrar</button>
+      <button *ngIf="!this.promocion" mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registrar</button>
+      <button *ngIf="this.promocion" mat-raised-button color="accent" class="btn round" (click)="modificarPromocion()" id="btnBuscar2">Modificar</button>
     </div>
   </div>
 

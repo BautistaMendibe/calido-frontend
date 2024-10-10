@@ -13,3 +13,8 @@
   margin-top: auto;
   margin-bottom: auto;
 }
+
+.disabled-table {
+  pointer-events: none;
+  opacity: 0.6;
+}

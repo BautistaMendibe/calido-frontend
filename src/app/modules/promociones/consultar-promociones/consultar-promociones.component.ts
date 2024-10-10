@@ -96,7 +96,8 @@ export class ConsultarPromocionesComponent implements OnInit {
         height: '85vh',
         panelClass: 'custom-dialog-container',
         data: {
-          promocion: promocion
+          promocion: promocion,
+          esConsulta: !editar
         }
       }
     );

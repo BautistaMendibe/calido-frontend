@@ -25,6 +25,7 @@ export class RegistrarPromocionComponent implements OnInit{
   public columnas: string[] = ['imgProducto', 'producto', 'precio', 'seleccionar'];
   public isLoading: boolean = false;
   public promocion: Promocion;
+  public esConsulta: boolean;
 
 
   constructor(
@@ -35,10 +36,12 @@ export class RegistrarPromocionComponent implements OnInit{
     private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: {
       promocion: Promocion,
+      esConsulta: boolean,
     }
   ) {
     this.form = new FormGroup({});
     this.promocion = this.data.promocion;
+    this.esConsulta = this.data.esConsulta;
   }
 
   ngOnInit() {
@@ -94,7 +97,9 @@ export class RegistrarPromocionComponent implements OnInit{
     this.txNombre.setValue(this.promocion.nombre);
     this.txPorcentajeDescuento.setValue(this.promocion.porcentajeDescuento);
     this.productosSelecionados = this.promocion.productos;
-    this.form.disable();
+    if (this.esConsulta) {
+      this.form.disable();
+    }
   }
 
   private identificarYActualizarProductosSeleccionados() {
@@ -104,8 +109,6 @@ export class RegistrarPromocionComponent implements OnInit{
         producto.estaEnPromocion = true;
       }
     });
-
-    console.log(this.listaProductos);
   }
 
   public seleccionarProducto(producto: Producto) {
@@ -166,6 +169,10 @@ export class RegistrarPromocionComponent implements OnInit{
       })
 
     }
+
+  }
+
+  public modificarPromocion() {
 
   }
 
