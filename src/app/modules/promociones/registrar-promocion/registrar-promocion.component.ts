@@ -123,13 +123,12 @@ export class RegistrarPromocionComponent implements OnInit{
       const promocion: Promocion = new Promocion();
       promocion.nombre = this.txNombre.value;
       promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
-      promocion.idProducto = this.idProductoSeleccionado; // Se usa la variable de la clase (id), evitas consultas a BD.
+      promocion.productos = this.productosSelecionados;
 
       this.promocionesService.registrarPromocion(promocion).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('La promoción se registró con éxito');
-          this.dialogRef.close();
-          this.referencia.buscar();
+          this.dialogRef.close(true);
         } else {
           this.notificacionService.openSnackBarError('Error al registrar una promoción, intentelo nuevamente');
         }

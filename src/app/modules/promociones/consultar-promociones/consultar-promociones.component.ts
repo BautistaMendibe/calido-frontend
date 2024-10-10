@@ -7,7 +7,6 @@ import {RegistrarPromocionComponent} from "../registrar-promocion/registrar-prom
 import {FiltrosPromociones} from "../../../models/comandos/FiltrosPromociones.comando";
 import {PromocionesService} from "../../../services/promociones.service";
 import {Router} from "@angular/router";
-import {DetallePromocionComponent} from "../detalle-promocion/detalle-promocion.component";
 import {MessagesComponent} from "../../../shared/messages/messages.component";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
@@ -58,15 +57,15 @@ export class ConsultarPromocionesComponent implements OnInit {
     this.filtros.nombre = this.txNombre.value;
     this.isLoading = true;
 
-    this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
-      this.promociones = promociones;
-      this.tableDataSource.data = promociones;
-      this.isLoading = false;
-    });
+    //this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
+    //  this.promociones = promociones;
+    //  this.tableDataSource.data = promociones;
+    //  this.isLoading = false;
+    //});
   }
 
   public registrarNuevaPromocion() {
-    this.dialog.open(
+    const dialog = this.dialog.open(
       RegistrarPromocionComponent,
       {
         width: '80%',
@@ -77,24 +76,18 @@ export class ConsultarPromocionesComponent implements OnInit {
           referencia: this
         }
       }
-    )
+    );
+
+    dialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscar();
+      }
+    });
   }
 
 
   public verPromocion(promocion: Promocion, editar: boolean) {
-    this.dialog.open(
-      DetallePromocionComponent,
-      {
-        width: '75%',
-        autoFocus: false,
-        panelClass: 'custom-dialog-container',
-        data: {
-          promocion: promocion,
-          edit: editar,
-          referencia: this
-        }
-      }
-    )
+
   }
 
 
