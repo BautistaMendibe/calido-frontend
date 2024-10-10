@@ -1,8 +1,11 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-    <div class="col">
+    <div class="col d-flex justify-content-between align-items-center">
       <p class="titulo">{{esConsulta ? 'Consultar promoción' : 'Registrar promoción'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar mb-3">edit</mat-icon>
+      </button>
     </div>
   </div>
   <br>

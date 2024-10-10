@@ -176,6 +176,11 @@ export class RegistrarPromocionComponent implements OnInit{
 
   }
 
+  public habilitarEdicion() {
+    this.form.enable();
+    this.esConsulta = !this.esConsulta;
+  }
+
   public cancelar() {
     this.dialogRef.close();
   }
