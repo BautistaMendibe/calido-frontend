@@ -10,6 +10,7 @@ import {Router} from "@angular/router";
 import {MessagesComponent} from "../../../shared/messages/messages.component";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {Producto} from "../../../models/producto.model";
 
 @Component({
   selector: 'app-consultar-promociones',
@@ -54,14 +55,14 @@ export class ConsultarPromocionesComponent implements OnInit {
   }
 
   public buscar() {
-    //this.filtros.nombre = this.txNombre.value;
-    //this.isLoading = true;
+    this.filtros.nombre = this.txNombre.value;
+    this.isLoading = true;
 
-    //this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
-    //  this.promociones = promociones;
-    //  this.tableDataSource.data = promociones;
-    //  this.isLoading = false;
-    //});
+    this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
+      this.promociones = promociones;
+      this.tableDataSource.data = promociones;
+      this.isLoading = false;
+    });
   }
 
   public registrarNuevaPromocion() {
@@ -88,6 +89,10 @@ export class ConsultarPromocionesComponent implements OnInit {
 
   public verPromocion(promocion: Promocion, editar: boolean) {
 
+  }
+
+  public getNombresProductos(productos: Producto[]): string {
+    return productos.map(producto => producto.nombre).join(', ');
   }
 
 
