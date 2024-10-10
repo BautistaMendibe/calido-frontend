@@ -54,8 +54,8 @@ export class ConsultarPromocionesComponent implements OnInit {
   }
 
   public buscar() {
-    this.filtros.nombre = this.txNombre.value;
-    this.isLoading = true;
+    //this.filtros.nombre = this.txNombre.value;
+    //this.isLoading = true;
 
     //this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
     //  this.promociones = promociones;

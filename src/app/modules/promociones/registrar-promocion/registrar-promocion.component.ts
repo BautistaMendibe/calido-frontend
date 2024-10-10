@@ -71,7 +71,6 @@ export class RegistrarPromocionComponent implements OnInit{
         Validators.max(100),
         Validators.pattern("^[0-9]*$")
         ]],
-      txProducto: ['', [Validators.required]],
       txBuscar: ['', []],
     });
   }
@@ -120,6 +119,12 @@ export class RegistrarPromocionComponent implements OnInit{
   public registrarPromocion() {
 
     if (this.form.valid) {
+
+      if (this.productosSelecionados.length == 0) {
+        this.notificacionService.openSnackBarError('Debe seleccionar al menos un producto para la promoción.');
+        return;
+      }
+
       const promocion: Promocion = new Promocion();
       promocion.nombre = this.txNombre.value;
       promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
