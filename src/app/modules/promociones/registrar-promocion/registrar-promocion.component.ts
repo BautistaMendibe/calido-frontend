@@ -2,13 +2,14 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
+import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-promociones.component";
 import {Producto} from "../../../models/producto.model";
 import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import {MatTableDataSource} from "@angular/material/table";
 import {BuscarProductosComponent} from "../../productos/buscar-productos/buscar-productos.component";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -34,6 +35,7 @@ export class RegistrarPromocionComponent implements OnInit{
     private promocionesService: PromocionesService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private dialog: MatDialog,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarPromocionesComponent
     }
@@ -92,7 +94,28 @@ export class RegistrarPromocionComponent implements OnInit{
     }
   }
 
-  public registrarNuevoProducto() {}
+  public registrarNuevoProducto() {
+    const dialog = this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        panelClass: 'custom-dialog-container',
+        data: {
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
+        }
+      }
+    );
+
+    dialog.afterClosed().subscribe((result) => {
+      if (result) {
+        this.buscarProductos();
+      }
+    })
+  }
 
   public registrarPromocion() {
 
