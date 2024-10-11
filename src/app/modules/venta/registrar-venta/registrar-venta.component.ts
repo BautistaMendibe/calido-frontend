@@ -234,9 +234,7 @@ export class RegistrarVentaComponent implements OnInit{
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
         venta.id = respuesta.id;
-        this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
-
-        })
+        //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
         this.registrandoVenta = false;
         this.limpiarVenta();
       } else {
