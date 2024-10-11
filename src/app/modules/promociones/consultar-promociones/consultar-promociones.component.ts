@@ -102,6 +102,12 @@ export class ConsultarPromocionesComponent implements OnInit {
         }
       }
     );
+
+    dialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscar();
+      }
+    });
   }
 
   public verProducto(producto: Producto) {

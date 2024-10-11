@@ -173,7 +173,14 @@ export class RegistrarPromocionComponent implements OnInit{
   }
 
   public modificarPromocion() {
-
+    //this.promocionesService.modificarPromocion(this.promocion).subscribe((respuesta) => {
+    //  if (respuesta.mensaje == 'OK') {
+    //    this.notificacionService.openSnackBarSuccess('La promoción se modificó con éxito');
+    //    this.dialogRef.close(true);
+    //  } else {
+    //    this.notificacionService.openSnackBarError('Error al modificar la promoción, intentelo nuevamente');
+    //  }
+    //})
   }
 
   public habilitarEdicion() {
