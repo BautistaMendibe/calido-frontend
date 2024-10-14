@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {DomicilioService} from "../../../services/domicilio.service";
@@ -19,7 +19,7 @@ import {VentasService} from "../../../services/ventas.services";
   templateUrl: './registrar-clientes.component.html',
   styleUrl: './registrar-clientes.component.scss'
 })
-export class RegistrarClientesComponent {
+export class RegistrarClientesComponent implements OnInit {
 
   public form: FormGroup;
   public referencia: any

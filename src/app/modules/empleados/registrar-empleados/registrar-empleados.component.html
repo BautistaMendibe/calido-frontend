@@ -11,11 +11,11 @@
 
   <form [formGroup]="form">
 
-    <div class="row pt-4">
-      <h3>Datos generales:</h3>
-      <mat-divider></mat-divider>
-      <br>
+    <br>
+    <h3>Datos generales:</h3>
+    <mat-divider class="my-3"></mat-divider>
 
+    <div class="row pt-4">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Nombre</mat-label>
@@ -33,7 +33,9 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de nacimiento</mat-label>
-          <input type="date" matInput [formControl]="txFechaNacimiento"/>
+          <input matInput [matDatepicker]="pickerFechaNacimiento" [formControl]="txFechaNacimiento" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
         </mat-form-field>
         <div *ngIf="form.get('txFechaNacimiento')?.touched || form.get('txFechaNacimiento')?.dirty">
           <div *ngIf="form.get('txFechaNacimiento')?.hasError('fechaInvalida')">
@@ -71,12 +73,13 @@
       </div>
     </div>
 
+    <br>
+    <h3>Domicilio:</h3>
+    <mat-divider class="my-3"></mat-divider>
+
     <div class="row pt-4">
-      <h3>Domicilio:</h3>
-      <mat-divider></mat-divider>
-      <br>
-      <div class="col-md-3">
-        <mat-form-field appearance="outline">
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Provincia</mat-label>
           <input matInput
                  placeholder="Ingrese"
@@ -89,8 +92,8 @@
           </mat-option>
         </mat-autocomplete>
       </div>
-      <div class="col-md-3">
-        <mat-form-field appearance="outline">
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Localidad</mat-label>
           <input matInput
                  placeholder="Ingrese"
@@ -127,10 +130,11 @@
       </div>
     </div>
 
+    <br>
+    <h3>Empleado en el sistema:</h3>
+    <mat-divider class="my-3"></mat-divider>
+
     <div class="row pt-4">
-      <h3>Empleado en el sistema:</h3>
-      <mat-divider></mat-divider>
-      <br>
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Nombre de usuario</mat-label>
