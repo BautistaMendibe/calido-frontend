@@ -82,7 +82,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       txCliente: [this.data.cuentaCorriente?.usuario?.id || '', [Validators.required]],
       txNombre: [this.data.cuentaCorriente?.usuario?.nombre || '', [Validators.required]],
       txApellido: [this.data.cuentaCorriente?.usuario?.apellido || '', [Validators.required]],
-      txCreada: [{ value: this.data.cuentaCorriente?.fechaDesde || '', disabled: true }, [Validators.required]],
+      txCreada: [{
+        value: this.data.cuentaCorriente?.fechaDesde ?? new Date(),
+        disabled: true
+      }, [Validators.required]],
       txBalance: [this.data.cuentaCorriente?.balanceTotal || '', [Validators.required, Validators.pattern('^[0-9]+$')]],
       txBuscar: ['']
     });
