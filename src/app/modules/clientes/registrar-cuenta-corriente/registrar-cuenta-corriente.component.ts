@@ -6,8 +6,6 @@ import { CuentaCorriente } from "../../../models/cuentaCorriente.model";
 import { SnackBarService } from "../../../services/snack-bar.service";
 import { Usuario } from "../../../models/usuario.model";
 import { UsuariosService } from "../../../services/usuarios.service";
-import {Producto} from "../../../models/producto.model";
-import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -99,7 +97,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   public modificarCuentaCorriente() {
-    
+
     if (this.form.valid) {
       const cuentaCorriente = this.construirCuentaCorriente(this.data.cuentaCorriente?.id);
       this.usuarioService.modificarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
