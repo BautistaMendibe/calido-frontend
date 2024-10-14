@@ -73,7 +73,7 @@ export class RegistrarClientesComponent implements OnInit {
     this.form = this.fb.group({
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
-      txMail: ['', [this.emailValidator()]],
+      txMail: ['', [Validators.required, this.emailValidator()]],
       txCondicionIva: ['', [Validators.required]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
       txCodigoPostal: ['', []],
@@ -260,13 +260,15 @@ export class RegistrarClientesComponent implements OnInit {
     }
   }
 
-  public emailValidator(): ValidatorFn {
+  private emailValidator(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
-      const valid = emailRegex.test(control.value);
+      if (!control.value) {
+        return null;
+      }
 
-      // Si el email no es válido, retornamos el error
-      return valid ? null : { invalidEmail: true };
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+      const valid = emailPattern.test(control.value);
+      return valid ? null : { invalidEmail: { value: control.value } };
     };
   }
 
