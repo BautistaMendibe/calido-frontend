@@ -22,7 +22,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   public tableDataSource: MatTableDataSource<CuentaCorriente> = new MatTableDataSource<CuentaCorriente>([]);
   public form: FormGroup;
   public cuentas: CuentaCorriente[] = [];
-  public columnas: string[] = ['idCuenta','nombre', 'apellido','creada','balance','acciones'];
+  public columnas: string[] = ['idCuenta', 'nombre', 'apellido', 'creada', 'balance', 'acciones'];
   private filtros: FiltrosCuentasCorrientes;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -79,7 +79,8 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
       RegistrarCuentaCorrienteComponent,
       {
         width: '75%',
-        height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
         autoFocus: false,
         data: {
           referencia: this,
@@ -96,7 +97,8 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
       RegistrarCuentaCorrienteComponent,
       {
         width: '75%',
-        height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
         autoFocus: false,
         data: {
           cuentaCorriente: cuentaCorriente,

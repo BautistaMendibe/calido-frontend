@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
@@ -18,7 +18,7 @@ import {fakeAsync} from "@angular/core/testing";
   templateUrl: './consultar-clientes.component.html',
   styleUrl: './consultar-clientes.component.scss'
 })
-export class ConsultarClientesComponent {
+export class ConsultarClientesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
