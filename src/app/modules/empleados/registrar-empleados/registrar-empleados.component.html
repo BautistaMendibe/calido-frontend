@@ -145,12 +145,10 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Contraseña</mat-label>
-              <input
-                matInput
-                type="password"
-                formControlName="txContrasena"
-                (focus)="applyPasswordValidations()"
-              />
+            <input [type]="hidePassword ? 'password' : 'text'" matInput [formControl]="txContrasena" (focus)="applyPasswordValidations()"/>
+            <button mat-icon-button matSuffix (mousedown)="$event.preventDefault(); hidePassword = !hidePassword" type="button">
+              <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+            </button>
               <mat-error *ngIf="form.get('txContrasena')?.hasError('required')">La contraseña es requerida</mat-error>
               <mat-error *ngIf="form.get('txContrasena')?.hasError('minlength')">La contraseña debe tener al menos 8 caracteres</mat-error>
               <mat-error *ngIf="form.get('txContrasena')?.hasError('pattern')">La contraseña debe contener al menos una letra mayúscula y un número</mat-error>

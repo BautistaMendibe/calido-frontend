@@ -35,6 +35,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   public usuario: Usuario;
   public esConsulta: boolean;
+  public hidePassword: boolean = true;
   public formDesactivado: boolean;
 
   constructor(
