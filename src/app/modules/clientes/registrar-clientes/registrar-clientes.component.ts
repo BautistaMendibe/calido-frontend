@@ -245,9 +245,9 @@ export class RegistrarClientesComponent implements OnInit {
       cliente.dni = this.txDNI.value;
       cliente.idGenero = this.ddGenero.value;
       cliente.domicilio = domicilio;
-      cliente.domicilio.localidad.id =  this.idLocalidad;
-      cliente.domicilio.calle =  this.txCalle.value;
-      cliente.domicilio.numero =  this.txNumero.value;
+      cliente.domicilio.localidad.id = this.idLocalidad;
+      cliente.domicilio.calle = this.txCalle.value;
+      cliente.domicilio.numero = this.txNumero.value;
       cliente.mail = this.txMail.value;
       cliente.tipoUsuario = tipoUsuario;
       cliente.tipoUsuario.id = 2;
