@@ -49,12 +49,9 @@ import { ConsultarComprobanteComponent } from './modules/comprobante/consultar-c
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
-import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
 import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
 import { VentasPorCuentaCorrienteComponent } from './modules/clientes/ventas-por-cuenta-corriente/ventas-por-cuenta-corriente.component';
-import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
 import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
-import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
 import { ConsultarTarjetasComponent } from './modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component';
 import { RegistrarTarjetaComponent } from './modules/tarjetas/registrar-tarjeta/registrar-tarjeta.component';
 import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consultar-ventas.component';
@@ -91,14 +88,13 @@ registerLocaleData(localeEs, 'es');
     RegistrarComprobanteComponent,
     ConsultarComprobanteComponent,
     ConsultarCuentasCorrientesComponent,
-    RegistrarCuentaCorrienteComponent
     RegistrarCuentaCorrienteComponent,
     RegistrarClientesComponent,
     ConsultarClientesComponent,
     ConsultarInventarioComponent,
     RegistrarInventarioComponent,
     BuscarProductosComponent,
-    VentasPorCuentaCorrienteComponent
+    VentasPorCuentaCorrienteComponent,
     ConsultarTarjetasComponent,
     RegistrarTarjetaComponent,
     ConsultarVentasComponent,
