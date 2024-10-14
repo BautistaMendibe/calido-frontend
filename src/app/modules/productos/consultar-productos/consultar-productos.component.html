@@ -11,14 +11,14 @@
     <h4 style="color: grey">Filtros de búsqueda</h4>
     <form [formGroup]="form">
       <div class="row pt-4">
-        <div class="col-md-3">
+        <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Producto</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
         </div>
-        <div class="col-md-auto">
-          <mat-form-field appearance="outline" class="width-80">
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Tipo Producto</mat-label>
             <mat-select [formControl]="txTipo">
               <mat-option *ngFor="let tipoProducto of listaTipoProducto" [value]="tipoProducto.id">
@@ -27,8 +27,8 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="col-md-auto">
-          <mat-form-field appearance="outline" class="width-80">
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Proveedor</mat-label>
             <mat-select [formControl]="txProveedor">
               <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
@@ -37,7 +37,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div class="col-md-auto">
+        <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Marca</mat-label>
             <mat-select [formControl]="txMarca">
