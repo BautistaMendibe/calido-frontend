@@ -45,12 +45,11 @@ import { RegistrarClientesComponent } from './modules/clientes/registrar-cliente
 import { ConsultarClientesComponent } from './modules/clientes/consultar-clientes/consultar-clientes.component';
 import { RegistrarComprobanteComponent } from './modules/comprobante/registrar-comprobante/registrar-comprobante.component';
 import { ConsultarComprobanteComponent } from './modules/comprobante/consultar-comprobante/consultar-comprobante.component';
-
 import {ConsultarCuentasCorrientesComponent} from "./modules/clientes/consultar-cuentas-corrientes/consultar-cuentas-corrientes.component";
 import {RegistrarCuentaCorrienteComponent} from "./modules/clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import { ConsultarInventarioComponent } from './modules/inventario/consultar-inventario/consultar-inventario.component';
-import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
 import { BuscarProductosComponent } from './modules/productos/buscar-productos/buscar-productos.component';
+import { RegistrarInventarioComponent } from './modules/inventario/registrar-inventario/registrar-inventario.component';
 import { ConsultarTarjetasComponent } from './modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component';
 import { RegistrarTarjetaComponent } from './modules/tarjetas/registrar-tarjeta/registrar-tarjeta.component';
 import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consultar-ventas.component';

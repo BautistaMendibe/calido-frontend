@@ -17,6 +17,7 @@ export class Venta {
   comprobanteAfip: ComprobanteAfip;
 
   constructor(id?: number, montoTotal?: number, fecha?: Date, usuario?: Usuario, formaDePago?: FormaDePago, detalleVenta?: DetalleVenta[], productos?: Producto[], facturacion?: TipoFactura, comprobanteAfip?: ComprobanteAfip) {
+
     this.id = id!;
     this.montoTotal = montoTotal!;
     this.fecha = fecha!;
