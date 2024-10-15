@@ -30,11 +30,6 @@ export class VentasService {
     return this.http.get<FormaDePago[]>(`${this.urlBackend}/${this.controllerName}/buscar-formas-de-pago`);
   }
 
-
-  public buscarVentasPorCC(filtro: FiltrosCuentasCorrientes): Observable<Venta[]> {
-    return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc`, filtro);
-  }
-  
   public buscarCategorias(): Observable<CondicionIva[]>{
     return this.http.get<CondicionIva[]>(`${this.urlBackend}/${this.controllerName}/obtener-condiciones-iva`);
   }
@@ -49,6 +44,10 @@ export class VentasService {
 
   public buscarVentas(filtros: FiltrosVentas): Observable<Venta[]>{
     return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas`, filtros);
+  }
+
+  public buscarVentasPorCC(idUsuario: number): Observable<Venta[]> {
+    return this.http.get<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc/${idUsuario}`);
   }
 
 }

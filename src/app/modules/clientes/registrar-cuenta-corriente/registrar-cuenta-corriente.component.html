@@ -55,7 +55,7 @@
     <div class="row pt-4" *ngIf="ventas.length > 0 && !esRegistro">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Venta</mat-label>
+          <mat-label>Número de venta</mat-label>
           <input type="text" matInput [formControl]="txBuscar"/>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
@@ -105,6 +105,15 @@
                         +{{ venta.productos.length - 3 }}
                   </span>
                   </div>
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="acciones">
+                <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+                <mat-cell *matCellDef="let venta" data-label="Acciones">
+                  <button class="btn" mat-icon-button matTooltip="Ver" (click)="verVenta(venta)">
+                    <mat-icon class="ver">visibility</mat-icon>
+                  </button>
                 </mat-cell>
               </ng-container>
 

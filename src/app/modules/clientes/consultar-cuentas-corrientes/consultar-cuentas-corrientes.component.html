@@ -20,8 +20,8 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Desde Monto Adeudado </mat-label>
-            <input type="number" matInput [formControl]="txDesdeMonto"/>
+            <mat-label>Desde Saldo</mat-label>
+            <input type="text" matInput [formControl]="txDesdeMonto" mask="separator.2" prefix="$" thousandSeparator=","/>
           </mat-form-field>
         </div>
 
