@@ -3,7 +3,7 @@
     <div class="row">
       <div class="d-flex justify-content-between align-items-center w-100">
         <p class="titulo">Cuentas Corrientes</p>
-         <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaCuenta()">Registrar cuenta corriente</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaCuenta()">Registrar cuenta corriente</button>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -20,8 +20,8 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Desde Monto Adeudado </mat-label>
-            <input type="number" matInput [formControl]="txDesdeMonto"/>
+            <mat-label>Desde Saldo</mat-label>
+            <input type="text" matInput [formControl]="txDesdeMonto" mask="separator.2" prefix="$" thousandSeparator=","/>
           </mat-form-field>
         </div>
 
@@ -65,7 +65,7 @@
               <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.apellido }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="creada">
-              <mat-header-cell *matHeaderCellDef>FECHA CREACIÓN</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>FECHA DE CREACIÓN</mat-header-cell>
               <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.fechaDesde | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="balance">
