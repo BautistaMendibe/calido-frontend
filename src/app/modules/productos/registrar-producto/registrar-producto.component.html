@@ -137,8 +137,41 @@
       </div>
     </div>
 
-    <mat-divider></mat-divider>
-    <br>
+
+    <!-- Precio sin iva y descuento por promo -->
+    <div class="row pt-4">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Precio con IVA</mat-label>
+          <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
+          <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
+        <span>-</span>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Descuento por promoción</mat-label>
+          <mat-select [formControl]="txProveedor">
+            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
+              {{proveedor.nombre}}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="txProveedor.invalid">{{getErrorMessage(txProveedor)}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
+        <span>=</span>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Precio final de venta</mat-label>
+          <input type="text" matInput [formControl]="txCostoFinal" mask="separator.2" prefix="$" thousandSeparator="," />
+        </mat-form-field>
+      </div>
+    </div>
+
     <div class="row text-right">
 
       <!-- Btn de cancelar, registrar y modificar -->
