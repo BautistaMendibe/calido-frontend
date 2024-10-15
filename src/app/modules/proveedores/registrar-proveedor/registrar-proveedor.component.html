@@ -9,9 +9,10 @@
     </div>
   </div>
 
-    <mat-divider></mat-divider>
-
     <br>
+    <h3>Datos generales:</h3>
+    <mat-divider class="my-3"></mat-divider>
+
     <form [formGroup]="form">
       <div class="row pt-4">
         <div class="col-md-4">
@@ -56,9 +57,13 @@
         </div>
       </div>
 
+      <br>
+      <h3>Domicilio:</h3>
+      <mat-divider class="my-3"></mat-divider>
+
       <div class="row pt-4">
           <div class="col-md-3">
-            <mat-form-field appearance="outline">
+            <mat-form-field appearance="outline" class="w-100">
               <mat-label>Provincia</mat-label>
               <input matInput
                      placeholder="Ingrese"
@@ -72,7 +77,7 @@
             </mat-autocomplete>
           </div>
         <div class="col-md-3">
-          <mat-form-field appearance="outline">
+          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Localidad</mat-label>
             <input matInput
                    placeholder="Ingrese"

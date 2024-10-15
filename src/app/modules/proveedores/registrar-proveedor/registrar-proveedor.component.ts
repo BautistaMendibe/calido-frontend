@@ -88,7 +88,7 @@ export class RegistrarProveedorComponent implements OnInit{
     this.txProvincia.setValue(this.proveedor.domicilio?.localidad?.provincia.nombre);
     this.txLocalidad.setValue(this.proveedor.domicilio?.localidad?.nombre);
     this.txCalle.setValue(this.proveedor.domicilio?.calle);
-    this.txNumero.setValue(this.proveedor.domicilio?.calle);
+    this.txNumero.setValue(this.proveedor.domicilio?.numero);
 
     if (this.proveedor.domicilio?.localidad) {
       this.obtenerLocalidadesPorProvincia(this.proveedor.domicilio.localidad.provincia.id)
@@ -200,8 +200,8 @@ export class RegistrarProveedorComponent implements OnInit{
       proveedor.cuit = this.txCuit.value;
       proveedor.domicilio = domicilio;
       proveedor.domicilio.localidad.id =  this.idLocalidad;
-      proveedor.domicilio.calle =  this.txCalle.value;
-      proveedor.domicilio.numero =  this.txNumero.value;
+      proveedor.domicilio.calle = this.txCalle.value;
+      proveedor.domicilio.numero = this.txNumero.value;
 
       this.proveedoresService.registrarProveedor(proveedor).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
@@ -244,11 +244,25 @@ export class RegistrarProveedorComponent implements OnInit{
   }
 
   private filterProvincias(busqueda: string) {
-    return this.listaProvincias.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+    const normalizarTexto = (texto: string) =>
+      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const busquedaNormalizada = normalizarTexto(busqueda);
+
+    return this.listaProvincias.filter((value) =>
+      normalizarTexto(value.nombre).includes(busquedaNormalizada)
+    );
   }
 
   private filterLocalidades(busqueda: string) {
-    return this.listaLocalidades.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+    const normalizarTexto = (texto: string) =>
+      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const busquedaNormalizada = normalizarTexto(busqueda);
+
+    return this.listaLocalidades.filter((value) =>
+      normalizarTexto(value.nombre).includes(busquedaNormalizada)
+    );
   }
 
   // Regios getters
