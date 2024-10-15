@@ -28,7 +28,7 @@
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Mail</mat-label>
+            <mat-label>Email</mat-label>
             <input type="text" matInput [formControl]="txMail"/>
           </mat-form-field>
         </div>
@@ -53,7 +53,7 @@
 
 
   <mat-card-header class="header-card">
-    <h2 style="color: grey">Empleados encontrados</h2>
+    <h2 style="color: grey">Clientes encontrados</h2>
   </mat-card-header>
 
   <!-- loading -->
@@ -72,7 +72,7 @@
             </ng-container>
 
             <ng-container matColumnDef="mail">
-              <mat-header-cell *matHeaderCellDef>MAIL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>EMAIL</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Mail">{{ usuario.mail }}</mat-cell>
             </ng-container>
 

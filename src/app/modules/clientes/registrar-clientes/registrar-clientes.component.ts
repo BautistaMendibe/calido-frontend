@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {DomicilioService} from "../../../services/domicilio.service";
@@ -19,7 +19,7 @@ import {VentasService} from "../../../services/ventas.services";
   templateUrl: './registrar-clientes.component.html',
   styleUrl: './registrar-clientes.component.scss'
 })
-export class RegistrarClientesComponent {
+export class RegistrarClientesComponent implements OnInit {
 
   public form: FormGroup;
   public referencia: any
@@ -73,7 +73,7 @@ export class RegistrarClientesComponent {
     this.form = this.fb.group({
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
-      txMail: ['', [Validators.required]],
+      txMail: ['', [Validators.required, this.emailValidator()]],
       txCondicionIva: ['', [Validators.required]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
       txCodigoPostal: ['', []],
@@ -208,11 +208,25 @@ export class RegistrarClientesComponent {
   }
 
   private filterProvincias(busqueda: string) {
-    return this.listaProvincias.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+    const normalizarTexto = (texto: string) =>
+      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const busquedaNormalizada = normalizarTexto(busqueda);
+
+    return this.listaProvincias.filter((value) =>
+      normalizarTexto(value.nombre).includes(busquedaNormalizada)
+    );
   }
 
   private filterLocalidades(busqueda: string) {
-    return this.listaLocalidades.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+    const normalizarTexto = (texto: string) =>
+      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const busquedaNormalizada = normalizarTexto(busqueda);
+
+    return this.listaLocalidades.filter((value) =>
+      normalizarTexto(value.nombre).includes(busquedaNormalizada)
+    );
   }
 
   public cancelar() {
@@ -231,9 +245,9 @@ export class RegistrarClientesComponent {
       cliente.dni = this.txDNI.value;
       cliente.idGenero = this.ddGenero.value;
       cliente.domicilio = domicilio;
-      cliente.domicilio.localidad.id =  this.idLocalidad;
-      cliente.domicilio.calle =  this.txCalle.value;
-      cliente.domicilio.numero =  this.txNumero.value;
+      cliente.domicilio.localidad.id = this.idLocalidad;
+      cliente.domicilio.calle = this.txCalle.value;
+      cliente.domicilio.numero = this.txNumero.value;
       cliente.mail = this.txMail.value;
       cliente.tipoUsuario = tipoUsuario;
       cliente.tipoUsuario.id = 2;
@@ -258,6 +272,18 @@ export class RegistrarClientesComponent {
       })
 
     }
+  }
+
+  private emailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+      const valid = emailPattern.test(control.value);
+      return valid ? null : { invalidEmail: { value: control.value } };
+    };
   }
 
   public modificarCliente(){

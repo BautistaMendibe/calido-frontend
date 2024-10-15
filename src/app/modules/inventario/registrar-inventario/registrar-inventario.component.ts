@@ -60,7 +60,9 @@ export class RegistrarInventarioComponent implements OnInit {
     }
 
     // Esto es necesario en el detalle unicamente para que el ID del producto se mantenga si no queres cambiarlo.
-    this.idProducto = this.detalle.producto.id;
+    if (this.detalle && this.detalle.producto) {
+      this.idProducto = this.detalle.producto.id;
+    }
   }
 
   private crearFormulario() {
@@ -122,7 +124,7 @@ export class RegistrarInventarioComponent implements OnInit {
     if (this.form.valid) {
       // Armamos el objeto Detalle Producto con todos los atributos
       const detalle: DetalleProducto = new DetalleProducto();
-      detalle.idProducto = this.txProducto.value;
+      detalle.idProducto = this.idProducto;
       detalle.cantEnInventario = this.txCantidadEnInventario.value;
 
       this.productoService.registrarDetalleProducto(detalle).subscribe((respuesta) => {

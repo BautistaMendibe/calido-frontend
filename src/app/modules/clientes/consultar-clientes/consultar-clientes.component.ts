@@ -11,7 +11,6 @@ import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
 import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
-import {fakeAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'app-consultar-clientes',
@@ -115,10 +114,6 @@ export class ConsultarClientesComponent implements OnInit {
       });
   }
 
-
-
-
-
   // Regios getters
   get txNombre(): FormControl {
     return this.form.get('txNombre') as FormControl;
@@ -131,6 +126,5 @@ export class ConsultarClientesComponent implements OnInit {
   get txMail(): FormControl {
     return this.form.get('txMail') as FormControl;
   }
-
 
 }
