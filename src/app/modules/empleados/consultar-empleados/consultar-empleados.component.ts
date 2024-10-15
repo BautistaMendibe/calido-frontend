@@ -122,6 +122,18 @@ export class ConsultarEmpleadosComponent implements OnInit {
       });
   }
 
+  public formatearCuil(cuil: string): string {
+    if (!cuil) {
+      return '';
+    }
+    // Aplicar máscara
+    const parte1 = cuil.slice(0, 2);
+    const parte2 = cuil.slice(2, 10);
+    const parte3 = cuil.slice(10, 11);
+
+    return `${parte1}-${parte2}-${parte3}`;
+  }
+
 
   // Regios getters
   get txNombre(): FormControl {

@@ -73,8 +73,8 @@
             </ng-container>
 
             <ng-container matColumnDef="cuil">
-              <mat-header-cell *matHeaderCellDef>CUIL</mat-header-cell>
-              <mat-cell *matCellDef="let usuario" data-label="Cuil">{{ usuario.cuil }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>CUIT/CUIL</mat-header-cell>
+              <mat-cell *matCellDef="let usuario" data-label="Cuil">{{ formatearCuil(usuario.cuil) }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">

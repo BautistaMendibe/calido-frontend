@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
@@ -11,14 +11,13 @@ import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
 import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
-import {fakeAsync} from "@angular/core/testing";
 
 @Component({
   selector: 'app-consultar-clientes',
   templateUrl: './consultar-clientes.component.html',
   styleUrl: './consultar-clientes.component.scss'
 })
-export class ConsultarClientesComponent {
+export class ConsultarClientesComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -115,10 +114,6 @@ export class ConsultarClientesComponent {
       });
   }
 
-
-
-
-
   // Regios getters
   get txNombre(): FormControl {
     return this.form.get('txNombre') as FormControl;
@@ -131,6 +126,5 @@ export class ConsultarClientesComponent {
   get txMail(): FormControl {
     return this.form.get('txMail') as FormControl;
   }
-
 
 }

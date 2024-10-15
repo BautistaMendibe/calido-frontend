@@ -35,6 +35,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   public usuario: Usuario;
   public esConsulta: boolean;
+  public hidePassword: boolean = true;
   public formDesactivado: boolean;
 
   constructor(
@@ -221,11 +222,25 @@ export class RegistrarEmpleadosComponent implements OnInit{
   }
 
   private filterProvincias(busqueda: string) {
-    return this.listaProvincias.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+    const normalizarTexto = (texto: string) =>
+      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const busquedaNormalizada = normalizarTexto(busqueda);
+
+    return this.listaProvincias.filter((value) =>
+      normalizarTexto(value.nombre).includes(busquedaNormalizada)
+    );
   }
 
   private filterLocalidades(busqueda: string) {
-    return this.listaLocalidades.filter((value) => value.nombre.toLowerCase().indexOf(busqueda.toLowerCase()) === 0);
+    const normalizarTexto = (texto: string) =>
+      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+    const busquedaNormalizada = normalizarTexto(busqueda);
+
+    return this.listaLocalidades.filter((value) =>
+      normalizarTexto(value.nombre).includes(busquedaNormalizada)
+    );
   }
 
   public registrarNuevoEmpleado() {
