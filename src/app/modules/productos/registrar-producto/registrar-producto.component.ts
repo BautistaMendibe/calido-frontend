@@ -68,12 +68,16 @@ export class RegistrarProductoComponent implements OnInit {
       }
     }
 
+    if (this.data.producto) {
+      this.calcularPrecioConIva();
+    }
+
     this.buscarTiposProductos();
     this.buscarMarcas();
     this.buscarProveedores();
 
-    this.form.get('txCosto')?.valueChanges.subscribe(() => this.calcularCostoFinal());
-    this.form.get('txMargenGanancia')?.valueChanges.subscribe(() => this.calcularCostoFinal());
+    this.form.get('txCosto')?.valueChanges.subscribe(() => this.calcularCostoFinalSinIva());
+    this.form.get('txMargenGanancia')?.valueChanges.subscribe(() => this.calcularCostoFinalSinIva());
   }
 
   private crearFormulario() {
@@ -86,16 +90,26 @@ export class RegistrarProductoComponent implements OnInit {
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
       txPrecioSinIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
+      txPrecioConIva: [{  }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
       txPrecioFinalVenta: [{ value: this.data.producto?.precioFinalVenta, disabled: true }, [Validators.required]],
     });
   }
 
-  private calcularCostoFinal() {
+  private calcularCostoFinalSinIva() {
     const costo = parseFloat(this.txCosto.value) || 0;
     const margenGanancia = parseFloat(this.txMargenGanancia.value) || 0;
     const costoFinal = costo * (1 + margenGanancia / 100);
     this.txPrecioSinIva.setValue(costoFinal.toFixed(2), { emitEvent: false });
+    this.calcularPrecioConIva();
+  }
+
+  private calcularPrecioConIva() {
+    //this.txPrecioConIva.enable();
+    const costoSinIva = parseFloat(this.txPrecioSinIva.value) || 0;
+    const costoConIva = costoSinIva * 1.21;
+    this.txPrecioConIva.setValue(costoConIva.toFixed(2), { emitEvent: false });
+    this.txPrecioConIva.disable();
   }
 
   private buscarTiposProductos() {
@@ -290,5 +304,9 @@ export class RegistrarProductoComponent implements OnInit {
 
   get txMargenGanancia(): FormControl {
     return this.form.get('txMargenGanancia') as FormControl;
+  }
+
+  get txPrecioConIva(): FormControl {
+    return this.form.get('txPrecioConIva') as FormControl;
   }
 }

@@ -143,10 +143,10 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Precio con IVA</mat-label>
-          <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
+          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$" thousandSeparator="," />
         </mat-form-field>
       </div>
-      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>-</span>
       </div>
       <div class="col-md-3">
