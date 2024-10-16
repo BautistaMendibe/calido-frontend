@@ -85,7 +85,7 @@ export class RegistrarProductoComponent implements OnInit {
       txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
-      txCostoFinal: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
+      txPrecioSinIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
       txPrecioFinalVenta: [{ value: this.data.producto?.precioFinalVenta, disabled: true }, [Validators.required]],
     });
@@ -95,7 +95,7 @@ export class RegistrarProductoComponent implements OnInit {
     const costo = parseFloat(this.txCosto.value) || 0;
     const margenGanancia = parseFloat(this.txMargenGanancia.value) || 0;
     const costoFinal = costo * (1 + margenGanancia / 100);
-    this.txCostoFinal.setValue(costoFinal.toFixed(2), { emitEvent: false });
+    this.txPrecioSinIva.setValue(costoFinal.toFixed(2), { emitEvent: false });
   }
 
   private buscarTiposProductos() {
@@ -153,7 +153,7 @@ export class RegistrarProductoComponent implements OnInit {
       id: id || undefined,
       nombre: this.txNombre.value,
       costo: parseFloat(this.txCosto.value) || 0,
-      precioSinIVA: parseFloat(this.txCostoFinal.value) || 0,
+      precioSinIVA: parseFloat(this.txPrecioSinIva.value) || 0,
       descripcion: this.txDescripcion.value,
       codigoBarra: this.txCodigoBarras.value,
       imgProducto: this.productoImg as string,
@@ -187,7 +187,7 @@ export class RegistrarProductoComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
-    this.txCostoFinal.disable();
+    this.txPrecioSinIva.disable();
     this.data.formDesactivado = false;
     this.data.editar = true;
   }
@@ -276,8 +276,8 @@ export class RegistrarProductoComponent implements OnInit {
     return this.form.get('txProveedor') as FormControl;
   }
 
-  get txCostoFinal(): FormControl {
-    return this.form.get('txCostoFinal') as FormControl;
+  get txPrecioSinIva(): FormControl {
+    return this.form.get('txPrecioSinIva') as FormControl;
   }
 
   get txDescripcion(): FormControl {
