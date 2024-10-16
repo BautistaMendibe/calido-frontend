@@ -39,4 +39,8 @@ export class PromocionesService {
   public buscarProductos(): Observable<Producto[]>{
     return this.http.get<Producto[]>(`${this.urlBackend}/${this.controllerName}/buscar-productos`);
   }
+
+  public buscarPromocionPorProducto(idProducto: number): Observable<Promocion[]>{
+    return this.http.get<Promocion[]>(`${this.urlBackend}/${this.controllerName}/consultar-promociones-por-producto/${idProducto}`);
+  }
 }

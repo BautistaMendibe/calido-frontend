@@ -152,12 +152,12 @@
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Descuento por promoción</mat-label>
-          <mat-select [formControl]="txProveedor">
-            <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
-              {{proveedor.nombre}}
+          <mat-select [formControl]="txPromocion">
+            <mat-option *ngFor="let promocion of promociones" [value]="promocion.id">
+              {{ promocion.nombre + ' (' + promocion.porcentajeDescuento + '%)' }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="txProveedor.invalid">{{getErrorMessage(txProveedor)}}</mat-error>
+          <mat-error *ngIf="txProveedor.invalid">{{ getErrorMessage(txProveedor) }}</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">

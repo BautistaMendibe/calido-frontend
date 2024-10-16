@@ -3,13 +3,13 @@ import {Producto} from "./producto.model";
 export class Promocion {
   id: number;
   nombre: string;
-  porcentajeDescuento: string;
+  porcentajeDescuento: number;
   productos: Producto[];
 
   constructor(
     id?: number,
     nombre?: string,
-    porcentajeDescuento?: string,
+    porcentajeDescuento?: number,
     productos?: Producto[],
   ) {
     this.id = id!;
