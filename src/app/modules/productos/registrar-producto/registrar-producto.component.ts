@@ -90,7 +90,7 @@ export class RegistrarProductoComponent implements OnInit {
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
       txPrecioSinIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
-      txPrecioConIva: [{  }, [Validators.required]],
+      txPrecioConIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
       txPrecioFinalVenta: [{ value: this.data.producto?.precioFinalVenta, disabled: true }, [Validators.required]],
     });
@@ -105,7 +105,7 @@ export class RegistrarProductoComponent implements OnInit {
   }
 
   private calcularPrecioConIva() {
-    //this.txPrecioConIva.enable();
+    this.txPrecioConIva.enable();
     const costoSinIva = parseFloat(this.txPrecioSinIva.value) || 0;
     const costoConIva = costoSinIva * 1.21;
     this.txPrecioConIva.setValue(costoConIva.toFixed(2), { emitEvent: false });
@@ -202,6 +202,7 @@ export class RegistrarProductoComponent implements OnInit {
   public habilitarEdicion(){
     this.form.enable();
     this.txPrecioSinIva.disable();
+    this.txPrecioConIva.disable();
     this.data.formDesactivado = false;
     this.data.editar = true;
   }
@@ -308,5 +309,9 @@ export class RegistrarProductoComponent implements OnInit {
 
   get txPrecioConIva(): FormControl {
     return this.form.get('txPrecioConIva') as FormControl;
+  }
+
+  get txPrecioFinalVenta(): FormControl {
+    return this.form.get('txPrecioFinalVenta') as FormControl;
   }
 }

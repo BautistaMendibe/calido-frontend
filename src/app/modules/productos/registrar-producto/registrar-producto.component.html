@@ -166,13 +166,12 @@
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Precio final de venta</mat-label>
-          <input type="text" matInput [formControl]="txPrecioSinIva" mask="separator.2" prefix="$" thousandSeparator="," />
+          <input type="text" matInput [formControl]="txPrecioFinalVenta" mask="separator.2" prefix="$" thousandSeparator="," />
         </mat-form-field>
       </div>
     </div>
 
-    <div class="row text-right">
-
+    <div class="row text-right mt-2">
       <!-- Btn de cancelar, registrar y modificar -->
       <div class="row text-right">
         <div class="col d-flex justify-content-end">
@@ -183,7 +182,6 @@
           <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">Modificar</button>
         </div>
       </div>
-
     </div>
     <br>
   </div>
