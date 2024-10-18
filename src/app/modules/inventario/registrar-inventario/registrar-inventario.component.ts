@@ -17,7 +17,6 @@ import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {MovimientoProducto} from "../../../models/movimientoProducto";
 import {MatTableDataSource} from "@angular/material/table";
-import {Venta} from "../../../models/venta.model";
 
 @Component({
   selector: 'app-registrar-inventario',
@@ -65,16 +64,16 @@ export class RegistrarInventarioComponent implements OnInit {
   ngOnInit() {
     this.crearFormulario();
     this.buscarProductos();
-    this.buscarMovimientosPorProducto(this.detalle.producto.id);
+
+    if (this.detalle && this.detalle.producto) {
+      this.idProducto = this.detalle.producto.id;
+      this.buscarMovimientosPorProducto(this.detalle.producto.id);
+    }
+
     this.filtrosSuscripciones();
 
     if (this.esConsulta && this.detalle) {
       this.rellenarFormularioDataDetalleProducto();
-    }
-
-    // Esto es necesario en el detalle unicamente para que el ID del producto se mantenga si no queres cambiarlo.
-    if (this.detalle && this.detalle.producto) {
-      this.idProducto = this.detalle.producto.id;
     }
   }
 
@@ -83,7 +82,8 @@ export class RegistrarInventarioComponent implements OnInit {
       txProducto: ['', [Validators.required]],
       txCantidadEnInventario: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       txValorEnInventario: [{value: '', disabled: true}],
-      txBuscar: ['']
+      txBuscarFecha: [''],
+      txBuscarTipo: ['']
     });
   }
 
@@ -190,32 +190,78 @@ export class RegistrarInventarioComponent implements OnInit {
   }
 
   private filtrosSuscripciones() {
-    this.txCantidadEnInventario.valueChanges.subscribe((cantidad: number) => {
-      if (this.detalle) { // Verificar si hay detalle
-        const costo = this.detalle.producto.costo || 0;
-        const valorEnInventario = cantidad * costo;
+    // Verificar si los form controls están inicializados antes de suscribirse a valueChanges
+    if (this.txCantidadEnInventario) {
+      this.txCantidadEnInventario.valueChanges.subscribe((cantidad: number) => {
+        if (this.detalle) { // Verificar si hay detalle
+          const costo = this.detalle.producto.costo || 0;
+          const valorEnInventario = cantidad * costo;
 
-        // Formatear el valor usando toLocaleString para el formato argentino
-        this.txValorEnInventario.setValue(this.formatearValor(valorEnInventario));
-      }
-    });
+          // Formatear el valor usando toLocaleString para el formato argentino
+          this.txValorEnInventario.setValue(this.formatearValor(valorEnInventario));
+        }
+      });
+    }
 
-    this.form.get('txBuscar')?.valueChanges.subscribe((fechaSeleccionada: Date) => {
-      if (fechaSeleccionada) {
-        const fechaFiltrada = new Date(fechaSeleccionada);
-        fechaFiltrada.setHours(0, 0, 0, 0);
+    if (this.txBuscarFecha) {
+      this.txBuscarFecha.valueChanges.subscribe((fechaSeleccionada: Date) => {
+        if (fechaSeleccionada) {
+          const fechaFiltrada = new Date(fechaSeleccionada);
+          fechaFiltrada.setHours(0, 0, 0, 0);
 
-        this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
-          const fechaMovimiento = new Date(movimiento.fecha);
-          fechaMovimiento.setHours(0, 0, 0, 0);
+          this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
+            const fechaMovimiento = new Date(movimiento.fecha);
+            fechaMovimiento.setHours(0, 0, 0, 0);
 
-          return fechaMovimiento.getTime() === fechaFiltrada.getTime();
+            return fechaMovimiento.getTime() === fechaFiltrada.getTime();
+          });
+        } else {
+          this.dataSourceMovimientosProducto.data = this.movimientosProducto;
+        }
+      });
+    }
+
+    if (this.txBuscarTipo) {
+      this.txBuscarTipo.valueChanges.subscribe((tipoSeleccionado: string) => {
+        const aplicarFiltros = () => {
+          const fechaSeleccionada: Date = this.txBuscarFecha ? this.txBuscarFecha.value : null;
+          const tipoSeleccionado: string = this.txBuscarTipo ? this.txBuscarTipo.value : null;
+
+          this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
+            let coincideFecha = true;
+            let coincideTipo = true;
+
+            // Filtrar por fecha
+            if (fechaSeleccionada) {
+              const fechaFiltrada = new Date(fechaSeleccionada);
+              fechaFiltrada.setHours(0, 0, 0, 0); // Normalizar hora
+
+              const fechaMovimiento = new Date(movimiento.fecha);
+              fechaMovimiento.setHours(0, 0, 0, 0); // Normalizar hora
+
+              coincideFecha = fechaMovimiento.getTime() === fechaFiltrada.getTime();
+            }
+
+            // Filtrar por tipo (incluyendo búsqueda parcial)
+            if (tipoSeleccionado) {
+              coincideTipo = movimiento.tipoMovimiento.toLowerCase().includes(tipoSeleccionado.toLowerCase());
+            }
+
+            return coincideFecha && coincideTipo;
+          });
+        };
+
+        this.txBuscarFecha?.valueChanges.subscribe(() => {
+          aplicarFiltros();
         });
-      } else {
-        this.dataSourceMovimientosProducto.data = this.movimientosProducto;
-      }
-    });
+
+        this.txBuscarTipo?.valueChanges.subscribe(() => {
+          aplicarFiltros();
+        });
+      });
+    }
   }
+
 
   public cancelar() {
     this.dialogRef.close();
@@ -242,7 +288,11 @@ export class RegistrarInventarioComponent implements OnInit {
     return this.form.get('txValorEnInventario') as FormControl;
   }
 
-  get txBuscar(): FormControl {
-    return this.form.get('txBuscar') as FormControl;
+  get txBuscarFecha(): FormControl {
+    return this.form.get('txBuscarFecha') as FormControl;
+  }
+
+  get txBuscarTipo(): FormControl {
+    return this.form.get('txBuscarTipo') as FormControl;
   }
 }

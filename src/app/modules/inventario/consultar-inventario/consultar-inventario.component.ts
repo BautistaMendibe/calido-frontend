@@ -22,7 +22,7 @@ export class ConsultarInventarioComponent implements OnInit {
   public tableDataSource: MatTableDataSource<DetalleProducto> = new MatTableDataSource<DetalleProducto>([]);
   public form: FormGroup;
   public detallesProducto: DetalleProducto[] = [];
-  public columnas: string[] = ['imgProducto', 'producto', 'proveedor', 'cantidadEnInventario', 'acciones'];
+  public columnas: string[] = ['imgProducto', 'producto', 'proveedor', 'marca', 'cantidadEnInventario', 'acciones'];
   private filtros: FiltrosDetallesProductos;
   public listaProveedores: Proveedor[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();

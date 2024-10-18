@@ -83,6 +83,11 @@
               <mat-cell *matCellDef="let detalleProducto" data-label="Proveedor">{{ detalleProducto.proveedor?.nombre }}</mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="marca">
+              <mat-header-cell *matHeaderCellDef>MARCA</mat-header-cell>
+              <mat-cell *matCellDef="let detalleProducto" data-label="Marca">{{ detalleProducto.producto?.marca?.nombre }}</mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="cantidadEnInventario">
               <mat-header-cell *matHeaderCellDef>CANT. EN INVENTARIO</mat-header-cell>
               <mat-cell *matCellDef="let detalleProducto" data-label="CantidadEnInventario">{{ detalleProducto.cantEnInventario }}</mat-cell>

@@ -30,7 +30,8 @@
       </div>
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Cantidad en Inventario</mat-label>
+          <mat-label *ngIf="esRegistro">Cantidad a añadir al inventario</mat-label>
+          <mat-label *ngIf="!esRegistro">Cantidad en Inventario</mat-label>
           <input type="text" matInput [formControl]="txCantidadEnInventario"/>
         </mat-form-field>
       </div>
@@ -52,12 +53,19 @@
   </div>
 
   <div class="row pt-4" *ngIf="movimientosProducto.length > 0 && !esRegistro">
-    <div class="col-md-4">
+    <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Fecha Movimiento</mat-label>
-        <input matInput [matDatepicker]="pickerFecha" [formControl]="txBuscar" />
+        <input matInput [matDatepicker]="pickerFecha" [formControl]="txBuscarFecha" />
         <mat-datepicker-toggle matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
         <mat-datepicker #pickerFecha></mat-datepicker>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Tipo de movimiento</mat-label>
+        <input type="text" matInput [formControl]="txBuscarTipo"/>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
     </div>
