@@ -100,8 +100,9 @@ export class RegistrarProductoComponent implements OnInit {
   private calcularCostoFinalSinIva() {
     const costo = parseFloat(this.txCosto.value) || 0;
     const margenGanancia = parseFloat(this.txMargenGanancia.value) || 0;
-    const promocion = this.promociones.find((promocion) => {promocion.id = this.txPromocion.value});
+    const promocion = this.promociones.find((promocion) => promocion.id == this.txPromocion.value);
     const porcentajeDescuento: number = promocion ? promocion.porcentajeDescuento : 0;
+
     const costoFinal = costo * (1 + margenGanancia / 100) * (1 - porcentajeDescuento / 100);
     this.txPrecioSinIva.setValue(costoFinal.toFixed(2), { emitEvent: false });
   }
@@ -143,7 +144,7 @@ export class RegistrarProductoComponent implements OnInit {
       this.promociones = [promocion, ...promociones];
 
       if (!this.data.producto.promocion?.id) {
-        this.txPromocion.setValue(promociones[0].id);
+        this.txPromocion.setValue(promocion.id);
       }
     });
   }
