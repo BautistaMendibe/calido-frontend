@@ -22,7 +22,7 @@ export class ConsultarInventarioComponent implements OnInit {
   public tableDataSource: MatTableDataSource<DetalleProducto> = new MatTableDataSource<DetalleProducto>([]);
   public form: FormGroup;
   public detallesProducto: DetalleProducto[] = [];
-  public columnas: string[] = ['imgProducto', 'producto', 'proveedor', 'cantidadEnInventario', 'acciones'];
+  public columnas: string[] = ['imgProducto', 'producto', 'proveedor', 'marca', 'cantidadEnInventario', 'acciones'];
   private filtros: FiltrosDetallesProductos;
   public listaProveedores: Proveedor[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();
@@ -87,7 +87,8 @@ export class ConsultarInventarioComponent implements OnInit {
         data: {
           referencia: this,
           esConsulta: false,
-          formDesactivado: false
+          formDesactivado: false,
+          esRegistro: true
         }
       }
     );
@@ -100,13 +101,16 @@ export class ConsultarInventarioComponent implements OnInit {
       {
         width: '75%',
         height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         autoFocus: false,
         data: {
           detalle: detalle,
           esConsulta: true,
           referencia: this,
           formDesactivado: !editar,
-          editar: editar
+          editar: editar,
+          esRegistro: false
         }
       }
     );
