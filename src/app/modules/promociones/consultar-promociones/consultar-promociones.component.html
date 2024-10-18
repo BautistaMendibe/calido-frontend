@@ -45,11 +45,11 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="promociones.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="promociones.length > 0">
+  <mat-card *ngIf="promociones.length > 0 && !isLoading">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
@@ -65,8 +65,19 @@
             </ng-container>
 
             <ng-container matColumnDef="producto">
-              <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
-              <mat-cell *matCellDef="let promocion" data-label="Nombre del producto">{{ promocion.producto.nombre }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>PRODUCTOS</mat-header-cell>
+              <mat-cell *matCellDef="let promocion">
+                <div class="productos-container">
+                  <ng-container *ngFor="let producto of promocion.productos.slice(0, 3)">
+                    <span class="producto-circulo" [matTooltip]="producto.nombre" (click)="verProducto(producto)">
+                    <img [src]="producto.imgProducto" alt="Producto" class="producto-imagen">
+                    </span>
+                  </ng-container>
+                  <span *ngIf="promocion.productos.length > 3" matTooltip="{{ getNombresProductos(promocion.productos) }}" class="mas-productos">
+                        +{{ promocion.productos.length - 3 }}
+                  </span>
+                </div>
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="acciones">
@@ -90,10 +101,6 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.promociones.length" class="alert alert-secondary text-center">
-            No se encuentran promociones para mostrar, realice una nueva búsqueda.
-          </h6>
-
           <mat-paginator *ngIf="this.promociones.length > 0"
                          [length]="this.promociones.length"
                          [pageSize]="10"
@@ -102,6 +109,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.promociones.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran promociones para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

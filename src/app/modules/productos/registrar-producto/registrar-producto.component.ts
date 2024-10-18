@@ -10,6 +10,9 @@ import { Producto } from "../../../models/producto.model";
 import { ProductosService } from "../../../services/productos.service";
 import { MarcasService } from "../../../services/marcas.service";
 import { ProveedoresService } from "../../../services/proveedores.service";
+import {Promocion} from "../../../models/promociones.model";
+import {PromocionesService} from "../../../services/promociones.service";
+import {FiltrosPromociones} from "../../../models/comandos/FiltrosPromociones.comando";
 
 @Component({
   selector: 'app-registrar-producto',
@@ -30,10 +33,12 @@ export class RegistrarProductoComponent implements OnInit {
   public esConsulta: boolean;
   public listaPorcentajesGanancia: { value: number, label: string }[] = [];
   public editarPrecioDeVenta: boolean = false;
+  public promociones: Promocion[] = [];
 
   constructor(
     private fb: FormBuilder,
     private productosService: ProductosService,
+    private promocionesService: PromocionesService,
     private marcasService: MarcasService,
     private proveedoresService: ProveedoresService,
     private dialogRef: MatDialogRef<RegistrarProductoComponent>,
@@ -69,13 +74,14 @@ export class RegistrarProductoComponent implements OnInit {
     this.buscarTiposProductos();
     this.buscarMarcas();
     this.buscarProveedores();
+    this.buscarPromocionPorProducto();
 
-    this.form.get('txCosto')?.valueChanges.subscribe(() => this.calcularCostoFinal());
-    this.form.get('txMargenGanancia')?.valueChanges.subscribe(() => this.calcularCostoFinal());
+    this.form.get('txCosto')?.valueChanges.subscribe(() => this.calcularCostoFinalSinIva());
+    this.form.get('txMargenGanancia')?.valueChanges.subscribe(() => this.calcularCostoFinalSinIva());
+    this.form.get('txPromocion')?.valueChanges.subscribe(() => this.calcularCostoFinalSinIva());
   }
 
   private crearFormulario() {
-    console.log(this.data.producto);
     this.form = this.fb.group({
       txNombre: [this.data.producto?.nombre || '', [Validators.required, Validators.pattern('^[^0-9]+$')]],
       txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13)]],
@@ -84,16 +90,21 @@ export class RegistrarProductoComponent implements OnInit {
       txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
-      txCostoFinal: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
-      txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]]
+      txPrecioSinIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
+      txPrecioConIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
+      txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
+      txPromocion: [this.data.producto?.promocion?.id, []],
     });
   }
 
-  private calcularCostoFinal() {
+  private calcularCostoFinalSinIva() {
     const costo = parseFloat(this.txCosto.value) || 0;
     const margenGanancia = parseFloat(this.txMargenGanancia.value) || 0;
-    const costoFinal = costo * (1 + margenGanancia / 100);
-    this.txCostoFinal.setValue(costoFinal.toFixed(2), { emitEvent: false });
+    const promocion = this.promociones.find((promocion) => promocion.id == this.txPromocion.value);
+    const porcentajeDescuento: number = promocion ? promocion.porcentajeDescuento : 0;
+
+    const costoFinal = costo * (1 + margenGanancia / 100) * (1 - porcentajeDescuento / 100);
+    this.txPrecioSinIva.setValue(costoFinal.toFixed(2), { emitEvent: false });
   }
 
   private buscarTiposProductos() {
@@ -117,6 +128,24 @@ export class RegistrarProductoComponent implements OnInit {
   private buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedores = proveedores;
+    });
+  }
+
+  private buscarPromocionPorProducto() {
+    const filtroPromocion: FiltrosPromociones = new FiltrosPromociones();
+
+    this.promocionesService.consultarPromociones(filtroPromocion).subscribe((promociones) => {
+      const promocion: Promocion = new Promocion();
+      promocion.id = -1;
+      promocion.nombre = 'Ninguno';
+      promocion.porcentajeDescuento = 0;
+      this.promociones.push(promocion);
+
+      this.promociones = [promocion, ...promociones];
+
+      if (!this.data.producto.promocion?.id) {
+        this.txPromocion.setValue(promocion.id);
+      }
     });
   }
 
@@ -151,7 +180,7 @@ export class RegistrarProductoComponent implements OnInit {
       id: id || undefined,
       nombre: this.txNombre.value,
       costo: parseFloat(this.txCosto.value) || 0,
-      precioSinIVA: parseFloat(this.txCostoFinal.value) || 0,
+      precioSinIVA: parseFloat(this.txPrecioSinIva.value) || 0,
       descripcion: this.txDescripcion.value,
       codigoBarra: this.txCodigoBarras.value,
       imgProducto: this.productoImg as string,
@@ -185,7 +214,8 @@ export class RegistrarProductoComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
-    this.txCostoFinal.disable();
+    this.txPrecioSinIva.disable();
+    this.txPrecioConIva.disable();
     this.data.formDesactivado = false;
     this.data.editar = true;
   }
@@ -274,8 +304,8 @@ export class RegistrarProductoComponent implements OnInit {
     return this.form.get('txProveedor') as FormControl;
   }
 
-  get txCostoFinal(): FormControl {
-    return this.form.get('txCostoFinal') as FormControl;
+  get txPrecioSinIva(): FormControl {
+    return this.form.get('txPrecioSinIva') as FormControl;
   }
 
   get txDescripcion(): FormControl {
@@ -289,4 +319,13 @@ export class RegistrarProductoComponent implements OnInit {
   get txMargenGanancia(): FormControl {
     return this.form.get('txMargenGanancia') as FormControl;
   }
+
+  get txPrecioConIva(): FormControl {
+    return this.form.get('txPrecioConIva') as FormControl;
+  }
+
+  get txPromocion(): FormControl {
+    return this.form.get('txPromocion') as FormControl;
+  }
+
 }
