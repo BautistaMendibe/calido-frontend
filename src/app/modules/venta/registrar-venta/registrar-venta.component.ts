@@ -16,6 +16,7 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {TipoFactura} from "../../../models/tipoFactura.model";
 import {PromocionesService} from "../../../services/promociones.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -24,6 +25,7 @@ import {PromocionesService} from "../../../services/promociones.service";
 })
 export class RegistrarVentaComponent implements OnInit{
   public productos: Producto[] = [];
+  public productosFiltrados: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
   public subTotal: number = 0;
   public impuestoIva: number = 0;
@@ -34,6 +36,7 @@ export class RegistrarVentaComponent implements OnInit{
   public formasDePago: FormaDePago[] = [];
   public registrandoVenta: boolean = false;
   public tiposDeFacturacion: TipoFactura[] = [];
+  public listaEmpleados: Usuario[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -43,7 +46,8 @@ export class RegistrarVentaComponent implements OnInit{
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
     private usuariosService: UsuariosService,
-    private promocionesService: PromocionesService
+    private promocionesService: PromocionesService,
+    private authService: AuthService
   ) {
     this.form = new FormGroup({});
   }
@@ -52,12 +56,14 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscar();
     this.crearFormulario();
     this.buscarDataCombos();
+    this.filtrosSuscripciones();
   }
 
   public buscar() {
     const filtros: FiltrosProductos = new FiltrosProductos();
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
+      this.productosFiltrados = [...productos];
       this.cargandoProductos = false;
     });
   }
@@ -67,6 +73,8 @@ export class RegistrarVentaComponent implements OnInit{
       txFormaDePago: ['', []],
       txTipoFacturacion: ['', []],
       txCliente: ['', []],
+      txEmpleado: ['', []],
+      txBuscar: ['', []]
     });
   }
 
@@ -74,6 +82,8 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarUsuariosClientes();
     this.buscarFormasDePago();
     this.buscarTiposFactura();
+    this.buscarEmpleados();
+    this.obtenerEmpleadoLogueado();
   }
 
   private buscarUsuariosClientes() {
@@ -97,6 +107,21 @@ export class RegistrarVentaComponent implements OnInit{
     });
   }
 
+  private buscarEmpleados() {
+    this.usuariosService.consultarEmpleados(new FiltrosEmpleados()).subscribe((empleados) => {
+      this.listaEmpleados = empleados;
+    });
+  }
+
+  private obtenerEmpleadoLogueado() {
+    const token = this.authService.getToken();
+    const infoToken: any = this.authService.getDecodedAccessToken(token);
+
+    if (infoToken) {
+      this.txEmpleado.setValue(infoToken.idusuario);
+    }
+  }
+
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
 
@@ -114,6 +139,7 @@ export class RegistrarVentaComponent implements OnInit{
 
     this.validarCantidadProductosSeleccionados();
     this.calcularSubTotal();
+    this.reordenarProductos();
   }
 
   public aumentarCantidad(producto: Producto) {
@@ -175,10 +201,10 @@ export class RegistrarVentaComponent implements OnInit{
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '85%',
+        width: '75%',
         autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         data: {
           producto: producto,
           editarPrecioDeVenta: true,
@@ -228,6 +254,7 @@ export class RegistrarVentaComponent implements OnInit{
     venta.montoTotal = this.totalVenta;
     venta.detalleVenta = [];
     venta.productos = this.productosSeleccionados;
+    venta.idEmpleado = this.txEmpleado.value;
 
     this.registrandoVenta = true;
 
@@ -265,7 +292,8 @@ export class RegistrarVentaComponent implements OnInit{
         width: '75%',
         height: 'auto',
         autoFocus: false,
-        panelClass: 'custom-dialog-container',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         data: {
           referencia: this,
           esConsulta: false,
@@ -280,9 +308,9 @@ export class RegistrarVentaComponent implements OnInit{
       RegistrarClientesComponent,
       {
         width: '75%',
-        height: '85vh',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         autoFocus: false,
-        panelClass: 'custom-dialog-container',
         data: {
           esConsulta: false,
           formDesactivado: false,
@@ -298,6 +326,46 @@ export class RegistrarVentaComponent implements OnInit{
     });
   }
 
+  public filtrosSuscripciones() {
+    this.txBuscar.valueChanges.subscribe(() => {
+      const textoBusqueda = this.normalizarTexto(this.txBuscar.value || '');
+
+      let productosFiltrados = this.productos.filter(producto => {
+        const codigoBarraNormalizado = this.normalizarTexto(producto.codigoBarra);
+        const nombreProductoNormalizado = this.normalizarTexto(producto.nombre);
+
+        // Filtrar productos que coincidan parcialmente con el código de barra o nombre
+        return codigoBarraNormalizado.includes(textoBusqueda) ||
+          nombreProductoNormalizado.includes(textoBusqueda);
+      });
+
+      // Ordenar productos: primero los seleccionados y luego los no seleccionados
+      productosFiltrados = productosFiltrados.sort((a, b) => {
+        return (b.seleccionadoParaVenta ? 1 : 0) - (a.seleccionadoParaVenta ? 1 : 0);
+      });
+
+      this.productosFiltrados = productosFiltrados;
+    })
+  }
+
+  private normalizarTexto(texto: string): string {
+    return texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  private reordenarProductos(): void {
+    // Ordenar productos: primero los seleccionados, luego los no seleccionados
+    this.productosFiltrados = this.productos.sort((a, b) => {
+      return (b.seleccionadoParaVenta ? 1 : 0) - (a.seleccionadoParaVenta ? 1 : 0);
+    });
+  }
+
+  public enfocar() {
+    const inputElement = document.getElementById('txBuscar') as HTMLInputElement;
+    if (inputElement) {
+      inputElement.focus();
+    }
+  }
+
   // Region getters
   get txFormaDePago(): FormControl {
     return this.form.get('txFormaDePago') as FormControl;
@@ -309,6 +377,14 @@ export class RegistrarVentaComponent implements OnInit{
 
   get txCliente(): FormControl {
     return this.form.get('txCliente') as FormControl;
+  }
+
+  get txEmpleado(): FormControl {
+    return this.form.get('txEmpleado') as FormControl;
+  }
+
+  get txBuscar(): FormControl {
+    return this.form.get('txBuscar') as FormControl;
   }
 
 }
