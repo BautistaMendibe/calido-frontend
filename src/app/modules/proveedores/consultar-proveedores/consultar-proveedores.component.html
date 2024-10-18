@@ -1,5 +1,5 @@
   <div class="container py-3 col-xl-11">
-    <mat-card class="mat-elevation-z12 p-4">
+    <mat-card class="mat-elevation-z12 p-4 mat-card">
       <div class="row">
         <div class="col d-flex justify-content-between align-items-center">
           <p class="titulo">Proveedores</p>
@@ -55,8 +55,8 @@
     <mat-card *ngIf="proveedores.length > 0">
       <mat-card-content>
         <div class="row">
-          <div class="col-md-12">
-            <mat-table [dataSource]="tableDataSource" matSort>
+          <div class="col-md-12 table-responsive">
+            <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
               <ng-container matColumnDef="nombre">
                 <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
                 <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>

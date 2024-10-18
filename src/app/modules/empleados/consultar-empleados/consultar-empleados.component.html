@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Empleados</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoEmpleado()">Registrar nuevo empleado</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoEmpleado()">Registrar nuevo empleado</button>
       </div>
     </div>
 
@@ -55,8 +55,8 @@
   <mat-card *ngIf="empleados.length > 0">
     <mat-card-content>
       <div class="row">
-        <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+        <div class="col-md-12 table-responsive">
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombreUsuario">
               <mat-header-cell *matHeaderCellDef>USUARIO</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Usuario">{{ usuario.nombreUsuario }}</mat-cell>

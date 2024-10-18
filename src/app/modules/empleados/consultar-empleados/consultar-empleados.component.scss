@@ -1,1 +1,35 @@
+.custom-table {
+  min-width: 800px;  /* Ancho mínimo para la tabla */
+}
 
+.table-responsive {
+  overflow-x: auto;  /* Permitir scroll horizontal */
+}
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+}
+
+.botonR {
+  margin-left: 1rem; /* Margen entre el título y el botón */
+  padding: 0.5rem 1rem; /* Espacio dentro del botón */
+}
+
+.mat-card {
+  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+}
+
+.container {
+  overflow-x: auto;
+}
