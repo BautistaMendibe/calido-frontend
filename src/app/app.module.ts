@@ -22,7 +22,6 @@ import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-p
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 import { ConsultarPromocionesComponent } from './modules/promociones/consultar-promociones/consultar-promociones.component';
 import { RegistrarPromocionComponent } from './modules/promociones/registrar-promocion/registrar-promocion.component';
-import { DetallePromocionComponent } from './modules/promociones/detalle-promocion/detalle-promocion.component';
 import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 import { ConsultarConfiguracionesComponent } from './modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component';
@@ -72,7 +71,6 @@ registerLocaleData(localeEs, 'es');
     RegistrarProveedorComponent,
     ConsultarPromocionesComponent,
     RegistrarPromocionComponent,
-    DetallePromocionComponent,
     NotificarPromocionComponent,
     MessagesComponent,
     ConsultarProductosComponent,

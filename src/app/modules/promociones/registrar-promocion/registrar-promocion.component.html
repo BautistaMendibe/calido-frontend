@@ -1,24 +1,23 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-    <div class="col">
-      <p class="titulo">Registrar promoción de producto</p>
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar promoción' : 'Registrar promoción'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar mb-3">edit</mat-icon>
+      </button>
     </div>
   </div>
-
+  <br>
   <mat-divider></mat-divider>
 
-  <br>
   <form [formGroup]="form">
     <div class="row pt-4">
-      <div class="col-md-4">
+      <div class="col-md-8">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Nombre</mat-label>
           <input type="text" matInput [formControl]="txNombre"/>
         </mat-form-field>
-        <!--
-        <caja-control-messages [control]="txCodigo"></caja-control-messages>
-        -->
       </div>
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
@@ -26,25 +25,77 @@
           <input type="text" matInput [formControl]="txPorcentajeDescuento"/>
         </mat-form-field>
       </div>
-      <div class="col-md-4">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Producto</mat-label>
-          <input matInput
-                 placeholder="Ingrese"
-                 [formControl]="txProducto"
-                 [matAutocomplete]="autoCompleteProducto">
-        </mat-form-field>
-        <mat-autocomplete #autoCompleteProducto="matAutocomplete" (optionSelected)="enSeleccionDeProducto($event)">
-            <mat-option *ngFor="let producto of this.productosFiltrados" [value]="producto.nombre" [id]="producto.id.toString()">
-              {{ producto.nombre }}
-            </mat-option>
-        </mat-autocomplete>
-      </div>
     </div>
-
   </form>
+  <br>
 
-  <mat-divider></mat-divider>
+
+  <h3 class="subtitulo" *ngIf="promocion">Productos incluídos en la promoción:</h3>
+  <h3 class="subtitulo" *ngIf="!promocion">Seleccionar los productos incluídos:</h3>
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="row pt-4" *ngIf="listaProductos.length > 0">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Producto</mat-label>
+        <input type="text" matInput [formControl]="txBuscar"/>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+    <div class="col-md-8">
+      <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="esConsulta">
+        <mat-icon>add</mat-icon>Nuevo producto
+      </button>
+    </div>
+  </div>
+
+  <mat-card *ngIf="!isLoading && listaProductos.length > 0">
+    <mat-card-content>
+      <div class="row">
+        <div class="col-md-12">
+          <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta">
+            <ng-container matColumnDef="imgProducto">
+              <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
+              <mat-cell *matCellDef="let producto">
+                <img [src]="producto.imgProducto" class="img-thumbnail"/>
+              </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="producto">
+              <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="precio">
+              <mat-header-cell *matHeaderCellDef>PRECIO DE VENTA</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Precio">$ {{ producto.precioFinalVenta }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="seleccionar">
+              <mat-header-cell *matHeaderCellDef>SELECCIONAR</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Seleccionar">
+                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
+
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+
+          </mat-table>
+
+          <mat-paginator *ngIf="this.listaProductos.length > 0"
+                         [length]="this.listaProductos.length"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
   <br>
 
   <!-- Btn de cancelar y registrar -->
@@ -53,7 +104,8 @@
       <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
         Cancelar
       </button>
-      <button mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registrar</button>
+      <button *ngIf="!this.promocion" mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registrar</button>
+      <button *ngIf="this.promocion" mat-raised-button color="accent" class="btn round" (click)="modificarPromocion()" id="btnBuscar2">Modificar</button>
     </div>
   </div>
 

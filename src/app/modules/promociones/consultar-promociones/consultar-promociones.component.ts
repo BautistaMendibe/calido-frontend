@@ -7,10 +7,11 @@ import {RegistrarPromocionComponent} from "../registrar-promocion/registrar-prom
 import {FiltrosPromociones} from "../../../models/comandos/FiltrosPromociones.comando";
 import {PromocionesService} from "../../../services/promociones.service";
 import {Router} from "@angular/router";
-import {DetallePromocionComponent} from "../detalle-promocion/detalle-promocion.component";
 import {MessagesComponent} from "../../../shared/messages/messages.component";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {Producto} from "../../../models/producto.model";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
   selector: 'app-consultar-promociones',
@@ -24,6 +25,7 @@ export class ConsultarPromocionesComponent implements OnInit {
   public promociones: Promocion[] = [];
   public columnas: string[] = ['nombre', 'porcentajeDescuento', 'producto', 'acciones'];
   private filtros: FiltrosPromociones;
+  public isLoading: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -55,45 +57,83 @@ export class ConsultarPromocionesComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
+    this.isLoading = true;
 
     this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
       this.promociones = promociones;
       this.tableDataSource.data = promociones;
+      this.isLoading = false;
     });
   }
 
   public registrarNuevaPromocion() {
-    this.dialog.open(
+    const dialog = this.dialog.open(
       RegistrarPromocionComponent,
       {
-        width: '75%',
+        width: '80%',
         autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
         data: {
           referencia: this
         }
       }
-    )
+    );
+
+    dialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscar();
+      }
+    });
   }
 
 
   public verPromocion(promocion: Promocion, editar: boolean) {
-    this.dialog.open(
-      DetallePromocionComponent,
+    const dialog = this.dialog.open(
+      RegistrarPromocionComponent,
       {
-        width: '75%',
+        width: '80%',
         autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
         data: {
           promocion: promocion,
-          edit: editar,
-          referencia: this
+          esConsulta: !editar
         }
       }
-    )
+    );
+
+    dialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscar();
+      }
+    });
+  }
+
+  public verProducto(producto: Producto) {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '80%',
+        autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          producto: producto,
+          esConsulta: true,
+          formDesactivado: true,
+          editar: false
+        }
+      }
+    );
+  }
+
+  public getNombresProductos(productos: Producto[]): string {
+    return productos.map(producto => producto.nombre).join(', ');
   }
 
 
   public eliminarPromocion(idPromocion: number) {
-
     this.notificationDialogService.confirmation("¿Desea eliminar la promoción?", "Eliminar promoción")
       .afterClosed()
       .subscribe((value) => {

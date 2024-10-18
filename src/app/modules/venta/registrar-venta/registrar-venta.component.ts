@@ -15,6 +15,7 @@ import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/regi
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {TipoFactura} from "../../../models/tipoFactura.model";
+import {PromocionesService} from "../../../services/promociones.service";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -42,6 +43,7 @@ export class RegistrarVentaComponent implements OnInit{
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
     private usuariosService: UsuariosService,
+    private promocionesService: PromocionesService
   ) {
     this.form = new FormGroup({});
   }
@@ -112,13 +114,11 @@ export class RegistrarVentaComponent implements OnInit{
 
     this.validarCantidadProductosSeleccionados();
     this.calcularSubTotal();
-    this.calcularTotal();
   }
 
   public aumentarCantidad(producto: Producto) {
     producto.cantidadSeleccionada++;
     this.calcularSubTotal();
-    this.calcularTotal();
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -129,22 +129,22 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = false;
     }
     this.validarCantidadProductosSeleccionados();
-    this.calcularSubTotal();
-    this.calcularTotal();
   }
 
   private calcularSubTotal() {
     this.subTotal = 0;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+      this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
     });
     this.impuestoIva = this.subTotal * 0.21;
+    this.calcularTotal();
   }
 
   private validarCantidadProductosSeleccionados() {
     if (this.productosSeleccionados.length == 0) {
       this.subTotal = 0;
       this.impuestoIva = 0;
+      this.totalVenta = 0;
     }
   }
 
@@ -175,9 +175,10 @@ export class RegistrarVentaComponent implements OnInit{
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '75%',
-        height: 'auto',
+        width: '85%',
         autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
         data: {
           producto: producto,
           editarPrecioDeVenta: true,
@@ -192,7 +193,8 @@ export class RegistrarVentaComponent implements OnInit{
       if (respusta) {
         this.productosSeleccionados.map((producto: Producto) => {
           if (producto.id == respusta.id) {
-            producto.costo = respusta.costo;
+            producto.precioSinIVA = respusta.precioSinIVA;
+            producto.promocion = respusta.promocion;
           }
         })
         this.notificacionService.openSnackBarSuccess('Precio modificado para esta venta.');
@@ -207,6 +209,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosSeleccionados.splice(index, 1);
     producto.seleccionadoParaVenta = false;
     producto.cantidadSeleccionada = 0;
+    this.calcularSubTotal();
   }
 
   public confirmarVenta() {
@@ -232,9 +235,7 @@ export class RegistrarVentaComponent implements OnInit{
       if (respuesta.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
         venta.id = respuesta.id;
-        this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
-
-        })
+        //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
         this.registrandoVenta = false;
         this.limpiarVenta();
       } else {
@@ -264,6 +265,7 @@ export class RegistrarVentaComponent implements OnInit{
         width: '75%',
         height: 'auto',
         autoFocus: false,
+        panelClass: 'custom-dialog-container',
         data: {
           referencia: this,
           esConsulta: false,
