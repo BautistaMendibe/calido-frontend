@@ -15,6 +15,9 @@ import {ConsultarInventarioComponent} from "../consultar-inventario/consultar-in
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {MovimientoProducto} from "../../../models/movimientoProducto";
+import {MatTableDataSource} from "@angular/material/table";
+import {Venta} from "../../../models/venta.model";
 
 @Component({
   selector: 'app-registrar-inventario',
@@ -29,7 +32,13 @@ export class RegistrarInventarioComponent implements OnInit {
   public productosFiltrados: Producto[] = [];
   public detalle: DetalleProducto;
   public esConsulta: boolean;
+  public esRegistro: boolean;
+
   public formDesactivado: boolean;
+  public columnas: string[] = ['fecha', 'producto', 'cantidad', 'tipoMovimiento', 'referencia'];
+  public movimientosProducto: MovimientoProducto[] = [];
+  public dataSourceMovimientosProducto = new MatTableDataSource(this.movimientosProducto);
+  public tablaMovimientosDesactivada: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +51,7 @@ export class RegistrarInventarioComponent implements OnInit {
       esConsulta: boolean;
       formDesactivado: boolean;
       editar: boolean;
+      esRegistro: boolean;
     }
   ) {
     this.form = new FormGroup({});
@@ -49,11 +59,14 @@ export class RegistrarInventarioComponent implements OnInit {
     this.detalle = this.data.detalle;
     this.esConsulta = this.data.esConsulta;
     this.formDesactivado = this.data.formDesactivado;
+    this.esRegistro = this.data.esRegistro;
   }
 
   ngOnInit() {
     this.crearFormulario();
     this.buscarProductos();
+    this.buscarMovimientosPorProducto(this.detalle.producto.id);
+    this.filtrosSuscripciones();
 
     if (this.esConsulta && this.detalle) {
       this.rellenarFormularioDataDetalleProducto();
@@ -69,6 +82,15 @@ export class RegistrarInventarioComponent implements OnInit {
     this.form = this.fb.group({
       txProducto: ['', [Validators.required]],
       txCantidadEnInventario: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
+      txValorEnInventario: [{value: '', disabled: true}],
+      txBuscar: ['']
+    });
+  }
+
+  private formatearValor(valor: number): string {
+    return '$ ' + valor.toLocaleString('es-AR', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
     });
   }
 
@@ -85,6 +107,9 @@ export class RegistrarInventarioComponent implements OnInit {
   public habilitarEdicion(){
     this.form.enable();
     this.data.editar = true;
+    this.formDesactivado = false;
+    this.tablaMovimientosDesactivada = false;
+    this.txValorEnInventario.disable();
   }
 
   /**
@@ -113,6 +138,13 @@ export class RegistrarInventarioComponent implements OnInit {
       this.txProducto.valueChanges.subscribe((producto) => {
         this.productosFiltrados = this.filterProductos(producto);
       });
+    });
+  }
+
+  private buscarMovimientosPorProducto(idProducto: number) {
+    this.productoService.consultarMovimientosPorProducto(idProducto).subscribe((movimientos) => {
+      this.movimientosProducto = movimientos;
+      this.dataSourceMovimientosProducto.data = this.movimientosProducto;
     });
   }
 
@@ -157,6 +189,34 @@ export class RegistrarInventarioComponent implements OnInit {
     }
   }
 
+  private filtrosSuscripciones() {
+    this.txCantidadEnInventario.valueChanges.subscribe((cantidad: number) => {
+      if (this.detalle) { // Verificar si hay detalle
+        const costo = this.detalle.producto.costo || 0;
+        const valorEnInventario = cantidad * costo;
+
+        // Formatear el valor usando toLocaleString para el formato argentino
+        this.txValorEnInventario.setValue(this.formatearValor(valorEnInventario));
+      }
+    });
+
+    this.form.get('txBuscar')?.valueChanges.subscribe((fechaSeleccionada: Date) => {
+      if (fechaSeleccionada) {
+        const fechaFiltrada = new Date(fechaSeleccionada);
+        fechaFiltrada.setHours(0, 0, 0, 0);
+
+        this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
+          const fechaMovimiento = new Date(movimiento.fecha);
+          fechaMovimiento.setHours(0, 0, 0, 0);
+
+          return fechaMovimiento.getTime() === fechaFiltrada.getTime();
+        });
+      } else {
+        this.dataSourceMovimientosProducto.data = this.movimientosProducto;
+      }
+    });
+  }
+
   public cancelar() {
     this.dialogRef.close();
   }
@@ -176,5 +236,13 @@ export class RegistrarInventarioComponent implements OnInit {
 
   get txCantidadEnInventario(): FormControl {
     return this.form.get('txCantidadEnInventario') as FormControl;
+  }
+
+  get txValorEnInventario(): FormControl {
+    return this.form.get('txValorEnInventario') as FormControl;
+  }
+
+  get txBuscar(): FormControl {
+    return this.form.get('txBuscar') as FormControl;
   }
 }

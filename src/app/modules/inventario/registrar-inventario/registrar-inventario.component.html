@@ -34,10 +34,80 @@
           <input type="text" matInput [formControl]="txCantidadEnInventario"/>
         </mat-form-field>
       </div>
+      <div class="col-md" *ngIf="!esRegistro">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Valor de Inventario</mat-label>
+          <input type="text" matInput [formControl]="txValorEnInventario"/>
+        </mat-form-field>
+      </div>
     </div>
   </form>
 
-  <mat-divider></mat-divider>
+  <mat-divider *ngIf="!esRegistro"></mat-divider>
+  <br>
+
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="movimientosProducto.length == 0 && !esRegistro">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div class="row pt-4" *ngIf="movimientosProducto.length > 0 && !esRegistro">
+    <div class="col-md-4">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Fecha Movimiento</mat-label>
+        <input matInput [matDatepicker]="pickerFecha" [formControl]="txBuscar" />
+        <mat-datepicker-toggle matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFecha></mat-datepicker>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </div>
+
+  <br>
+
+  <mat-card *ngIf="movimientosProducto.length > 0 && !esRegistro">
+    <mat-card-content>
+      <div class="row">
+
+        <div class="col-md-12">
+          <mat-table [dataSource]="dataSourceMovimientosProducto" matSort [class.disabled-table]="formDesactivado || tablaMovimientosDesactivada">
+            <ng-container matColumnDef="fecha">
+              <mat-header-cell *matHeaderCellDef>FECHA MOVIMIENTO</mat-header-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="producto">
+              <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.producto.nombre }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="cantidad">
+              <mat-header-cell *matHeaderCellDef>CAMBIO EN CANTIDAD</mat-header-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.cantidad }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="tipoMovimiento">
+              <mat-header-cell *matHeaderCellDef>TIPO DE MOVIMIENTO</mat-header-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.tipoMovimiento }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="referencia">
+              <mat-header-cell *matHeaderCellDef>REFERENCIA</mat-header-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.referencia }}</mat-cell>
+            </ng-container>
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+          </mat-table>
+          <h6 *ngIf="!this.movimientosProducto.length" class="alert alert-secondary text-center">
+            No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+          </h6>
+          <mat-paginator *ngIf="this.movimientosProducto.length > 0"
+                         [length]="this.movimientosProducto.length"
+                         [disabled]="formDesactivado"
+                         [pageSize]="10"
+                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-divider class="my-3" *ngIf="!esRegistro"></mat-divider>
   <br>
 
   <!-- Btn de cancelar, registrar y modificar -->

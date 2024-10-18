@@ -8,6 +8,7 @@ import {FiltrosProductos} from "../models/comandos/FiltrosProductos.comando";
 import {TipoProducto} from "../models/tipoProducto.model";
 import {DetalleProducto} from "../models/detalleProducto";
 import {FiltrosDetallesProductos} from "../models/comandos/FiltrosDetallesProductos";
+import {MovimientoProducto} from "../models/movimientoProducto";
 
 @Injectable({
   providedIn: 'root'
@@ -52,5 +53,9 @@ export class ProductosService {
 
   public eliminarDetalleProducto(idDetalleProducto: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-detalle-producto/${idDetalleProducto}`);
+  }
+
+  public consultarMovimientosPorProducto(idProducto: number): Observable<MovimientoProducto[]>{
+    return this.http.get<MovimientoProducto[]>(`${this.urlBackend}/${this.controllerName}/buscar-movimientos-por-producto/${idProducto}`);
   }
 }

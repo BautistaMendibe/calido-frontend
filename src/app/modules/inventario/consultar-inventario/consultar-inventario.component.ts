@@ -87,7 +87,8 @@ export class ConsultarInventarioComponent implements OnInit {
         data: {
           referencia: this,
           esConsulta: false,
-          formDesactivado: false
+          formDesactivado: false,
+          esRegistro: true
         }
       }
     );
@@ -100,13 +101,16 @@ export class ConsultarInventarioComponent implements OnInit {
       {
         width: '75%',
         height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         autoFocus: false,
         data: {
           detalle: detalle,
           esConsulta: true,
           referencia: this,
           formDesactivado: !editar,
-          editar: editar
+          editar: editar,
+          esRegistro: false
         }
       }
     );
