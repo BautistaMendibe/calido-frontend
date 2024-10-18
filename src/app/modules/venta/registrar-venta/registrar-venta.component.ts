@@ -114,13 +114,11 @@ export class RegistrarVentaComponent implements OnInit{
 
     this.validarCantidadProductosSeleccionados();
     this.calcularSubTotal();
-    this.calcularTotal();
   }
 
   public aumentarCantidad(producto: Producto) {
     producto.cantidadSeleccionada++;
     this.calcularSubTotal();
-    this.calcularTotal();
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -131,8 +129,6 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = false;
     }
     this.validarCantidadProductosSeleccionados();
-    this.calcularSubTotal();
-    this.calcularTotal();
   }
 
   private calcularSubTotal() {
@@ -141,12 +137,14 @@ export class RegistrarVentaComponent implements OnInit{
       this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
     });
     this.impuestoIva = this.subTotal * 0.21;
+    this.calcularTotal();
   }
 
   private validarCantidadProductosSeleccionados() {
     if (this.productosSeleccionados.length == 0) {
       this.subTotal = 0;
       this.impuestoIva = 0;
+      this.totalVenta = 0;
     }
   }
 
@@ -211,6 +209,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.productosSeleccionados.splice(index, 1);
     producto.seleccionadoParaVenta = false;
     producto.cantidadSeleccionada = 0;
+    this.calcularSubTotal();
   }
 
   public confirmarVenta() {
