@@ -138,7 +138,7 @@ export class RegistrarVentaComponent implements OnInit{
   private calcularSubTotal() {
     this.subTotal = 0;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.costo * producto.cantidadSeleccionada);
+      this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
     });
     this.impuestoIva = this.subTotal * 0.21;
   }
@@ -177,9 +177,10 @@ export class RegistrarVentaComponent implements OnInit{
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '75%',
-        height: 'auto',
+        width: '85%',
         autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
         data: {
           producto: producto,
           editarPrecioDeVenta: true,
@@ -194,7 +195,8 @@ export class RegistrarVentaComponent implements OnInit{
       if (respusta) {
         this.productosSeleccionados.map((producto: Producto) => {
           if (producto.id == respusta.id) {
-            producto.costo = respusta.costo;
+            producto.precioSinIVA = respusta.precioSinIVA;
+            producto.promocion = respusta.promocion;
           }
         })
         this.notificacionService.openSnackBarSuccess('Precio modificado para esta venta.');
