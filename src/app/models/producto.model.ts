@@ -1,6 +1,7 @@
 import { TipoProducto } from "./tipoProducto.model";
 import { Proveedor } from "./proveedores.model";
 import { Marca } from "./marca.model";
+import {Promocion} from "./promociones.model";
 
 export class Producto {
   id: number;
@@ -25,6 +26,7 @@ export class Producto {
   descuentoTarjeta: number;
 
   estaEnPromocion: boolean;
+  promocion: Promocion;
 
   constructor(
     id?: number,
@@ -48,6 +50,7 @@ export class Producto {
     descuentoPromocion?: number,
     descuentoTarjeta?: number,
     estaEnPromocion?: boolean,
+    promocion?: Promocion
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -70,5 +73,6 @@ export class Producto {
     this.descuentoPromocion = descuentoPromocion!;
     this.descuentoTarjeta = descuentoTarjeta!;
     this.estaEnPromocion = estaEnPromocion!;
+    this.promocion = promocion!;
   }
 }

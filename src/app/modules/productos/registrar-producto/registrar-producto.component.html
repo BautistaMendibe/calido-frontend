@@ -13,7 +13,7 @@
 
   <div class="row">
     <!-- Columna de Inputs -->
-    <div class="col-md-9 p-2">
+    <div class="col-md-8 p-2">
       <form [formGroup]="form">
         <mat-divider></mat-divider>
         <br>
@@ -87,46 +87,11 @@
 
         <mat-divider></mat-divider>
         <br>
-
-        <!-- Costo Base, Impuestos, Costo Final -->
-        <div class="row pt-4">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Costo de Compra</mat-label>
-              <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
-              <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
-            <span>+</span>
-          </div>
-          <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Margen de Ganancia</mat-label>
-                <input
-                  type="text"
-                  matInput
-                  mask="percent.2"
-                  suffix="%"
-                  [formControl]="txMargenGanancia"/>
-              <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
-            <span>=</span>
-          </div>
-          <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Precio sin IVA</mat-label>
-              <input type="text" matInput [formControl]="txPrecioSinIva" mask="separator.2" prefix="$" thousandSeparator="," />
-            </mat-form-field>
-          </div>
-        </div>
       </form>
     </div>
 
     <!-- Columna de Subir Imagen -->
-    <div class="col-md-3">
+    <div class="col-md-4 p-5">
       <div class="upload-container d-flex align-items-center mb-2 mt-2"
            (dragover)="onDragOver($event)"
            (drop)="onDrop($event)"
@@ -137,19 +102,34 @@
       </div>
     </div>
 
-
-    <!-- Precio con iva y descuento por promo -->
+    <!-- Costo Base, Impuestos, Costo Final -->
     <div class="row pt-4">
-      <div class="col-md-4">
+      <div class="col-md-2">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Precio con IVA</mat-label>
-          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$" thousandSeparator="," />
+          <mat-label>Costo de Compra</mat-label>
+          <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
+          <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+        <span>+</span>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Margen de Ganancia</mat-label>
+          <input
+            type="text"
+            matInput
+            mask="percent.2"
+            suffix="%"
+            [formControl]="txMargenGanancia"/>
+          <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
         </mat-form-field>
       </div>
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>-</span>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Descuento por promoción</mat-label>
           <mat-select [formControl]="txPromocion">
@@ -160,10 +140,10 @@
           <mat-error *ngIf="txProveedor.invalid">{{ getErrorMessage(txProveedor) }}</mat-error>
         </mat-form-field>
       </div>
-      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>=</span>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Precio final de venta</mat-label>
           <input type="text" matInput [formControl]="txPrecioFinalVenta" mask="separator.2" prefix="$" thousandSeparator="," />
@@ -171,7 +151,7 @@
       </div>
     </div>
 
-    <div class="row text-right mt-2">
+    <div class="row text-right mt-2 mb-2">
       <!-- Btn de cancelar, registrar y modificar -->
       <div class="row text-right">
         <div class="col d-flex justify-content-end">
