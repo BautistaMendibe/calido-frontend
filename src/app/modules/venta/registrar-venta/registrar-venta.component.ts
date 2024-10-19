@@ -20,6 +20,8 @@ import {AuthService} from "../../../services/auth.service";
 import {Tarjeta} from "../../../models/tarjeta.model";
 import {TarjetasService} from "../../../services/tarjetas.service";
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
+import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
+import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -132,7 +134,14 @@ export class RegistrarVentaComponent implements OnInit{
 
   public cambiarFormaDePago(formaDePagoElegida: number) {
     if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
-      this.mostrarTarjetasCuotas = true;
+      const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
+      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO ? this.tiposTarjetasEnum.TARJETA_CREDITO : this.tiposTarjetasEnum.TARJETA_DEBITO;
+
+      this.tarjetasService.consultarTarjetas(filtroTarjeta).subscribe((tarjetas) => {
+        this.tarjetasRegistradas = tarjetas;
+        this.mostrarTarjetasCuotas = true;
+      });
+
     } else {
       this.mostrarTarjetasCuotas = false;
       this.txTarjeta.setValue(null);
@@ -427,4 +436,7 @@ export class RegistrarVentaComponent implements OnInit{
     return FormasDePagoEnum;
   }
 
+  get tiposTarjetasEnum(): typeof TiposTarjetasEnum {
+    return TiposTarjetasEnum;
+  }
 }
