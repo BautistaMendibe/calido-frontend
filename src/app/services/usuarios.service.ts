@@ -10,6 +10,7 @@ import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando"
 import {FiltrosCuentasCorrientes} from "../models/comandos/FiltrosCuentasCorrientes";
 import {CuentaCorriente} from "../models/cuentaCorriente.model";
 import {Rol} from "../models/Rol";
+import {Motivo} from "../models/motivo.model";
 
 @Injectable({
   providedIn: 'root'
@@ -94,5 +95,9 @@ export class UsuariosService {
 
   public eliminarCuentaCorriente(idCuentaCorriente: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-cuenta-corriente/${idCuentaCorriente}`);
+  }
+
+  public obtenerMotivosLicencia(): Observable<Motivo[]>{
+    return this.http.get<Motivo[]>(`${this.urlBackend}/${this.controllerName}/obtener-motivos-licencia`);
   }
 }

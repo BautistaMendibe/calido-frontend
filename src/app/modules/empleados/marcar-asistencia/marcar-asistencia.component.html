@@ -40,6 +40,9 @@
           <button mat-icon-button class="button-logout" (click)="marcarSalida()" [disabled]="botonSalidaDeshabilitado" matTooltip="Marcar Salida">
             <mat-icon>logout</mat-icon>
           </button>
+          <button mat-icon-button class="button-absence" (click)="marcarLicencia()" [disabled]="botonLicenciaDeshabilitado" matTooltip="Solicitar Licencia">
+            <mat-icon>add_circle_outlinen</mat-icon>
+          </button>
           <!-- Botón que despliega el menú -->
           <button mat-icon-button [matMenuTriggerFor]="commentMenu" class="button-comment" matTooltip="Otras Opciones">
             <mat-icon>more_vert</mat-icon>

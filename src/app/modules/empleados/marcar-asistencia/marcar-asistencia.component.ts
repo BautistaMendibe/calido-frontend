@@ -8,6 +8,7 @@ import {NotificationService} from "../../../services/notificacion.service";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {Asistencia} from "../../../models/asistencia";
 import {FiltrosAsistencias} from "../../../models/comandos/FiltrosAsistencias.comando";
+import {SolicitarLicenciaComponent} from "../solicitar-licencia/solicitar-licencia.component";
 
 @Component({
   selector: 'app-marcar-asistencia',
@@ -29,6 +30,7 @@ export class MarcarAsistenciaComponent implements OnInit {
   public salida: boolean = false;
   public botonPresenteDeshabilitado: boolean = false;
   public botonSalidaDeshabilitado: boolean = false;
+  public botonLicenciaDeshabilitado: boolean = false;
   public asistencias: any[] = [];
   public isSearchingAsistencias = true;
   public asistencia = new Asistencia();
@@ -223,6 +225,21 @@ export class MarcarAsistenciaComponent implements OnInit {
             }
           }
       });
+  }
+
+  public marcarLicencia() {
+    this.dialog.open(
+      SolicitarLicenciaComponent,
+      {
+        width: '50vh',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
+        data: {
+          referencia: this,
+        }
+      }
+    )
   }
 
   abrirDialogComentario(): void {
