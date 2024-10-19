@@ -70,10 +70,10 @@ export class RegistrarVentaComponent implements OnInit{
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txFormaDePago: ['', []],
-      txTipoFacturacion: ['', []],
-      txCliente: ['', []],
-      txEmpleado: ['', []],
+      txFormaDePago: ['', [Validators.required]],
+      txTipoFacturacion: ['', [Validators.required]],
+      txCliente: ['', [Validators.required]],
+      txEmpleado: ['', [Validators.required]],
       txBuscar: ['', []]
     });
   }
@@ -239,37 +239,39 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public confirmarVenta() {
-    const venta: Venta = new Venta();
+    if (this.form.valid && this.productosSeleccionados.length > 0) {
+      const venta: Venta = new Venta();
 
-    // Seteamos valores de la venta
-    venta.usuario = new Usuario();
-    venta.usuario.id = this.txCliente.value ? this.txCliente.value : null;
-    venta.fecha = new Date();
-    venta.formaDePago = new FormaDePago();
-    venta.formaDePago.id = this.txFormaDePago.value;
-    venta.facturacion = new TipoFactura();
-    venta.facturacion.id = this.txTipoFacturacion.value;
-    const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
-    venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
-    venta.montoTotal = this.totalVenta;
-    venta.detalleVenta = [];
-    venta.productos = this.productosSeleccionados;
-    venta.idEmpleado = this.txEmpleado.value;
+      // Seteamos valores de la venta
+      venta.usuario = new Usuario();
+      venta.usuario.id = this.txCliente.value ? this.txCliente.value : null;
+      venta.fecha = new Date();
+      venta.formaDePago = new FormaDePago();
+      venta.formaDePago.id = this.txFormaDePago.value;
+      venta.facturacion = new TipoFactura();
+      venta.facturacion.id = this.txTipoFacturacion.value;
+      const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
+      venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
+      venta.montoTotal = this.totalVenta;
+      venta.detalleVenta = [];
+      venta.productos = this.productosSeleccionados;
+      venta.idEmpleado = this.txEmpleado.value;
 
-    this.registrandoVenta = true;
+      this.registrandoVenta = true;
 
-    this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
-        venta.id = respuesta.id;
-        //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
-        this.registrandoVenta = false;
-        this.limpiarVenta();
-      } else {
-        this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
-        this.registrandoVenta = false;
-      }
-    });
+      this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+          venta.id = respuesta.id;
+          //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
+          this.registrandoVenta = false;
+          this.limpiarVenta();
+        } else {
+          this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
+          this.registrandoVenta = false;
+        }
+      });
+    }
   }
 
   private limpiarVenta() {
@@ -277,12 +279,20 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = false;
       producto.cantidadSeleccionada = 0;
     });
+
+    // Limpiar productos seleccionados y totales
     this.productosSeleccionados = [];
     this.totalVenta = 0;
     this.subTotal = 0;
+
+    // Reestablecer valores
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
+
+    // Establecer txCliente en null pero como intacto
     this.txCliente.setValue(null);
+    this.txCliente.markAsPristine();
+    this.txCliente.markAsUntouched()
   }
 
   public registrarProducto() {
@@ -386,5 +396,4 @@ export class RegistrarVentaComponent implements OnInit{
   get txBuscar(): FormControl {
     return this.form.get('txBuscar') as FormControl;
   }
-
 }
