@@ -17,6 +17,9 @@ import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comand
 import {TipoFactura} from "../../../models/tipoFactura.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {AuthService} from "../../../services/auth.service";
+import {Tarjeta} from "../../../models/tarjeta.model";
+import {TarjetasService} from "../../../services/tarjetas.service";
+import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -37,6 +40,8 @@ export class RegistrarVentaComponent implements OnInit{
   public registrandoVenta: boolean = false;
   public tiposDeFacturacion: TipoFactura[] = [];
   public listaEmpleados: Usuario[] = [];
+  public mostrarTarjetasCuotas: boolean = false;
+  public tarjetasRegistradas: Tarjeta[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -47,7 +52,8 @@ export class RegistrarVentaComponent implements OnInit{
     private dialog: MatDialog,
     private usuariosService: UsuariosService,
     private promocionesService: PromocionesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private tarjetasService: TarjetasService
   ) {
     this.form = new FormGroup({});
   }
@@ -74,7 +80,9 @@ export class RegistrarVentaComponent implements OnInit{
       txTipoFacturacion: ['', [Validators.required]],
       txCliente: ['', [Validators.required]],
       txEmpleado: ['', [Validators.required]],
-      txBuscar: ['', []]
+      txBuscar: ['', []],
+      txTarjeta: ['', []],
+      txCuotas: ['', []]
     });
   }
 
@@ -119,6 +127,16 @@ export class RegistrarVentaComponent implements OnInit{
 
     if (infoToken) {
       this.txEmpleado.setValue(infoToken.idusuario);
+    }
+  }
+
+  public cambiarFormaDePago(formaDePagoElegida: number) {
+    if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
+      this.mostrarTarjetasCuotas = true;
+    } else {
+      this.mostrarTarjetasCuotas = false;
+      this.txTarjeta.setValue(null);
+      this.txCuotas.setValue(null);
     }
   }
 
@@ -396,4 +414,17 @@ export class RegistrarVentaComponent implements OnInit{
   get txBuscar(): FormControl {
     return this.form.get('txBuscar') as FormControl;
   }
+
+  get txTarjeta(): FormControl {
+    return this.form.get('txTarjeta') as FormControl;
+  }
+
+  get txCuotas(): FormControl {
+    return this.form.get('txCuotas') as FormControl;
+  }
+
+  get formasDePagoEnum(): typeof FormasDePagoEnum {
+    return FormasDePagoEnum;
+  }
+
 }
