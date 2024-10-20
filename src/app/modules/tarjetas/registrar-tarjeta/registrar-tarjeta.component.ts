@@ -226,7 +226,8 @@ export class RegistrarTarjetaComponent implements OnInit {
         idCuota: idCuota,
         idTarjeta: this.tarjeta.id,
         recargo: cuota.recargo,
-        descuento: cuota.descuento
+        descuento: cuota.descuento,
+        cantidadCuota: cuota.cantidadCuotas
       };
 
       // Agregar a la lista de cuotas seleccionadas

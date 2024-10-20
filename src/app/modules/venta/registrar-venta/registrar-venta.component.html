@@ -141,7 +141,7 @@
               <mat-label>Cuotas</mat-label>
               <mat-select [formControl]="txCuotas">
                 <mat-option *ngFor="let cpt of tarjetaSeleccionada.cuotaPorTarjeta" [value]="cpt.id">
-                  {{ cpt.idCuota }}
+                  {{ cpt.cantidadCuota }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
