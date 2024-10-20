@@ -30,7 +30,7 @@
       <div class="col">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Periodo</mat-label>
-          <mat-date-range-input [rangePicker]="picker" [formGroup]="txPeriodo">
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="txPeriodo" [min]="fechaMinima">
             <input matStartDate formControlName="txPeriodoInicio" placeholder="Desde">
             <input matEndDate formControlName="txPeriodoFin" placeholder="Hasta">
           </mat-date-range-input>
@@ -40,7 +40,7 @@
           </button>
         </mat-form-field>
         <small *ngIf="diasSeleccionados > 0" class="diasSeleccionados">
-          Días seleccionados: {{ diasSeleccionados }}
+          Se solicitarán <b>{{ diasSeleccionados }}</b> días.
         </small>
       </div>
     </div>

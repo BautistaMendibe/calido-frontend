@@ -51,3 +51,24 @@ button.button-logout[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.warning-icon {
+  color: #ecb324;
+  margin-right: 5px;
+  display: inline-block;
+  position: relative;
+}
+
+.accepted-icon {
+  color: greenyellow;
+  margin-right: 5px;
+  display: inline-block;
+  position: relative;
+}
+
+.rejected-icon {
+  color: indianred;
+  margin-right: 5px;
+  display: inline-block;
+  position: relative;
+}

@@ -9,6 +9,8 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {Asistencia} from "../../../models/asistencia";
 import {FiltrosAsistencias} from "../../../models/comandos/FiltrosAsistencias.comando";
 import {SolicitarLicenciaComponent} from "../solicitar-licencia/solicitar-licencia.component";
+import {FiltrosLicencias} from "../../../models/comandos/FiltrosLicencias.comando";
+import {Licencia} from "../../../models/licencia.model";
 
 @Component({
   selector: 'app-marcar-asistencia',
@@ -23,6 +25,7 @@ export class MarcarAsistenciaComponent implements OnInit {
   public idUsuario: number = -1;
   public diasDelMes: any[] = [];
   public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
+  public columnasLicencias = ['nombre', 'periodo', 'motivo', 'estado', 'comentario', 'acciones'];
   public fechaHoy = new Date();
   public horaEntrada: string = '';
   public horaSalida: string = '';
@@ -32,7 +35,9 @@ export class MarcarAsistenciaComponent implements OnInit {
   public botonSalidaDeshabilitado: boolean = false;
   public botonLicenciaDeshabilitado: boolean = false;
   public asistencias: any[] = [];
+  public licencias: Licencia[] = [];
   public isSearchingAsistencias = true;
+  public isSearchingLicencias = true;
   public asistencia = new Asistencia();
   public form: FormGroup;
   public comentario: string = '';
@@ -66,6 +71,7 @@ export class MarcarAsistenciaComponent implements OnInit {
 
     this.generarDiasDelMes();
     this.consultarAsistencias();
+    this.consultarLicecias();
   }
 
   consultarAsistencias(): void {
@@ -94,6 +100,55 @@ export class MarcarAsistenciaComponent implements OnInit {
         this.notificacionService.openSnackBarError('Error al cargar asistencias. Intente nuevamente.');
       }
     });
+  }
+
+  consultarLicecias(): void {
+    this.usuariosService.consultarLicencias(new FiltrosLicencias()).subscribe({
+      next: (licencias) => {
+        const fechaActual = new Date();
+        const mesActual = fechaActual.getMonth() + 1;
+        const anioActual = fechaActual.getFullYear()
+
+        this.licencias = licencias.filter(licencia => {
+          const fechaLicencia = new Date(licencia.fechaInicio);
+          const mesLicencia = fechaLicencia.getMonth() + 1;
+          const anioLicencia = fechaLicencia.getFullYear();
+
+          return licencia.idUsuario === this.idUsuario &&
+            mesLicencia === mesActual &&
+            anioLicencia === anioActual;
+        });
+
+        this.isSearchingLicencias = false;
+      },
+      error: (err) => {
+        console.error('Error al consultar licencias:', err);
+        this.notificacionService.openSnackBarError('Error al cargar licencias. Intente nuevamente.');
+      }
+    });
+  }
+
+  eliminarLicencia(idLicencia: number): void {
+    this.notificationDialogService.confirmation(
+      '¿Desea eliminar la licencia?', 'Eliminar Licencia')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuariosService.eliminarLicencia(idLicencia).subscribe({
+            next: (respuesta) => {
+              if (respuesta.mensaje === 'OK') {
+                this.notificacionService.openSnackBarSuccess('Licencia eliminada con éxito');
+                this.consultarLicecias();
+              } else {
+                this.notificacionService.openSnackBarError('Error al eliminar la licencia.');
+              }
+            },
+            error: () => {
+              this.notificacionService.openSnackBarError('Error al eliminar la licencia.');
+            }
+          });
+        }
+      });
   }
 
   buscarAsistenciaHoy(): Asistencia {
