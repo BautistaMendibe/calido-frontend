@@ -22,6 +22,7 @@ import {TarjetasService} from "../../../services/tarjetas.service";
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
 import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
+import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -45,6 +46,9 @@ export class RegistrarVentaComponent implements OnInit{
   public mostrarTarjetasCuotas: boolean = false;
   public tarjetasRegistradas: Tarjeta[] = [];
   public tarjetaSeleccionada: Tarjeta;
+  public cantidadCuotaSeleccionada: CuotaPorTarjeta;
+  public descuentoPorTarjeta: number = 0;
+  public interesPorTarjeta: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -60,6 +64,7 @@ export class RegistrarVentaComponent implements OnInit{
   ) {
     this.form = new FormGroup({});
     this.tarjetaSeleccionada = new Tarjeta();
+    this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
   }
 
   ngOnInit(){
@@ -227,13 +232,24 @@ export class RegistrarVentaComponent implements OnInit{
 
   private calcularTotal() {
     this.totalVenta = this.subTotal + this.impuestoIva;
+
+    if (this.cantidadCuotaSeleccionada?.id){
+       this.descuentoPorTarjeta = this.totalVenta - this.totalVenta * (1 - (this.cantidadCuotaSeleccionada.descuento / 100));
+       this.interesPorTarjeta = this.totalVenta * (1 + (this.cantidadCuotaSeleccionada.interes / 100)) - this.totalVenta;
+
+       this.totalVenta = this.totalVenta - this.descuentoPorTarjeta + this.interesPorTarjeta;
+    }
   }
 
   public seleccionarTarjeta(tarjetaId: number){
     const tarjeta = this.tarjetasRegistradas.find((tarjeta) => tarjeta.id == tarjetaId);
     this.tarjetaSeleccionada = tarjeta ? tarjeta : new Tarjeta();
+  }
 
-
+  public seleccionarCuota(cuotaId: number) {
+    const cuota = this.tarjetaSeleccionada.cuotaPorTarjeta.find((cuota) => cuota.id == cuotaId);
+    this.cantidadCuotaSeleccionada = cuota ? cuota : new CuotaPorTarjeta();
+    this.calcularTotal();
   }
 
   public editarProductoEnVenta(producto: Producto){

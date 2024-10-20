@@ -139,7 +139,7 @@
           <div class="col-3" *ngIf="this.txFormaDePago.value == this.formasDePagoEnum.TARJETA_CREDITO">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cuotas</mat-label>
-              <mat-select [formControl]="txCuotas">
+              <mat-select [formControl]="txCuotas" (valueChange)="seleccionarCuota($event)">
                 <mat-option *ngFor="let cpt of tarjetaSeleccionada.cuotaPorTarjeta" [value]="cpt.id">
                   {{ cpt.cantidadCuota }}
                 </mat-option>
@@ -216,8 +216,20 @@
             </div>
             <div class="dotted-line"></div>
             <div class="summary-row">
-              <span>IVA (21.00%)</span>
+              <span>IVA (21,00%)</span>
               <span class="text-summary">$ {{ impuestoIva | number:'1.2-2':'es-AR' }}</span>
+            </div>
+            <div *ngIf="cantidadCuotaSeleccionada.id">
+              <div class="dotted-line"></div>
+              <div class="summary-row">
+                <span>Descuento por tarjeta ({{ this.cantidadCuotaSeleccionada.descuento ? (this.cantidadCuotaSeleccionada.descuento | number:'1.2-2':'es-AR') : 0 }}%)</span>
+                <span class="text-summary">$ {{ this.descuentoPorTarjeta | number:'1.2-2':'es-AR' }}</span>
+              </div>
+              <div class="dotted-line"></div>
+              <div class="summary-row">
+                <span>Interés por tarjeta ({{this.cantidadCuotaSeleccionada.interes ? (this.cantidadCuotaSeleccionada.interes | number:'1.2-2':'es-AR') : 0}}%)</span>
+                <span class="text-summary">$ {{ this.interesPorTarjeta | number:'1.2-2':'es-AR' }}</span>
+              </div>
             </div>
           </div>
         </div>
