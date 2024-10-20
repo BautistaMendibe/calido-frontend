@@ -139,15 +139,18 @@ export class RegistrarVentaComponent implements OnInit{
       const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
       filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO ? this.tiposTarjetasEnum.TARJETA_CREDITO : this.tiposTarjetasEnum.TARJETA_DEBITO;
 
+      this.txTarjeta.disable();
       this.tarjetasService.consultarTarjetas(filtroTarjeta).subscribe((tarjetas) => {
         this.tarjetasRegistradas = tarjetas;
         this.mostrarTarjetasCuotas = true;
+        this.txTarjeta.enable();
       });
 
     } else {
       this.mostrarTarjetasCuotas = false;
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
+      this.txTarjeta.enable();
     }
   }
 
