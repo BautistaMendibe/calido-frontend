@@ -44,6 +44,7 @@ export class RegistrarVentaComponent implements OnInit{
   public listaEmpleados: Usuario[] = [];
   public mostrarTarjetasCuotas: boolean = false;
   public tarjetasRegistradas: Tarjeta[] = [];
+  public tarjetaSeleccionada: Tarjeta;
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +59,7 @@ export class RegistrarVentaComponent implements OnInit{
     private tarjetasService: TarjetasService
   ) {
     this.form = new FormGroup({});
+    this.tarjetaSeleccionada = new Tarjeta();
   }
 
   ngOnInit(){
@@ -222,6 +224,13 @@ export class RegistrarVentaComponent implements OnInit{
 
   private calcularTotal() {
     this.totalVenta = this.subTotal + this.impuestoIva;
+  }
+
+  public seleccionarTarjeta(tarjetaId: number){
+    const tarjeta = this.tarjetasRegistradas.find((tarjeta) => tarjeta.id == tarjetaId);
+    this.tarjetaSeleccionada = tarjeta ? tarjeta : new Tarjeta();
+
+
   }
 
   public editarProductoEnVenta(producto: Producto){

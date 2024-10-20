@@ -129,7 +129,7 @@
           <div class="col-9">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Tarjeta</mat-label>
-              <mat-select [formControl]="txTarjeta">
+              <mat-select [formControl]="txTarjeta" (valueChange)="seleccionarTarjeta($event)">
                 <mat-option *ngFor="let tarjeta of this.tarjetasRegistradas" [value]="tarjeta.id">
                   {{ tarjeta.nombre }}
                 </mat-option>
@@ -140,8 +140,8 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cuotas</mat-label>
               <mat-select [formControl]="txCuotas">
-                <mat-option *ngFor="let tp of this.tiposDeFacturacion" [value]="tp.id">
-                  {{ tp.nombre }}
+                <mat-option *ngFor="let cpt of tarjetaSeleccionada.cuotaPorTarjeta" [value]="cpt.id">
+                  {{ cpt.idCuota }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
