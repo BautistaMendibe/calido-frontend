@@ -66,6 +66,12 @@
                 <div class="w-100 codigoBarra">
                   [ {{producto.codigoBarra}} ]
                 </div>
+
+                <div class="w-100 cantidadStock">
+                  <b [ngClass]="obtenerClaseStock(producto)">
+                    {{ producto.cantidadEnStock > 0 ? ('Cantidad: ' + producto.cantidadEnStock) : 'Sin stock' }}
+                  </b>
+                </div>
               </div>
 
               <!-- Precio del producto -->

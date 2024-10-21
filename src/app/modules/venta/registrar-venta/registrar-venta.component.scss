@@ -199,3 +199,30 @@
   font-size: 12px;
   color: #9c9898;
 }
+
+.stock-disponible {
+  background-color: #d4edda;
+  color: #318142;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.stock-medio {
+  background-color: #fff3cd;
+  color: #eab318;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.sin-stock {
+  background-color: #ffdfe2;
+  color: #83393f;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.cantidadStock {
+  font-size: 14px;
+  color: #777777;
+  margin-top: 10px;
+}

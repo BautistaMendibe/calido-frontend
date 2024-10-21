@@ -292,6 +292,18 @@ export class RegistrarVentaComponent implements OnInit{
     });
   }
 
+  public obtenerClaseStock(producto: Producto): string {
+    if (producto.cantidadEnStock > 5) {
+      return 'stock-disponible';
+    } else if (producto.cantidadEnStock >= 1 && producto.cantidadEnStock <= 5) {
+      return 'stock-medio';
+    } else if (producto.cantidadEnStock === 0) {
+      return 'sin-stock';
+    } else {
+      return 'stock-bajo';
+    }
+  }
+
   public eliminarProductoDeVenta(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
     // Si el producto ya está en la lista, lo eliminamos y marcamos el seleccionado para venta en false
