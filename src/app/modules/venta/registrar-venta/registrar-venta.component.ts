@@ -105,8 +105,16 @@ export class RegistrarVentaComponent implements OnInit{
 
   private buscarUsuariosClientes() {
     const filtro: FiltrosEmpleados = new FiltrosEmpleados();
+    const clienteConsumidorFinal = new Usuario();
+    clienteConsumidorFinal.id = -1;
+    clienteConsumidorFinal.nombre = 'Consumidor';
+    clienteConsumidorFinal.apellido = 'Final';
+
+    this.clientes.push(clienteConsumidorFinal);
+
     this.usuariosService.consultarClientes(filtro).subscribe((usuarios) => {
-      this.clientes = usuarios;
+      this.clientes = [clienteConsumidorFinal, ...usuarios];
+      this.txCliente.setValue(clienteConsumidorFinal.id);
     });
   }
 
@@ -298,8 +306,8 @@ export class RegistrarVentaComponent implements OnInit{
       const venta: Venta = new Venta();
 
       // Seteamos valores de la venta
-      venta.usuario = new Usuario();
-      venta.usuario.id = this.txCliente.value ? this.txCliente.value : null;
+      venta.cliente = new Usuario();
+      venta.cliente.id = this.txCliente.value ? this.txCliente.value : null;
       venta.fecha = new Date();
       venta.formaDePago = new FormaDePago();
       venta.formaDePago.id = this.txFormaDePago.value;

@@ -9,7 +9,7 @@ export class Venta {
   id: number | undefined;
   montoTotal: number;
   fecha: Date;
-  usuario: Usuario;
+  cliente: Usuario;
   formaDePago: FormaDePago;
   detalleVenta: DetalleVenta[];
   productos: Producto[];
@@ -25,7 +25,7 @@ export class Venta {
       id?: number,
       montoTotal?: number,
       fecha?: Date,
-      usuario?: Usuario,
+      cliente?: Usuario,
       formaDePago?: FormaDePago,
       detalleVenta?: DetalleVenta[],
       productos?: Producto[],
@@ -41,7 +41,7 @@ export class Venta {
     this.id = id!;
     this.montoTotal = montoTotal!;
     this.fecha = fecha!;
-    this.usuario = usuario!;
+    this.cliente = cliente!;
     this.formaDePago = formaDePago!;
     this.detalleVenta = detalleVenta!;
     this.productos = productos!;

@@ -59,19 +59,19 @@
     <div class="row">
       <h3 class="subtitulo">Cliente:</h3>
       <br>
-      <div class="col-md">
+      <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Cliente</mat-label>
           <input type="text" matInput [formControl]="txCliente"/>
         </mat-form-field>
       </div>
-      <div class="col-md">
+      <div class="col-md-4" *ngIf="this.venta.cliente.id != -1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Dni</mat-label>
           <input type="text" matInput [formControl]="txDniCliente"/>
         </mat-form-field>
       </div>
-      <div class="col-md">
+      <div class="col-md-4" *ngIf="this.venta.cliente.id != -1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Mail</mat-label>
           <input type="text" matInput [formControl]="txMailCliente"/>
