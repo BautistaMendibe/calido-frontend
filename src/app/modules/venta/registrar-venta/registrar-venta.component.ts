@@ -312,6 +312,12 @@ export class RegistrarVentaComponent implements OnInit{
       venta.productos = this.productosSeleccionados;
       venta.idEmpleado = this.txEmpleado.value;
 
+      // Si el pago es con tarjeta se registran esos datos
+      venta.tarjeta = this.tarjetaSeleccionada.nombre;
+      venta.cantidadCuotas = this.cantidadCuotaSeleccionada.cantidadCuota;
+      venta.interes = this.cantidadCuotaSeleccionada.interes;
+      venta.descuento = this.cantidadCuotaSeleccionada.descuento;
+
       this.registrandoVenta = true;
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
