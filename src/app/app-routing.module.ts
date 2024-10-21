@@ -33,7 +33,7 @@ const routes: Routes = [
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
   {path:'consultar-clientes', component: ConsultarClientesComponent},
-  {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
+  {path:'consultar-presencia', component: ConsultarAsistenciaComponent},
   {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
   {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},

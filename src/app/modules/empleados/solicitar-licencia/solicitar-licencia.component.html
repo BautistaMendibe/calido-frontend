@@ -40,7 +40,7 @@
           </button>
         </mat-form-field>
         <small *ngIf="diasSeleccionados > 0" class="diasSeleccionados">
-          Se solicitarán <b>{{ diasSeleccionados }}</b> días.
+          {{(diasSeleccionados !== 1) ? 'Se solicitarán' : 'Se solicitará'}} <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}
         </small>
       </div>
     </div>

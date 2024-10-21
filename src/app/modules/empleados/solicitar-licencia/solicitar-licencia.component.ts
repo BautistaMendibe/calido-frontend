@@ -8,6 +8,7 @@ import {Motivo} from "../../../models/motivo.model";
 import {Licencia} from "../../../models/licencia.model";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SpResult} from "../../../models/resultadoSp.model";
+import {Asistencia} from "../../../models/asistencia";
 
 @Component({
   selector: 'app-solicitar-licencia',
@@ -92,22 +93,36 @@ export class SolicitarLicenciaComponent implements OnInit {
       licencia.comentario = this.txComentario.value;
       licencia.idEstadoLicencia = 1; // Pendiente siempre
 
-      // Validación de superposición de fechas
-      const existeSuperposicion = this.referencia.licencias.some((licenciaExistente: Licencia) => {
+      // Validación de superposición de fechas con licencias
+      const existeSuperposicionLicencia = this.referencia.licencias.some((licenciaExistente: Licencia) => {
         const fechaInicioExistente = new Date(licenciaExistente.fechaInicio);
         const fechaFinExistente = new Date(licenciaExistente.fechaFin);
 
-        // Comprobar si las fechas se superponen
+        // Comprobar si las fechas se superponen o coinciden exactamente
         return (
-          (fechaInicioNueva >= fechaInicioExistente && fechaInicioNueva <= fechaFinExistente) ||
-          (fechaFinNueva >= fechaInicioExistente && fechaFinNueva <= fechaFinExistente) ||
+          (fechaInicioNueva < fechaFinExistente && fechaFinNueva > fechaInicioExistente) ||
           (fechaInicioNueva <= fechaInicioExistente && fechaFinNueva >= fechaFinExistente)
         );
       });
 
-      if (existeSuperposicion) {
+      // Validación de superposición con asistencias
+      const existeSuperposicionAsistencia = this.referencia.asistencias.some((asistenciaExistente: Asistencia) => {
+        const fechaAsistenciaExistente = new Date(asistenciaExistente.fecha);
+
+        // Comprobar si alguna fecha de licencia coincide con una fecha de asistencia
+        return (
+          (fechaInicioNueva <= fechaAsistenciaExistente && fechaFinNueva >= fechaAsistenciaExistente)
+        );
+      });
+
+      if (existeSuperposicionLicencia) {
         this.notificacionService.openSnackBarError('Ya existe una licencia en el periodo seleccionado.');
-        return; // No continuar si hay superposición
+        return; // No continuar si hay superposición de licencias
+      }
+
+      if (existeSuperposicionAsistencia) {
+        this.notificacionService.openSnackBarError('No puede solicitar una licencia en días que ya marcó como presente.');
+        return; // No continuar si hay superposición con asistencias
       }
 
       // Si no hay superposición, continuar con el proceso de solicitud de licencia
@@ -122,6 +137,7 @@ export class SolicitarLicenciaComponent implements OnInit {
               if (res.mensaje == 'OK') {
                 this.notificacionService.openSnackBarSuccess('Licencia solicitada con éxito');
                 this.dialogRef.close();
+                this.data.referencia.consultarLicencias();
               } else {
                 this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al solicitar licencia');
               }

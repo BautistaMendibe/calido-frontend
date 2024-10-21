@@ -44,16 +44,6 @@
           <button mat-icon-button class="button-absence" (click)="marcarLicencia()" [disabled]="botonLicenciaDeshabilitado" matTooltip="Solicitar Licencia">
             <mat-icon>add_circle_outlinen</mat-icon>
           </button>
-          <button mat-icon-button [matMenuTriggerFor]="commentMenu" class="button-comment" matTooltip="Otras Opciones">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-
-          <!-- Menú de opciones -->
-          <mat-menu #commentMenu="matMenu">
-            <button mat-menu-item (click)="abrirDialogComentario()">
-              <span>Añadir comentario</span>
-            </button>
-          </mat-menu>
 
           <!-- Diálogo para añadir comentario -->
           <ng-template #dialogoComentario>
@@ -112,8 +102,13 @@
     <h2 style="color: grey">Asistencias y licencias encontradas</h2>
   </mat-card-header>
 
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="isSearchingLicencias || isSearchingAsistencias">
+    <mat-spinner></mat-spinner>
+  </div>
+
   <!-- Implementación de Mat-Tab-Group -->
-  <mat-tab-group mat-align-tabs="#e15b35" color="warn">
+  <mat-tab-group mat-align-tabs="#e15b35" color="warn" *ngIf="!isSearchingLicencias && !isSearchingAsistencias">
     <!-- Pestaña de asistencias -->
     <mat-tab label="Asistencias">
       <mat-card *ngIf="!isSearchingAsistencias">
@@ -167,10 +162,10 @@
                   <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
                   <mat-cell *matCellDef="let asistencia" class="acciones-cell">
                     <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Añadir Comentario">
-                      <mat-icon>more_vert</mat-icon>
+                      <mat-icon class="icono-acciones">more_vert</mat-icon>
                     </button>
                     <mat-menu #menu="matMenu">
-                      <button mat-menu-item (click)="abrirDialogComentario()">Añadir comentario</button>
+                      <button mat-menu-item (click)="abrirDialogComentario(asistencia)">Añadir comentario</button>
                     </mat-menu>
                   </mat-cell>
                 </ng-container>
@@ -178,17 +173,18 @@
                 <!-- Definir las filas y las columnas -->
                 <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
-
               </mat-table>
 
-              <h6 *ngIf="!this.asistencias.length" class="alert alert-secondary text-center">
+              <!-- Mensaje cuando no hay asistencias -->
+              <h6 *ngIf="asistencias.length === 0" class="alert alert-secondary text-center">
                 No se encuentran asistencias para mostrar, realice una nueva búsqueda.
               </h6>
 
-              <mat-paginator *ngIf="this.asistencias.length > 0"
-                             [length]="this.asistencias.length"
+              <mat-paginator *ngIf="asistencias.length > 0"
+                             [length]="asistencias.length"
                              [pageSize]="10"
-                             [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                             [pageSizeOptions]="[5, 10, 20]"
+                             showFirstLastButtons>
               </mat-paginator>
             </div>
           </div>
@@ -232,19 +228,15 @@
                 <ng-container matColumnDef="estado">
                   <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
-
-                    <mat-icon *ngIf="licencia.estadoLicencia.id === 1" class="warning-icon" matTooltip="Pendiente">
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 1" class="warning-icon" matTooltip="El empleador aún no ha revisado su solicitud.">
                       warning
                     </mat-icon>
-
-                    <mat-icon *ngIf="licencia.estadoLicencia.id === 2" class="accepted-icon" matTooltip="Aceptada">
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 2" class="accepted-icon" matTooltip="El empleador ha aceptado su solicitud de licencia.">
                       check_circle
                     </mat-icon>
-
-                    <mat-icon *ngIf="licencia.estadoLicencia.id === 3" class="rejected-icon" matTooltip="Rechazada">
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 3" class="rejected-icon" matTooltip="El empleador ha rechazado su solicitud de licencia.">
                       cancel
                     </mat-icon>
-
                     {{ licencia.estadoLicencia.nombre }}
                   </mat-cell>
                 </ng-container>
@@ -264,23 +256,30 @@
                     <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarLicencia(licencia.id)">
                       <mat-icon class="eliminar">delete</mat-icon>
                     </button>
+                    <button mat-icon-button [matMenuTriggerFor]="licenciaMenu" matTooltip="Opciones">
+                      <mat-icon class="icono-acciones">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #licenciaMenu="matMenu">
+                      <button mat-menu-item (click)="abrirDialogComentario(licencia)">Añadir comentario</button>
+                    </mat-menu>
                   </mat-cell>
                 </ng-container>
 
                 <!-- Definir las filas y las columnas -->
                 <mat-header-row *matHeaderRowDef="columnasLicencias"></mat-header-row>
                 <mat-row *matRowDef="let row; columns: columnasLicencias;"></mat-row>
-
               </mat-table>
 
-              <h6 *ngIf="!this.licencias.length" class="alert alert-secondary text-center">
+              <!-- Mensaje cuando no hay licencias -->
+              <h6 *ngIf="licencias.length === 0" class="alert alert-secondary text-center">
                 No se encuentran licencias para mostrar, realice una nueva búsqueda.
               </h6>
 
-              <mat-paginator *ngIf="this.licencias.length > 0"
-                             [length]="this.licencias.length"
+              <mat-paginator *ngIf="licencias.length > 0"
+                             [length]="licencias.length"
                              [pageSize]="10"
-                             [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+                             [pageSizeOptions]="[5, 10, 20]"
+                             showFirstLastButtons>
               </mat-paginator>
             </div>
           </div>

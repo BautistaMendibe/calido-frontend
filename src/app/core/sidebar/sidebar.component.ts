@@ -39,7 +39,7 @@ export class SidebarComponent implements OnInit {
     {id: 8, nombre: 'Estadisticas', path:'/consultar-estadisticas', icon: 'data_usage', activo: false, subMenu: []},
     {id: 9, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, requiresAdmin: true, subMenu: []}
+        {id: 2, nombre: 'Consultar presencia', path:'/consultar-presencia', icon: '', activo: false, requiresAdmin: true, subMenu: []}
       ]},
     {id: 10, nombre: 'Clientes', path:'/consultar-clientes', icon: 'person_add', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar clientes', path:'/consultar-clientes', icon: '', activo: false, subMenu: []},

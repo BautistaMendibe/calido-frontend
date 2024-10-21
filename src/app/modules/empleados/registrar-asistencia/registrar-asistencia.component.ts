@@ -7,6 +7,7 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {Asistencia} from "../../../models/asistencia";
 import {ConsultarAsistenciaComponent} from "../consultar-asistencia/consultar-asistencia.component";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {Licencia} from "../../../models/licencia.model";
 
 @Component({
   selector: 'app-registrar-asistencia',
@@ -50,7 +51,7 @@ export class RegistrarAsistenciaComponent implements OnInit {
     this.buscarEmpleados();
 
     if (this.esConsulta && this.asistencia) {
-      this.rellenarFormularioDataUsuario();
+      this.rellenarFormularioDataAsistencia();
     }
   }
 
@@ -71,7 +72,7 @@ export class RegistrarAsistenciaComponent implements OnInit {
   }
 
 
-  private rellenarFormularioDataUsuario() {
+  private rellenarFormularioDataAsistencia() {
 
     this.txEmpleados.setValue(this.asistencia.idUsuario);
     this.txFecha.setValue(this.asistencia.fecha);
@@ -90,7 +91,6 @@ export class RegistrarAsistenciaComponent implements OnInit {
   }
 
   public registrarNuevaAsistencia() {
-
     if (this.form.valid) {
       const asistencia: Asistencia = new Asistencia();
 
@@ -100,6 +100,22 @@ export class RegistrarAsistenciaComponent implements OnInit {
       asistencia.horaSalida = this.txHoraSalida.value;
       asistencia.comentario = this.txComentario.value;
 
+      // Validación de superposición con licencias
+      const fechaAsistencia = new Date(asistencia.fecha);
+      const existeSuperposicionLicencia = this.referencia.licencias.some((licenciaExistente: Licencia) => {
+        const fechaInicioExistente = new Date(licenciaExistente.fechaInicio);
+        const fechaFinExistente = new Date(licenciaExistente.fechaFin);
+
+        // Comprobar si la fecha de asistencia coincide con las fechas de la licencia (incluidos los extremos)
+        return (
+          (fechaAsistencia >= fechaInicioExistente && fechaAsistencia <= fechaFinExistente)
+        );
+      });
+
+      if (existeSuperposicionLicencia) {
+        this.notificacionService.openSnackBarError('No puede registrar asistencia en días que tiene licencia.');
+        return; // No continuar si hay superposición con licencias
+      }
 
       this.usuariosService.registrarAsistencia(asistencia).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
@@ -109,10 +125,8 @@ export class RegistrarAsistenciaComponent implements OnInit {
         } else {
           this.notificacionService.openSnackBarError('Error al registrar una asistencia, inténtelo nuevamente');
         }
-      })
-
+      });
     }
-
   }
 
   public modificarAsistencia() {
@@ -125,6 +139,23 @@ export class RegistrarAsistenciaComponent implements OnInit {
       asistencia.horaSalida = this.txHoraSalida.value;
       asistencia.comentario = this.txComentario.value;
 
+      // Validación de superposición con licencias
+      const fechaAsistencia = new Date(asistencia.fecha);
+      const existeSuperposicionLicencia = this.referencia.licencias.some((licenciaExistente: Licencia) => {
+        const fechaInicioExistente = new Date(licenciaExistente.fechaInicio);
+        const fechaFinExistente = new Date(licenciaExistente.fechaFin);
+
+        // Comprobar si la fecha de asistencia coincide con las fechas de la licencia (incluidos los extremos)
+        return (
+          (fechaAsistencia >= fechaInicioExistente && fechaAsistencia <= fechaFinExistente)
+        );
+      });
+
+      if (existeSuperposicionLicencia) {
+        this.notificacionService.openSnackBarError('No puede modificar la asistencia a días que tiene licencia.');
+        return; // No continuar si hay superposición con licencias
+      }
+
       this.usuariosService.modificarAsistencia(asistencia).subscribe((res) => {
         if (res.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('Asistencia modificada con éxito');
@@ -133,9 +164,10 @@ export class RegistrarAsistenciaComponent implements OnInit {
         } else {
           this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar la asistencia');
         }
-      })
+      });
     }
   }
+
 
 
   public cancelar() {
