@@ -17,6 +17,12 @@ import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comand
 import {TipoFactura} from "../../../models/tipoFactura.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {AuthService} from "../../../services/auth.service";
+import {Tarjeta} from "../../../models/tarjeta.model";
+import {TarjetasService} from "../../../services/tarjetas.service";
+import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
+import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
+import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
+import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -37,6 +43,12 @@ export class RegistrarVentaComponent implements OnInit{
   public registrandoVenta: boolean = false;
   public tiposDeFacturacion: TipoFactura[] = [];
   public listaEmpleados: Usuario[] = [];
+  public mostrarTarjetasCuotas: boolean = false;
+  public tarjetasRegistradas: Tarjeta[] = [];
+  public tarjetaSeleccionada: Tarjeta;
+  public cantidadCuotaSeleccionada: CuotaPorTarjeta;
+  public descuentoPorTarjeta: number = 0;
+  public interesPorTarjeta: number = 0;
 
   constructor(
     private fb: FormBuilder,
@@ -47,9 +59,12 @@ export class RegistrarVentaComponent implements OnInit{
     private dialog: MatDialog,
     private usuariosService: UsuariosService,
     private promocionesService: PromocionesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private tarjetasService: TarjetasService
   ) {
     this.form = new FormGroup({});
+    this.tarjetaSeleccionada = new Tarjeta();
+    this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
   }
 
   ngOnInit(){
@@ -74,7 +89,9 @@ export class RegistrarVentaComponent implements OnInit{
       txTipoFacturacion: ['', [Validators.required]],
       txCliente: ['', [Validators.required]],
       txEmpleado: ['', [Validators.required]],
-      txBuscar: ['', []]
+      txBuscar: ['', []],
+      txTarjeta: ['', []],
+      txCuotas: ['', []]
     });
   }
 
@@ -88,8 +105,11 @@ export class RegistrarVentaComponent implements OnInit{
 
   private buscarUsuariosClientes() {
     const filtro: FiltrosEmpleados = new FiltrosEmpleados();
+
     this.usuariosService.consultarClientes(filtro).subscribe((usuarios) => {
       this.clientes = usuarios;
+      // Consumidor final por defecto
+      this.txCliente.setValue(-1);
     });
   }
 
@@ -119,6 +139,26 @@ export class RegistrarVentaComponent implements OnInit{
 
     if (infoToken) {
       this.txEmpleado.setValue(infoToken.idusuario);
+    }
+  }
+
+  public cambiarFormaDePago(formaDePagoElegida: number) {
+    if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
+      const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
+      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO ? this.tiposTarjetasEnum.TARJETA_CREDITO : this.tiposTarjetasEnum.TARJETA_DEBITO;
+
+      this.txTarjeta.disable();
+      this.tarjetasService.consultarTarjetas(filtroTarjeta).subscribe((tarjetas) => {
+        this.tarjetasRegistradas = tarjetas;
+        this.mostrarTarjetasCuotas = true;
+        this.txTarjeta.enable();
+      });
+
+    } else {
+      this.mostrarTarjetasCuotas = false;
+      this.txTarjeta.setValue(null);
+      this.txCuotas.setValue(null);
+      this.txTarjeta.enable();
     }
   }
 
@@ -195,6 +235,24 @@ export class RegistrarVentaComponent implements OnInit{
 
   private calcularTotal() {
     this.totalVenta = this.subTotal + this.impuestoIva;
+
+    if (this.cantidadCuotaSeleccionada?.id){
+       this.descuentoPorTarjeta = this.totalVenta - this.totalVenta * (1 - (this.cantidadCuotaSeleccionada.descuento / 100));
+       this.interesPorTarjeta = this.totalVenta * (1 + (this.cantidadCuotaSeleccionada.interes / 100)) - this.totalVenta;
+
+       this.totalVenta = this.totalVenta - this.descuentoPorTarjeta + this.interesPorTarjeta;
+    }
+  }
+
+  public seleccionarTarjeta(tarjetaId: number){
+    const tarjeta = this.tarjetasRegistradas.find((tarjeta) => tarjeta.id == tarjetaId);
+    this.tarjetaSeleccionada = tarjeta ? tarjeta : new Tarjeta();
+  }
+
+  public seleccionarCuota(cuotaId: number) {
+    const cuota = this.tarjetaSeleccionada.cuotaPorTarjeta.find((cuota) => cuota.id == cuotaId);
+    this.cantidadCuotaSeleccionada = cuota ? cuota : new CuotaPorTarjeta();
+    this.calcularTotal();
   }
 
   public editarProductoEnVenta(producto: Producto){
@@ -229,6 +287,18 @@ export class RegistrarVentaComponent implements OnInit{
     });
   }
 
+  public obtenerClaseStock(producto: Producto): string {
+    if (producto.cantidadEnStock > 5) {
+      return 'stock-disponible';
+    } else if (producto.cantidadEnStock >= 1 && producto.cantidadEnStock <= 5) {
+      return 'stock-medio';
+    } else if (producto.cantidadEnStock === 0) {
+      return 'sin-stock';
+    } else {
+      return 'stock-bajo';
+    }
+  }
+
   public eliminarProductoDeVenta(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
     // Si el producto ya está en la lista, lo eliminamos y marcamos el seleccionado para venta en false
@@ -243,8 +313,8 @@ export class RegistrarVentaComponent implements OnInit{
       const venta: Venta = new Venta();
 
       // Seteamos valores de la venta
-      venta.usuario = new Usuario();
-      venta.usuario.id = this.txCliente.value ? this.txCliente.value : null;
+      venta.cliente = new Usuario();
+      venta.cliente.id = this.txCliente.value ? this.txCliente.value : null;
       venta.fecha = new Date();
       venta.formaDePago = new FormaDePago();
       venta.formaDePago.id = this.txFormaDePago.value;
@@ -256,6 +326,12 @@ export class RegistrarVentaComponent implements OnInit{
       venta.detalleVenta = [];
       venta.productos = this.productosSeleccionados;
       venta.idEmpleado = this.txEmpleado.value;
+
+      // Si el pago es con tarjeta se registran esos datos
+      venta.tarjeta = this.tarjetaSeleccionada.nombre;
+      venta.cantidadCuotas = this.cantidadCuotaSeleccionada.cantidadCuota;
+      venta.interes = this.cantidadCuotaSeleccionada.interes;
+      venta.descuento = this.cantidadCuotaSeleccionada.descuento;
 
       this.registrandoVenta = true;
 
@@ -395,5 +471,21 @@ export class RegistrarVentaComponent implements OnInit{
 
   get txBuscar(): FormControl {
     return this.form.get('txBuscar') as FormControl;
+  }
+
+  get txTarjeta(): FormControl {
+    return this.form.get('txTarjeta') as FormControl;
+  }
+
+  get txCuotas(): FormControl {
+    return this.form.get('txCuotas') as FormControl;
+  }
+
+  get formasDePagoEnum(): typeof FormasDePagoEnum {
+    return FormasDePagoEnum;
+  }
+
+  get tiposTarjetasEnum(): typeof TiposTarjetasEnum {
+    return TiposTarjetasEnum;
   }
 }

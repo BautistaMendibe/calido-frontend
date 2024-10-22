@@ -56,12 +56,12 @@ export class DetalleVentaComponent implements OnInit{
   private setearDatos() {
     this.txFecha.setValue(this.formatDate(this.venta.fecha));
     this.txFormaDePago.setValue(this.venta.formaDePago.nombre);
-    this.txTipoFactura.setValue(this.venta.comprobanteAfip.comprobante_tipo);
+    this.txTipoFactura.setValue(this.venta.facturacion.nombre);
     this.txMontoTotal.setValue(this.venta.montoTotal);
-    this.txCliente.setValue(this.venta.usuario.nombre);
-    this.txDniCliente.setValue(this.venta.usuario.dni);
-    this.txMailCliente.setValue(this.venta.usuario.mail);
-    this.txCondicionIvaCliente.setValue(this.venta.usuario.idCondicionIva);
+    this.txCliente.setValue( this.venta.cliente.nombre ? (this.venta.cliente.nombre + ' ' + this.venta.cliente.apellido) : 'Consumidor final');
+    this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');
+    this.txMailCliente.setValue(this.venta.cliente.mail ? this.venta.cliente.mail : 'No registrado');
+    this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
   }
 
   private formatDate(fecha: Date): string | null {
