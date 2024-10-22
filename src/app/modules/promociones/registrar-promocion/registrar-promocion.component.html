@@ -31,7 +31,9 @@
 
 
   <h3 class="subtitulo" *ngIf="promocion">Productos incluídos en la promoción:</h3>
-  <h3 class="subtitulo" *ngIf="!promocion">Seleccionar los productos incluídos:</h3>
+  <h3 class="subtitulo" *ngIf="!promocion">Selecciona los productos incluídos:</h3>
+  <mat-divider class="my-3"></mat-divider>
+
   <!-- loading -->
   <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
@@ -57,6 +59,14 @@
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta">
+
+            <ng-container matColumnDef="seleccionar">
+              <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Seleccionar">
+                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="imgProducto">
               <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
               <mat-cell *matCellDef="let producto">
@@ -74,14 +84,6 @@
               <mat-cell *matCellDef="let producto" data-label="Precio">$ {{ producto.precioFinalVenta }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="seleccionar">
-              <mat-header-cell *matHeaderCellDef>SELECCIONAR</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Seleccionar">
-                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
-              </mat-cell>
-            </ng-container>
-
-
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
 
@@ -97,6 +99,7 @@
   </mat-card>
 
   <br>
+  <mat-divider class="my-3"></mat-divider>
 
   <!-- Btn de cancelar y registrar -->
   <div class="row text-right">

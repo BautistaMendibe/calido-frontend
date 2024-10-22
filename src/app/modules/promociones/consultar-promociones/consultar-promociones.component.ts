@@ -7,7 +7,6 @@ import {RegistrarPromocionComponent} from "../registrar-promocion/registrar-prom
 import {FiltrosPromociones} from "../../../models/comandos/FiltrosPromociones.comando";
 import {PromocionesService} from "../../../services/promociones.service";
 import {Router} from "@angular/router";
-import {MessagesComponent} from "../../../shared/messages/messages.component";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {Producto} from "../../../models/producto.model";
@@ -72,7 +71,8 @@ export class ConsultarPromocionesComponent implements OnInit {
       {
         width: '80%',
         autoFocus: false,
-        height: '85vh',
+        maxHeight: '80vh',
+        height: 'auto',
         panelClass: 'custom-dialog-container',
         data: {
           referencia: this

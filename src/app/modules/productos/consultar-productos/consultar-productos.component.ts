@@ -98,7 +98,7 @@ export class ConsultarProductosComponent implements OnInit {
       {
         width: '85%',
         autoFocus: false,
-        height: '85vh',
+        height: 'auto',
         panelClass: 'custom-dialog-container',
         data: {
           referencia: this,

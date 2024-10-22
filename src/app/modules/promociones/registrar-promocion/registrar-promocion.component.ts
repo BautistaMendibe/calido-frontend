@@ -4,11 +4,8 @@ import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-promociones.component";
 import {Producto} from "../../../models/producto.model";
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import {MatTableDataSource} from "@angular/material/table";
-import {BuscarProductosComponent} from "../../productos/buscar-productos/buscar-productos.component";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
@@ -22,11 +19,10 @@ export class RegistrarPromocionComponent implements OnInit{
   public listaProductos: Producto[] = [];
   public productosSelecionados: Producto[] = [];
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public columnas: string[] = ['imgProducto', 'producto', 'precio', 'seleccionar'];
+  public columnas: string[] = ['seleccionar', 'imgProducto', 'producto', 'precio'];
   public isLoading: boolean = false;
   public promocion: Promocion;
   public esConsulta: boolean;
-
 
   constructor(
     private fb: FormBuilder,
