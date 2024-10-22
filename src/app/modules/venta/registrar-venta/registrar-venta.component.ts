@@ -105,16 +105,11 @@ export class RegistrarVentaComponent implements OnInit{
 
   private buscarUsuariosClientes() {
     const filtro: FiltrosEmpleados = new FiltrosEmpleados();
-    const clienteConsumidorFinal = new Usuario();
-    clienteConsumidorFinal.id = -1;
-    clienteConsumidorFinal.nombre = 'Consumidor';
-    clienteConsumidorFinal.apellido = 'Final';
-
-    this.clientes.push(clienteConsumidorFinal);
 
     this.usuariosService.consultarClientes(filtro).subscribe((usuarios) => {
-      this.clientes = [clienteConsumidorFinal, ...usuarios];
-      this.txCliente.setValue(clienteConsumidorFinal.id);
+      this.clientes = usuarios;
+      // Consumidor final por defecto
+      this.txCliente.setValue(-1);
     });
   }
 
