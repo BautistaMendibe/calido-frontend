@@ -60,8 +60,8 @@
             </ng-container>
 
             <ng-container matColumnDef="porcentajeDescuento">
-              <mat-header-cell *matHeaderCellDef>% DESCUENTO</mat-header-cell>
-              <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>DESCUENTO</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento" class="text-center">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="producto">

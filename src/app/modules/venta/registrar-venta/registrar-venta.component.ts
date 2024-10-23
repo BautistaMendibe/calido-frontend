@@ -368,7 +368,9 @@ export class RegistrarVentaComponent implements OnInit{
     // Establecer txCliente en null pero como intacto
     this.txCliente.setValue(null);
     this.txCliente.markAsPristine();
-    this.txCliente.markAsUntouched()
+    this.txCliente.markAsUntouched();
+
+    this.buscar();
   }
 
   public registrarProducto() {
