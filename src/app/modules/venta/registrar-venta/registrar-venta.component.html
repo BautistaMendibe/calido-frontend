@@ -77,7 +77,7 @@
               <!-- Precio del producto -->
               <div class="row align-items-center text-center mb-3">
                 <div class="col">
-                  <strong [ngClass]="!producto.seleccionadoParaVenta ? 'product-price' : 'product-price-seleccionado'" >$ {{producto.precioSinIVA | number:'1.2-2':'es-AR' }}</strong>
+                  <strong [ngClass]="!producto.seleccionadoParaVenta ? 'product-price' : 'product-price-seleccionado'" >$ {{producto.precioConIVA | number:'1.2-2':'es-AR' }}</strong>
                 </div>
               </div>
             </div>
