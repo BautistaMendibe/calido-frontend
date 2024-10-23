@@ -213,9 +213,11 @@
           </div>
         </div>
 
-        <!-- Resumen -->
-        <div class="container mt-4" *ngIf="productosSeleccionados.length > 0">
+        <!-- Resumen si pagas con tarjeta-->
+        <div class="container mt-4" *ngIf="productosSeleccionados.length > 0 && cantidadCuotaSeleccionada.id">
+
           <div class="summary-container">
+            <!--
             <div class="summary-row">
               <span>Subtotal</span>
               <span class="text-summary">$ {{ subTotal | number:'1.2-2':'es-AR' }}</span>
@@ -225,14 +227,14 @@
               <span>IVA (21,00%)</span>
               <span class="text-summary">$ {{ impuestoIva | number:'1.2-2':'es-AR' }}</span>
             </div>
-            <div *ngIf="cantidadCuotaSeleccionada.id">
-              <div class="dotted-line"></div>
-              <div class="summary-row">
+            -->
+            <div>
+              <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.descuento">
                 <span>Descuento por tarjeta ({{ this.cantidadCuotaSeleccionada.descuento ? (this.cantidadCuotaSeleccionada.descuento | number:'1.2-2':'es-AR') : 0 }}%)</span>
                 <span class="text-summary">$ {{ this.descuentoPorTarjeta | number:'1.2-2':'es-AR' }}</span>
               </div>
-              <div class="dotted-line"></div>
-              <div class="summary-row">
+              <div class="dotted-line" *ngIf="cantidadCuotaSeleccionada.descuento && cantidadCuotaSeleccionada.interes"></div>
+              <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.interes">
                 <span>Interés por tarjeta ({{this.cantidadCuotaSeleccionada.interes ? (this.cantidadCuotaSeleccionada.interes | number:'1.2-2':'es-AR') : 0}}%)</span>
                 <span class="text-summary">$ {{ this.interesPorTarjeta | number:'1.2-2':'es-AR' }}</span>
               </div>

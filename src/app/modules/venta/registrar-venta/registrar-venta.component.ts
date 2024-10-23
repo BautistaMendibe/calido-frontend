@@ -234,7 +234,8 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularTotal() {
-    this.totalVenta = this.subTotal + this.impuestoIva;
+    //this.totalVenta = this.subTotal + this.impuestoIva;
+    this.totalVenta = this.subTotal;
 
     if (this.cantidadCuotaSeleccionada?.id){
        this.descuentoPorTarjeta = this.totalVenta - this.totalVenta * (1 - (this.cantidadCuotaSeleccionada.descuento / 100));
