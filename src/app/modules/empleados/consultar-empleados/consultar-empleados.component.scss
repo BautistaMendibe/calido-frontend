@@ -1,8 +1,5 @@
 .custom-table {
-  min-width: 800px;  /* Ancho mínimo para la tabla */
-}
-
-.table-responsive {
+  min-width: 400px;  /* Ancho mínimo para la tabla */
   overflow-x: auto;  /* Permitir scroll horizontal */
 }
 
@@ -10,6 +7,7 @@
   .custom-table {
     width: 100%;
     overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+
   }
 }
 
@@ -20,6 +18,10 @@
   }
 }
 
+.mat-column-acciones {
+  min-width: 168px; /* Ajusta el tamaño para que no se corte el icono de borrar */
+}
+
 .botonR {
   margin-left: 1rem; /* Margen entre el título y el botón */
   padding: 0.5rem 1rem; /* Espacio dentro del botón */
@@ -28,6 +30,7 @@
 .mat-card {
   min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
   width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
 }
 
 .container {

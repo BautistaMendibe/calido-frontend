@@ -1,5 +1,5 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Notificar Promoción</p>
@@ -16,7 +16,7 @@
         <div class="col-md-12 d-flex">
           <div class="upload-container d-flex justify-content-center align-items-center mb-3">
             <img *ngIf="previewUrl" [src]="previewUrl" class="preview-img">
-            <span *ngIf="!previewUrl" class="upload-text">Arrastra una imagen aquí o haz clic para subir</span>
+            <span *ngIf="!previewUrl" class="upload-text"></span>
             <input type="file" class="file-input" (change)="onFileSelected($event)">
           </div>
           <div class="comment-container d-flex flex-column justify-content-center ml-3 w-100">

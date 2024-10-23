@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Comprobantes</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoComprobante()">Registrar nuevo comprobante</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoComprobante()">Registrar nuevo comprobante</button>
       </div>
     </div>
 
@@ -103,11 +103,11 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="comprobantes.length > 0">
+  <mat-card class="mat-card" *ngIf="comprobantes.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="fechaEmision">
               <mat-header-cell *matHeaderCellDef>FECHA DE EMISIÓN</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Fecha de emision">{{ comprobante.fechaEmision | date: 'dd/MM/yyyy' }}</mat-cell>

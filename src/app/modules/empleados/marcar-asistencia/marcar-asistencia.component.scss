@@ -47,3 +47,20 @@ button.button-logout[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.custom-table {
+  width: 100%;
+  min-width: 800px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+}
+
+@media (max-width: 450px) {
+  .asistencia-card {
+  width: 300px;
+  }
+
+  .mat-card-fondo-asistencia {
+    overflow: hidden;
+    height: 375px;
+    min-width: 360px;
+  }
+}

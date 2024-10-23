@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="d-flex justify-content-between align-items-center w-100">
         <p class="titulo">Cuentas Corrientes</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaCuenta()">Registrar cuenta corriente</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaCuenta()">Registrar cuenta corriente</button>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -47,11 +47,11 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="cuentas.length > 0">
+  <mat-card class="mat-card" *ngIf="cuentas.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="idCuenta">
               <mat-header-cell *matHeaderCellDef>NÚMERO DE CUENTA</mat-header-cell>
               <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.id }}</mat-cell>
@@ -74,7 +74,7 @@
                 $ {{ cuentaCorriente.balanceTotal | number:'1.2-2':'es-AR' }}
               </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="acciones">
+            <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let cuentaCorriente" data-label="Acciones">
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verCuentaCorriente(cuentaCorriente, false)">
