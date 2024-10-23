@@ -54,7 +54,6 @@ export class SidebarComponent implements OnInit {
   showFiller = false;
   public sideNavState = false;
   public linkText = false;
-  private timeout: any;
 
   constructor(
     private router: Router,
@@ -90,18 +89,15 @@ export class SidebarComponent implements OnInit {
   }
 
   onSinenavToggle() {
-    clearTimeout(this.timeout);
-    this.timeout = setTimeout(() => {
-      this.sideNavState = !this.sideNavState;
+    this.sideNavState = !this.sideNavState;
 
-      if (!this.sideNavState) {
-        this.colapsarSubmenus();
-      }
+    if (!this.sideNavState) {
+      this.colapsarSubmenus();
+    }
 
-      setTimeout(() => {
-        this.linkText = this.sideNavState;
-      }, 300);
-    }, 100);
+    setTimeout(() => {
+      this.linkText = this.sideNavState;
+    }, 300);
   }
 
   navigate(item: Menu) {
