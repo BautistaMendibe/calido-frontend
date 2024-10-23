@@ -91,7 +91,7 @@ export class RegistrarProductoComponent implements OnInit {
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
       txPrecioSinIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
-      txPrecioConIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
+      txPrecioConIva: [{ value: this.data.producto?.precioConIVA, disabled: true }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
       txPromocion: [this.data.producto?.promocion?.id, []],
     });
@@ -105,6 +105,12 @@ export class RegistrarProductoComponent implements OnInit {
 
     const costoFinal = costo * (1 + margenGanancia / 100) * (1 - porcentajeDescuento / 100);
     this.txPrecioSinIva.setValue(costoFinal.toFixed(2), { emitEvent: false });
+    this.calcularCostoFinalConIva(costoFinal);
+  }
+
+  private calcularCostoFinalConIva(costoFinalSinIva: number) {
+    const costoFinalConIva: number = costoFinalSinIva * 1.21;
+    this.txPrecioConIva.setValue(costoFinalConIva.toFixed(2), { emitEvent: false });
   }
 
   private buscarTiposProductos() {
@@ -181,6 +187,7 @@ export class RegistrarProductoComponent implements OnInit {
       nombre: this.txNombre.value,
       costo: parseFloat(this.txCosto.value) || 0,
       precioSinIVA: parseFloat(this.txPrecioSinIva.value) || 0,
+      precioConIVA: parseFloat(this.txPrecioConIva.value) || 0,
       descripcion: this.txDescripcion.value,
       codigoBarra: this.txCodigoBarras.value,
       imgProducto: this.productoImg as string,

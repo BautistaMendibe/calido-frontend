@@ -93,7 +93,7 @@
             <ng-container matColumnDef="precioBase">
               <mat-header-cell *matHeaderCellDef>PRECIO DE VENTA</mat-header-cell>
               <mat-cell *matCellDef="let producto">
-                $ {{ producto.precioSinIVA | number:'1.2-2':'es-AR' }}
+                $ {{ producto.precioConIVA | number:'1.2-2':'es-AR' }}
               </mat-cell>
             </ng-container>
             <ng-container matColumnDef="tipoProducto">

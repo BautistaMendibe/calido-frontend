@@ -259,7 +259,7 @@ export class RegistrarVentaComponent implements OnInit{
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '75%',
+        width: '90%',
         autoFocus: false,
         maxHeight: '80vh',
         panelClass: 'dialog-container',
@@ -377,7 +377,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '75%',
+        width: '90%',
         height: 'auto',
         autoFocus: false,
         maxHeight: '80vh',

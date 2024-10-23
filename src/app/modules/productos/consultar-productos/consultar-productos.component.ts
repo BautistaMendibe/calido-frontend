@@ -96,7 +96,7 @@ export class ConsultarProductosComponent implements OnInit {
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '85%',
+        width: '90%',
         autoFocus: false,
         height: 'auto',
         panelClass: 'custom-dialog-container',

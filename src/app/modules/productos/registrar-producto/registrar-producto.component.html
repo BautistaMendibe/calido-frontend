@@ -143,15 +143,14 @@
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>=</span>
       </div>
-      <div class="col-md-2">
+      <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Precio final de venta</mat-label>
-          <input type="text" matInput [formControl]="txPrecioSinIva" mask="separator.2" prefix="$" thousandSeparator="," />
+          <mat-label>Precio final de venta (+21%)</mat-label>
+          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$" thousandSeparator="," />
         </mat-form-field>
       </div>
     </div>
 
-    <mat-divider></mat-divider>
     <br>
 
     <div class="row text-right mt-3 mb-3">
