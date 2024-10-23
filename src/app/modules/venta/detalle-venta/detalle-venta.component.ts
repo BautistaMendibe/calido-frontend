@@ -18,8 +18,6 @@ export class DetalleVentaComponent implements OnInit{
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public columnas: string[] = ['imgProducto', 'producto', 'cantidad', 'subTotal'];
 
-
-
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
@@ -42,6 +40,7 @@ export class DetalleVentaComponent implements OnInit{
 
   private crearFormulario() {
     this.form = this.fb.group({
+      txNumeroVenta: ['', []],
       txFecha: ['', []],
       txFormaDePago: ['', []],
       txTipoFactura: ['', []],
@@ -54,6 +53,7 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   private setearDatos() {
+    this.txNumeroVenta.setValue(this.venta.id)
     this.txFecha.setValue(this.formatDate(this.venta.fecha));
     this.txFormaDePago.setValue(this.venta.formaDePago.nombre);
     this.txTipoFactura.setValue(this.venta.facturacion.nombre);
@@ -78,7 +78,6 @@ export class DetalleVentaComponent implements OnInit{
   public cerrar() {
     this.dialogRef.close();
   }
-
 
   // Getters
   get txFecha(): FormControl {
@@ -111,6 +110,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txCondicionIvaCliente(): FormControl {
     return this.form.get('txCondicionIvaCliente') as FormControl;
+  }
+
+  get txNumeroVenta(): FormControl {
+    return this.form.get('txNumeroVenta') as FormControl;
   }
 
 }

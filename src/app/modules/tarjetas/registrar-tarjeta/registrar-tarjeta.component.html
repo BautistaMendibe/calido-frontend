@@ -83,25 +83,6 @@
                   </mat-cell>
                 </ng-container>
 
-                <!-- Columna de recargo -->
-                <ng-container matColumnDef="recargo">
-                  <mat-header-cell *matHeaderCellDef>% RECARGO</mat-header-cell>
-                  <mat-cell *matCellDef="let cuota">
-                    <div (click)="toggleEdit(cuota, 'recargo')" class="editable-cell">
-                      <span *ngIf="!cuota.isEditingRecargo">{{ cuota.recargo }}%</span>
-                      <input *ngIf="cuota.isEditingRecargo"
-                             type="number"
-                             [(ngModel)]="cuota.recargo"
-                             [disabled]="!isSelected(cuota)"
-                             [ngModelOptions]="{standalone: true}"
-                             (blur)="disableEdit(cuota, 'recargo')"
-                             (keydown.enter)="disableEdit(cuota, 'recargo')"
-                             (input)="cuota.recargo = Math.max(0, cuota.recargo)"
-                             class="full-width-input" />
-                    </div>
-                  </mat-cell>
-                </ng-container>
-
                 <!-- Columna de descuento -->
                 <ng-container matColumnDef="descuento">
                   <mat-header-cell *matHeaderCellDef>% DESCUENTO</mat-header-cell>

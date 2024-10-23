@@ -2,11 +2,11 @@
   <br>
   <div class="row">
     <div class="col-sm-6 mt-2">
-      <p class="titulo">Consultar venta N° {{venta.id}}</p>
+      <p class="titulo">Consultar venta</p>
     </div>
     <div class="col-sm-6">
       <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
-        <button mat-icon-button color="primary" matTooltip="Deshacer verta" (click)="desHacerVenta()">
+        <button mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta()">
           <mat-icon class="eliminar">settings_backup_restore</mat-icon>
         </button>
         <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
@@ -16,13 +16,22 @@
     </div>
   </div>
 
-  <mat-divider></mat-divider>
+  <br>
+
+  <h3 class="subtitulo">Datos generales:</h3>
+  <mat-divider class="my-3"></mat-divider>
   <br>
 
   <form [formGroup]="form">
     <div class="row">
-      <h3 class="subtitulo">Datos generales:</h3>
-      <br>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número de venta</mat-label>
+          <input type="text" matInput [formControl]="txNumeroVenta"/>
+        </mat-form-field>
+      </div>
+
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de venta</mat-label>
@@ -37,14 +46,15 @@
         </mat-form-field>
       </div>
 
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Tipo de factura</mat-label>
           <input type="text" matInput [formControl]="txTipoFactura"/>
         </mat-form-field>
       </div>
-    </div>
-    <div class="row">
+
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Monto total</mat-label>
@@ -53,12 +63,13 @@
       </div>
     </div>
 
-    <mat-divider></mat-divider>
+    <br>
+    <h3 class="subtitulo">Cliente:</h3>
+    <mat-divider class="my-3"></mat-divider>
     <br>
 
     <div class="row">
-      <h3 class="subtitulo">Cliente:</h3>
-      <br>
+
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Cliente</mat-label>
@@ -79,10 +90,10 @@
       </div>
     </div>
 
-    <mat-divider></mat-divider>
     <br>
-
     <h3 class="subtitulo">Productos vendidos:</h3>
+    <mat-divider class="my-3"></mat-divider>
+
     <mat-card>
       <mat-card-content>
         <div class="row">
@@ -126,7 +137,9 @@
       </mat-card-content>
     </mat-card>
 
-    <br><br>
+    <br>
+    <mat-divider class="my-3"></mat-divider>
+
     <div class="row text-right">
       <div class="col d-flex justify-content-end">
         <button mat-button color="accent" class="btn round" (click)="cerrar()" id="btnLimpiarFiltro">
