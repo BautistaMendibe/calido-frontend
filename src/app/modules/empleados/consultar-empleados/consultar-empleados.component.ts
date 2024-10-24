@@ -76,8 +76,9 @@ export class ConsultarEmpleadosComponent implements OnInit {
       {
         width: '75%',
         autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
+        height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         data: {
           referencia: this,
           esConsulta: false,
@@ -93,6 +94,8 @@ export class ConsultarEmpleadosComponent implements OnInit {
       {
         width: '75%',
         height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         autoFocus: false,
         data: {
           usuario: usuario,

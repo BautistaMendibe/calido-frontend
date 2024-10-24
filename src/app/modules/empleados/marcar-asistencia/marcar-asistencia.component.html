@@ -4,7 +4,7 @@
   <mat-card class="mat-elevation-z12 p-4">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Control de Presencia</p>
+        <p class="titulo">Panel de Empleado</p>
       </div>
     </div>
 
@@ -234,7 +234,7 @@
                     <mat-icon *ngIf="licencia.estadoLicencia.id === 2" class="accepted-icon" matTooltip="El empleador ha aceptado su solicitud de licencia.">
                       check_circle
                     </mat-icon>
-                    <mat-icon *ngIf="licencia.estadoLicencia.id === 3" class="rejected-icon" matTooltip="El empleador ha rechazado su solicitud de licencia.">
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 3" class="rejected-icon" matTooltip="El empleador ha denegado su solicitud de licencia.">
                       cancel
                     </mat-icon>
                     {{ licencia.estadoLicencia.nombre }}
