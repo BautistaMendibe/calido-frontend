@@ -198,11 +198,15 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularSubTotal() {
+    //this.subTotal = 0;
+    //this.productosSeleccionados.forEach((producto) => {
+    //  this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
+    //});
+    //this.impuestoIva = this.subTotal * 0.21;
     this.subTotal = 0;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
+      this.subTotal += (producto.precioConIVA * producto.cantidadSeleccionada);
     });
-    this.impuestoIva = this.subTotal * 0.21;
     this.calcularTotal();
   }
 
