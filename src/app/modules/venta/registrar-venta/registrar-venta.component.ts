@@ -278,7 +278,7 @@ export class RegistrarVentaComponent implements OnInit{
       if (respusta) {
         this.productosSeleccionados.map((producto: Producto) => {
           if (producto.id == respusta.id) {
-            producto.precioSinIVA = respusta.precioSinIVA;
+            producto.precioConIVA = respusta.precioConIVA;
             producto.promocion = respusta.promocion;
           }
         })
