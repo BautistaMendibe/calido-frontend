@@ -27,7 +27,7 @@ import {
 import {ConsultarInventarioComponent} from "./modules/inventario/consultar-inventario/consultar-inventario.component";
 import {ConsultarTarjetasComponent} from "./modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component";
 import {ConsultarVentasComponent} from "./modules/venta/consultar-ventas/consultar-ventas.component";
-import {ArqueoCajaComponent} from "./modules/gerencia/arqueo-caja/arqueo-caja.component";
+import {ConsultarArqueoCajaComponent} from "./modules/gerencia/consultar-arqueo-caja/consultar-arqueo-caja.component";
 import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consultar-caja.component";
 
 const routes: Routes = [
@@ -52,7 +52,7 @@ const routes: Routes = [
   {path:'consultar-inventario', component:ConsultarInventarioComponent},
   {path:'consultar-tarjetas', component:ConsultarTarjetasComponent},
   {path:'consultar-ventas', component: ConsultarVentasComponent},
-  {path:'arqueo-caja', component:ArqueoCajaComponent},
+  {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
   {path:'consultar-cajas', component:ConsultarCajaComponent}
 ];
 

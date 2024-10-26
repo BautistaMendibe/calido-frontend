@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ArqueoCajaComponent } from './arqueo-caja.component';
+import { ConsultarArqueoCajaComponent } from './consultar-arqueo-caja.component';
 
 describe('ArqueoCajaComponent', () => {
-  let component: ArqueoCajaComponent;
-  let fixture: ComponentFixture<ArqueoCajaComponent>;
+  let component: ConsultarArqueoCajaComponent;
+  let fixture: ComponentFixture<ConsultarArqueoCajaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ArqueoCajaComponent]
+      declarations: [ConsultarArqueoCajaComponent]
     })
     .compileComponents();
-    
-    fixture = TestBed.createComponent(ArqueoCajaComponent);
+
+    fixture = TestBed.createComponent(ConsultarArqueoCajaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

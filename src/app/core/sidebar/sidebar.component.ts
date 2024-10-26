@@ -30,8 +30,8 @@ export class SidebarComponent implements OnInit {
         {id: 1, nombre: 'Consultar comprobantes', path:'/consultar-comprobante', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Consultar inventario', path:'/consultar-inventario', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 5, nombre: 'Caja', path:'arqueo-caja', icon: 'store', activo: false, subMenu: [
-        {id: 1, nombre: 'Apertura de Caja', path:'/arqueo-caja', icon: '', activo: false, subMenu: []},
+    {id: 5, nombre: 'Caja', path:'consultar-arqueo-caja', icon: 'store', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar Arqueos de Caja', path:'/consultar-arqueo-caja', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Consultar cajas', path:'/consultar-cajas', icon: '', activo: false, subMenu: []}
       ]},
     {id: 6, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
