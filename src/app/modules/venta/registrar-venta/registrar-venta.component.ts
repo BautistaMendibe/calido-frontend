@@ -344,7 +344,7 @@ export class RegistrarVentaComponent implements OnInit{
         if (respuesta.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
           venta.id = respuesta.id;
-          //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
+          this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
           this.registrandoVenta = false;
           this.limpiarVenta();
         } else {
@@ -370,10 +370,9 @@ export class RegistrarVentaComponent implements OnInit{
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
 
-    // Establecer txCliente en null pero como intacto
-    this.txCliente.setValue(null);
-    this.txCliente.markAsPristine();
-    this.txCliente.markAsUntouched();
+    // Establecer txCliente en consumidor final
+    this.txCliente.setValue(-1);
+
 
     this.buscar();
   }
