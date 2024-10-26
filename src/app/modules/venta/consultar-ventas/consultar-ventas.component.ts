@@ -142,6 +142,17 @@ export class ConsultarVentasComponent implements OnInit{
     );
   }
 
+  public facturarVenta(venta: Venta) {
+    this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
+      if (respuesta.mensaje == 'OK') {
+        this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
+        this.buscarVentas();
+      } else {
+        this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
+      }
+    });
+  }
+
   // Getters
   get txNumero(): FormControl {
     return this.form.get('txNumero') as FormControl;

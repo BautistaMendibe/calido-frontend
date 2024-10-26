@@ -136,6 +136,9 @@
                 <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante(venta)">
                   <mat-icon class="imprimir">print</mat-icon>
                 </button>
+                <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null" mat-icon-button color="primary"  matTooltip="Facturar venta" (click)="facturarVenta(venta)">
+                  <mat-icon class="facturar">attach_money</mat-icon>
+                </button>
               </mat-cell>
             </ng-container>
 
