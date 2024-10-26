@@ -46,7 +46,11 @@
           <mat-table [dataSource]="tableDataSource" matSort>
             <ng-container matColumnDef="nombre">
               <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
-              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let caja">{{ caja.nombre }}</mat-cell>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+              <mat-header-cell *matHeaderCellDef>DESCRIPCIÓN</mat-header-cell>
+              <mat-cell *matCellDef="let caja">{{ caja.descripcion }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>

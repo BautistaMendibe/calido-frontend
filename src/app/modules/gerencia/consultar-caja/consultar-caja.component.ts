@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Subject} from "rxjs";
@@ -16,12 +16,12 @@ import {CajasService} from "../../../services/cajas.service";
   templateUrl: './consultar-caja.component.html',
   styleUrl: './consultar-caja.component.scss'
 })
-export class ConsultarCajaComponent {
+export class ConsultarCajaComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Caja> = new MatTableDataSource<Caja>([]);
   public form: FormGroup;
   public cajas: Caja[] = [];
-  public columnas: string[] = ['nombre', 'acciones'];
+  public columnas: string[] = ['nombre', 'descripcion', 'acciones'];
   private filtros: FiltrosCajas;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -33,6 +33,7 @@ export class ConsultarCajaComponent {
     private cajasService: CajasService) {
     this.form = this.fb.group({
       txNombre: [''],
+      txDescripcion: [''],
     });
     this.filtros = new FiltrosCajas();
   }
@@ -44,12 +45,14 @@ export class ConsultarCajaComponent {
 
   private createForm() {
     this.form = this.fb.group({
-      txNombre: ['']
+      txNombre: [''],
+      txDescripcion: [''],
     });
   }
 
   public limpiarFiltros() {
     this.form.reset();
+    this.buscar();
   }
 
   public buscar() {
@@ -127,5 +130,9 @@ export class ConsultarCajaComponent {
   // Región getters
   get txNombre(): FormControl {
     return this.form.get('txNombre') as FormControl;
+  }
+
+  get txDescripcion(): FormControl {
+    return this.form.get('txDescripcion') as FormControl;
   }
 }
