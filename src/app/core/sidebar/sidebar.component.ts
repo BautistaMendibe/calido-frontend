@@ -30,9 +30,9 @@ export class SidebarComponent implements OnInit {
         {id: 1, nombre: 'Consultar comprobantes', path:'/consultar-comprobante', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Consultar inventario', path:'/consultar-inventario', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 5, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
-        {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
+    {id: 5, nombre: 'Caja', path:'arqueo-caja', icon: 'store', activo: false, subMenu: [
+        {id: 1, nombre: 'Apertura de Caja', path:'/arqueo-caja', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar cajas', path:'/consultar-cajas', icon: '', activo: false, subMenu: []}
       ]},
     {id: 6, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
     {id: 7, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
@@ -44,10 +44,14 @@ export class SidebarComponent implements OnInit {
     {id: 10, nombre: 'Clientes', path:'/consultar-clientes', icon: 'person_add', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar clientes', path:'/consultar-clientes', icon: '', activo: false, subMenu: []},
       ]},
-    {id: 11, nombre: 'Cuentas Corrientes', path:'consultar-cuentas-corrientes', icon: 'account_balance', activo: false, subMenu: []},
-    {id: 12, nombre: 'Tarjetas', path:'consultar-tarjetas', icon: 'credit_card', activo: false, subMenu: []},
-    {id: 13, nombre: 'Panel de Empleado', path:'/panel-empleado', icon: 'event_available', activo: false, requiresAdmin: true, subMenu: []},
-    {id: 14, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
+    {id: 11, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
+      ]},
+    {id: 12, nombre: 'Cuentas Corrientes', path:'consultar-cuentas-corrientes', icon: 'account_balance', activo: false, subMenu: []},
+    {id: 13, nombre: 'Tarjetas', path:'consultar-tarjetas', icon: 'credit_card', activo: false, subMenu: []},
+    {id: 14, nombre: 'Panel de Empleado', path:'/panel-empleado', icon: 'event_available', activo: false, requiresAdmin: true, subMenu: []},
+    {id: 15, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;

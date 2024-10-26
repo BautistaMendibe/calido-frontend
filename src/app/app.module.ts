@@ -56,6 +56,9 @@ import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consu
 import { DetalleVentaComponent } from './modules/venta/detalle-venta/detalle-venta.component';
 import { SolicitarLicenciaComponent } from './modules/empleados/solicitar-licencia/solicitar-licencia.component';
 import { RegistrarLicenciaComponent } from './modules/empleados/registrar-licencia/registrar-licencia.component';
+import { ArqueoCajaComponent } from './modules/gerencia/arqueo-caja/arqueo-caja.component';
+import { ConsultarCajaComponent } from './modules/gerencia/consultar-caja/consultar-caja.component';
+import { RegistrarCajaComponent } from './modules/gerencia/registrar-caja/registrar-caja.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -98,7 +101,10 @@ registerLocaleData(localeEs, 'es');
     ConsultarVentasComponent,
     DetalleVentaComponent,
     SolicitarLicenciaComponent,
-    RegistrarLicenciaComponent
+    RegistrarLicenciaComponent,
+    ArqueoCajaComponent,
+    ConsultarCajaComponent,
+    RegistrarCajaComponent
   ],
   imports: [
     BrowserModule,
