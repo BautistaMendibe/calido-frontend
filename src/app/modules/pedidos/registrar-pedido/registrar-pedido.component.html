@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -105,12 +105,12 @@
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0">
+    <mat-card class="mat-card" *ngIf="productos.length > 0">
       <mat-card-content>
         <div class="row">
 
           <div class="col-md-12">
-            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
+            <mat-table [dataSource]="dataSourceProductos" matSort class="custom-table" [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
               <ng-container matColumnDef="imgProducto">
                 <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
@@ -141,7 +141,7 @@
               </ng-container>
               <ng-container matColumnDef="cantidad">
                 <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
-                <mat-cell *matCellDef="let producto" data-label="Cantidad">
+                <mat-cell *matCellDef="let producto" data-label="Cantidad" class="cantidad-cell">
                   <div class="d-flex align-items-center justify-content-right">
                     <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
                     <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">

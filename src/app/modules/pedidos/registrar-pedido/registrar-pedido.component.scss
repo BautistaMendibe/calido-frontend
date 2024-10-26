@@ -41,3 +41,48 @@
   pointer-events: none;
   opacity: 0.6;
 }
+
+.mat-card {
+  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+    min-width: 900px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+
+  }
+  .cantidad-cell {
+    background-color: #cd9d0a;
+  }
+
+  .new-product-btn {
+    height: 40px;
+    float: right;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-color: #cd9d0a;
+  }
+
+  .mat-card {
+    min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+    width: 100%; /* Ancho completo hasta que alcance el mínimo */
+    overflow-x: auto;
+  }
+}
+
+.form-emergente {
+  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
