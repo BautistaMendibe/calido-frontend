@@ -73,6 +73,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   public registrarArqueo() {
     if (this.form.valid) {
       const arqueo = this.construirArqueo();
+      arqueo.idEstadoArqueo = 1;
       this.cajasService.registrarArqueo(arqueo).subscribe((respuesta) => {
         this.gestionarRespuesta(respuesta, 'El arqueo se registró con éxito');
       });
