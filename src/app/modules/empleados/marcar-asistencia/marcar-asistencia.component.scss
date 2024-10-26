@@ -72,3 +72,9 @@ button.button-logout[disabled] {
   display: inline-block;
   position: relative;
 }
+
+.eliminar-btn[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}

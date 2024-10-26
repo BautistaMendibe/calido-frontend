@@ -253,7 +253,7 @@
                 <ng-container matColumnDef="acciones">
                   <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
-                    <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarLicencia(licencia.id)">
+                    <button class="eliminar-btn" mat-icon-button color="primary" matTooltip="Eliminar" [disabled]="licencia.estadoLicencia.id !== 1" (click)="eliminarLicencia(licencia.id)">
                       <mat-icon class="eliminar">delete</mat-icon>
                     </button>
                     <button mat-icon-button [matMenuTriggerFor]="licenciaMenu" matTooltip="Opciones">

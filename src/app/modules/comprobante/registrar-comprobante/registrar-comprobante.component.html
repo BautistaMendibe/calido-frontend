@@ -87,39 +87,56 @@
     </div>
 
     <!-- Selector de órdenes de compra para ese proveedor -->
-    <div class="row" *ngFor="let filaPedidos of agruparPedidos(listaPedidosPorProveedor, 4)">
-      <div class="col-12 col-md-6 col-lg-3 p-4" *ngFor="let pedido of filaPedidos"> <!-- 4 columnas por fila -->
-        <div
-          class="card pedido-card"
-          [ngClass]="{ 'selected-pedido-card': pedido.id === numeroOrdenSeleccionada }"
-          (click)="seleccionarPedido(pedido.id)"
-        >
-          <!-- Contenido del pedido -->
-          <div class="row align-items-center text-center my-3 pedido-id">
-            <div class="col">
-              <strong>Orden de compra:</strong> {{ pedido.id }}
+    <div class="row">
+      <ng-container *ngIf="listaPedidosPorProveedor.length > 0; else noPedidos">
+        <ng-container *ngFor="let filaPedidos of agruparPedidos(listaPedidosPorProveedor, 4)">
+          <div class="col-12 col-md-6 col-lg-3 p-4" *ngFor="let pedido of filaPedidos"> <!-- 4 columnas por fila -->
+            <div
+              class="card pedido-card"
+              [ngClass]="{ 'selected-pedido-card': pedido.id === numeroOrdenSeleccionada }"
+              (click)="seleccionarPedido(pedido.id)"
+            >
+              <!-- Contenido del pedido -->
+              <div class="row align-items-center text-center my-3 pedido-id">
+                <div class="col">
+                  <strong>Orden de compra:</strong> {{ pedido.id }}
+                </div>
+              </div>
+
+              <div class="row align-items-center text-center mb-3 pedido-fecha">
+                <div class="col">
+                  <strong>Fecha Emisión:</strong> {{ pedido.fechaEmision | date:'shortDate' }}
+                </div>
+              </div>
+
+              <div class="row align-items-center text-center mb-3 pedido-total">
+                <div class="col">
+                  <strong>Total:</strong> ${{ pedido.total }}
+                </div>
+              </div>
+
+              <div class="row align-items-center text-center mb-3 pedido-id">
+                <div class="col">
+                  <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+                </div>
+              </div>
             </div>
           </div>
+        </ng-container>
+      </ng-container>
 
-          <div class="row align-items-center text-center mb-3 pedido-fecha">
-            <div class="col">
-              <strong>Fecha Emisión:</strong> {{ pedido.fechaEmision | date:'shortDate' }}
-            </div>
-          </div>
-
-          <div class="row align-items-center text-center mb-3 pedido-total">
-            <div class="col">
-              <strong>Total:</strong> ${{ pedido.total }}
-            </div>
-          </div>
-
-          <div class="row align-items-center text-center mb-3 pedido-estado">
-            <div class="col">
-              <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+      <ng-template #noPedidos>
+        <div class="col-12 p-4">
+          <div class="card selected-pedido-card text-center no-pedidos-card">
+            <div class="row align-items-center my-3">
+              <div class="col">
+                <span *ngIf="!txProveedor.value">Selecciona un proveedor para visualizar los pedidos a los que puedes registrarle un comprobante</span>
+                <span *ngIf="txProveedor.value">No hay pedidos creados para el proveedor seleccionado</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-template>
     </div>
 
     <mat-divider class="my-3" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)"></mat-divider>
