@@ -5,6 +5,7 @@ export class Arqueo {
   id: number;
   fechaApertura: Date;
   horaApertura: Date;
+  montoInicial: number;
   horaCierre: Date;
   sistema: number;
   usuario: number;
@@ -19,6 +20,7 @@ export class Arqueo {
     id?: number,
     fechaApertura?: Date,
     horaApertura?: Date,
+    montoInicial?: number,
     horaCierre?: Date,
     sistema?: number,
     usuario?: number,
@@ -31,6 +33,7 @@ export class Arqueo {
     this.id = id!;
     this.fechaApertura = fechaApertura!;
     this.horaApertura = horaApertura!;
+    this.montoInicial = montoInicial!;
     this.horaCierre = horaCierre!;
     this.sistema = sistema!;
     this.usuario = usuario!;
