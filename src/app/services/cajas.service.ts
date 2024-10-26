@@ -6,7 +6,6 @@ import {SpResult} from "../models/resultadoSp.model";
 import {FiltrosCajas} from "../models/comandos/FiltrosCaja.comando";
 import {Caja} from "../models/Caja.model";
 
-
 @Injectable({
   providedIn: 'root'
 })
@@ -26,5 +25,9 @@ export class CajasService {
 
   public eliminarCaja(idCaja: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-caja/${idCaja}`);
+  }
+
+  public modificarCaja(caja: Caja): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-caja`, caja);
   }
 }
