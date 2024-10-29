@@ -77,7 +77,8 @@ export class ConsultarConfiguracionesComponent implements OnInit {
           condicionIva: configuracion.condicionIva,
           contrasenaInstagram: configuracion.contrasenaInstagram,
           logo: configuracion.logo,
-          usuarioInstagram: configuracion.usuarioInstagram
+          usuarioInstagram: configuracion.usuarioInstagram,
+          facturacionAutomatica: configuracion.facturacionAutomatica
         });
       },
       error: (err) => {
@@ -166,6 +167,7 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       this.ciudad.value,
       this.provincia.value,
       this.codigoPostal.value,
+      this.facturacionAutomatica.value
     );
   }
 
