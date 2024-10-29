@@ -183,8 +183,10 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public aumentarCantidad(producto: Producto) {
-    producto.cantidadSeleccionada++;
-    this.calcularSubTotal();
+    if (producto.cantidadSeleccionada < producto.cantidadEnStock) {
+      producto.cantidadSeleccionada++;
+      this.calcularSubTotal();
+    }
   }
 
   public disminuirCantidad(producto: Producto) {
