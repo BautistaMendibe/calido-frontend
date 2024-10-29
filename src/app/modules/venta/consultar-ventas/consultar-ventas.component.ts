@@ -12,6 +12,7 @@ import {TipoFactura} from "../../../models/tipoFactura.model";
 import {Router} from "@angular/router";
 import {DetalleVentaComponent} from "../detalle-venta/detalle-venta.component";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-consultar-ventas',
@@ -35,7 +36,8 @@ export class ConsultarVentasComponent implements OnInit{
     private dialog: MatDialog,
     private notificacionService: SnackBarService,
     private ventasService: VentasService,
-    private router: Router) {
+    private router: Router,
+    private notificationDialogService: NotificationService) {
     this.filtros = new FiltrosVentas();
     this.form = new FormGroup({});
   }
@@ -112,7 +114,20 @@ export class ConsultarVentasComponent implements OnInit{
   }
 
   public desHacerVenta(venta: Venta) {
-
+    this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Generar nota de crédito')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
+          //  if (respuesta.mensaje == 'OK') {
+          //    this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
+          //    this.buscarVentas();
+          //  } else {
+          //    this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
+          //  }
+          //});
+        }
+      });
   }
 
   public imprimirComprobante(venta: Venta) {
@@ -143,14 +158,20 @@ export class ConsultarVentasComponent implements OnInit{
   }
 
   public facturarVenta(venta: Venta) {
-    this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
-        this.buscarVentas();
-      } else {
-        this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
-      }
-    });
+    this.notificationDialogService.confirmation('¿Desea facturar esta venta?', 'Facturar venta')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
+              this.buscarVentas();
+            } else {
+              this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
+            }
+          });
+        }
+      });
   }
 
   // Getters
