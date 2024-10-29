@@ -51,7 +51,8 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       condicionIva: [''],
       logo: [null],
       contrasenaInstagram: [''],
-      usuarioInstagram: ['']
+      usuarioInstagram: [''],
+      facturacionAutomatica: ['']
     });
   }
 
@@ -274,6 +275,10 @@ export class ConsultarConfiguracionesComponent implements OnInit {
 
   get usuarioInstagram(): FormControl {
     return this.form.get('usuarioInstagram') as FormControl;
+  }
+
+  get facturacionAutomatica(): FormControl {
+    return this.form.get('facturacionAutomatica') as FormControl;
   }
 
 }
