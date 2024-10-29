@@ -39,8 +39,11 @@
         <div class="row">
           <div class="col-12 col-md-6 col-lg-4 p-4" *ngFor="let producto of productosFiltrados | slice:0:30"> <!-- Ajustar columnas para pantallas pequeñas -->
             <div class="card product-card"
-                 [ngClass]="{'selected-card': producto.seleccionadoParaVenta}"
-                 (click)="seleccionarProducto(producto)">
+                 [ngClass]="{
+                    'selected-card': producto.seleccionadoParaVenta,
+                    'producto-sin-stock': producto.cantidadEnStock === 0
+                  }"
+                 (click)="producto.cantidadEnStock > 0 && seleccionarProducto(producto)">
 
               <!-- Círculo con el número en la esquina superior derecha -->
               <div *ngIf="producto.seleccionadoParaVenta"
