@@ -11,6 +11,8 @@ import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
 import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
+import {Caja} from "../../../models/Caja.model";
+import {RegistrarCajaComponent} from "../../gerencia/registrar-caja/registrar-caja.component";
 
 @Component({
   selector: 'app-consultar-clientes',
@@ -80,7 +82,7 @@ export class ConsultarClientesComponent implements OnInit {
       {
         width: '75%',
         autoFocus: false,
-        height: '85vh',
+        height: '80vh',
         panelClass: 'custom-dialog-container',
         data: {
           referencia: this,
@@ -95,6 +97,25 @@ export class ConsultarClientesComponent implements OnInit {
         this.buscar();
       }
     });
+  }
+
+  public verUsuario(usuario: Usuario, editar: boolean) {
+    this.dialog.open(
+      RegistrarClientesComponent,
+      {
+        width: '75%',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
+        autoFocus: false,
+        data: {
+          usuario: usuario,
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar,
+          editar: editar,
+        }
+      }
+    );
   }
 
   public eliminarUsuario(idUsuario: number) {
