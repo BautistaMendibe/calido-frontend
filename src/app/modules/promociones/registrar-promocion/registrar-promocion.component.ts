@@ -18,6 +18,7 @@ export class RegistrarPromocionComponent implements OnInit{
   public form: FormGroup;
   public listaProductos: Producto[] = [];
   public productosSelecionados: Producto[] = [];
+  public productosSeleccionadosOriginales: Producto[] = [];
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public columnas: string[] = ['seleccionar', 'imgProducto', 'producto', 'precio'];
   public isLoading: boolean = false;
@@ -96,6 +97,7 @@ export class RegistrarPromocionComponent implements OnInit{
     this.txNombre.setValue(this.promocion.nombre);
     this.txPorcentajeDescuento.setValue(this.promocion.porcentajeDescuento);
     this.productosSelecionados = this.promocion.productos;
+    this.productosSeleccionadosOriginales = [...this.productosSelecionados];
     if (this.esConsulta) {
       this.form.disable();
     }
@@ -208,10 +210,15 @@ export class RegistrarPromocionComponent implements OnInit{
       promocion.id = this.promocion.id;
       promocion.nombre = this.txNombre.value;
       promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
-      promocion.productos = this.productosSelecionados;
+
+      const productosAgregados = this.productosSelecionados;
+      promocion.productos = productosAgregados;
+
+      promocion.productosEliminados = this.productosSeleccionadosOriginales.filter(producto =>
+        !this.productosSelecionados.includes(producto)
+      );
 
       this.promocionesService.modificarPromocion(promocion).subscribe((respuesta) => {
-        console.log(respuesta);
         if (respuesta.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('La promoción se modificó con éxito');
           this.dialogRef.close(true);
