@@ -85,6 +85,9 @@ export class RegistrarPromocionComponent implements OnInit{
       }
 
       this.tableDataSource.data = this.listaProductos;
+
+      this.ordenarTablaPorSeleccionados();
+
       this.isLoading = false;
     });
   }
@@ -107,6 +110,17 @@ export class RegistrarPromocionComponent implements OnInit{
     });
   }
 
+  public validarPorcentaje() {
+    const value = this.txPorcentajeDescuento.value;
+
+    // Verifica si el valor es un número y está fuera de los límites
+    if (value && (Number(value) < 0 || Number(value) > 100)) {
+      // Si el valor es menor que 0 o mayor que 100, lo ajusta
+      this.txPorcentajeDescuento.setValue(Math.max(0, Math.min(100, Number(value))));
+    }
+  }
+
+
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSelecionados.findIndex(p => p.id === producto.id);
     if (index > -1) {
@@ -116,6 +130,21 @@ export class RegistrarPromocionComponent implements OnInit{
       this.productosSelecionados.push(producto);
       producto.estaEnPromocion = true;
     }
+
+    // Ordenar productos: primero los que están en promoción
+    this.ordenarTablaPorSeleccionados();
+  }
+
+  private ordenarTablaPorSeleccionados() {
+    const productosOrdenados = this.tableDataSource.data.sort((a, b) => {
+      if (a.estaEnPromocion === b.estaEnPromocion) {
+        return 0; // Si ambos tienen el mismo estado, no cambiar el orden
+      }
+      return a.estaEnPromocion ? -1 : 1; // a va antes que b si a está en promoción
+    });
+
+    // Actualizar la data de MatTableDataSource
+    this.tableDataSource.data = productosOrdenados;
   }
 
   public registrarNuevoProducto() {
@@ -169,14 +198,28 @@ export class RegistrarPromocionComponent implements OnInit{
   }
 
   public modificarPromocion() {
-    //this.promocionesService.modificarPromocion(this.promocion).subscribe((respuesta) => {
-    //  if (respuesta.mensaje == 'OK') {
-    //    this.notificacionService.openSnackBarSuccess('La promoción se modificó con éxito');
-    //    this.dialogRef.close(true);
-    //  } else {
-    //    this.notificacionService.openSnackBarError('Error al modificar la promoción, intentelo nuevamente');
-    //  }
-    //})
+    if (this.form.valid) {
+      if (this.productosSelecionados.length == 0) {
+        this.notificacionService.openSnackBarError('Debe seleccionar al menos un producto para la promoción.');
+        return;
+      }
+
+      const promocion: Promocion = new Promocion();
+      promocion.id = this.promocion.id;
+      promocion.nombre = this.txNombre.value;
+      promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
+      promocion.productos = this.productosSelecionados;
+
+      this.promocionesService.modificarPromocion(promocion).subscribe((respuesta) => {
+        console.log(respuesta);
+        if (respuesta.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('La promoción se modificó con éxito');
+          this.dialogRef.close(true);
+        } else {
+          this.notificacionService.openSnackBarError('Error al modificar la promoción, intentelo nuevamente');
+        }
+      })
+    }
   }
 
   public habilitarEdicion() {
