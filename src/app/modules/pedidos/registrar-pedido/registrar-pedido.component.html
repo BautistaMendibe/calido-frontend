@@ -141,7 +141,7 @@
               </ng-container>
               <ng-container matColumnDef="cantidad">
                 <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
-                <mat-cell *matCellDef="let producto" data-label="Cantidad" class="cantidad-cell">
+                <mat-cell *matCellDef="let producto" data-label="Cantidad">
                   <div class="d-flex align-items-center justify-content-right">
                     <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
                     <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">

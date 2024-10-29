@@ -40,6 +40,13 @@
   overflow-x: auto;
 }
 
+.form-emergente {
+  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
+}
+
 /* Fin Responsive */
 
 html, body {
