@@ -6,3 +6,9 @@
 .person-icon {
   margin-right: 8px;
 }
+
+.mat-card {
+  min-width: 700px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
