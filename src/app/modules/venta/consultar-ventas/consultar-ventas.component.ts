@@ -113,12 +113,12 @@ export class ConsultarVentasComponent implements OnInit{
     )
   }
 
-  public desHacerVenta(venta: Venta) {
+  public anularVenta(venta: Venta) {
     this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Generar nota de crédito')
       .afterClosed()
       .subscribe((value) => {
         if (value) {
-          this.ventasService.desHacerVenta(venta).subscribe((respuesta) => {
+          this.ventasService.anularVenta(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
               this.buscarVentas();

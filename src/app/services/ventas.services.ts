@@ -42,8 +42,8 @@ export class VentasService {
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/facturar-venta`, venta);
   }
 
-  public desHacerVenta(venta: Venta): Observable<SpResult>{
-    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/deshacer-venta`, venta);
+  public anularVenta(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/anular-venta`, venta);
   }
 
   public buscarVentas(filtros: FiltrosVentas): Observable<Venta[]>{
