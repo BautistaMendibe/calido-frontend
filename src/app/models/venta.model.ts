@@ -20,6 +20,7 @@ export class Venta {
   cantidadCuotas: number;
   interes: number;
   descuento: number;
+  anulada: boolean;
 
   constructor(
       id?: number,
@@ -35,7 +36,8 @@ export class Venta {
       tarjeta?: string,
       cantidadCuotas?: number,
       interes?: number,
-      descuento?: number
+      descuento?: number,
+      anulada?: boolean,
   ) {
 
     this.id = id!;
@@ -52,5 +54,6 @@ export class Venta {
     this.cantidadCuotas = cantidadCuotas!;
     this.interes = interes!;
     this.descuento = descuento!;
+    this.anulada = anulada!;
   }
 }

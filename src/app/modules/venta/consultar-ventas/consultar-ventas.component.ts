@@ -118,14 +118,14 @@ export class ConsultarVentasComponent implements OnInit{
       .afterClosed()
       .subscribe((value) => {
         if (value) {
-          //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
-          //  if (respuesta.mensaje == 'OK') {
-          //    this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
-          //    this.buscarVentas();
-          //  } else {
-          //    this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
-          //  }
-          //});
+          this.ventasService.desHacerVenta(venta).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+              this.buscarVentas();
+            } else {
+              this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
+            }
+          });
         }
       });
   }
