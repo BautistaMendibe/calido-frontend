@@ -1,5 +1,5 @@
 <!-- Formulario HTML -->
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -129,7 +129,7 @@
            (drop)="onDrop($event)"
            [ngClass]="{'disabled-container': data.formDesactivado}">
         <img *ngIf="productoImg" [src]="productoImg" class="preview-img">
-        <span *ngIf="!productoImg" class="upload-text">Arrastra aquí...</span>
+        <span *ngIf="!productoImg" class="upload-text"></span>
         <input type="file" class="file-input" [attr.disabled]="data.formDesactivado ? true : null" (change)="onFileSelected($event)">
       </div>
     </div>
