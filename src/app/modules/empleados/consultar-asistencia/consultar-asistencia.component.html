@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Asistencia</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaAsistencia()">Registrar nueva asistencia</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaAsistencia()">Registrar nueva asistencia</button>
       </div>
     </div>
 
@@ -63,7 +63,7 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="asistencias.length > 0">
+  <mat-card class="mat-card" *ngIf="asistencias.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
