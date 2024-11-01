@@ -127,6 +127,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   private buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedores = proveedores;
+
     });
   }
 
@@ -147,10 +148,12 @@ export class RegistrarComprobanteComponent implements OnInit {
   }
 
   public ObtenerPedidosPorProveedor() {
-    const filtroProveedor = new FiltrosPedidos();
-    filtroProveedor.proveedor = this.txProveedor.value;
+    const filtroPedidos = new FiltrosPedidos();
+    filtroPedidos.proveedor = this.txProveedor.value;
+    this.txCantidadProductos.reset();
+    this.txTotal.reset();
 
-    this.pedidosService.consultarPedidos(filtroProveedor).subscribe((pedidos) => {
+    this.pedidosService.consultarPedidos(filtroPedidos).subscribe((pedidos) => {
       // Filtrar los pedidos que estén en estado 1 (Pendiente) o 3 (Recibido con diferencias)
       this.listaPedidosPorProveedor = pedidos.filter(pedido => pedido.idEstadoPedido === 1 || pedido.idEstadoPedido === 3);
     });

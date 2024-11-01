@@ -22,7 +22,7 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Porcentaje de descuento</mat-label>
-          <input type="text" matInput [formControl]="txPorcentajeDescuento"/>
+          <input type="text" matInput [formControl]="txPorcentajeDescuento" maxlength="3" (input)="validarPorcentaje()"/>
         </mat-form-field>
       </div>
     </div>
@@ -81,7 +81,16 @@
 
             <ng-container matColumnDef="precio">
               <mat-header-cell *matHeaderCellDef>PRECIO DE VENTA</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Precio">$ {{ producto.precioFinalVenta }}</mat-cell>
+              <mat-cell *matCellDef="let producto" data-label="Precio">
+                <div class="precio-container">
+                  <span [ngClass]="{'precio-tachado': producto.estaEnPromocion}">
+                    {{ producto.precioConIVA | mask: 'separator.2' : { prefix: '$', thousandSeparator: ',' } }}
+                  </span>
+                  <span *ngIf="producto.estaEnPromocion" class="precio-promocion">
+                    {{ (producto.precioConIVA * (1 - this.txPorcentajeDescuento.value / 100)) | mask: 'separator.2' : { prefix: '$', thousandSeparator: ',' } }}
+                  </span>
+                </div>
+              </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>

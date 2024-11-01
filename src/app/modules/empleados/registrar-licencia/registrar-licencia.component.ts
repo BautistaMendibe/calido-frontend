@@ -12,6 +12,7 @@ import {Licencia} from "../../../models/licencia.model";
 import {SpResult} from "../../../models/resultadoSp.model";
 import {EstadoLicencia} from "../../../models/estadoLicencia.model";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {FilesService} from "../../../services/files.service";
 
 @Component({
   selector: 'app-registrar-licencia',
@@ -38,6 +39,7 @@ export class RegistrarLicenciaComponent implements OnInit {
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
+    private filesService: FilesService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarAsistenciaComponent,
       licencia: Licencia;
@@ -236,6 +238,10 @@ export class RegistrarLicenciaComponent implements OnInit {
         }
       });
     }
+  }
+
+  public descargarArchivo() {
+    this.filesService.obtenerArchivo(this.licencia.archivo.nombre).subscribe();
   }
 
   public cancelar() {
