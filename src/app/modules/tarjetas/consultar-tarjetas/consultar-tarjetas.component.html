@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Tarjetas</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaTarjeta()">Registrar nueva tarjeta</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaTarjeta()">Registrar nueva tarjeta</button>
       </div>
     </div>
 
@@ -61,11 +61,11 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="tarjetas.length > 0">
+  <mat-card class="mat-card" *ngIf="tarjetas.length > 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="tarjeta">
               <mat-header-cell *matHeaderCellDef>TARJETA</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="Tarjeta">{{ tarjeta.nombre }}</mat-cell>
@@ -85,7 +85,7 @@
               </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="acciones">
+            <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="Acciones">
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verTarjeta(tarjeta, false)">

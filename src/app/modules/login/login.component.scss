@@ -10,3 +10,9 @@
 #btnRegistrarse {
   color: #e15b35;
 }
+
+.mat-card {
+  min-width: 300px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
