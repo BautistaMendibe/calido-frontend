@@ -231,3 +231,8 @@
   color: #777777;
   margin-top: 10px;
 }
+
+.producto-sin-stock {
+  opacity: 0.5;
+  pointer-events: none; /* Desactiva la interacción del usuario */
+}

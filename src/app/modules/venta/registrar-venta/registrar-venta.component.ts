@@ -23,6 +23,7 @@ import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
 import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
 import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -49,6 +50,7 @@ export class RegistrarVentaComponent implements OnInit{
   public cantidadCuotaSeleccionada: CuotaPorTarjeta;
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
+  private facturacionAutomatica: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +62,8 @@ export class RegistrarVentaComponent implements OnInit{
     private usuariosService: UsuariosService,
     private promocionesService: PromocionesService,
     private authService: AuthService,
-    private tarjetasService: TarjetasService
+    private tarjetasService: TarjetasService,
+    private configuracionesService: ConfiguracionesService
   ) {
     this.form = new FormGroup({});
     this.tarjetaSeleccionada = new Tarjeta();
@@ -72,6 +75,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.crearFormulario();
     this.buscarDataCombos();
     this.filtrosSuscripciones();
+    this.buscarFacturacionAutomatica();
   }
 
   public buscar() {
@@ -101,6 +105,12 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarTiposFactura();
     this.buscarEmpleados();
     this.obtenerEmpleadoLogueado();
+  }
+
+  private buscarFacturacionAutomatica() {
+    this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
+      this.facturacionAutomatica = configuracion.facturacionAutomatica;
+    });
   }
 
   private buscarUsuariosClientes() {
@@ -183,8 +193,10 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public aumentarCantidad(producto: Producto) {
-    producto.cantidadSeleccionada++;
-    this.calcularSubTotal();
+    if (producto.cantidadSeleccionada < producto.cantidadEnStock) {
+      producto.cantidadSeleccionada++;
+      this.calcularSubTotal();
+    }
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -198,11 +210,15 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularSubTotal() {
+    //this.subTotal = 0;
+    //this.productosSeleccionados.forEach((producto) => {
+    //  this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
+    //});
+    //this.impuestoIva = this.subTotal * 0.21;
     this.subTotal = 0;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
+      this.subTotal += (producto.precioConIVA * producto.cantidadSeleccionada);
     });
-    this.impuestoIva = this.subTotal * 0.21;
     this.calcularTotal();
   }
 
@@ -278,7 +294,7 @@ export class RegistrarVentaComponent implements OnInit{
       if (respusta) {
         this.productosSeleccionados.map((producto: Producto) => {
           if (producto.id == respusta.id) {
-            producto.precioSinIVA = respusta.precioSinIVA;
+            producto.precioConIVA = respusta.precioConIVA;
             producto.promocion = respusta.promocion;
           }
         })
@@ -338,9 +354,17 @@ export class RegistrarVentaComponent implements OnInit{
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
+          this.notificacionService.openSnackBarSuccess('Venta registrada con éxito.');
           venta.id = respuesta.id;
-          //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
+          if (this.facturacionAutomatica) {
+            this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
+              if (respuestaAfip.mensaje == 'OK') {
+                this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
+              } else {
+                this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente desde consultas.');
+              }
+            })
+          }
           this.registrandoVenta = false;
           this.limpiarVenta();
         } else {
@@ -366,10 +390,9 @@ export class RegistrarVentaComponent implements OnInit{
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
 
-    // Establecer txCliente en null pero como intacto
-    this.txCliente.setValue(null);
-    this.txCliente.markAsPristine();
-    this.txCliente.markAsUntouched();
+    // Establecer txCliente en consumidor final
+    this.txCliente.setValue(-1);
+
 
     this.buscar();
   }
