@@ -10,6 +10,10 @@ import {FiltrosAsistencias} from "../models/comandos/FiltrosAsistencias.comando"
 import {FiltrosCuentasCorrientes} from "../models/comandos/FiltrosCuentasCorrientes";
 import {CuentaCorriente} from "../models/cuentaCorriente.model";
 import {Rol} from "../models/Rol";
+import {Motivo} from "../models/motivo.model";
+import {Licencia} from "../models/licencia.model";
+import {FiltrosLicencias} from "../models/comandos/FiltrosLicencias.comando";
+import {EstadoLicencia} from "../models/estadoLicencia.model";
 
 @Injectable({
   providedIn: 'root'
@@ -94,5 +98,29 @@ export class UsuariosService {
 
   public eliminarCuentaCorriente(idCuentaCorriente: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-cuenta-corriente/${idCuentaCorriente}`);
+  }
+
+  public obtenerMotivosLicencia(): Observable<Motivo[]>{
+    return this.http.get<Motivo[]>(`${this.urlBackend}/${this.controllerName}/obtener-motivos-licencia`);
+  }
+
+  public registrarLicencia(licencia: Licencia): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-licencia`, licencia);
+  }
+
+  public eliminarLicencia(idLicencia: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-licencia/${idLicencia}`);
+  }
+
+  public consultarLicencias(filtro: FiltrosLicencias): Observable<Licencia[]>{
+    return this.http.post<Licencia[]>(`${this.urlBackend}/${this.controllerName}/consultar-licencias`, filtro);
+  }
+
+  public obtenerEstadosLicencia(): Observable<EstadoLicencia[]>{
+    return this.http.get<EstadoLicencia[]>(`${this.urlBackend}/${this.controllerName}/obtener-estados-licencia`);
+  }
+
+  public modificarLicencia(licencia: Licencia): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-licencia`, licencia);
   }
 }

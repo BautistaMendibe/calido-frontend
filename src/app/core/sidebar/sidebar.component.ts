@@ -39,14 +39,14 @@ export class SidebarComponent implements OnInit {
     {id: 8, nombre: 'Estadisticas', path:'/consultar-estadisticas', icon: 'data_usage', activo: false, subMenu: []},
     {id: 9, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Consultar asistencia', path:'/consultar-asistencia', icon: '', activo: false, requiresAdmin: true, subMenu: []}
+        {id: 2, nombre: 'Control de empleado', path:'/control-empleados', icon: '', activo: false, requiresAdmin: true, subMenu: []}
       ]},
     {id: 10, nombre: 'Clientes', path:'/consultar-clientes', icon: 'person_add', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar clientes', path:'/consultar-clientes', icon: '', activo: false, subMenu: []},
       ]},
     {id: 11, nombre: 'Cuentas Corrientes', path:'consultar-cuentas-corrientes', icon: 'account_balance', activo: false, subMenu: []},
     {id: 12, nombre: 'Tarjetas', path:'consultar-tarjetas', icon: 'credit_card', activo: false, subMenu: []},
-    {id: 13, nombre: 'Asistencia', path:'/marcar-asistencia', icon: 'event_available', activo: false, requiresAdmin: true, subMenu: []},
+    {id: 13, nombre: 'Panel de Empleado', path:'/panel-empleado', icon: 'event_available', activo: false, requiresAdmin: true, subMenu: []},
     {id: 14, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
   ];
   isExpanded = true;
@@ -165,5 +165,4 @@ export class SidebarComponent implements OnInit {
       }
     });
   }
-
 }

@@ -1,12 +1,14 @@
-import { TipoProducto } from "./tipoProducto.model"
+import { TipoProducto } from "./tipoProducto.model";
 import { Proveedor } from "./proveedores.model";
 import { Marca } from "./marca.model";
+import {Promocion} from "./promociones.model";
 
 export class Producto {
   id: number;
   nombre: string;
   costo: number;
   precioSinIVA: number;
+  precioConIVA: number;
   tipoProducto: TipoProducto;
   proveedor: Proveedor;
   marca: Marca;
@@ -19,12 +21,20 @@ export class Producto {
   subTotalVenta: number;
   cantidad: number;
   margenGanancia: number;
+  precioConIva: number;
+  precioFinalVenta: number;
+  descuentoPromocion: number;
+  descuentoTarjeta: number;
+
+  estaEnPromocion: boolean;
+  promocion: Promocion;
 
   constructor(
     id?: number,
     nombre?: string,
     costo?: number,
     precioSinIVA?: number,
+    precioConIVA?: number,
     tipoProducto?: TipoProducto,
     proveedor?: Proveedor,
     seleccionadoParaVenta?: boolean,
@@ -37,11 +47,18 @@ export class Producto {
     imgProducto?: string,
     subTotalVenta?: number,
     cantidad?: number,
+    precioConIva?: number,
+    precioFinalVenta?: number,
+    descuentoPromocion?: number,
+    descuentoTarjeta?: number,
+    estaEnPromocion?: boolean,
+    promocion?: Promocion
   ) {
     this.id = id!;
     this.nombre = nombre!;
     this.costo = costo!;
     this.precioSinIVA = precioSinIVA!;
+    this.precioConIVA = precioConIVA!;
     this.tipoProducto = tipoProducto!;
     this.proveedor = proveedor!;
     this.marca = marca!;
@@ -54,6 +71,11 @@ export class Producto {
     this.margenGanancia = margenGanancia!;
     this.subTotalVenta = subTotalVenta!;
     this.cantidad = cantidad!;
+    this.precioConIva = precioConIva!;
+    this.precioFinalVenta = precioFinalVenta!;
+    this.descuentoPromocion = descuentoPromocion!;
+    this.descuentoTarjeta = descuentoTarjeta!;
+    this.estaEnPromocion = estaEnPromocion!;
+    this.promocion = promocion!;
   }
 }
-

@@ -8,6 +8,9 @@ import {NotificationService} from "../../../services/notificacion.service";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {Asistencia} from "../../../models/asistencia";
 import {FiltrosAsistencias} from "../../../models/comandos/FiltrosAsistencias.comando";
+import {SolicitarLicenciaComponent} from "../solicitar-licencia/solicitar-licencia.component";
+import {FiltrosLicencias} from "../../../models/comandos/FiltrosLicencias.comando";
+import {Licencia} from "../../../models/licencia.model";
 
 @Component({
   selector: 'app-marcar-asistencia',
@@ -22,6 +25,7 @@ export class MarcarAsistenciaComponent implements OnInit {
   public idUsuario: number = -1;
   public diasDelMes: any[] = [];
   public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
+  public columnasLicencias = ['nombre', 'periodo', 'motivo', 'estado', 'comentario', 'acciones'];
   public fechaHoy = new Date();
   public horaEntrada: string = '';
   public horaSalida: string = '';
@@ -29,8 +33,11 @@ export class MarcarAsistenciaComponent implements OnInit {
   public salida: boolean = false;
   public botonPresenteDeshabilitado: boolean = false;
   public botonSalidaDeshabilitado: boolean = false;
+  public botonLicenciaDeshabilitado: boolean = false;
   public asistencias: any[] = [];
+  public licencias: Licencia[] = [];
   public isSearchingAsistencias = true;
+  public isSearchingLicencias = true;
   public asistencia = new Asistencia();
   public form: FormGroup;
   public comentario: string = '';
@@ -64,6 +71,7 @@ export class MarcarAsistenciaComponent implements OnInit {
 
     this.generarDiasDelMes();
     this.consultarAsistencias();
+    this.consultarLicencias();
   }
 
   consultarAsistencias(): void {
@@ -92,6 +100,52 @@ export class MarcarAsistenciaComponent implements OnInit {
         this.notificacionService.openSnackBarError('Error al cargar asistencias. Intente nuevamente.');
       }
     });
+  }
+
+  consultarLicencias(): void {
+    this.usuariosService.consultarLicencias(new FiltrosLicencias()).subscribe({
+      next: (licencias) => {
+        const fechaActual = new Date();
+        const anioActual = fechaActual.getFullYear();
+
+        this.licencias = licencias.filter(licencia => {
+          const fechaLicencia = new Date(licencia.fechaInicio);
+          const anioLicencia = fechaLicencia.getFullYear();
+
+          return licencia.idUsuario === this.idUsuario &&
+            anioLicencia === anioActual; // Filtrar solo por año
+        });
+
+        this.isSearchingLicencias = false;
+      },
+      error: (err) => {
+        console.error('Error al consultar licencias:', err);
+        this.notificacionService.openSnackBarError('Error al cargar licencias. Intente nuevamente.');
+      }
+    });
+  }
+
+  eliminarLicencia(idLicencia: number): void {
+    this.notificationDialogService.confirmation(
+      '¿Desea eliminar la licencia?', 'Eliminar Licencia')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuariosService.eliminarLicencia(idLicencia).subscribe({
+            next: (respuesta) => {
+              if (respuesta.mensaje === 'OK') {
+                this.notificacionService.openSnackBarSuccess('Licencia eliminada con éxito');
+                this.consultarLicencias();
+              } else {
+                this.notificacionService.openSnackBarError('Error al eliminar la licencia.');
+              }
+            },
+            error: () => {
+              this.notificacionService.openSnackBarError('Error al eliminar la licencia.');
+            }
+          });
+        }
+      });
   }
 
   buscarAsistenciaHoy(): Asistencia {
@@ -160,36 +214,54 @@ export class MarcarAsistenciaComponent implements OnInit {
   marcarPresente(): void {
     this.notificationDialogService.confirmation(
       `¿Desea marcar la entrada?
-      Esta acción no es reversible.`, 'Marcar Entrada')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          if (!this.botonPresenteDeshabilitado) {
+    Esta acción no es reversible.`, 'Marcar Entrada'
+    ).afterClosed().subscribe((value) => {
+      if (value) {
+        if (!this.botonPresenteDeshabilitado) {
 
-            this.asistencia.fecha = new Date();
-            this.asistencia.horaEntrada = new Date().toLocaleTimeString('en-GB', { hour12: false });
-            this.asistencia.idUsuario = this.idUsuario;
+          // Obtener la fecha actual
+          const fechaActual = new Date();
+          const fechaEntrada = new Date(fechaActual.toISOString().split('T')[0]); // Solo la parte de la fecha, sin la hora
 
-            this.usuariosService.registrarAsistencia(this.asistencia).subscribe({
-              next: (respuesta) => {
-                if (respuesta.mensaje === 'OK') {
-                  this.notificacionService.openSnackBarSuccess('La entrada se registró con éxito');
-                  this.presente = true;
-                  this.botonPresenteDeshabilitado = true;
-                  this.botonSalidaDeshabilitado = false;
-                  this.consultarAsistencias();
-                } else
-                {
-                  this.notificacionService.openSnackBarError('Error al registrar la entrada. Intente nuevamente');
-                }
-              },
-              error: (err) => {
-                this.notificacionService.openSnackBarError('Error al registrar la entrada. Inténtelo nuevamente');
-              }
-            });
-            }
+          // Validación de superposición con licencias
+          const existeSuperposicionLicencia = this.licencias.some((licenciaExistente: Licencia) => {
+            const fechaInicioExistente = new Date(licenciaExistente.fechaInicio);
+            const fechaFinExistente = new Date(licenciaExistente.fechaFin);
+
+            // Comprobar si la fecha de entrada coincide con las fechas de la licencia (incluidos los extremos)
+            return (
+              (fechaEntrada >= fechaInicioExistente && fechaEntrada <= fechaFinExistente)
+            );
+          });
+
+          if (existeSuperposicionLicencia) {
+            this.notificacionService.openSnackBarError('No puede marcar presencia en días que tiene licencia.');
+            return; // No continuar si hay superposición con licencias
           }
-      });
+
+          this.asistencia.fecha = fechaActual;
+          this.asistencia.horaEntrada = fechaActual.toLocaleTimeString('en-GB', { hour12: false });
+          this.asistencia.idUsuario = this.idUsuario;
+
+          this.usuariosService.registrarAsistencia(this.asistencia).subscribe({
+            next: (respuesta) => {
+              if (respuesta.mensaje === 'OK') {
+                this.notificacionService.openSnackBarSuccess('La entrada se registró con éxito');
+                this.presente = true;
+                this.botonPresenteDeshabilitado = true;
+                this.botonSalidaDeshabilitado = false;
+                this.consultarAsistencias();
+              } else {
+                this.notificacionService.openSnackBarError('Error al registrar la entrada. Intente nuevamente');
+              }
+            },
+            error: (err) => {
+              this.notificacionService.openSnackBarError('Error al registrar la entrada. Inténtelo nuevamente');
+            }
+          });
+        }
+      }
+    });
   }
 
   marcarSalida(): void {
@@ -225,21 +297,48 @@ export class MarcarAsistenciaComponent implements OnInit {
       });
   }
 
-  abrirDialogComentario(): void {
+  public marcarLicencia() {
+    this.dialog.open(
+      SolicitarLicenciaComponent,
+      {
+        width: '50vh',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
+        data: {
+          referencia: this,
+        }
+      }
+    )
+  }
+
+  abrirDialogComentario(presencia: Asistencia | Licencia): void {
+    this.txComentario.setValue(presencia.comentario);
+
     this.dialogoComentarioRef = this.dialog.open(this.dialogoComentario, {
       width: '75%',
-      autoFocus: false
+      autoFocus: false,
+      data: { presencia }
     });
   }
 
   guardarComentario(): void {
+    const data = this.dialogoComentarioRef._containerInstance._config.data;
+
+    if (data?.presencia && data?.presencia.horaEntrada) {
+      this.guardarComentarioAsistencia(data.presencia as Asistencia);
+    } else {
+      this.guardarComentarioLicencia(data.presencia as Licencia);
+    }
+
+    this.txComentario.reset();
+  }
+
+  guardarComentarioAsistencia(asistencia: Asistencia): void {
     if (this.form.valid) {
-      this.comentario = this.form.get('txComentario')?.value;
+      asistencia.comentario = this.txComentario.value;
 
-      const asistenciaHoy = this.buscarAsistenciaHoy();
-      asistenciaHoy.comentario = this.comentario;
-
-      this.usuariosService.modificarAsistencia(asistenciaHoy).subscribe({
+      this.usuariosService.modificarAsistencia(asistencia).subscribe({
         next: (respuesta) => {
           if (respuesta.mensaje === 'OK') {
             this.notificacionService.openSnackBarSuccess('Asistencia modificada con éxito');
@@ -255,6 +354,29 @@ export class MarcarAsistenciaComponent implements OnInit {
           this.dialogoComentarioRef.close();
         }
       });
+    }
+  }
+
+  guardarComentarioLicencia(licencia: Licencia): void {
+    if (this.form.valid) {
+      licencia.comentario = this.txComentario.value;
+
+      this.usuariosService.modificarLicencia(licencia).subscribe({
+        next: (respuesta) => {
+          if (respuesta.mensaje === 'OK') {
+            this.notificacionService.openSnackBarSuccess('Licencia modificada con éxito');
+            this.consultarLicencias();
+            this.dialogoComentarioRef.close();
+          } else {
+            this.notificacionService.openSnackBarError('Error al modificar la licencia');
+            this.dialogoComentarioRef.close();
+          }
+        },
+          error: () => {
+            this.notificacionService.openSnackBarError('Error al modificar la licencia');
+            this.dialogoComentarioRef.close();
+          }
+        });
     }
   }
 

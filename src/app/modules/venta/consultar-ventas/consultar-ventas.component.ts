@@ -11,6 +11,7 @@ import {FormaDePago} from "../../../models/formaDePago.model";
 import {TipoFactura} from "../../../models/tipoFactura.model";
 import {Router} from "@angular/router";
 import {DetalleVentaComponent} from "../detalle-venta/detalle-venta.component";
+import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 
 @Component({
   selector: 'app-consultar-ventas',
@@ -121,6 +122,24 @@ export class ConsultarVentasComponent implements OnInit{
 
   public getNombresProductos(productos: Producto[]): string {
     return productos.map(producto => producto.nombre).join(', ');
+  }
+
+  public verProducto(producto: Producto) {
+    this.dialog.open(
+      RegistrarProductoComponent,
+      {
+        width: '80%',
+        autoFocus: false,
+        height: '85vh',
+        panelClass: 'custom-dialog-container',
+        data: {
+          producto: producto,
+          esConsulta: true,
+          formDesactivado: true,
+          editar: false
+        }
+      }
+    );
   }
 
   // Getters

@@ -2,8 +2,11 @@
   <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Asistencia</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaAsistencia()">Registrar nueva asistencia</button>
+        <p class="titulo">Control de Empleado</p>
+        <div class="d-flex justify-content-end">
+          <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaAsistencia()">Registrar nueva asistencia</button>
+          <button mat-stroked-button color="warn" class="btn round mb-3 ms-2 botonR" (click)="registrarNuevaLicencia()">Registrar nueva licencia</button>
+        </div>
       </div>
     </div>
 
@@ -17,7 +20,7 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Empleado</mat-label>
             <mat-select [formControl]="txNombreUsuario">
               <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id">
                 {{ empleado.nombre + ' ' + empleado.apellido }}
@@ -55,77 +58,195 @@
 
 
   <mat-card-header class="header-card">
-    <h2 style="color: grey">Asistencias encontradas</h2>
+    <h2 style="color: grey">Asistencias y licencias encontradas</h2>
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="asistencias.length == 0">
+  <div class="spinner-wrapper" *ngIf="isSearchingLicencias || isSearchingAsistencias">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card class="mat-card" *ngIf="asistencias.length > 0">
-    <mat-card-content>
-      <div class="row">
-        <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
-            <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" data-label="Empleado">
-                <mat-icon class="person-icon">person</mat-icon>{{ asistencia.usuario.nombre + ' ' + asistencia.usuario.apellido }}</mat-cell>
-            </ng-container>
+  <mat-tab-group mat-align-tabs="#e15b35" color="warn" *ngIf="!isSearchingLicencias && !isSearchingAsistencias">
 
-            <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" data-label="Fecha">{{ asistencia.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
-            </ng-container>
+    <!-- Pestaña de asistencias -->
+    <mat-tab label="Asistencias">
+      <mat-card *ngIf="!isSearchingAsistencias">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-table [dataSource]="tableDataSource" matSort>
 
-            <ng-container matColumnDef="horaEntrada">
-              <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" data-label="Hora de entrada">{{ asistencia.horaEntrada }}</mat-cell>
-            </ng-container>
+                <!-- Columna Empleado -->
+                <ng-container matColumnDef="nombre">
+                  <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" data-label="Empleado">
+                    <mat-icon class="person-icon">person</mat-icon>{{ asistencia.usuario.nombre + ' ' + asistencia.usuario.apellido }}
+                  </mat-cell>
+                </ng-container>
 
-            <ng-container matColumnDef="horaSalida">
-              <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" data-label="Hora de salida">{{ asistencia.horaSalida }}</mat-cell>
-            </ng-container>
+                <!-- Columna Fecha -->
+                <ng-container matColumnDef="fecha">
+                  <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" data-label="Fecha">
+                    {{ asistencia.fecha | date: 'dd/MM/yyyy' }}
+                  </mat-cell>
+                </ng-container>
 
-            <ng-container matColumnDef="comentario">
-              <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" data-label="Comentario">{{ asistencia.comentario }}</mat-cell>
-            </ng-container>
+                <!-- Columna Hora de entrada -->
+                <ng-container matColumnDef="horaEntrada">
+                  <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" data-label="Hora de entrada">
+                    {{ asistencia.horaEntrada }}
+                  </mat-cell>
+                </ng-container>
 
-            <ng-container matColumnDef="acciones">
-              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" data-label="Acciones">
-                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verAsistencia(asistencia, false)">
-                  <mat-icon class="ver">visibility</mat-icon>
-                </button>
-                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verAsistencia(asistencia, true)">
-                  <mat-icon class="editar">edit</mat-icon>
-                </button>
-                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarAsistencia(asistencia.id)">
-                  <mat-icon class="eliminar">delete</mat-icon>
-                </button>
-              </mat-cell>
-            </ng-container>
+                <!-- Columna Hora de salida -->
+                <ng-container matColumnDef="horaSalida">
+                  <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" data-label="Hora de salida">
+                    {{ asistencia.horaSalida }}
+                  </mat-cell>
+                </ng-container>
 
-            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+                <!-- Columna Comentario -->
+                <ng-container matColumnDef="comentario">
+                  <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" data-label="Comentario">
+                    {{ asistencia.comentario }}
+                  </mat-cell>
+                </ng-container>
 
-          </mat-table>
+                <!-- Columna Acciones -->
+                <ng-container matColumnDef="acciones">
+                  <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" data-label="Acciones">
+                    <button class="btn" mat-icon-button matTooltip="Ver" (click)="verAsistencia(asistencia, false)">
+                      <mat-icon class="ver">visibility</mat-icon>
+                    </button>
+                    <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verAsistencia(asistencia, true)">
+                      <mat-icon class="editar">edit</mat-icon>
+                    </button>
+                    <button class="btn" mat-icon-button matTooltip="Eliminar" color="primary" (click)="eliminarAsistencia(asistencia.id)">
+                      <mat-icon class="eliminar">delete</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
 
-          <h6 *ngIf="!this.asistencias.length" class="alert alert-secondary text-center">
-            No se encuentran asistencias para mostrar, realice una nueva búsqueda.
-          </h6>
+                <!-- Filas y columnas de la tabla -->
+                <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+                <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
 
-          <mat-paginator *ngIf="this.asistencias.length > 0"
-                         [length]="this.asistencias.length"
-                         [pageSize]="10"
-                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+              </mat-table>
+
+              <h6 *ngIf="this.asistencias.length === 0" class="alert alert-secondary text-center">
+                No se encuentran asistencias para mostrar, realice una nueva búsqueda.
+              </h6>
+
+              <mat-paginator *ngIf="this.asistencias.length === 0"
+                             [length]="this.asistencias.length"
+                             [pageSize]="10"
+                             [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+
+    <!-- Pestaña de licencias -->
+    <mat-tab label="Licencias">
+      <mat-card *ngIf="!isSearchingLicencias">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-table [dataSource]="tableDataSourceLicencia" matSort>
+
+                <!-- Columna Empleado -->
+                <ng-container matColumnDef="nombre">
+                  <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    <mat-icon class="person-icon">person</mat-icon>{{ licencia.usuario.nombre + ' ' + licencia.usuario.apellido }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna Periodo -->
+                <ng-container matColumnDef="periodo">
+                  <mat-header-cell *matHeaderCellDef>PERIODO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    {{ licencia.fechaInicio | date: 'dd/MM/yyyy' }} al {{ licencia.fechaFin | date: 'dd/MM/yyyy' }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna Motivo -->
+                <ng-container matColumnDef="motivo">
+                  <mat-header-cell *matHeaderCellDef>MOTIVO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    {{ licencia.motivo.nombre }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna Estado -->
+                <ng-container matColumnDef="estado">
+                  <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 1" class="warning-icon" matTooltip="El empleador aún no ha revisado su solicitud.">
+                      warning
+                    </mat-icon>
+
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 2" class="accepted-icon" matTooltip="El empleador ha aceptado su solicitud de licencia.">
+                      check_circle
+                    </mat-icon>
+
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 3" class="rejected-icon" matTooltip="El empleador ha denegado su solicitud de licencia.">
+                      cancel
+                    </mat-icon>
+                    {{ licencia.estadoLicencia.nombre }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna Comentario -->
+                <ng-container matColumnDef="comentario">
+                  <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    {{ licencia.comentario }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Columna Acciones -->
+                <ng-container matColumnDef="acciones">
+                  <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    <button class="btn" mat-icon-button matTooltip="Ver" (click)="verLicencia(licencia, false)">
+                      <mat-icon class="ver">visibility</mat-icon>
+                    </button>
+                    <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verLicencia(licencia, true)">
+                      <mat-icon class="editar">edit</mat-icon>
+                    </button>
+                    <button class="btn" mat-icon-button matTooltip="Eliminar" color="primary" (click)="eliminarLicencia(licencia.id)">
+                      <mat-icon class="eliminar">delete</mat-icon>
+                    </button>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Filas y columnas de la tabla -->
+                <mat-header-row *matHeaderRowDef="columnasLicencias"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: columnasLicencias;"></mat-row>
+
+              </mat-table>
+
+              <h6 *ngIf="this.licencias.length === 0" class="alert alert-secondary text-center">
+                No se encuentran licencias para mostrar, realice una nueva búsqueda.
+              </h6>
+
+              <mat-paginator *ngIf="this.licencias.length > 0"
+                             [length]="this.licencias.length"
+                             [pageSize]="10"
+                             [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 
 

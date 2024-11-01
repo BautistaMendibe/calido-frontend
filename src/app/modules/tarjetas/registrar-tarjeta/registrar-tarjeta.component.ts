@@ -24,7 +24,7 @@ export class RegistrarTarjetaComponent implements OnInit {
   public tarjetas: Tarjeta[] = [];
   public listaCuotas: Cuota[] = [];
   public cuotasSeleccionadas: CuotaPorTarjeta[] = [];
-  public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'recargo', 'descuento'];
+  public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'descuento'];
   public listaTiposTarjetas: TipoTarjeta[] = [];
 
   public tarjeta: Tarjeta;
@@ -114,7 +114,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         if (fila) {
           (fila as any).selected = true;
           (fila as any).interes = cuota.interes;
-          (fila as any).recargo = cuota.recargo;
           (fila as any).descuento = cuota.descuento;
 
           // Simula una selección, para agregar la cuota a la lista de cuotas seleccionadas
@@ -153,7 +152,6 @@ export class RegistrarTarjetaComponent implements OnInit {
 
         cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
         cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
-        cuotaPorTarjeta.recargo = cuotaSeleccionada.recargo;
         cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
 
         // Agregar la cuota a la lista de la tarjeta
@@ -187,7 +185,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
         cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
         cuotaPorTarjeta.idTarjeta = cuotaSeleccionada.idTarjeta;
-        cuotaPorTarjeta.recargo = cuotaSeleccionada.recargo;
         cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
 
         // Agregar la cuota a la lista de la tarjeta
@@ -224,9 +221,9 @@ export class RegistrarTarjetaComponent implements OnInit {
         id: cuota.id,
         interes: cuota.interes,
         idCuota: idCuota,
-        idTarjeta: this.tarjeta.id,
-        recargo: cuota.recargo,
-        descuento: cuota.descuento
+        idTarjeta: this.tarjeta?.id,
+        descuento: cuota.descuento,
+        cantidadCuota: cuota.cantidadCuotas
       };
 
       // Agregar a la lista de cuotas seleccionadas

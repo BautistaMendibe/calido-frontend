@@ -104,7 +104,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '80%',
+        width: '90%',
         autoFocus: false,
         maxHeight: '80vh',
         panelClass: 'custom-dialog-container',

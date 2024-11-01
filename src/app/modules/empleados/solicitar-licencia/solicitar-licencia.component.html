@@ -1,0 +1,76 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{'Solicitar Licencia'}}</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Motivo</mat-label>
+          <mat-select [formControl]="txMotivo">
+            <mat-option *ngFor="let motivo of listaMotivos" [value]="motivo.id">
+              {{ motivo.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <br>
+
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Periodo</mat-label>
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="txPeriodo" [min]="fechaMinima">
+            <input matStartDate formControlName="txPeriodoInicio" placeholder="Desde">
+            <input matEndDate formControlName="txPeriodoFin" placeholder="Hasta">
+          </mat-date-range-input>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+          <button mat-icon-button matSuffix (click)="picker.open()">
+            <mat-icon>date_range</mat-icon>
+          </button>
+        </mat-form-field>
+        <small *ngIf="diasSeleccionados > 0" class="diasSeleccionados">
+          {{(diasSeleccionados !== 1) ? 'Se solicitarán' : 'Se solicitará'}} <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}
+        </small>
+      </div>
+    </div>
+
+    <br>
+    <br *ngIf="diasSeleccionados > 0">
+
+    <div class="row">
+      <div class="col">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Comentario</mat-label>
+          <textarea matInput [formControl]="txComentario"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="3"
+                    cdkAutosizeMaxRows="10">
+          </textarea>
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Btn de cancelar o aceptar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ 'Cancelar' }}
+      </button>
+      <button mat-raised-button color="accent" class="btn round" (click)="aceptar()" id="btnBuscar">Aceptar</button>
+    </div>
+  </div>
+</div>

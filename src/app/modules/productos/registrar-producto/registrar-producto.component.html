@@ -5,19 +5,19 @@
     <div class="col d-flex justify-content-between align-items-center">
       <p class="titulo">{{esConsulta ? 'Consultar producto' : 'Registrar producto'}}</p>
       <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
-        <mat-icon class="editar">edit</mat-icon>
+        <mat-icon class="editar mb-3">edit</mat-icon>
       </button>
     </div>
   </div>
 
-  <mat-divider></mat-divider>
-  <br>
 
   <div class="row">
     <!-- Columna de Inputs -->
-    <div class="col-md-8">
+    <div class="col-md-8 p-2">
       <form [formGroup]="form">
-        <!-- Primera línea: Nombre del producto y Código de Barras -->
+        <mat-divider></mat-divider>
+        <br>
+        <!-- Nombre del producto y Código de Barras -->
         <div class="row pt-4">
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
@@ -35,7 +35,7 @@
           </div>
         </div>
 
-        <!-- Segunda línea: Tipo Producto, Marca, Proveedor -->
+        <!-- Tipo Producto, Marca, Proveedor -->
         <div class="row pt-4">
           <div class="col-md-4">
             <mat-form-field appearance="outline" class="w-100">
@@ -74,42 +74,7 @@
           </div>
         </div>
 
-        <!-- Tercera línea: Costo Base, Impuestos, Costo Final -->
-        <div class="row pt-4">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Costo de Compra</mat-label>
-              <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
-              <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
-            <span>+</span>
-          </div>
-          <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Margen de Ganancia</mat-label>
-                <input
-                  type="text"
-                  matInput
-                  mask="percent.2"
-                  suffix="%"
-                  [formControl]="txMargenGanancia"/>
-              <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
-            </mat-form-field>
-          </div>
-          <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost">
-            <span>=</span>
-          </div>
-          <div class="col-md-3">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Precio sin IVA</mat-label>
-              <input type="text" matInput [formControl]="txCostoFinal" mask="separator.2" prefix="$" thousandSeparator="," />
-            </mat-form-field>
-          </div>
-        </div>
-
-        <!-- Cuarta línea: Descripción -->
+        <!-- Descripción -->
         <div class="row pt-4">
           <div class="col-md-12">
             <mat-form-field appearance="outline" class="w-100">
@@ -119,12 +84,15 @@
             </mat-form-field>
           </div>
         </div>
+
+        <mat-divider></mat-divider>
+        <br>
       </form>
     </div>
 
     <!-- Columna de Subir Imagen -->
-    <div class="col-md-4">
-      <div class="upload-container d-flex align-items-center mb-3"
+    <div class="col-md-4 p-4">
+      <div class="upload-container d-flex align-items-center mb-2 mt-2"
            (dragover)="onDragOver($event)"
            (drop)="onDrop($event)"
            [ngClass]="{'disabled-container': data.formDesactivado}">
@@ -134,10 +102,58 @@
       </div>
     </div>
 
-    <mat-divider></mat-divider>
-    <br>
-    <div class="row text-right">
+    <!-- Costo Base, Impuestos, Costo Final -->
+    <div class="row pt-4">
+      <div class="col-md-2">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Costo de Compra</mat-label>
+          <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
+          <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+        <span>+</span>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Margen de Ganancia</mat-label>
+          <input
+            type="text"
+            matInput
+            mask="percent.2"
+            suffix="%"
+            [formControl]="txMargenGanancia"/>
+          <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+        <span>-</span>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Descuento por promoción</mat-label>
+          <mat-select [formControl]="txPromocion">
+            <mat-option *ngFor="let promocion of promociones" [value]="promocion.id">
+              {{ promocion.nombre + ' (' + promocion.porcentajeDescuento + '%)' }}
+            </mat-option>
+          </mat-select>
+          <mat-error *ngIf="txProveedor.invalid">{{ getErrorMessage(txProveedor) }}</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+        <span>=</span>
+      </div>
+      <div class="col-md-3">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Precio final de venta (+21%)</mat-label>
+          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$" thousandSeparator="," />
+        </mat-form-field>
+      </div>
+    </div>
 
+    <br>
+
+    <div class="row text-right mt-3 mb-3">
       <!-- Btn de cancelar, registrar y modificar -->
       <div class="row text-right">
         <div class="col d-flex justify-content-end">
@@ -148,7 +164,6 @@
           <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">Modificar</button>
         </div>
       </div>
-
     </div>
     <br>
   </div>

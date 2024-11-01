@@ -22,7 +22,6 @@ import { ConsultarProveedoresComponent } from './modules/proveedores/consultar-p
 import { RegistrarProveedorComponent } from './modules/proveedores/registrar-proveedor/registrar-proveedor.component';
 import { ConsultarPromocionesComponent } from './modules/promociones/consultar-promociones/consultar-promociones.component';
 import { RegistrarPromocionComponent } from './modules/promociones/registrar-promocion/registrar-promocion.component';
-import { DetallePromocionComponent } from './modules/promociones/detalle-promocion/detalle-promocion.component';
 import { NotificarPromocionComponent } from './modules/promociones/notificar-promocion/notificar-promocion.component';
 import {PickerComponent} from "@ctrl/ngx-emoji-mart";
 import { ConsultarConfiguracionesComponent } from './modules/configuraciones/consultar-configuraciones/consultar-configuraciones.component';
@@ -55,6 +54,8 @@ import { ConsultarTarjetasComponent } from './modules/tarjetas/consultar-tarjeta
 import { RegistrarTarjetaComponent } from './modules/tarjetas/registrar-tarjeta/registrar-tarjeta.component';
 import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consultar-ventas.component';
 import { DetalleVentaComponent } from './modules/venta/detalle-venta/detalle-venta.component';
+import { SolicitarLicenciaComponent } from './modules/empleados/solicitar-licencia/solicitar-licencia.component';
+import { RegistrarLicenciaComponent } from './modules/empleados/registrar-licencia/registrar-licencia.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -72,7 +73,6 @@ registerLocaleData(localeEs, 'es');
     RegistrarProveedorComponent,
     ConsultarPromocionesComponent,
     RegistrarPromocionComponent,
-    DetallePromocionComponent,
     NotificarPromocionComponent,
     MessagesComponent,
     ConsultarProductosComponent,
@@ -96,7 +96,9 @@ registerLocaleData(localeEs, 'es');
     ConsultarTarjetasComponent,
     RegistrarTarjetaComponent,
     ConsultarVentasComponent,
-    DetalleVentaComponent
+    DetalleVentaComponent,
+    SolicitarLicenciaComponent,
+    RegistrarLicenciaComponent
   ],
   imports: [
     BrowserModule,

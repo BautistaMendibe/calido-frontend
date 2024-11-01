@@ -1,9 +1,10 @@
 <div class="container py-3 col-xl-11">
 
+  <!-- Tarjeta de bienvenida y opciones -->
   <mat-card class="mat-elevation-z12 p-4 mat-card-fondo-asistencia">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Asistencia</p>
+        <p class="titulo">Panel de Empleado</p>
       </div>
     </div>
 
@@ -40,17 +41,9 @@
           <button mat-icon-button class="button-logout" (click)="marcarSalida()" [disabled]="botonSalidaDeshabilitado" matTooltip="Marcar Salida">
             <mat-icon>logout</mat-icon>
           </button>
-          <!-- Botón que despliega el menú -->
-          <button mat-icon-button [matMenuTriggerFor]="commentMenu" class="button-comment" matTooltip="Otras Opciones">
-            <mat-icon>more_vert</mat-icon>
+          <button mat-icon-button class="button-absence" (click)="marcarLicencia()" [disabled]="botonLicenciaDeshabilitado" matTooltip="Solicitar Licencia">
+            <mat-icon>add_circle_outlinen</mat-icon>
           </button>
-
-          <!-- Definición del menú -->
-          <mat-menu #commentMenu="matMenu">
-            <button mat-menu-item (click)="abrirDialogComentario()">
-              <span>Añadir comentario</span>
-            </button>
-          </mat-menu>
 
           <!-- Diálogo para añadir comentario -->
           <ng-template #dialogoComentario>
@@ -72,7 +65,11 @@
                     <div class="col-md-12">
                       <mat-form-field appearance="outline" class="w-100">
                         <mat-label>Comentario</mat-label>
-                        <input type="text" matInput [formControl]="txComentario"/>
+                        <textarea matInput [formControl]="txComentario"
+                                  cdkTextareaAutosize
+                                  cdkAutosizeMinRows="3"
+                                  cdkAutosizeMaxRows="10">
+                        </textarea>
                       </mat-form-field>
                     </div>
                   </div>
@@ -94,101 +91,200 @@
               <br>
             </div>
           </ng-template>
-
         </div>
       </mat-card>
     </div>
-
   </mat-card>
 
   <br>
 
   <mat-card-header class="header-card">
-    <h2 style="color: grey">Asistencias encontradas</h2>
+    <h2 style="color: grey">Asistencias y licencias encontradas</h2>
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="isSearchingAsistencias">
+  <div class="spinner-wrapper" *ngIf="isSearchingLicencias || isSearchingAsistencias">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card class="mat-card" *ngIf="!isSearchingAsistencias">
-    <mat-card-content>
-      <!-- Tabla existente -->
-      <div class="row">
-        <div class="col-md-12">
-          <mat-table [dataSource]="asistencias" matSort class="custom-table">
+  <!-- Implementación de Mat-Tab-Group -->
+  <mat-tab-group mat-align-tabs="#e15b35" color="warn" *ngIf="!isSearchingLicencias && !isSearchingAsistencias">
+    <!-- Pestaña de asistencias -->
+    <mat-tab label="Asistencias">
+      <mat-card *ngIf="!isSearchingAsistencias">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-table [dataSource]="asistencias" matSort>
 
-            <!-- Nombre del empleado -->
-            <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="nombre-cell">
-                <mat-icon class="person-icon">person</mat-icon>{{ nombreApellido }}
-              </mat-cell>
-            </ng-container>
+                <!-- Nombre del empleado -->
+                <ng-container matColumnDef="nombre">
+                  <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" class="nombre-cell">
+                    <mat-icon class="person-icon">person</mat-icon>{{ nombreApellido }}
+                  </mat-cell>
+                </ng-container>
 
-            <!-- Fecha -->
-            <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="fecha-cell">
-                {{ asistencia.fecha | date: 'dd/MM/yyyy' }}
-              </mat-cell>
-            </ng-container>
+                <!-- Fecha -->
+                <ng-container matColumnDef="fecha">
+                  <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" class="fecha-cell">
+                    {{ asistencia.fecha | date: 'dd/MM/yyyy' }}
+                  </mat-cell>
+                </ng-container>
 
-            <!-- Hora de entrada -->
-            <ng-container matColumnDef="horaEntrada">
-              <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="hora-entrada-cell">
-                {{ asistencia.horaEntrada }}
-              </mat-cell>
-            </ng-container>
+                <!-- Hora de entrada -->
+                <ng-container matColumnDef="horaEntrada">
+                  <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" class="hora-entrada-cell">
+                    {{ asistencia.horaEntrada }}
+                  </mat-cell>
+                </ng-container>
 
-            <!-- Hora de salida -->
-            <ng-container matColumnDef="horaSalida">
-              <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="hora-salida-cell">
-                {{ asistencia.horaSalida }}
-              </mat-cell>
-            </ng-container>
+                <!-- Hora de salida -->
+                <ng-container matColumnDef="horaSalida">
+                  <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" class="hora-salida-cell">
+                    {{ asistencia.horaSalida }}
+                  </mat-cell>
+                </ng-container>
 
-            <!-- Comentario -->
-            <ng-container matColumnDef="comentario">
-              <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="comentario-cell">
-                {{ asistencia.comentario }}
-              </mat-cell>
-            </ng-container>
+                <!-- Comentario -->
+                <ng-container matColumnDef="comentario">
+                  <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" class="comentario-cell">
+                    {{ asistencia.comentario }}
+                  </mat-cell>
+                </ng-container>
 
-            <!-- Acciones -->
-            <ng-container matColumnDef="acciones">
-              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
-              <mat-cell *matCellDef="let asistencia" class="acciones-cell">
-                <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Añadir Comentario">
-                  <mat-icon>more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu">
-                  <button mat-menu-item (click)="abrirDialogComentario()">Añadir comentario</button>
-                </mat-menu>
-              </mat-cell>
-            </ng-container>
+                <!-- Acciones -->
+                <ng-container matColumnDef="acciones">
+                  <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+                  <mat-cell *matCellDef="let asistencia" class="acciones-cell">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" matTooltip="Añadir Comentario">
+                      <mat-icon class="icono-acciones">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="abrirDialogComentario(asistencia)">Añadir comentario</button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>
 
-            <!-- Definir las filas y las columnas -->
-            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+                <!-- Definir las filas y las columnas -->
+                <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+              </mat-table>
 
-          </mat-table>
+              <!-- Mensaje cuando no hay asistencias -->
+              <h6 *ngIf="asistencias.length === 0" class="alert alert-secondary text-center">
+                No se encuentran asistencias para mostrar, realice una nueva búsqueda.
+              </h6>
 
-          <h6 *ngIf="!this.asistencias.length" class="alert alert-secondary text-center">
-            No se encuentran asistencias para mostrar, realice una nueva búsqueda.
-          </h6>
+              <mat-paginator *ngIf="asistencias.length > 0"
+                             [length]="asistencias.length"
+                             [pageSize]="10"
+                             [pageSizeOptions]="[5, 10, 20]"
+                             showFirstLastButtons>
+              </mat-paginator>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
 
-          <mat-paginator *ngIf="this.asistencias.length > 0"
-                         [length]="this.asistencias.length"
-                         [pageSize]="10"
-                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+    <!-- Pestaña de licencias -->
+    <mat-tab label="Licencias">
+      <mat-card *ngIf="!isSearchingLicencias">
+        <mat-card-content>
+          <div class="row">
+            <div class="col-md-12">
+              <mat-table [dataSource]="licencias" matSort>
 
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
+                <!-- Nombre del empleado -->
+                <ng-container matColumnDef="nombre">
+                  <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    <mat-icon class="person-icon">person</mat-icon>{{ nombreApellido }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Periodo -->
+                <ng-container matColumnDef="periodo">
+                  <mat-header-cell *matHeaderCellDef>PERIODO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    {{ licencia.fechaInicio | date: 'dd/MM/yyyy' }} al {{ licencia.fechaFin | date: 'dd/MM/yyyy' }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Motivo -->
+                <ng-container matColumnDef="motivo">
+                  <mat-header-cell *matHeaderCellDef>MOTIVO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    {{ licencia.motivo.nombre }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Estado -->
+                <ng-container matColumnDef="estado">
+                  <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 1" class="warning-icon" matTooltip="El empleador aún no ha revisado su solicitud.">
+                      warning
+                    </mat-icon>
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 2" class="accepted-icon" matTooltip="El empleador ha aceptado su solicitud de licencia.">
+                      check_circle
+                    </mat-icon>
+                    <mat-icon *ngIf="licencia.estadoLicencia.id === 3" class="rejected-icon" matTooltip="El empleador ha denegado su solicitud de licencia.">
+                      cancel
+                    </mat-icon>
+                    {{ licencia.estadoLicencia.nombre }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Comentario -->
+                <ng-container matColumnDef="comentario">
+                  <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    {{ licencia.comentario }}
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Acciones -->
+                <ng-container matColumnDef="acciones">
+                  <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+                  <mat-cell *matCellDef="let licencia">
+                    <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarLicencia(licencia.id)">
+                      <mat-icon class="eliminar">delete</mat-icon>
+                    </button>
+                    <button mat-icon-button [matMenuTriggerFor]="licenciaMenu" matTooltip="Opciones">
+                      <mat-icon class="icono-acciones">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #licenciaMenu="matMenu">
+                      <button mat-menu-item (click)="abrirDialogComentario(licencia)">Añadir comentario</button>
+                    </mat-menu>
+                  </mat-cell>
+                </ng-container>
+
+                <!-- Definir las filas y las columnas -->
+                <mat-header-row *matHeaderRowDef="columnasLicencias"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: columnasLicencias;"></mat-row>
+              </mat-table>
+
+              <!-- Mensaje cuando no hay licencias -->
+              <h6 *ngIf="licencias.length === 0" class="alert alert-secondary text-center">
+                No se encuentran licencias para mostrar, realice una nueva búsqueda.
+              </h6>
+
+              <mat-paginator *ngIf="licencias.length > 0"
+                             [length]="licencias.length"
+                             [pageSize]="10"
+                             [pageSizeOptions]="[5, 10, 20]"
+                             showFirstLastButtons>
+              </mat-paginator>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </mat-tab>
+  </mat-tab-group>
 </div>

@@ -12,3 +12,24 @@
   width: 100%; /* Ancho completo hasta que alcance el mínimo */
   overflow-x: auto;
 }
+
+.warning-icon {
+  color: #ecb324;
+  margin-right: 5px;
+  display: inline-block;
+  position: relative;
+}
+
+.accepted-icon {
+  color: greenyellow;
+  margin-right: 5px;
+  display: inline-block;
+  position: relative;
+}
+
+.rejected-icon {
+  color: indianred;
+  margin-right: 5px;
+  display: inline-block;
+  position: relative;
+}
