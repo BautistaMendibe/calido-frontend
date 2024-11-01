@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Promociones</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaPromocion()">Registrar nueva promoción</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaPromocion()">Registrar nueva promoción</button>
       </div>
     </div>
 
@@ -49,11 +49,11 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="promociones.length > 0 && !isLoading">
+  <mat-card class="mat-card" *ngIf="promociones.length > 0 && !isLoading">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombre">
               <mat-header-cell *matHeaderCellDef>PROMOCIÓN</mat-header-cell>
               <mat-cell *matCellDef="let promocion" data-label="Promoción">{{ promocion.nombre }}</mat-cell>

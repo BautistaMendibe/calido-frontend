@@ -1,3 +1,15 @@
 h3 {
   color: #5e5e5e;
 }
+.container {
+  height: 100vh; /* La altura completa de la pantalla */
+  overflow-x: auto;
+}
+
+.form-emergente {
+  max-height: calc(100vh - 100px); /* Ajusta según el espacio que necesites */
+  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
+}

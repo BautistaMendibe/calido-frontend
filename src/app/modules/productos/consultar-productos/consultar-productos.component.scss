@@ -6,3 +6,23 @@
   border: 1px solid #ddd;
   margin: 5px 0;
 }
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+}
+
+.custom-table {
+  min-width: 1000px;  /* Ancho mínimo para la tabla */
+  overflow-x: auto;  /* Permitir scroll horizontal */
+}

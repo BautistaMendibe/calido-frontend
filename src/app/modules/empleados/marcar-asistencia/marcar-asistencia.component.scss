@@ -52,6 +52,23 @@ button.button-logout[disabled] {
   cursor: not-allowed;
 }
 
+.custom-table {
+  width: 100%;
+  min-width: 800px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+}
+
+@media (max-width: 450px) {
+  .asistencia-card {
+  width: 300px;
+  }
+
+  .mat-card-fondo-asistencia {
+    overflow: hidden;
+    height: 375px;
+    min-width: 360px;
+  }
+}
+
 .warning-icon {
   color: #ecb324;
   margin-right: 5px;
