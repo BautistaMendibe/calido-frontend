@@ -143,7 +143,9 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+            <mat-row *matRowDef="let row; columns: columnas;"
+                     [ngClass]="{'anulada-row': row.anulada}"
+                     [matTooltip]="row.anulada ? 'Venta anulada' : ''"></mat-row>
           </mat-table>
           <mat-paginator *ngIf="this.ventas.length > 0"
                          [length]="this.ventas.length"
