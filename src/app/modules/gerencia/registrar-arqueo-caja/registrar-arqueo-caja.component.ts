@@ -21,7 +21,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   public formDesactivado: boolean;
   private referencia: ConsultarArqueoCajaComponent;
 
-  public fechaHoy: Date = new Date();
+  public fechaHoy: Date;
   public listaCajas: Caja[] = [];
 
   constructor(
@@ -44,6 +44,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     this.esRegistro = this.data.esRegistro;
     this.formDesactivado = this.data.formDesactivado;
     this.referencia = this.data.referencia;
+    this.fechaHoy = new Date();
   }
 
   ngOnInit() {
@@ -116,6 +117,9 @@ export class RegistrarArqueoCajaComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
+    this.txCaja.disable();
+    this.txFechaApertura.disable();
+    this.txHoraApertura.disable();
     this.formDesactivado = false;
     this.data.editar = true;
   }

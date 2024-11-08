@@ -1,0 +1,14 @@
+/* Se agrega esto al box de botones (acciones) porque al ser tantas columnas */
+/* Los botones se ocultaban, entonces se tuvieron que mover manualmente */
+.actions-cell {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  margin-left: -17px;
+}

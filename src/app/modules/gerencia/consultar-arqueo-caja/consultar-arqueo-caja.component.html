@@ -88,18 +88,6 @@
               </mat-cell>
             </ng-container>
 
-            <!-- Cantidad en $ informada por el sistema al cierre del arqueo -->
-            <ng-container matColumnDef="sistema">
-              <mat-header-cell *matHeaderCellDef>SISTEMA</mat-header-cell>
-              <mat-cell *matCellDef="let arqueo" >$ {{ arqueo.sistema | number:'1.2-2':'es-AR'}}</mat-cell>
-            </ng-container>
-
-            <!-- Cantidad en $ informada por el usuario al cierre del arqueo -->
-            <ng-container matColumnDef="usuario">
-              <mat-header-cell *matHeaderCellDef>USUARIO</mat-header-cell>
-              <mat-cell *matCellDef="let arqueo" >$ {{ arqueo.usuario | number:'1.2-2':'es-AR'}}</mat-cell>
-            </ng-container>
-
             <!-- Diferencia entre sistema y usuario en $ al cierre del arqueo -->
             <ng-container matColumnDef="diferencia">
               <mat-header-cell *matHeaderCellDef>DIFERENCIA</mat-header-cell>
@@ -114,16 +102,21 @@
 
             <ng-container matColumnDef="acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
-              <mat-cell *matCellDef="let arqueo" data-label="Acciones">
-                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verArqueo(arqueo, false)">
-                  <mat-icon class="ver">visibility</mat-icon>
-                </button>
-                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verArqueo(arqueo, true)">
-                  <mat-icon class="editar">edit</mat-icon>
-                </button>
-                <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarArqueo(arqueo.id)">
-                  <mat-icon class="eliminar">delete</mat-icon>
-                </button>
+              <mat-cell *matCellDef="let arqueo" data-label="Acciones" class="actions-cell">
+                <div class="actions-container">
+                  <button class="btn" mat-icon-button matTooltip="Ver" (click)="verArqueo(arqueo, false)">
+                    <mat-icon class="ver">visibility</mat-icon>
+                  </button>
+                  <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verArqueo(arqueo, true)">
+                    <mat-icon class="editar">edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarArqueo(arqueo.id)">
+                    <mat-icon class="eliminar">delete</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" matTooltip="Ver Detalle Arqueo" (click)="verDetalleArqueo(arqueo.id)">
+                    <mat-icon class="detalle">description</mat-icon>
+                  </button>
+                </div>
               </mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>

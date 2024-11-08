@@ -29,6 +29,7 @@ import {ConsultarTarjetasComponent} from "./modules/tarjetas/consultar-tarjetas/
 import {ConsultarVentasComponent} from "./modules/venta/consultar-ventas/consultar-ventas.component";
 import {ConsultarArqueoCajaComponent} from "./modules/gerencia/consultar-arqueo-caja/consultar-arqueo-caja.component";
 import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consultar-caja.component";
+import {DetalleArqueoComponent} from "./modules/gerencia/detalle-arqueo/detalle-arqueo.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -53,7 +54,8 @@ const routes: Routes = [
   {path:'consultar-tarjetas', component:ConsultarTarjetasComponent},
   {path:'consultar-ventas', component: ConsultarVentasComponent},
   {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
-  {path:'consultar-cajas', component:ConsultarCajaComponent}
+  {path:'consultar-cajas', component:ConsultarCajaComponent},
+  {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent},
 ];
 
 @NgModule({

@@ -60,6 +60,7 @@ import { ConsultarArqueoCajaComponent } from './modules/gerencia/consultar-arque
 import { ConsultarCajaComponent } from './modules/gerencia/consultar-caja/consultar-caja.component';
 import { RegistrarCajaComponent } from './modules/gerencia/registrar-caja/registrar-caja.component';
 import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arqueo-caja/registrar-arqueo-caja.component';
+import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -106,7 +107,8 @@ registerLocaleData(localeEs, 'es');
     ConsultarArqueoCajaComponent,
     ConsultarCajaComponent,
     RegistrarCajaComponent,
-    RegistrarArqueoCajaComponent
+    RegistrarArqueoCajaComponent,
+    DetalleArqueoComponent
   ],
   imports: [
     BrowserModule,

@@ -11,6 +11,7 @@ import {Arqueo} from "../../../models/Arqueo.model";
 import {RegistrarArqueoCajaComponent} from "../registrar-arqueo-caja/registrar-arqueo-caja.component";
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {EstadoArqueo} from "../../../models/estadoArqueo.model";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-consultar-arqueo-caja',
@@ -23,7 +24,7 @@ export class ConsultarArqueoCajaComponent implements OnInit {
   public form: FormGroup;
   public arqueos: Arqueo[] = [];
   public listaEstadosArqueo: EstadoArqueo[] = [];
-  public columnas: string[] = ['caja', 'fecha', 'horaApertura', 'horaCierre', 'sistema', 'usuario', 'diferencia', 'estado', 'acciones'];
+  public columnas: string[] = ['caja', 'fecha', 'horaApertura', 'horaCierre', 'diferencia', 'estado', 'acciones'];
   private filtros: FiltrosArqueos;
   private unsubscribe$: Subject<void> = new Subject<void>();
 
@@ -32,6 +33,7 @@ export class ConsultarArqueoCajaComponent implements OnInit {
     private dialog: MatDialog,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
+    private router: Router,
     private cajasService: CajasService) {
     this.form = this.fb.group({
       txFechaApertura: [''],
@@ -125,6 +127,10 @@ export class ConsultarArqueoCajaComponent implements OnInit {
         }
       }
     );
+  }
+
+  public verDetalleArqueo(idArqueo: number) {
+    this.router.navigate(['/detalle-arqueo', idArqueo])
   }
 
   public eliminarArqueo(idArqueo: number) {

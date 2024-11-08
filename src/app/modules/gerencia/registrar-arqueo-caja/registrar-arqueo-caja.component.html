@@ -28,7 +28,7 @@
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de Apertura</mat-label>
-          <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" [min]="fechaHoy" />
+          <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" [max]="fechaHoy" />
           <mat-datepicker-toggle matSuffix [for]="pickerApertura"></mat-datepicker-toggle>
           <mat-datepicker #pickerApertura></mat-datepicker>
         </mat-form-field>
