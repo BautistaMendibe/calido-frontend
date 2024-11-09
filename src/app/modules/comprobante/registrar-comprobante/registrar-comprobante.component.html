@@ -49,7 +49,7 @@
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de Emisión</mat-label>
-          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
+          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" [max]="fechaHoy"/>
           <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
           <mat-datepicker #pickerEmision></mat-datepicker>
         </mat-form-field>

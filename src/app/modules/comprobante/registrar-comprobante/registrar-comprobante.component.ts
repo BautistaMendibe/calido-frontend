@@ -51,6 +51,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public formDesactivado: boolean;
   public tablaProductosDesactivada: boolean = false;
   public isLoading: boolean = false;
+  public fechaHoy: Date = new Date();
 
   public dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
 

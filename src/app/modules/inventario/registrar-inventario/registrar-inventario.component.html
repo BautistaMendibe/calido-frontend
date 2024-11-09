@@ -127,12 +127,12 @@
     </mat-card-content>
   </mat-card>
 
-  <h5 *ngIf="!isLoading && !(this.movimientosProducto.length > 0)" class="alert alert-secondary text-center">
+  <h5 *ngIf="!isLoading && !(this.movimientosProducto.length > 0) && !esRegistro" class="alert alert-secondary text-center">
     No se encuentran movimientos para mostrar, por favor realice una nueva búsqueda.
   </h5>
 
   <mat-divider class="my-3"></mat-divider>
-  <br>
+  <br *nfIf="!esRegistro">
 
   <!-- Btn de cancelar, registrar y modificar -->
   <div class="row text-right">

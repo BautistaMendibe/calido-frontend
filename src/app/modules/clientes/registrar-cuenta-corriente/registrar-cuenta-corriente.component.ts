@@ -75,6 +75,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
     if (this.data.editar) {
       this.listaVentasDeshabilitada = false;
+      this.txCreada.disable();
+      this.txCliente.disable();
     }
 
     this.buscarUsuarios();
@@ -194,13 +196,9 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public habilitarEdicion(){
     this.form.enable();
     this.txCreada.disable();
+    this.txCliente.disable();
     this.formDesactivado = false;
     this.data.editar = true;
-  }
-
-  public getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) return 'Este campo es obligatorio';
-    return '';
   }
 
   private filtrosSuscripciones() {
