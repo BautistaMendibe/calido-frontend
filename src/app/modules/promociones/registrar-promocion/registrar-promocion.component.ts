@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
@@ -73,8 +73,7 @@ export class RegistrarPromocionComponent implements OnInit{
       txPorcentajeDescuento: ['',
         [
         Validators.required,
-        Validators.min(0),
-        Validators.max(100),
+        this.validarPorcentaje(),
         Validators.pattern("^[0-9]*$")
         ]],
       txBuscar: ['', []],
@@ -119,14 +118,19 @@ export class RegistrarPromocionComponent implements OnInit{
     });
   }
 
-  public validarPorcentaje() {
-    const value = this.txPorcentajeDescuento.value;
+  public validarPorcentaje(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
 
-    // Verifica si el valor es un número y está fuera de los límites
-    if (value && (Number(value) < 0 || Number(value) > 100)) {
-      // Si el valor es menor que 0 o mayor que 100, lo ajusta
-      this.txPorcentajeDescuento.setValue(Math.max(0, Math.min(100, Number(value))));
-    }
+      // Verifica si el valor es un número y está fuera de los límites
+      if (value && (Number(value) <= 0 || Number(value) > 100)) {
+        // Si el valor es menor o igual a 0 o mayor a 100, devuelve el error
+        control.setValue(Math.max(1, Math.min(100, Number(value))));
+        return { 'invalidPercentage': { value: control.value } };
+      }
+
+      return null;
+    };
   }
 
 

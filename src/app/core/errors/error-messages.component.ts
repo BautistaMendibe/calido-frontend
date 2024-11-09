@@ -46,6 +46,7 @@ export class ErrorMessagesComponent {
     { key: 'dniCuilMismatch', message: () => 'El DNI y el CUIL no coinciden.' },
     { key: 'horaInvalida', message: () => 'Hora salida debe ser mayor a hora entrada.' },
     { key: 'passwordMismatch', message: () => 'Las contraseñas no coinciden.' },
+    { key: 'invalidPercentage', message: () => 'El porcentaje debe ser mayor a 0 y menor o igual a 100.' },
   ];
 }
 
