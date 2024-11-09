@@ -46,32 +46,32 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="empleados.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card class="mat-card" *ngIf="empleados.length > 0">
+  <mat-card class="mat-card" [hidden]="empleados.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombreUsuario">
-              <mat-header-cell *matHeaderCellDef>USUARIO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>USUARIO</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Usuario">{{ usuario.nombreUsuario }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Nombre">{{ usuario.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="apellido">
-              <mat-header-cell *matHeaderCellDef>APELLIDO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>APELLIDO</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Apellido">{{ usuario.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="cuil">
-              <mat-header-cell *matHeaderCellDef>CUIL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>CUIL</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Cuil">{{ formatearCuil(usuario.cuil) }}</mat-cell>
             </ng-container>
 
@@ -95,11 +95,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.empleados.length" class="alert alert-secondary text-center">
-            No se encuentran empleados para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.empleados.length > 0"
+          <mat-paginator
                          [length]="this.empleados.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -107,6 +103,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.empleados.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran empleados para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

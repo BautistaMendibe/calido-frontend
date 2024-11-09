@@ -36,7 +36,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public listaProveedores: Proveedor[] = [];
   public productos: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
-  public columnas: string[] = ['imgProducto', 'producto', 'costo', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
+  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
   public listaTiposComprobantes: TipoComprobante[] = [];
   public listaUsuarios: Usuario[] = [];
   public listaPedidosPorProveedor: Pedido[] = [];
@@ -50,6 +50,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public ordenSeleccionada: boolean = false;
   public formDesactivado: boolean;
   public tablaProductosDesactivada: boolean = false;
+  public isLoading: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
 
@@ -138,12 +139,14 @@ export class RegistrarComprobanteComponent implements OnInit {
   }
 
   private buscarProductos() {
+    this.isLoading = true;
     this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
       this.productos = productos;
 
       if (this.esConsulta && this.comprobante) {
         this.rellenarFormularioDataComprobante();
       }
+      this.isLoading = false;
     });
   }
 

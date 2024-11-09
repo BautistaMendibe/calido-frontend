@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {FiltrosCuentasCorrientes} from "../../../models/comandos/FiltrosCuentasCorrientes";
@@ -10,6 +10,8 @@ import {takeUntil} from "rxjs/operators";
 import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {RegistrarCuentaCorrienteComponent} from "../registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-cuentas-corrientes',
@@ -22,9 +24,13 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   public tableDataSource: MatTableDataSource<CuentaCorriente> = new MatTableDataSource<CuentaCorriente>([]);
   public form: FormGroup;
   public cuentas: CuentaCorriente[] = [];
-  public columnas: string[] = ['idCuenta', 'nombre', 'apellido', 'creada', 'balance', 'acciones'];
+  public columnas: string[] = ['id', 'nombre', 'apellido', 'fechaDesde', 'balanceTotal', 'acciones'];
   private filtros: FiltrosCuentasCorrientes;
   private unsubscribe$: Subject<void> = new Subject<void>();
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -61,15 +67,20 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
       desdeMonto: this.txDesdeMonto.value
     };
 
+    this.isLoading = true;
     this.usuariosService.consultarCuentasCorrientesxUsuario(this.filtros)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (cuentas) => {
           this.cuentas = cuentas;
           this.tableDataSource.data= cuentas;
+          this.tableDataSource.paginator = this.paginator;
+          this.tableDataSource.sort = this.sort;
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Error al consultar cuentas corrientes:', err);
+          this.isLoading = false;
         }
       });
   }

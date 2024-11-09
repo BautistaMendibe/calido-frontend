@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
@@ -7,6 +7,8 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {Producto} from "../../../models/producto.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -20,10 +22,13 @@ export class RegistrarPromocionComponent implements OnInit{
   public productosSelecionados: Producto[] = [];
   public productosSeleccionadosOriginales: Producto[] = [];
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public columnas: string[] = ['seleccionar', 'imgProducto', 'producto', 'precio'];
+  public columnas: string[] = ['seleccionar', 'imgProducto', 'nombre', 'precioConIVA'];
   public isLoading: boolean = false;
   public promocion: Promocion;
   public esConsulta: boolean;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -86,6 +91,8 @@ export class RegistrarPromocionComponent implements OnInit{
       }
 
       this.tableDataSource.data = this.listaProductos;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
 
       this.ordenarTablaPorSeleccionados();
 

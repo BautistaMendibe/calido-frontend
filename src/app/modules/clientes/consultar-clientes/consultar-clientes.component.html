@@ -64,21 +64,20 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card class="mat-card" *ngIf="clientes.length > 0">
+  <mat-card class="mat-card" [hidden]="clientes.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Nombre">{{ usuario.nombre + ' ' + usuario.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="mail">
-              <mat-header-cell *matHeaderCellDef>EMAIL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>EMAIL</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Mail">{{ usuario.mail }}</mat-cell>
             </ng-container>
-
 
             <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
@@ -100,7 +99,7 @@
 
           </mat-table>
 
-          <mat-paginator *ngIf="this.clientes.length > 0"
+          <mat-paginator
                          [length]="this.clientes.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

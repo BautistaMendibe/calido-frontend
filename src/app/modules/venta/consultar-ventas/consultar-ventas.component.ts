@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Producto} from "../../../models/producto.model";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
@@ -13,23 +13,28 @@ import {Router} from "@angular/router";
 import {DetalleVentaComponent} from "../detalle-venta/detalle-venta.component";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 import {NotificationService} from "../../../services/notificacion.service";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-ventas',
   templateUrl: './consultar-ventas.component.html',
   styleUrl: './consultar-ventas.component.scss'
 })
-export class ConsultarVentasComponent implements OnInit{
+export class ConsultarVentasComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public form: FormGroup;
   private filtros: FiltrosVentas;
-  public columnas: string[] = ['nroventa', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
+  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
 
   public formasDePago: FormaDePago[] = [];
   public tiposFactura: TipoFactura[] = [];
   public ventas: Venta[] = [];
   public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -37,7 +42,8 @@ export class ConsultarVentasComponent implements OnInit{
     private notificacionService: SnackBarService,
     private ventasService: VentasService,
     private router: Router,
-    private notificationDialogService: NotificationService) {
+    private notificationDialogService: NotificationService
+  ){
     this.filtros = new FiltrosVentas();
     this.form = new FormGroup({});
   }
@@ -84,7 +90,9 @@ export class ConsultarVentasComponent implements OnInit{
     this.armarFiltro();
     this.ventasService.buscarVentas(this.filtros).subscribe((ventas) => {
       this.ventas = ventas;
-      this.tableDataSource.data = ventas;
+      this.tableDataSource.data = this.ventas;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
       this.isLoading = false;
     })
   }
@@ -108,20 +116,24 @@ export class ConsultarVentasComponent implements OnInit{
         panelClass: 'custom-dialog-container',
         data: {
           venta: venta,
+          referencia: this,
         }
       }
     )
   }
 
-  public anularVenta(venta: Venta) {
+  public anularVenta(venta: Venta, onSuccess?: () => void) {
     this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Generar nota de crédito')
       .afterClosed()
       .subscribe((value) => {
         if (value) {
           this.ventasService.anularVenta(venta).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
+            if (respuesta.mensaje === 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
               this.buscarVentas();
+              if (onSuccess) {
+                onSuccess(); // Llama al callback solo si es exitoso
+              }
             } else {
               this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
             }

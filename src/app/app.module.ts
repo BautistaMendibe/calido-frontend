@@ -62,6 +62,7 @@ import { RegistrarCajaComponent } from './modules/gerencia/registrar-caja/regist
 import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arqueo-caja/registrar-arqueo-caja.component';
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
+import {MatPaginatorModule} from "@angular/material/paginator";
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -126,7 +127,8 @@ registerLocaleData(localeEs, 'es');
     PickerComponent,
     NgxMaskDirective,
     NgxMaskPipe,
-    FormsModule
+    FormsModule,
+    MatPaginatorModule
   ],
   providers: [
     HealthService,

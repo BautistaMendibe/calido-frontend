@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -10,6 +10,8 @@ import {Tarjeta} from "../../../models/tarjeta.model";
 import {TarjetasService} from "../../../services/tarjetas.service";
 import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
 import {Cuota} from "../../../models/Cuota.model";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-tarjeta',
@@ -26,6 +28,7 @@ export class RegistrarTarjetaComponent implements OnInit {
   public cuotasSeleccionadas: CuotaPorTarjeta[] = [];
   public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'descuento'];
   public listaTiposTarjetas: TipoTarjeta[] = [];
+  public isLoading: boolean = false;
 
   public tarjeta: Tarjeta;
   public esConsulta: boolean;
@@ -35,6 +38,9 @@ export class RegistrarTarjetaComponent implements OnInit {
   protected readonly Math = Math;
 
   public dataSourceCuotas = new MatTableDataSource(this.listaCuotas);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -93,9 +99,13 @@ export class RegistrarTarjetaComponent implements OnInit {
   }
 
   private buscarCuotas() {
+    this.isLoading = true;
     this.tarjetasService.buscarCuotas().subscribe((cuotas) => {
       this.listaCuotas = cuotas;
       this.dataSourceCuotas.data = this.listaCuotas;
+      this.dataSourceCuotas.paginator = this.paginator;
+      this.dataSourceCuotas.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

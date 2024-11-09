@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Proveedor} from "../../../models/proveedores.model";
@@ -12,6 +12,8 @@ import {takeUntil} from "rxjs/operators";
 import {FiltrosDetallesProductos} from "../../../models/comandos/FiltrosDetallesProductos";
 import {DetalleProducto} from "../../../models/detalleProducto";
 import {RegistrarInventarioComponent} from "../registrar-inventario/registrar-inventario.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-inventario',
@@ -22,10 +24,14 @@ export class ConsultarInventarioComponent implements OnInit {
   public tableDataSource: MatTableDataSource<DetalleProducto> = new MatTableDataSource<DetalleProducto>([]);
   public form: FormGroup;
   public detallesProducto: DetalleProducto[] = [];
-  public columnas: string[] = ['imgProducto', 'producto', 'proveedor', 'marca', 'cantidadEnInventario', 'acciones'];
+  public columnas: string[] = ['imgProducto', 'producto', 'proveedor', 'marca', 'cantEnInventario', 'acciones'];
   private filtros: FiltrosDetallesProductos;
   public listaProveedores: Proveedor[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -64,15 +70,20 @@ export class ConsultarInventarioComponent implements OnInit {
       proveedor: this.txProveedor.value,
     };
 
+    this.isLoading = true;
     this.productosService.consultarDetallesProductos(this.filtros)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (detallesProducto) => {
           this.detallesProducto = detallesProducto;
-          this.tableDataSource.data = detallesProducto;
+          this.tableDataSource.data = this.detallesProducto;
+          this.tableDataSource.paginator = this.paginator;
+          this.tableDataSource.sort = this.sort;
+          this.isLoading = false;
         },
         error: (err) => {
           console.error('Error al consultar detalles de productos:', err);
+          this.isLoading = false;
         }
       });
   }
@@ -93,7 +104,6 @@ export class ConsultarInventarioComponent implements OnInit {
       }
     );
   }
-
 
   public verDetalleProducto(detalle: DetalleProducto, editar: boolean) {
     this.dialog.open(

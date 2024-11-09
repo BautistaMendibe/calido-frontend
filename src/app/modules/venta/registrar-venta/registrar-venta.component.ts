@@ -81,6 +81,16 @@ export class RegistrarVentaComponent implements OnInit{
   public buscar() {
     const filtros: FiltrosProductos = new FiltrosProductos();
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
+      // Ordena los productos por cantidadEnStock (descendente) y luego por nombre (alfabético ascendente)
+      productos.sort((a, b) => {
+        const stockComparison = b.cantidadEnStock - a.cantidadEnStock;
+        if (stockComparison !== 0) {
+          return stockComparison;
+        }
+        return a.nombre.localeCompare(b.nombre);
+      });
+
+      // Asigna los productos ordenados a las variables
       this.productos = productos;
       this.productosFiltrados = [...productos];
       this.cargandoProductos = false;
@@ -392,7 +402,6 @@ export class RegistrarVentaComponent implements OnInit{
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
-
 
     this.buscar();
   }

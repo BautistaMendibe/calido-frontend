@@ -46,17 +46,17 @@
     </mat-card-header>
 
     <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="proveedores.length == 0">
+    <div class="spinner-wrapper" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
 
-    <mat-card class="mat-card" *ngIf="proveedores.length > 0">
+    <mat-card class="mat-card" [hidden]="proveedores.length === 0">
       <mat-card-content>
         <div class="row">
           <div class="col-md-12 ">
             <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
               <ng-container matColumnDef="nombre">
-                <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
                 <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>
               </ng-container>
 
@@ -66,12 +66,12 @@
               </ng-container>
 
               <ng-container matColumnDef="telefono">
-                <mat-header-cell *matHeaderCellDef>TELÉFONO</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>TELÉFONO</mat-header-cell>
                 <mat-cell *matCellDef="let proveedor" data-label="Teléfono">{{ proveedor.telefono }}</mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="mail">
-                <mat-header-cell *matHeaderCellDef>EMAIL</mat-header-cell>
+              <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>EMAIL</mat-header-cell>
                 <mat-cell class="columna-email" *matCellDef="let proveedor" data-label="Mail">{{ proveedor.email }}</mat-cell>
               </ng-container>
 
@@ -95,11 +95,7 @@
 
             </mat-table>
 
-            <h6 *ngIf="!this.proveedores.length" class="alert alert-secondary text-center">
-              No se encuentran proveedores para mostrar, realice una nueva búsqueda.
-            </h6>
-
-            <mat-paginator *ngIf="this.proveedores.length > 0"
+            <mat-paginator
                            [length]="this.proveedores.length"
                            [pageSize]="10"
                            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -107,6 +103,10 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <h5 *ngIf="!isLoading && !(this.proveedores.length > 0)" class="alert alert-secondary text-center">
+      No se encuentran proveedores para mostrar, realice una nueva búsqueda.
+    </h5>
   </div>
 
 

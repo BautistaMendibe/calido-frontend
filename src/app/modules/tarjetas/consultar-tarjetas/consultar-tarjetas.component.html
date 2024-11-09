@@ -53,23 +53,22 @@
 
   <br>
 
-
   <mat-card-header class="header-card">
     <h2 style="color: grey">Tarjetas encontradas</h2>
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="tarjetas.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card class="mat-card" *ngIf="tarjetas.length > 0">
+  <mat-card class="mat-card" [hidden]="tarjetas.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
-            <ng-container matColumnDef="tarjeta">
-              <mat-header-cell *matHeaderCellDef>TARJETA</mat-header-cell>
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>TARJETA</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="Tarjeta">{{ tarjeta.nombre }}</mat-cell>
             </ng-container>
 
@@ -107,11 +106,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.tarjetas.length" class="alert alert-secondary text-center">
-            No se encuentran tarjetas para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.tarjetas.length > 0"
+          <mat-paginator
                          [length]="this.tarjetas.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -119,6 +114,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.tarjetas.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran tarjetas para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

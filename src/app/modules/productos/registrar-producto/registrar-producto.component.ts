@@ -31,7 +31,6 @@ export class RegistrarProductoComponent implements OnInit {
   public productoImg: string | ArrayBuffer | null = null;
   private selectedFile: File | null = null;
   public esConsulta: boolean;
-  public listaPorcentajesGanancia: { value: number, label: string }[] = [];
   public editarPrecioDeVenta: boolean = false;
   public promociones: Promocion[] = [];
 
@@ -149,7 +148,7 @@ export class RegistrarProductoComponent implements OnInit {
 
       this.promociones = [promocion, ...promociones];
 
-      if (!this.data.producto.promocion?.id) {
+      if (!this.data.producto?.promocion?.id) {
         this.txPromocion.setValue(promocion.id);
       }
     });

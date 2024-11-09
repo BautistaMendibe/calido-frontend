@@ -11,8 +11,6 @@ import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
 import {RegistrarClientesComponent} from "../registrar-clientes/registrar-clientes.component";
-import {Caja} from "../../../models/Caja.model";
-import {RegistrarCajaComponent} from "../../gerencia/registrar-caja/registrar-caja.component";
 
 @Component({
   selector: 'app-consultar-clientes',
@@ -21,8 +19,6 @@ import {RegistrarCajaComponent} from "../../gerencia/registrar-caja/registrar-ca
 })
 export class ConsultarClientesComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
   public clientes: Usuario[] = [];
@@ -30,6 +26,9 @@ export class ConsultarClientesComponent implements OnInit {
   public isLoading: boolean = false;
 
   private filtros: FiltrosEmpleados;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -41,8 +40,6 @@ export class ConsultarClientesComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosEmpleados();
-    this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
   }
 
   ngOnInit() {
@@ -71,7 +68,9 @@ export class ConsultarClientesComponent implements OnInit {
 
     this.usuariosService.consultarClientes(this.filtros).subscribe((clientes) => {
       this.clientes = clientes;
-      this.tableDataSource.data = clientes;
+      this.tableDataSource.data = this.clientes;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
       this.isLoading = false;
     });
   }

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Proveedor} from "../../../models/proveedores.model";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
@@ -9,6 +9,8 @@ import {ProveedoresService} from "../../../services/proveedores.service";
 import {Router} from "@angular/router";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {NotificationService} from "../../../services/notificacion.service";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-proveedores',
@@ -20,8 +22,12 @@ export class ConsultarProveedoresComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Proveedor> = new MatTableDataSource<Proveedor>([]);
   public form: FormGroup;
   public proveedores: Proveedor[] = [];
-  public columnas: string[] = ['nombre', 'tipo', 'telefono', 'mail', 'acciones'];
+  public columnas: string[] = ['nombre', 'tipo', 'telefono', 'email', 'acciones'];
   private filtros: FiltrosProveedores;
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -54,9 +60,13 @@ export class ConsultarProveedoresComponent implements OnInit {
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
 
+    this.isLoading = true;
     this.proveedoresService.consultarProveedores(this.filtros).subscribe((proveedores) => {
       this.proveedores = proveedores;
-      this.tableDataSource.data = proveedores;
+      this.tableDataSource.data = this.proveedores;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

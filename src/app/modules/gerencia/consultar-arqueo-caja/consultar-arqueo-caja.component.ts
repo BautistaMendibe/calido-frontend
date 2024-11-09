@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Subject} from "rxjs";
@@ -12,6 +12,8 @@ import {RegistrarArqueoCajaComponent} from "../registrar-arqueo-caja/registrar-a
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {EstadoArqueo} from "../../../models/estadoArqueo.model";
 import {Router} from "@angular/router";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-arqueo-caja',
@@ -24,9 +26,13 @@ export class ConsultarArqueoCajaComponent implements OnInit {
   public form: FormGroup;
   public arqueos: Arqueo[] = [];
   public listaEstadosArqueo: EstadoArqueo[] = [];
-  public columnas: string[] = ['caja', 'fecha', 'horaApertura', 'horaCierre', 'diferencia', 'estado', 'acciones'];
+  public columnas: string[] = ['caja', 'fechaApertura', 'horaApertura', 'horaCierre', 'diferencia', 'estado', 'acciones'];
   private filtros: FiltrosArqueos;
   private unsubscribe$: Subject<void> = new Subject<void>();
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -66,15 +72,18 @@ export class ConsultarArqueoCajaComponent implements OnInit {
       estado: this.txEstado.value,
     };
 
+    this.isLoading = true;
     this.cajasService.consultarArqueos(this.filtros)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (arqueos) => {
           this.arqueos = arqueos;
           this.tableDataSource.data = this.arqueos;
+          this.tableDataSource.paginator = this.paginator;
+          this.tableDataSource.sort = this.sort;
+          this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error al consultar arqueos:', err);
         }
       });
   }
@@ -87,7 +96,6 @@ export class ConsultarArqueoCajaComponent implements OnInit {
           this.listaEstadosArqueo = estados;
         },
         error: (err) => {
-          console.error('Error al consultar estados de arqueo:', err);
         }
       });
   }

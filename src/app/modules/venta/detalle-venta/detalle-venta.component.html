@@ -112,18 +112,18 @@
                 </mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="producto">
-                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="cantidad">
-                <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
+              <ng-container matColumnDef="cantidadSeleccionada">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>CANTIDAD</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="Cantidad">{{ producto.cantidadSeleccionada }}</mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="subTotal">
-                <mat-header-cell *matHeaderCellDef>SUBTOTAL</mat-header-cell>
+              <ng-container matColumnDef="subTotalVenta">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>SUBTOTAL</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta }}</mat-cell>
               </ng-container>
 
@@ -133,8 +133,7 @@
 
             </mat-table>
 
-
-            <mat-paginator *ngIf="this.venta.productos.length > 0"
+            <mat-paginator
                            [length]="this.venta.productos.length"
                            [pageSize]="10"
                            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -142,6 +141,10 @@
         </div>
       </mat-card-content>
     </mat-card>
+
+    <h5 *ngIf="!(this.venta.productos.length > 0)" class="alert alert-secondary text-center">
+      No se encuentran productos de la venta para mostrar, por favor realice una nueva búsqueda.
+    </h5>
 
     <br>
     <mat-divider class="my-3"></mat-divider>

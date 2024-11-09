@@ -68,11 +68,11 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-tab-group mat-align-tabs="#e15b35" color="warn" *ngIf="!isSearchingLicencias && !isSearchingAsistencias">
+  <mat-tab-group mat-align-tabs="#e15b35" color="warn" [hidden]="isSearchingLicencias && isSearchingAsistencias">
 
     <!-- Pestaña de asistencias -->
     <mat-tab label="Asistencias">
-      <mat-card *ngIf="!isSearchingAsistencias">
+      <mat-card [hidden]="isSearchingAsistencias">
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">
@@ -80,7 +80,7 @@
 
                 <!-- Columna Empleado -->
                 <ng-container matColumnDef="nombre">
-                  <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>EMPLEADO</mat-header-cell>
                   <mat-cell *matCellDef="let asistencia" data-label="Empleado">
                     <mat-icon class="person-icon">person</mat-icon>{{ asistencia.usuario.nombre + ' ' + asistencia.usuario.apellido }}
                   </mat-cell>
@@ -88,7 +88,7 @@
 
                 <!-- Columna Fecha -->
                 <ng-container matColumnDef="fecha">
-                  <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
                   <mat-cell *matCellDef="let asistencia" data-label="Fecha">
                     {{ asistencia.fecha | date: 'dd/MM/yyyy' }}
                   </mat-cell>
@@ -96,7 +96,7 @@
 
                 <!-- Columna Hora de entrada -->
                 <ng-container matColumnDef="horaEntrada">
-                  <mat-header-cell *matHeaderCellDef>HORA DE ENTRADA</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>HORA DE ENTRADA</mat-header-cell>
                   <mat-cell *matCellDef="let asistencia" data-label="Hora de entrada">
                     {{ asistencia.horaEntrada }}
                   </mat-cell>
@@ -104,7 +104,7 @@
 
                 <!-- Columna Hora de salida -->
                 <ng-container matColumnDef="horaSalida">
-                  <mat-header-cell *matHeaderCellDef>HORA DE SALIDA</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>HORA DE SALIDA</mat-header-cell>
                   <mat-cell *matCellDef="let asistencia" data-label="Hora de salida">
                     {{ asistencia.horaSalida }}
                   </mat-cell>
@@ -112,7 +112,7 @@
 
                 <!-- Columna Comentario -->
                 <ng-container matColumnDef="comentario">
-                  <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>COMENTARIO</mat-header-cell>
                   <mat-cell *matCellDef="let asistencia" data-label="Comentario">
                     {{ asistencia.comentario }}
                   </mat-cell>
@@ -140,11 +140,11 @@
 
               </mat-table>
 
-              <h6 *ngIf="this.asistencias.length === 0" class="alert alert-secondary text-center">
+              <h5 *ngIf="this.asistencias.length === 0" class="alert alert-secondary text-center">
                 No se encuentran asistencias para mostrar, realice una nueva búsqueda.
-              </h6>
+              </h5>
 
-              <mat-paginator *ngIf="this.asistencias.length === 0"
+              <mat-paginator
                              [length]="this.asistencias.length"
                              [pageSize]="10"
                              [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -156,7 +156,7 @@
 
     <!-- Pestaña de licencias -->
     <mat-tab label="Licencias">
-      <mat-card *ngIf="!isSearchingLicencias">
+      <mat-card [hidden]="isSearchingLicencias">
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">
@@ -164,7 +164,7 @@
 
                 <!-- Columna Empleado -->
                 <ng-container matColumnDef="nombre">
-                  <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>EMPLEADO</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
                     <mat-icon class="person-icon">person</mat-icon>{{ licencia.usuario.nombre + ' ' + licencia.usuario.apellido }}
                   </mat-cell>
@@ -172,7 +172,7 @@
 
                 <!-- Columna Periodo -->
                 <ng-container matColumnDef="periodo">
-                  <mat-header-cell *matHeaderCellDef>PERIODO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>PERIODO</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
                     {{ licencia.fechaInicio | date: 'dd/MM/yyyy' }} al {{ licencia.fechaFin | date: 'dd/MM/yyyy' }}
                   </mat-cell>
@@ -180,7 +180,7 @@
 
                 <!-- Columna Motivo -->
                 <ng-container matColumnDef="motivo">
-                  <mat-header-cell *matHeaderCellDef>MOTIVO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>MOTIVO</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
                     {{ licencia.motivo.nombre }}
                   </mat-cell>
@@ -188,7 +188,7 @@
 
                 <!-- Columna Estado -->
                 <ng-container matColumnDef="estado">
-                  <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>ESTADO</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
                     <mat-icon *ngIf="licencia.estadoLicencia.id === 1" class="warning-icon" matTooltip="El empleador aún no ha revisado su solicitud.">
                       warning
@@ -207,7 +207,7 @@
 
                 <!-- Columna Comentario -->
                 <ng-container matColumnDef="comentario">
-                  <mat-header-cell *matHeaderCellDef>COMENTARIO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef mat-sort-header>COMENTARIO</mat-header-cell>
                   <mat-cell *matCellDef="let licencia">
                     {{ licencia.comentario }}
                   </mat-cell>
@@ -235,11 +235,11 @@
 
               </mat-table>
 
-              <h6 *ngIf="this.licencias.length === 0" class="alert alert-secondary text-center">
+              <h5 *ngIf="this.licencias.length === 0" class="alert alert-secondary text-center">
                 No se encuentran licencias para mostrar, realice una nueva búsqueda.
-              </h6>
+              </h5>
 
-              <mat-paginator *ngIf="this.licencias.length > 0"
+              <mat-paginator
                              [length]="this.licencias.length"
                              [pageSize]="10"
                              [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

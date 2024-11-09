@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,6 +17,8 @@ import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {MovimientoProducto} from "../../../models/movimientoProducto";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-inventario',
@@ -38,6 +40,10 @@ export class RegistrarInventarioComponent implements OnInit {
   public movimientosProducto: MovimientoProducto[] = [];
   public dataSourceMovimientosProducto = new MatTableDataSource(this.movimientosProducto);
   public tablaMovimientosDesactivada: boolean = false;
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -148,9 +154,13 @@ export class RegistrarInventarioComponent implements OnInit {
   }
 
   private buscarMovimientosPorProducto(idProducto: number) {
+    this.isLoading = true;
     this.productoService.consultarMovimientosPorProducto(idProducto).subscribe((movimientos) => {
       this.movimientosProducto = movimientos;
       this.dataSourceMovimientosProducto.data = this.movimientosProducto;
+      this.dataSourceMovimientosProducto.paginator = this.paginator;
+      this.dataSourceMovimientosProducto.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

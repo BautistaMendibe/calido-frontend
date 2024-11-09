@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
@@ -16,6 +16,8 @@ import {Transporte} from "../../../models/transporte.model";
 import {DetallePedido} from "../../../models/detallePedido.model";
 import {PedidosService} from "../../../services/pedidos.service";
 import {EstadoPedido} from "../../../models/estadoPedido";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-pedido',
@@ -30,7 +32,7 @@ export class RegistrarPedidoComponent implements OnInit {
   public listaProveedores: Proveedor[] = [];
   public productos: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
-  public columnas: string[] = ['imgProducto', 'producto', 'costo', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
+  public columnas: string[] = ['imgProducto', 'nombre', 'costo', 'tipoProducto', 'proveedor', 'marca', 'cantidad'];
   public listaTransportes: Transporte[] = [];
   public transportesFiltrados: Transporte[] = [];
   private idTransporte: number = -1;
@@ -45,7 +47,12 @@ export class RegistrarPedidoComponent implements OnInit {
   public formDesactivado: boolean;
   public listaProductosDeshabilitada: boolean = false;
 
+  public isLoading: boolean = false;
+
   public dataSourceProductos = new MatTableDataSource(this.productos);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -139,13 +146,17 @@ export class RegistrarPedidoComponent implements OnInit {
   }
 
   private buscarProductos() {
+    this.isLoading = true;
     this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
       this.productos = productos;
-      this.dataSourceProductos.data = productos;
+      this.dataSourceProductos.data = this.productos;
+      this.dataSourceProductos.paginator = this.paginator;
+      this.dataSourceProductos.sort = this.sort;
 
       if (this.esConsulta && this.pedido) {
         this.rellenarFormularioDataPedido();
       }
+      this.isLoading = false;
     });
   }
 

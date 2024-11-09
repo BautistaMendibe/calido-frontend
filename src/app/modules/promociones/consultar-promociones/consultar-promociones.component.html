@@ -40,7 +40,6 @@
 
   <br>
 
-
   <mat-card-header class="header-card">
     <h2 style="color: grey">Promociones encontradas</h2>
   </mat-card-header>
@@ -50,23 +49,23 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card class="mat-card" *ngIf="promociones.length > 0 && !isLoading">
+  <mat-card class="mat-card" [hidden]="!(promociones.length > 0 && !isLoading)">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>PROMOCIÓN</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PROMOCIÓN</mat-header-cell>
               <mat-cell *matCellDef="let promocion" data-label="Promoción">{{ promocion.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="porcentajeDescuento">
-              <mat-header-cell *matHeaderCellDef>DESCUENTO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>DESCUENTO</mat-header-cell>
               <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento" class="text-center">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="producto">
-              <mat-header-cell *matHeaderCellDef>PRODUCTOS</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTOS</mat-header-cell>
               <mat-cell *matCellDef="let promocion">
                 <div class="productos-container">
                   <ng-container *ngFor="let producto of promocion.productos.slice(0, 3)">
@@ -102,7 +101,7 @@
 
           </mat-table>
 
-          <mat-paginator *ngIf="this.promociones.length > 0"
+          <mat-paginator
                          [length]="this.promociones.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

@@ -24,12 +24,10 @@ import {RegistrarLicenciaComponent} from "../registrar-licencia/registrar-licenc
 })
 export class ConsultarAsistenciaComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Asistencia> = new MatTableDataSource<Asistencia>([]);
   public tableDataSourceLicencia: MatTableDataSource<Licencia> = new MatTableDataSource<Licencia>([]);
   public form: FormGroup;
-  // Ver. Crear tabla empleados que cada uno tenga un usuario
+
   public asistencias: Asistencia[] = [];
   public licencias: Licencia[] = [];
   public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
@@ -38,6 +36,9 @@ export class ConsultarAsistenciaComponent implements OnInit {
   private filtrosAsistencias: FiltrosAsistencias;
   private filtrosLicencias: FiltrosLicencias;
   public listaEmpleados: Usuario[] = [];
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   // Banderas
   public isSearchingAsistencias: boolean = false;
@@ -54,8 +55,6 @@ export class ConsultarAsistenciaComponent implements OnInit {
     this.form = new FormGroup({});
     this.filtrosAsistencias = new FiltrosAsistencias();
     this.filtrosLicencias = new FiltrosLicencias();
-    this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
   }
 
   ngOnInit() {
@@ -93,13 +92,17 @@ export class ConsultarAsistenciaComponent implements OnInit {
 
     this.usuariosService.consultarAsistencias(this.filtrosAsistencias).subscribe((asistencias) => {
       this.asistencias = asistencias;
-      this.tableDataSource.data = asistencias;
+      this.tableDataSource.data = this.asistencias;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
       this.isSearchingAsistencias = false;
     });
 
     this.usuariosService.consultarLicencias(this.filtrosLicencias).subscribe((licencias) => {
       this.licencias = licencias;
-      this.tableDataSourceLicencia.data = licencias;
+      this.tableDataSourceLicencia.data = this.licencias;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
       this.isSearchingLicencias = false;
     });
   }

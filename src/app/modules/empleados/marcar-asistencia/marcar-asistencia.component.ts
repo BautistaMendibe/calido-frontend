@@ -11,6 +11,9 @@ import {FiltrosAsistencias} from "../../../models/comandos/FiltrosAsistencias.co
 import {SolicitarLicenciaComponent} from "../solicitar-licencia/solicitar-licencia.component";
 import {FiltrosLicencias} from "../../../models/comandos/FiltrosLicencias.comando";
 import {Licencia} from "../../../models/licencia.model";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-marcar-asistencia',
@@ -24,8 +27,8 @@ export class MarcarAsistenciaComponent implements OnInit {
   public nombreApellido: string = '';
   public idUsuario: number = -1;
   public diasDelMes: any[] = [];
-  public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
-  public columnasLicencias = ['nombre', 'periodo', 'motivo', 'estado', 'comentario', 'acciones'];
+  public columnas = ['nombreApellido', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
+  public columnasLicencias = ['nombreApellido', 'periodo', 'motivo', 'estado', 'comentario', 'acciones'];
   public fechaHoy = new Date();
   public horaEntrada: string = '';
   public horaSalida: string = '';
@@ -41,6 +44,11 @@ export class MarcarAsistenciaComponent implements OnInit {
   public asistencia = new Asistencia();
   public form: FormGroup;
   public comentario: string = '';
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  public tableDataSourceAsistencia: MatTableDataSource<Asistencia> = new MatTableDataSource<Asistencia>([]);
+  public tableDataSourceLicencia: MatTableDataSource<Licencia> = new MatTableDataSource<Licencia>([]);
 
   constructor(
     private router: Router,
@@ -91,12 +99,14 @@ export class MarcarAsistenciaComponent implements OnInit {
             mesAsistencia === mesActual &&
             anioAsistencia === anioActual;
         });
+        this.tableDataSourceAsistencia.data = this.asistencias;
+        this.tableDataSourceAsistencia.paginator = this.paginator;
+        this.tableDataSourceAsistencia.sort = this.sort;
 
         this.isSearchingAsistencias = false;
         this.verificarAsistencias();
       },
       error: (err) => {
-        console.error('Error al consultar asistencias:', err);
         this.notificacionService.openSnackBarError('Error al cargar asistencias. Intente nuevamente.');
       }
     });
@@ -115,11 +125,13 @@ export class MarcarAsistenciaComponent implements OnInit {
           return licencia.idUsuario === this.idUsuario &&
             anioLicencia === anioActual; // Filtrar solo por año
         });
+        this.tableDataSourceLicencia.data = this.licencias;
+        this.tableDataSourceLicencia.paginator = this.paginator;
+        this.tableDataSourceLicencia.sort = this.sort;
 
         this.isSearchingLicencias = false;
       },
       error: (err) => {
-        console.error('Error al consultar licencias:', err);
         this.notificacionService.openSnackBarError('Error al cargar licencias. Intente nuevamente.');
       }
     });

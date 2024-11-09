@@ -88,14 +88,14 @@
 
   <br>
 
-  <mat-card *ngIf="movimientosProducto.length > 0 && !esRegistro">
+  <mat-card [hidden]="!(movimientosProducto.length > 0 && !esRegistro)">
     <mat-card-content>
       <div class="row">
 
         <div class="col-md-12">
           <mat-table [dataSource]="dataSourceMovimientosProducto" matSort [class.disabled-table]="formDesactivado || tablaMovimientosDesactivada">
             <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>FECHA MOVIMIENTO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA MOVIMIENTO</mat-header-cell>
               <mat-cell *matCellDef="let movimiento">{{ movimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="producto">
@@ -107,20 +107,17 @@
               <mat-cell *matCellDef="let movimiento">{{ movimiento.cantidad }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="tipoMovimiento">
-              <mat-header-cell *matHeaderCellDef>TIPO DE MOVIMIENTO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>TIPO DE MOVIMIENTO</mat-header-cell>
               <mat-cell *matCellDef="let movimiento">{{ movimiento.tipoMovimiento }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="referencia">
-              <mat-header-cell *matHeaderCellDef>REFERENCIA</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>REFERENCIA</mat-header-cell>
               <mat-cell *matCellDef="let movimiento">{{ movimiento.referencia }}</mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
           </mat-table>
-          <h6 *ngIf="!this.movimientosProducto.length" class="alert alert-secondary text-center">
-            No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-          </h6>
-          <mat-paginator *ngIf="this.movimientosProducto.length > 0"
+          <mat-paginator
                          [length]="this.movimientosProducto.length"
                          [disabled]="formDesactivado"
                          [pageSize]="10"
@@ -129,6 +126,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.movimientosProducto.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran movimientos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
 
   <mat-divider class="my-3"></mat-divider>
   <br>

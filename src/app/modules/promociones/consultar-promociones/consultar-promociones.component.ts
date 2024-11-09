@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Promocion} from "../../../models/promociones.model";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
@@ -11,6 +11,8 @@ import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {Producto} from "../../../models/producto.model";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-promociones',
@@ -25,6 +27,9 @@ export class ConsultarPromocionesComponent implements OnInit {
   public columnas: string[] = ['nombre', 'porcentajeDescuento', 'producto', 'acciones'];
   private filtros: FiltrosPromociones;
   public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -60,7 +65,9 @@ export class ConsultarPromocionesComponent implements OnInit {
 
     this.promocionesService.consultarPromociones(this.filtros).subscribe((promociones) => {
       this.promociones = promociones;
-      this.tableDataSource.data = promociones;
+      this.tableDataSource.data = this.promociones;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
       this.isLoading = false;
     });
   }

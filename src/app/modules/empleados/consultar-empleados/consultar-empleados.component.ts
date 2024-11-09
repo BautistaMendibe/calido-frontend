@@ -4,7 +4,7 @@ import {Usuario} from "../../../models/usuario.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
-import {RegistrarEmpleadosComponent} from "../../empleados/registrar-empleados/registrar-empleados.component";
+import {RegistrarEmpleadosComponent} from "../registrar-empleados/registrar-empleados.component";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
@@ -25,6 +25,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public form: FormGroup;
   public empleados: Usuario[] = [];
   public columnas: string[] = ['nombreUsuario', "nombre",'apellido', 'cuil', 'acciones'];
+  public isLoading: boolean = false;
 
   private filtros: FiltrosEmpleados;
 
@@ -38,8 +39,6 @@ export class ConsultarEmpleadosComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosEmpleados();
-    this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
   }
 
   ngOnInit() {
@@ -64,9 +63,13 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
 
+    this.isLoading = true;
     this.usuariosService.consultarEmpleados(this.filtros).subscribe((empleados) => {
       this.empleados = empleados;
-      this.tableDataSource.data = empleados;
+      this.tableDataSource.data = this.empleados;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

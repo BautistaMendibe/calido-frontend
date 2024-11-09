@@ -49,11 +49,11 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="arqueos.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="arqueos.length > 0">
+  <mat-card [hidden]="arqueos.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
@@ -65,8 +65,8 @@
             </ng-container>
 
             <!-- Fecha -->
-            <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>FECHA</mat-header-cell>
+            <ng-container matColumnDef="fechaApertura">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
               <mat-cell *matCellDef="let arqueo" class="fecha-cell">
                 {{ arqueo.fechaApertura | date: 'dd/MM/yyyy' }}
               </mat-cell>
@@ -74,7 +74,7 @@
 
             <!-- Hora de apertura -->
             <ng-container matColumnDef="horaApertura">
-              <mat-header-cell *matHeaderCellDef>HORA DE APERTURA</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>HORA DE APERTURA</mat-header-cell>
               <mat-cell *matCellDef="let arqueo">
                 {{ arqueo.horaApertura }}
               </mat-cell>
@@ -82,7 +82,7 @@
 
             <!-- Hora de cierre -->
             <ng-container matColumnDef="horaCierre">
-              <mat-header-cell *matHeaderCellDef>HORA DE CIERRE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>HORA DE CIERRE</mat-header-cell>
               <mat-cell *matCellDef="let arqueo">
                 {{ arqueo.horaCierre }}
               </mat-cell>
@@ -90,7 +90,7 @@
 
             <!-- Diferencia entre sistema y usuario en $ al cierre del arqueo -->
             <ng-container matColumnDef="diferencia">
-              <mat-header-cell *matHeaderCellDef>DIFERENCIA</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>DIFERENCIA</mat-header-cell>
               <mat-cell *matCellDef="let arqueo" >$ {{ arqueo.diferencia | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 
@@ -122,10 +122,7 @@
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
           </mat-table>
-          <h6 *ngIf="!this.arqueos.length" class="alert alert-secondary text-center">
-            No se encuentran arqueos de caja para mostrar, por favor realice una nueva búsqueda.
-          </h6>
-          <mat-paginator *ngIf="this.arqueos.length > 0"
+          <mat-paginator
                          [length]="this.arqueos.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
@@ -134,4 +131,8 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.arqueos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran arqueos de caja para mostrar, por favor realice una nueva búsqueda.
+  </h5>
 </div>
