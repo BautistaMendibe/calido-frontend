@@ -3,10 +3,11 @@
   <div class="row">
     <div class="col-sm-6 mt-2">
       <p class="titulo">Consultar venta</p>
+      <p *ngIf="venta.anulada">Venta anulada</p>
     </div>
     <div class="col-sm-6">
       <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
-        <button mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta()">
+        <button *ngIf="!venta.anulada" mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta()">
           <mat-icon class="eliminar">settings_backup_restore</mat-icon>
         </button>
         <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
