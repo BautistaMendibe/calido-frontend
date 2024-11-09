@@ -135,7 +135,7 @@
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verVenta(venta)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button mat-icon-button color="primary" matTooltip="Anular venta" (click)="anularVenta(venta)">
+                <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null && venta.anulada == 0" mat-icon-button color="primary" matTooltip="Anular venta" (click)="anularVenta(venta)">
                   <mat-icon class="eliminar">settings_backup_restore</mat-icon>
                 </button>
                 <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante(venta)">
@@ -148,7 +148,9 @@
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+            <mat-row *matRowDef="let row; columns: columnas;"
+                     [ngClass]="{'anulada-row': row.anulada}"
+                     [matTooltip]="row.anulada ? 'Venta anulada' : ''"></mat-row>
           </mat-table>
           <mat-paginator *ngIf="this.ventas.length > 0"
                          [length]="this.ventas.length"
