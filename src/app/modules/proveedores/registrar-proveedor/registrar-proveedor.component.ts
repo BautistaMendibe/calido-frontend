@@ -75,7 +75,7 @@ export class RegistrarProveedorComponent implements OnInit{
       txProvincia: [ '', [Validators.required]],
       txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
     });
   }
 

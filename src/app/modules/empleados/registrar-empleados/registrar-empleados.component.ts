@@ -113,7 +113,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txProvincia: ['', [Validators.required]],
       txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
       txRoles: [[], [Validators.required]]
     });
   }
