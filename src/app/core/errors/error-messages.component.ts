@@ -1,32 +1,22 @@
 import { Component, Input } from '@angular/core';
 import { AbstractControl } from '@angular/forms';
 
-/**
- * Componente que muestra mensajes de error para controles de formulario.
- * Se debe agregar este componente en el HTML del formulario para mostrar los mensajes de error.
- * Se puede agregar errores personalizados en el template.
- */
 @Component({
   selector: 'app-error-messages',
-  template: `
-    <div *ngIf="control && control.errors && (control.dirty || control.touched)">
-      <ng-container *ngFor="let error of errorOrder">
-        <p *ngIf="control.hasError(error.key); else stop">
-          {{ error.message(control.errors[error.key]) }}
-        </p>
-        <ng-template #stop></ng-template>
-      </ng-container>
-    </div>
-  `,
-  styles: [`
-    p {
-      color: indianred;
-      font-size: 0.8em;
-      margin-top: -20px;
-      padding: 0;
-    }
-  `]
+  templateUrl: './error-messages.component.html',
+  styleUrls: ['./error-messages.component.scss']
 })
+
+/**
+ * Componente para mostrar mensajes de error en controles de formulario.
+ *
+ * Uso:
+ * <app-error-messages [control]="tuControl"></app-error-messages>
+ *
+ * - `control`: Especifica el control de formulario al que se aplican los mensajes de error.
+ * - Admite mensajes de error personalizados definidos en el array `errorOrder` del componente.
+ *
+ */
 export class ErrorMessagesComponent {
   @Input() control!: AbstractControl | null;
 
@@ -49,5 +39,3 @@ export class ErrorMessagesComponent {
     { key: 'invalidPercentage', message: () => 'El porcentaje debe ser mayor a 0 y menor o igual a 100.' },
   ];
 }
-
-

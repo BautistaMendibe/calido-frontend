@@ -1,0 +1,8 @@
+<div *ngIf="control && control.errors && (control.dirty || control.touched)">
+  <ng-container *ngFor="let error of errorOrder">
+    <p *ngIf="control.hasError(error.key); else stop">
+      {{ error.message(control.errors[error.key]) }}
+    </p>
+    <ng-template #stop></ng-template>
+  </ng-container>
+</div>
