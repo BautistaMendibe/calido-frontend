@@ -72,10 +72,10 @@ export class RegistrarProveedorComponent implements OnInit{
       txTelefono: ['', []],
       txEmail: ['', [this.emailValidator()]],
       txCuit: ['', []],
-      txProvincia: [ '', []],
-      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txProvincia: [ '', [Validators.required]],
+      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
     });
   }
 

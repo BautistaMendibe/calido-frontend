@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { PromocionesService } from "../../../services/promociones.service";
 import { Router } from "@angular/router";
@@ -123,6 +123,10 @@ export class NotificarPromocionComponent implements OnInit {
   addEmoji(event: any) {
     const commentControl = this.form.get('comment');
     commentControl?.setValue(commentControl?.value + event.emoji.native);
+  }
+
+  get comment(): FormControl {
+    return this.form.get('comment') as FormControl;
   }
 
 }

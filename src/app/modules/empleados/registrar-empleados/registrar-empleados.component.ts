@@ -1,5 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators, AbstractControl, ValidatorFn} from "@angular/forms";
+import {
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+  AbstractControl,
+  ValidatorFn,
+  ValidationErrors
+} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -97,8 +105,8 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]], // a date
-      txCodigoPostal: ['', []], // a int
-      txDNI: ['', [Validators.maxLength(8)]], // a int
+      txCodigoPostal: ['', []], // an int
+      txDNI: ['', [Validators.pattern(/^\d{7,8}$/)]], // numérico, 7 u 8 caracteres
       txCuil: ['', []], // se usa máscara
       txContrasena: ['', [Validators.required]],
       ddGenero: ['', []], // desplegable a int
@@ -120,12 +128,11 @@ export class RegistrarEmpleadosComponent implements OnInit{
     }
   }
 
-
   private rellenarFormularioDataUsuario() {
     this.txNombreUsuario.setValue(this.usuario.nombreUsuario);
     this.txNombre.setValue(this.usuario.nombre);
     this.txApellido.setValue(this.usuario.apellido);
-    this.txFechaNacimiento.setValue(this.formatDate(this.usuario.fechaNacimiento));
+    this.txFechaNacimiento.setValue(this.usuario.fechaNacimiento);
     this.txCodigoPostal.setValue(this.usuario.codigoPostal);
     this.txDNI.setValue(this.usuario.dni);
     this.txCuil.setValue(this.usuario.cuil);
@@ -152,10 +159,6 @@ export class RegistrarEmpleadosComponent implements OnInit{
     if (this.formDesactivado) {
       this.form.disable();
     }
-  }
-
-  formatDate(fecha: Date): string {
-    return new Date(fecha).toISOString().substring(0, 10);
   }
 
   public habilitarEdicion(){

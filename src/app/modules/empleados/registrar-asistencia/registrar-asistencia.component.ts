@@ -1,5 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -25,6 +33,8 @@ export class RegistrarAsistenciaComponent implements OnInit {
   public asistencia: Asistencia;
   public esConsulta: boolean;
   public formDesactivado: boolean;
+
+  public fechaHoy: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -66,11 +76,31 @@ export class RegistrarAsistenciaComponent implements OnInit {
       txEmpleados: ['', [Validators.required]],
       txFecha: ['', [Validators.required]],
       txHoraEntrada: ['', [Validators.required]],
-      txHoraSalida: ['', [Validators.required]],
+      txHoraSalida: ['', [Validators.required, this.horaSalidaMayorQueEntradaValidator]],
       txComentario: ['', [Validators.maxLength(200)]],
+    });
+
+    this.form.get('txHoraEntrada')?.valueChanges.subscribe(() => {
+      this.form.get('txHoraSalida')?.updateValueAndValidity();
     });
   }
 
+  horaSalidaMayorQueEntradaValidator = (control: AbstractControl): ValidationErrors | null => {
+    const formGroup = control.parent as FormGroup;
+    if (!formGroup) return null;
+
+    const horaEntrada = formGroup.get('txHoraEntrada')?.value;
+    const horaSalida = control.value;
+
+    if (horaEntrada && horaSalida) {
+
+      if (horaSalida <= horaEntrada) {
+        return { horaInvalida: true };
+      }
+    }
+
+    return null;
+  };
 
   private rellenarFormularioDataAsistencia() {
 

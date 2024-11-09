@@ -23,6 +23,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txProveedor"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -35,6 +36,7 @@
             [matAutocomplete]="autoCompleteTransporte"
           />
         </mat-form-field>
+        <app-error-messages [control]="txTransporte"></app-error-messages>
         <mat-autocomplete #autoCompleteTransporte="matAutocomplete">
           <mat-option *ngFor="let transporte of transportesFiltrados" [value]="transporte.nombre" [id]="transporte.id.toString()">
             {{transporte.nombre}}
@@ -49,6 +51,7 @@
           <mat-datepicker-toggle matSuffix [for]="pickerPedido"></mat-datepicker-toggle>
           <mat-datepicker #pickerPedido></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFechaPedido"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -58,6 +61,7 @@
           <mat-datepicker-toggle matSuffix [for]="pickerEntrega"></mat-datepicker-toggle>
           <mat-datepicker #pickerEntrega></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFechaEntrega"></app-error-messages>
       </div>
     </div>
 
@@ -67,6 +71,7 @@
           <mat-label>Observaciones</mat-label>
           <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
+        <app-error-messages [control]="txObservaciones"></app-error-messages>
       </div>
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
@@ -77,6 +82,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txEstadoPedido"></app-error-messages>
       </div>
     </div>
 
@@ -175,6 +181,7 @@
         <mat-label>Costo de Compra</mat-label>
         <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$" thousandSeparator="," />
       </mat-form-field>
+      <app-error-messages [control]="txSubtotal"></app-error-messages>
     </div>
     <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
       <span>+</span>
@@ -184,6 +191,7 @@
         <mat-label>Costo de Transporte</mat-label>
         <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$" thousandSeparator="," />
       </mat-form-field>
+      <app-error-messages [control]="txMontoEnvio"></app-error-messages>
     </div>
     <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
       <span>+</span>
@@ -195,6 +203,7 @@
           <mat-option value="21">IVA (21%)</mat-option>
         </mat-select>
       </mat-form-field>
+      <app-error-messages [control]="txImpuestos"></app-error-messages>
     </div>
     <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
       <span>-</span>
@@ -208,6 +217,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <app-error-messages [control]="txDescuento"></app-error-messages>
     </div>
   </div>
 
@@ -217,6 +227,7 @@
         <mat-label>Total</mat-label>
         <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
       </mat-form-field>
+      <app-error-messages [control]="txTotal"></app-error-messages>
     </div>
   </div>
 

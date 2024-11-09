@@ -61,6 +61,7 @@ import { ConsultarCajaComponent } from './modules/gerencia/consultar-caja/consul
 import { RegistrarCajaComponent } from './modules/gerencia/registrar-caja/registrar-caja.component';
 import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arqueo-caja/registrar-arqueo-caja.component';
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
+import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -108,7 +109,8 @@ registerLocaleData(localeEs, 'es');
     ConsultarCajaComponent,
     RegistrarCajaComponent,
     RegistrarArqueoCajaComponent,
-    DetalleArqueoComponent
+    DetalleArqueoComponent,
+    ErrorMessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -138,6 +140,7 @@ registerLocaleData(localeEs, 'es');
     },
     { provide: LOCALE_ID, useValue: 'es' },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [ErrorMessagesComponent]
 })
 export class AppModule { }

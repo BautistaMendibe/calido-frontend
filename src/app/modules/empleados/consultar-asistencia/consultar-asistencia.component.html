@@ -27,6 +27,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txNombreUsuario"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -36,6 +37,7 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFecha"></app-error-messages>
         </div>
       </div>
     </form>

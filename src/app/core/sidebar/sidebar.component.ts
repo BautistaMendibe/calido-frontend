@@ -58,6 +58,7 @@ export class SidebarComponent implements OnInit {
   showFiller = false;
   public sideNavState = false;
   public linkText = false;
+  private lastSelectedItem: Menu | null = null;
 
   constructor(
     private router: Router,
@@ -109,16 +110,17 @@ export class SidebarComponent implements OnInit {
   }
 
   activarItem(item: Menu) {
-    if (item.activo) {
-      return;
+    // Si el ítem tiene submenús y es el mismo que el último seleccionado, alterna su estado
+    if (item.subMenu?.length) {
+      item.activo = this.lastSelectedItem === item ? !item.activo : true;
+      this.menuItems.forEach(x => x !== item && (x.activo = false));
+      this.lastSelectedItem = item.activo ? item : null;
+    } else {
+      // Si no tiene submenús, actívalo y resetea el último seleccionado
+      this.menuItems.forEach(x => x.activo = false);
+      item.activo = true;
+      this.lastSelectedItem = null;
     }
-
-    this.menuItems.forEach(x => {
-      if (x.activo && item.id !== x.id) {
-        x.activo = false;
-      }
-    });
-    item.activo = true;
   }
 
   /**

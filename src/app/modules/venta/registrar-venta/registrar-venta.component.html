@@ -23,6 +23,7 @@
               <input type="text" [formControl]="txBuscar" id="txBuscar" matInput/>
               <mat-icon matPrefix>search</mat-icon>
             </mat-form-field>
+            <app-error-messages [control]="txBuscar"></app-error-messages>
           </div>
 
           <!-- Botón de 'Nuevo producto' -->
@@ -121,6 +122,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-error-messages [control]="txFormaDePago"></app-error-messages>
           </div>
           <div class="col">
             <mat-form-field appearance="outline" class="w-100">
@@ -131,6 +133,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-error-messages [control]="txTipoFacturacion"></app-error-messages>
           </div>
         </div>
 
@@ -144,6 +147,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-error-messages [control]="txTarjeta"></app-error-messages>
           </div>
           <div class="col-3" *ngIf="this.txFormaDePago.value == this.formasDePagoEnum.TARJETA_CREDITO">
             <mat-form-field appearance="outline" class="w-100">
@@ -154,6 +158,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-error-messages [control]="txCuotas"></app-error-messages>
           </div>
         </div>
 
@@ -167,6 +172,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-error-messages [control]="txEmpleado"></app-error-messages>
           </div>
         </div>
         <div class="row">
@@ -179,6 +185,7 @@
                 </mat-option>
               </mat-select>
             </mat-form-field>
+            <app-error-messages [control]="txCliente"></app-error-messages>
           </div>
           <div class="col-3">
             <button mat-stroked-button color="warn" class="btn round new-client-btn" (click)="registrarCliente()">

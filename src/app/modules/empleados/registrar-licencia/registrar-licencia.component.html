@@ -24,6 +24,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txEmpleado"></app-error-messages>
       </div>
 
       <div class="col-md-6">
@@ -35,6 +36,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txEstado"></app-error-messages>
       </div>
 
     </div>
@@ -49,6 +51,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txMotivo"></app-error-messages>
       </div>
     </div>
 
@@ -65,6 +68,7 @@
             <mat-icon>date_range</mat-icon>
           </button>
         </mat-form-field>
+        <app-error-messages [control]="txPeriodo"></app-error-messages>
         <small *ngIf="diasSeleccionados > 0" class="diasSeleccionados">
           <span *ngIf="esConsulta">El empleado solicitó <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}</span>
           <span *ngIf="!esConsulta">{{(diasSeleccionados !== 1) ? 'Se solicitaron' : 'Se solicitó'}} <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}</span>
@@ -85,6 +89,7 @@
                     cdkAutosizeMaxRows="10">
           </textarea>
         </mat-form-field>
+        <app-error-messages [control]="txComentario"></app-error-messages>
       </div>
     </div>
 

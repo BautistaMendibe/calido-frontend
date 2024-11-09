@@ -19,9 +19,7 @@
             <mat-label>Empleado</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
-          <!--
-          <caja-control-messages [control]="txCodigo"></caja-control-messages>
-          -->
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
       </div>
     </form>

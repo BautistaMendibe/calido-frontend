@@ -20,6 +20,7 @@
             <mat-label>Número de Comprobante</mat-label>
             <input type="text" matInput [formControl]="txComprobante"/>
           </mat-form-field>
+          <app-error-messages [control]="txComprobante"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,6 +32,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTipoComprobante"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -42,6 +44,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -53,6 +56,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txResponsable"></app-error-messages>
         </div>
       </div>
 
@@ -64,6 +68,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaEmisionDesde"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -73,6 +78,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaEmisionHasta"></app-error-messages>
         </div>
       </div>
     </form>

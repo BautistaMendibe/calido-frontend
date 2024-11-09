@@ -20,6 +20,7 @@
             <mat-label>Tarjeta</mat-label>
             <input type="text" matInput [formControl]="txTarjeta"/>
           </mat-form-field>
+          <app-error-messages [control]="txTarjeta"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,6 +32,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTipoTarjeta"></app-error-messages>
         </div>
       </div>
     </form>

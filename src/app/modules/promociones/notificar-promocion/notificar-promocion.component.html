@@ -24,6 +24,7 @@
               <mat-label>Comentario</mat-label>
               <textarea matInput placeholder="Escribe tu comentario aquí..." formControlName="comment" class="comment-textarea mb-3"></textarea>
             </mat-form-field>
+            <app-error-messages [control]="comment"></app-error-messages>
             <button mat-icon-button class="emoji-button" (click)="toggleEmojiPicker()">
               <mat-icon>sentiment_very_satisfied</mat-icon>
             </button>

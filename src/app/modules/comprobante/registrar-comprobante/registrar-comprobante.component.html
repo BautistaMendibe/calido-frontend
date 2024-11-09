@@ -23,6 +23,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txTipoComprobante"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -30,6 +31,7 @@
           <mat-label>Número de Comprobante</mat-label>
           <input type="text" matInput [formControl]="txNumeroComprobante"/>
         </mat-form-field>
+        <app-error-messages [control]="txNumeroComprobante"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -41,6 +43,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txProveedor"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -50,13 +53,14 @@
           <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
           <mat-datepicker #pickerEmision></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFechaEmision"></app-error-messages>
       </div>
 
     </div>
 
     <div class="row pt-4">
 
-      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+      <div class="col-md-3" *ngIf="txTipoComprobante?.value === 1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Responsable</mat-label>
           <mat-select [formControl]="txResponsable">
@@ -65,9 +69,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txResponsable"></app-error-messages>
       </div>
 
-      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+      <div class="col-md-3" *ngIf="txTipoComprobante?.value === 1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Recibido por</mat-label>
           <mat-select [formControl]="txReceptor">
@@ -76,6 +81,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txReceptor"></app-error-messages>
       </div>
 
       <div class="col-md">
@@ -83,6 +89,7 @@
           <mat-label>Observaciones</mat-label>
           <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
+        <app-error-messages [control]="txObservaciones"></app-error-messages>
       </div>
     </div>
 
@@ -148,6 +155,7 @@
           <input type="text" matInput [formControl]="txBuscar"/>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
+        <app-error-messages [control]="txBuscar"></app-error-messages>
       </div>
       <div class="col-md-8">
         <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado || tablaProductosDesactivada">

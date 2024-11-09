@@ -19,6 +19,7 @@
           <mat-label>Tarjeta</mat-label>
           <input type="text" matInput [formControl]="txTarjeta"/>
         </mat-form-field>
+        <app-error-messages [control]="txTarjeta"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -30,6 +31,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txTipoTarjeta"></app-error-messages>
       </div>
 
     <mat-divider class="my-3"></mat-divider>
@@ -77,7 +79,8 @@
                              [ngModelOptions]="{standalone: true}"
                              (blur)="disableEdit(cuota, 'interes')"
                              (keydown.enter)="disableEdit(cuota, 'interes')"
-                             (input)="cuota.interes = Math.max(0, cuota.interes)"
+                             (input)="cuota.interes = Math.min(100, Math.max(0, +cuota.interes || 0))"
+                             min="0" max="100" maxlength="3"
                              class="full-width-input" />
                     </div>
                   </mat-cell>
@@ -96,7 +99,8 @@
                              [ngModelOptions]="{standalone: true}"
                              (blur)="disableEdit(cuota, 'descuento')"
                              (keydown.enter)="disableEdit(cuota, 'descuento')"
-                             (input)="cuota.descuento = Math.max(0, cuota.descuento)"
+                             (input)="cuota.descuento = Math.min(100, Math.max(0, +cuota.descuento || 0))"
+                             min="0" max="100" maxlength="3"
                              class="full-width-input" />
                     </div>
                   </mat-cell>

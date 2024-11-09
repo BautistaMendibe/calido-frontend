@@ -19,18 +19,21 @@
             <mat-label>Nombre</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Apellido</mat-label>
             <input type="text" matInput [formControl]="txApellido"/>
           </mat-form-field>
+          <app-error-messages [control]="txApellido"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Email</mat-label>
             <input type="text" matInput [formControl]="txMail"/>
           </mat-form-field>
+          <app-error-messages [control]="txMail"></app-error-messages>
         </div>
       </div>
     </form>

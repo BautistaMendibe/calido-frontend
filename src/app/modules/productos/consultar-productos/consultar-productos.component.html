@@ -16,6 +16,7 @@
             <mat-label>Producto</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
@@ -26,6 +27,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTipo"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
@@ -36,6 +38,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
@@ -46,6 +49,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txMarca"></app-error-messages>
         </div>
       </div>
     </form>

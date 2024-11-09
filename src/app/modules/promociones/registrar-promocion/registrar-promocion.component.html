@@ -18,12 +18,14 @@
           <mat-label>Nombre</mat-label>
           <input type="text" matInput [formControl]="txNombre"/>
         </mat-form-field>
+        <app-error-messages [control]="txNombre"></app-error-messages>
       </div>
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Porcentaje de descuento</mat-label>
           <input type="text" matInput [formControl]="txPorcentajeDescuento" maxlength="3" (input)="validarPorcentaje()"/>
         </mat-form-field>
+        <app-error-messages [control]="txPorcentajeDescuento"></app-error-messages>
       </div>
     </div>
   </form>
@@ -46,6 +48,7 @@
         <input type="text" matInput [formControl]="txBuscar"/>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscar"></app-error-messages>
     </div>
     <div class="col-md-8">
       <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="esConsulta">

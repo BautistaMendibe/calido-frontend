@@ -21,6 +21,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txMotivo"></app-error-messages>
       </div>
     </div>
 
@@ -39,6 +40,7 @@
             <mat-icon>date_range</mat-icon>
           </button>
         </mat-form-field>
+        <app-error-messages [control]="txPeriodo"></app-error-messages>
         <small *ngIf="diasSeleccionados > 0" class="diasSeleccionados">
           {{(diasSeleccionados !== 1) ? 'Se solicitarán' : 'Se solicitará'}} <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}
         </small>
@@ -58,6 +60,7 @@
                     cdkAutosizeMaxRows="10">
           </textarea>
         </mat-form-field>
+        <app-error-messages [control]="txComentario"></app-error-messages>
       </div>
     </div>
 

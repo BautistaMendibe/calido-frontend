@@ -227,12 +227,6 @@ export class RegistrarProductoComponent implements OnInit {
     this.data.editar = true;
   }
 
-  public getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) return 'Este campo es obligatorio';
-    if (control.hasError('pattern')) return 'Formato inválido';
-    return '';
-  }
-
   public onFileSelected(event: Event) {
     const fileInput = event.target as HTMLInputElement;
     if (fileInput.files?.length) {

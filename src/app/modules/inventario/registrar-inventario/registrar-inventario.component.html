@@ -22,6 +22,7 @@
                  [formControl]="txProducto"
                  [matAutocomplete]="autoCompleteProducto">
         </mat-form-field>
+        <app-error-messages [control]="txProducto"></app-error-messages>
         <mat-autocomplete #autoCompleteProducto="matAutocomplete" (optionSelected)="enSeleccionDeProducto($event)">
           <mat-option *ngFor="let producto of this.productosFiltrados" [value]="producto.nombre" [id]="producto.id.toString()">
             {{ producto.nombre }}
@@ -34,12 +35,14 @@
           <mat-label *ngIf="!esRegistro">Cantidad en Inventario</mat-label>
           <input type="text" matInput [formControl]="txCantidadEnInventario"/>
         </mat-form-field>
+        <app-error-messages [control]="txCantidadEnInventario"></app-error-messages>
       </div>
       <div class="col-md" *ngIf="!esRegistro">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Valor de Inventario</mat-label>
           <input type="text" matInput [formControl]="txValorEnInventario"/>
         </mat-form-field>
+        <app-error-messages [control]="txValorEnInventario"></app-error-messages>
       </div>
     </div>
   </form>
@@ -61,6 +64,7 @@
         <mat-datepicker #pickerFecha></mat-datepicker>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscarFecha"></app-error-messages>
     </div>
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
@@ -70,6 +74,7 @@
         <mat-datepicker #pickerFechaHasta></mat-datepicker>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscarFechaHasta"></app-error-messages>
     </div>
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
@@ -77,6 +82,7 @@
         <input type="text" matInput [formControl]="txBuscarTipo"/>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscarTipo"></app-error-messages>
     </div>
   </div>
 

@@ -30,6 +30,7 @@
           <mat-label>Número de venta</mat-label>
           <input type="text" matInput [formControl]="txNumeroVenta"/>
         </mat-form-field>
+        <app-error-messages [control]="txNumeroVenta"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -37,6 +38,7 @@
           <mat-label>Fecha de venta</mat-label>
           <input type="text" matInput [formControl]="txFecha"/>
         </mat-form-field>
+        <app-error-messages [control]="txFecha"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -44,6 +46,7 @@
           <mat-label>Forma de pago</mat-label>
           <input type="text" matInput [formControl]="txFormaDePago"/>
         </mat-form-field>
+        <app-error-messages [control]="txFormaDePago"></app-error-messages>
       </div>
 
     </div>
@@ -53,6 +56,7 @@
           <mat-label>Tipo de factura</mat-label>
           <input type="text" matInput [formControl]="txTipoFactura"/>
         </mat-form-field>
+        <app-error-messages [control]="txTipoFactura"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -60,6 +64,7 @@
           <mat-label>Monto total</mat-label>
           <input type="text" matInput [formControl]="txMontoTotal"/>
         </mat-form-field>
+        <app-error-messages [control]="txMontoTotal"></app-error-messages>
       </div>
     </div>
 

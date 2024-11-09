@@ -24,15 +24,17 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txEmpleados"></app-error-messages>
       </div>
 
       <div class="col-md-6">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="txFecha" />
+          <input matInput [matDatepicker]="picker" [formControl]="txFecha" [max]="fechaHoy"/>
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFecha"></app-error-messages>
       </div>
     </div>
 
@@ -43,6 +45,7 @@
           <mat-label>Hora de Entrada</mat-label>
           <input type="time" step="1" matInput [formControl]="txHoraEntrada"/>
         </mat-form-field>
+        <app-error-messages [control]="txHoraEntrada"></app-error-messages>
       </div>
 
       <div class="col-md-6">
@@ -50,6 +53,7 @@
           <mat-label>Hora de Salida</mat-label>
           <input type="time" step="1" matInput [formControl]="txHoraSalida"/>
         </mat-form-field>
+        <app-error-messages [control]="txHoraSalida"></app-error-messages>
       </div>
 
     </div>
@@ -61,6 +65,7 @@
           <mat-label>Comentario</mat-label>
           <input type="text" matInput [formControl]="txComentario"/>
         </mat-form-field>
+        <app-error-messages [control]="txComentario"></app-error-messages>
       </div>
 
     </div>

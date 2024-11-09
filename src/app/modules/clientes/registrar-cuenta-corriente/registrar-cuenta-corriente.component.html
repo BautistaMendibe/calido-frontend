@@ -22,8 +22,8 @@
               {{ '(' + cliente.id + ') ' + cliente.nombre + ' ' + cliente.apellido}}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="txCliente.invalid">{{getErrorMessage(txCliente)}}</mat-error>
         </mat-form-field>
+        <app-error-messages [control]="txCliente"></app-error-messages>
       </div>
 
       <div class="col-md">
@@ -33,14 +33,15 @@
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txCreada"></app-error-messages>
       </div>
 
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Saldo</mat-label>
           <input matInput formControlName="txBalance" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
-          <mat-error *ngIf="txBalance.invalid">{{getErrorMessage(txBalance)}}</mat-error>
         </mat-form-field>
+        <app-error-messages [control]="txBalance"></app-error-messages>
       </div>
     </div>
 
@@ -59,6 +60,7 @@
           <input type="text" matInput [formControl]="txBuscar"/>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
+        <app-error-messages [control]="txBuscar"></app-error-messages>
       </div>
     </div>
 

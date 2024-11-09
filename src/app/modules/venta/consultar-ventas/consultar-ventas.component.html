@@ -17,6 +17,7 @@
             <mat-label>Número de venta</mat-label>
             <input type="text" matInput [formControl]="txNumero"/>
           </mat-form-field>
+          <app-error-messages [control]="txNumero"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -27,6 +28,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txFormaDePago"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -37,6 +39,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTiposFactura"></app-error-messages>
         </div>
       </div>
       <div class="row pt-4">
@@ -47,6 +50,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaDesde"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -55,6 +59,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaHasta"></app-error-messages>
         </div>
       </div>
     </form>

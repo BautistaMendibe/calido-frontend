@@ -20,6 +20,7 @@
             <mat-label>Producto</mat-label>
             <input type="text" matInput [formControl]="txProducto"/>
           </mat-form-field>
+          <app-error-messages [control]="txProducto"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,6 +32,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
       </div>
     </form>

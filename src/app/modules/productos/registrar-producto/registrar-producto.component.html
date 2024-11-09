@@ -23,15 +23,15 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Producto</mat-label>
               <input type="text" matInput [formControl]="txNombre"/>
-              <mat-error *ngIf="txNombre.invalid">{{getErrorMessage(txNombre)}}</mat-error>
             </mat-form-field>
+            <app-error-messages [control]="txNombre"></app-error-messages>
           </div>
           <div class="col-md-6">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Código de Barras</mat-label>
               <input type="text" matInput [formControl]="txCodigoBarras" maxlength="13"/>
-              <mat-error *ngIf="txCodigoBarras.invalid">{{getErrorMessage(txCodigoBarras)}}</mat-error>
             </mat-form-field>
+            <app-error-messages [control]="txCodigoBarras"></app-error-messages>
           </div>
         </div>
 
@@ -41,8 +41,8 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Tipo Producto</mat-label>
               <input type="text" matInput [formControl]="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto"/>
-              <mat-error *ngIf="txTipoProducto.invalid">{{getErrorMessage(txTipoProducto)}}</mat-error>
             </mat-form-field>
+            <app-error-messages [control]="txTipoProducto"></app-error-messages>
             <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
               <mat-option *ngFor="let tipoProducto of tiposProductoFiltrados" [value]="tipoProducto.nombre">
                 {{tipoProducto.nombre}}
@@ -53,8 +53,8 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Marca</mat-label>
               <input type="text" matInput [formControl]="txMarca" [matAutocomplete]="autoCompleteMarca"/>
-              <mat-error *ngIf="txMarca.invalid">{{getErrorMessage(txMarca)}}</mat-error>
             </mat-form-field>
+            <app-error-messages [control]="txMarca"></app-error-messages>
             <mat-autocomplete #autoCompleteMarca="matAutocomplete">
               <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.nombre">
                 {{marca.nombre}}
@@ -69,8 +69,8 @@
                   {{proveedor.nombre}}
                 </mat-option>
               </mat-select>
-              <mat-error *ngIf="txProveedor.invalid">{{getErrorMessage(txProveedor)}}</mat-error>
             </mat-form-field>
+            <app-error-messages [control]="txProveedor"></app-error-messages>
           </div>
         </div>
 
@@ -80,8 +80,8 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Descripción</mat-label>
               <textarea matInput [formControl]="txDescripcion" rows="3"></textarea>
-              <mat-error *ngIf="txDescripcion.invalid">{{getErrorMessage(txDescripcion)}}</mat-error>
             </mat-form-field>
+            <app-error-messages [control]="txDescripcion"></app-error-messages>
           </div>
         </div>
 
@@ -108,8 +108,8 @@
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Costo de Compra</mat-label>
           <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$" thousandSeparator="," />
-          <mat-error *ngIf="txCosto.invalid">{{getErrorMessage(txCosto)}}</mat-error>
         </mat-form-field>
+        <app-error-messages [control]="txCosto"></app-error-messages>
       </div>
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>+</span>
@@ -123,8 +123,8 @@
             mask="percent.2"
             suffix="%"
             [formControl]="txMargenGanancia"/>
-          <mat-error *ngIf="txMargenGanancia.invalid">{{getErrorMessage(txMargenGanancia)}}</mat-error>
         </mat-form-field>
+        <app-error-messages [control]="txMargenGanancia"></app-error-messages>
       </div>
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>-</span>
@@ -137,8 +137,8 @@
               {{ promocion.nombre + ' (' + promocion.porcentajeDescuento + '%)' }}
             </mat-option>
           </mat-select>
-          <mat-error *ngIf="txProveedor.invalid">{{ getErrorMessage(txProveedor) }}</mat-error>
         </mat-form-field>
+        <app-error-messages [control]="txPromocion"></app-error-messages>
       </div>
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>=</span>
@@ -148,6 +148,7 @@
           <mat-label>Precio final de venta (+21%)</mat-label>
           <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$" thousandSeparator="," />
         </mat-form-field>
+        <app-error-messages [control]="txPrecioConIva"></app-error-messages>
       </div>
     </div>
 

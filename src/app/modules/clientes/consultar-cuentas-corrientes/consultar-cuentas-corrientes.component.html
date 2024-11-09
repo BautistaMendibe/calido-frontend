@@ -16,6 +16,7 @@
             <mat-label>Cliente</mat-label>
             <input type="text" matInput [formControl]="txCliente"/>
           </mat-form-field>
+          <app-error-messages [control]="txCliente"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -23,6 +24,7 @@
             <mat-label>Desde Saldo</mat-label>
             <input type="text" matInput [formControl]="txDesdeMonto" mask="separator.2" prefix="$" thousandSeparator=","/>
           </mat-form-field>
+          <app-error-messages [control]="txDesdeMonto"></app-error-messages>
         </div>
 
       </div>
