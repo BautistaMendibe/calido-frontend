@@ -21,6 +21,7 @@ export class Venta {
   interes: number;
   descuento: number;
   anulada: boolean;
+  idCaja: number;
 
   constructor(
       id?: number,
@@ -38,6 +39,7 @@ export class Venta {
       interes?: number,
       descuento?: number,
       anulada?: boolean,
+      idCaja?: number,
   ) {
 
     this.id = id!;
@@ -55,5 +57,6 @@ export class Venta {
     this.interes = interes!;
     this.descuento = descuento!;
     this.anulada = anulada!;
+    this.idCaja = idCaja!;
   }
 }

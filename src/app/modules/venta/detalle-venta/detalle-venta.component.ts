@@ -71,7 +71,7 @@ export class DetalleVentaComponent implements OnInit{
     this.txNumeroVenta.setValue(this.venta.id)
     this.txFecha.setValue(this.formatDate(this.venta.fecha));
     this.txFormaDePago.setValue(this.venta.formaDePago.nombre);
-    this.txTipoFactura.setValue(this.venta.facturacion.nombre);
+    this.txTipoFactura.setValue(this.venta.facturacion?.nombre);
     this.txMontoTotal.setValue(this.venta.montoTotal);
     this.txCliente.setValue( this.venta.cliente.nombre ? (this.venta.cliente.nombre + ' ' + this.venta.cliente.apellido) : 'Consumidor final');
     this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');

@@ -28,20 +28,20 @@
 
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de creación</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="txCreada" placeholder="Creada">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <app-error-messages [control]="txCreada"></app-error-messages>
-      </div>
-
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Saldo</mat-label>
           <input matInput formControlName="txBalance" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
         </mat-form-field>
         <app-error-messages [control]="txBalance"></app-error-messages>
+      </div>
+
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de creación</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="txCreada" placeholder="Creada" [min]="fechaHoy" [max]="fechaHoy">
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+        <app-error-messages [control]="txCreada"></app-error-messages>
       </div>
     </div>
 
@@ -131,7 +131,7 @@
       </mat-card-content>
     </mat-card>
 
-    <h5 *ngIf="!isLoading && this.ventas.length === 0" class="alert alert-secondary text-center">
+    <h5 *ngIf="!isLoading && this.ventas.length === 0 && !esRegistro" class="alert alert-secondary text-center">
       No se encuentran ventas para esta cuenta para mostrar, por favor realice una nueva búsqueda.
     </h5>
   </form>

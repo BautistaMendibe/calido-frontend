@@ -4,7 +4,7 @@ import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {NotificationService} from "../../../services/notificacion.service";
 import {Venta} from "../../../models/venta.model";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
@@ -24,6 +24,9 @@ import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando"
 import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
 import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
 import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Caja} from "../../../models/Caja.model";
+import {CajasService} from "../../../services/cajas.service";
+import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -44,6 +47,7 @@ export class RegistrarVentaComponent implements OnInit{
   public registrandoVenta: boolean = false;
   public tiposDeFacturacion: TipoFactura[] = [];
   public listaEmpleados: Usuario[] = [];
+  public listaCajas: Caja[] = [];
   public mostrarTarjetasCuotas: boolean = false;
   public tarjetasRegistradas: Tarjeta[] = [];
   public tarjetaSeleccionada: Tarjeta;
@@ -63,7 +67,8 @@ export class RegistrarVentaComponent implements OnInit{
     private promocionesService: PromocionesService,
     private authService: AuthService,
     private tarjetasService: TarjetasService,
-    private configuracionesService: ConfiguracionesService
+    private configuracionesService: ConfiguracionesService,
+    private cajasService: CajasService,
   ) {
     this.form = new FormGroup({});
     this.tarjetaSeleccionada = new Tarjeta();
@@ -105,7 +110,8 @@ export class RegistrarVentaComponent implements OnInit{
       txEmpleado: ['', [Validators.required]],
       txBuscar: ['', []],
       txTarjeta: ['', []],
-      txCuotas: ['', []]
+      txCuotas: ['', []],
+      txCaja: [1, [Validators.required]]
     });
   }
 
@@ -115,11 +121,18 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarTiposFactura();
     this.buscarEmpleados();
     this.obtenerEmpleadoLogueado();
+    this.buscarCajas();
   }
 
   private buscarFacturacionAutomatica() {
     this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
       this.facturacionAutomatica = configuracion.facturacionAutomatica;
+    });
+  }
+
+  private buscarCajas() {
+    this.cajasService.consultarCajas(new FiltrosCajas()).subscribe((cajas) => {
+      this.listaCajas = cajas;
     });
   }
 
@@ -353,6 +366,7 @@ export class RegistrarVentaComponent implements OnInit{
       venta.detalleVenta = [];
       venta.productos = this.productosSeleccionados;
       venta.idEmpleado = this.txEmpleado.value;
+      venta.idCaja = this.txCaja.value;
 
       // Si el pago es con tarjeta se registran esos datos
       venta.tarjeta = this.tarjetaSeleccionada.nombre;
@@ -522,5 +536,9 @@ export class RegistrarVentaComponent implements OnInit{
 
   get tiposTarjetasEnum(): typeof TiposTarjetasEnum {
     return TiposTarjetasEnum;
+  }
+
+  get txCaja(): FormControl {
+    return this.form.get('txCaja') as FormControl;
   }
 }

@@ -31,6 +31,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public esRegistro: boolean;
   public formDesactivado: boolean;
   private referencia: ConsultarCuentasCorrientesComponent;
+  public fechaHoy: Date = new Date();
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public ventas: Venta[] = [];
@@ -192,6 +193,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
+    this.txCreada.disable();
     this.formDesactivado = false;
     this.data.editar = true;
   }

@@ -165,6 +165,18 @@
         <div class="row">
           <div class="col">
             <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Caja</mat-label>
+              <mat-select [formControl]="txCaja">
+                <mat-option *ngFor="let caja of this.listaCajas" [value]="caja.id">
+                  {{ caja.nombre }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <app-error-messages [control]="txCaja"></app-error-messages>
+          </div>
+
+          <div class="col">
+            <mat-form-field appearance="outline" class="w-100">
               <mat-label>Empleado</mat-label>
               <mat-select [formControl]="txEmpleado">
                 <mat-option *ngFor="let empleado of this.listaEmpleados" [value]="empleado.id">
