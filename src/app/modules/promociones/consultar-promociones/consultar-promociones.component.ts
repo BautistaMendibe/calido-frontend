@@ -69,11 +69,11 @@ export class ConsultarPromocionesComponent implements OnInit {
     const dialog = this.dialog.open(
       RegistrarPromocionComponent,
       {
-        width: '80%',
-        autoFocus: false,
-        maxHeight: '80vh',
+        width: '75%',
         height: 'auto',
-        panelClass: 'custom-dialog-container',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
         data: {
           referencia: this
         }
@@ -92,10 +92,11 @@ export class ConsultarPromocionesComponent implements OnInit {
     const dialog = this.dialog.open(
       RegistrarPromocionComponent,
       {
-        width: '80%',
+        width: '75%',
+        height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
         data: {
           promocion: promocion,
           esConsulta: !editar

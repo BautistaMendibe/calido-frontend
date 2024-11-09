@@ -60,6 +60,31 @@
         </mat-form-field>
       </div>
     </div>
+
+    <!-- Botón para adjuntar archivo -->
+    <div class="row pt-12">
+      <div class="col-md-12">
+        <label class="upload-label"
+               (dragover)="onDragOver($event)"
+               (dragleave)="onDragLeave($event)"
+               (drop)="onDrop($event)">
+
+          <input type="file" (change)="onFileSelected($event)" hidden #fileInput>
+          <button
+            mat-raised-button
+            color="primary"
+            class="btn-upload"
+            (click)="fileInput.click()"
+            [class.drag-over]="dragging">
+            <mat-icon>attach_file</mat-icon> Adjuntar archivo
+          </button>
+        </label>
+
+        <div *ngIf="archivoSubido" class="file-name">
+          Archivo seleccionado: {{ archivoSubido.name }}
+        </div>
+      </div>
+    </div>
   </form>
 
   <mat-divider class="my-3"></mat-divider>

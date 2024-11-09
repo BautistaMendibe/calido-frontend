@@ -87,6 +87,19 @@
         </mat-form-field>
       </div>
     </div>
+
+    <div class="row pt-12" *ngIf="esConsulta && this.licencia.archivo?.nombre">
+      <div class="col-md-12">
+        <button mat-raised-button
+                color="primary"
+                class="btn-upload"
+                (click)="descargarArchivo()">
+          <mat-icon>download</mat-icon> Descargar comprobante
+        </button>
+      </div>
+    </div>
+    <br *ngIf="esConsulta && this.licencia.archivo?.nombre">
+
   </form>
 
   <mat-divider></mat-divider>

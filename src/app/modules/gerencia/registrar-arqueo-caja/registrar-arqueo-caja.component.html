@@ -1,0 +1,71 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar Arqueo de Caja' : 'Registrar Arqueo de Caja'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Caja</mat-label>
+          <mat-select [formControl]="txCaja">
+            <mat-option *ngFor="let caja of listaCajas" [value]="caja.id">
+              {{ caja.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de Apertura</mat-label>
+          <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" [min]="fechaHoy" />
+          <mat-datepicker-toggle matSuffix [for]="pickerApertura"></mat-datepicker-toggle>
+          <mat-datepicker #pickerApertura></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Hora de Apertura</mat-label>
+          <input type="time" step="1" matInput [formControl]="txHoraApertura"/>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="row pt-4">
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Monto Inicial</mat-label>
+          <input type="text" matInput [formControl]="txMontoInicial" mask="separator.2" prefix="$" thousandSeparator="," />
+        </mat-form-field>
+      </div>
+    </div>
+  </form>
+
+  <br>
+
+  <mat-divider class="my-3"></mat-divider>
+
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+      </button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarArqueo()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarArqueo()" id="btnBuscar2">Modificar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

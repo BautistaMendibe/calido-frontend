@@ -138,7 +138,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
     this.txNumero.setValue(this.usuario.domicilio?.numero);
     this.txRoles.setValue(this.usuario.roles.map(rol => rol.id));
 
-    if (this.usuario.domicilio?.localidad) {
+    if (this.usuario.domicilio?.localidad?.provincia?.id) {
       this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id)
         .then(() => {
           this.localidadesFiltradas = this.filterLocalidades(this.usuario.domicilio.localidad.nombre);
@@ -223,7 +223,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   private filterProvincias(busqueda: string) {
     const normalizarTexto = (texto: string) =>
-      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      texto ? texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
 
     const busquedaNormalizada = normalizarTexto(busqueda);
 
@@ -234,7 +234,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   private filterLocalidades(busqueda: string) {
     const normalizarTexto = (texto: string) =>
-      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      texto ? texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
 
     const busquedaNormalizada = normalizarTexto(busqueda);
 

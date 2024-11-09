@@ -80,10 +80,10 @@
             <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Acciones">
-                <button class="btn" mat-icon-button matTooltip="Ver">
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verUsuario(usuario, false)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button class="btn" mat-icon-button matTooltip="Modificar">
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verUsuario(usuario, true)">
                   <mat-icon class="editar">edit</mat-icon>
                 </button>
                 <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarUsuario(usuario.id)">

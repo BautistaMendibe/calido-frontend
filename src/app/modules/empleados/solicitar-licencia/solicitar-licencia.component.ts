@@ -9,6 +9,9 @@ import {Licencia} from "../../../models/licencia.model";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SpResult} from "../../../models/resultadoSp.model";
 import {Asistencia} from "../../../models/asistencia";
+import {FilesService} from "../../../services/files.service";
+import {firstValueFrom} from "rxjs";
+import {Archivo} from "../../../models/Archivo";
 
 @Component({
   selector: 'app-solicitar-licencia',
@@ -23,6 +26,9 @@ export class SolicitarLicenciaComponent implements OnInit {
   public listaMotivos: Motivo[] = [];
   public diasSeleccionados = 0;
   public fechaMinima: Date = new Date();
+  public selectedFiles: File[] = [];
+  public archivoSubido: File | null = null;
+  dragging = false;
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +36,7 @@ export class SolicitarLicenciaComponent implements OnInit {
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
+    private filesService: FilesService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: MarcarAsistenciaComponent
     }
@@ -79,7 +86,7 @@ export class SolicitarLicenciaComponent implements OnInit {
     this.diasSeleccionados = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 para incluir el día de inicio
   }
 
-  public aceptar() {
+  public async aceptar() {
     if (this.form.valid) {
       const licencia: Licencia = new Licencia();
 
@@ -131,8 +138,29 @@ export class SolicitarLicenciaComponent implements OnInit {
         'Solicitar licencia',
       )
         .afterClosed()
-        .subscribe((value) => {
+        .subscribe(async (value) => {
           if (value) {
+
+            // Existe un archivo subido por el usuario, subirlo y recuperar el nombre del archivo
+            if (this.archivoSubido) {
+              try {
+                // Necesitamos esperar primero que esto suceda para guardar la licencia
+                const response = await firstValueFrom(this.filesService.guardarArchivo(this.archivoSubido));
+                if (response?.fileId) {
+                  // Asignar la ID del archivo de la base de dato
+                  licencia.archivo = new Archivo();
+                  licencia.archivo.id = response.fileId;
+                } else {
+                  this.notificacionService.openSnackBarError('Error al subir el archivo');
+                  return;
+                }
+              } catch (error) {
+                console.log(error);
+                this.notificacionService.openSnackBarError('Error al subir el archivo');
+                return;
+              }
+            }
+
             this.usuariosService.registrarLicencia(licencia).subscribe((res: SpResult) => {
               if (res.mensaje == 'OK') {
                 this.notificacionService.openSnackBarSuccess('Licencia solicitada con éxito');
@@ -147,6 +175,31 @@ export class SolicitarLicenciaComponent implements OnInit {
           this.notificacionService.openSnackBarError('Error al solicitar licencia');
         });
     }
+  }
+
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (file) {
+      this.archivoSubido = file;
+    }
+  }
+
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.dragging = true;
+  }
+
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    const files = event.dataTransfer?.files;
+    if (files?.length) {
+      this.onFileSelected({ target: { files } });
+    }
+  }
+
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.dragging = false;
   }
 
   public cancelar() {
