@@ -37,6 +37,7 @@ export class RegistrarClientesComponent implements OnInit {
   public esConsulta: boolean;
   public formDesactivado: boolean;
   public isLoading: boolean = false;
+  public pedirCUIT: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -83,6 +84,7 @@ export class RegistrarClientesComponent implements OnInit {
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
       txCodigoPostal: ['', []],
       txDNI: ['', [Validators.maxLength(8)]],
+      txCUIT: ['', [Validators.maxLength(10)]],
       ddGenero: ['', []],
       txProvincia: ['', []],
       txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
@@ -188,6 +190,7 @@ export class RegistrarClientesComponent implements OnInit {
     this.ventaServive.buscarCategorias().subscribe((categorias) => {
       if (categorias.length > 0) {
         this.condicionesIva = categorias;
+        this.txCondicionIva.setValue(3);
       }
     });
   }
@@ -330,6 +333,10 @@ export class RegistrarClientesComponent implements OnInit {
     }
   }
 
+  public pedirCuit(id: number) {
+    this.pedirCUIT = id == 1 || id == 2;
+  }
+
   // Getters
 
   get txNombre(): FormControl {
@@ -358,6 +365,10 @@ export class RegistrarClientesComponent implements OnInit {
 
   get txDNI(): FormControl {
     return this.form.get('txDNI') as FormControl;
+  }
+
+  get txCUIT(): FormControl {
+    return this.form.get('txCUIT') as FormControl;
   }
 
   get ddGenero(): FormControl {

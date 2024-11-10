@@ -46,7 +46,7 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Categoría ante IVA</mat-label>
-          <mat-select [formControl]="txCondicionIva">
+          <mat-select [formControl]="txCondicionIva" (selectionChange)="pedirCuit($event.value)">
             <mat-option *ngFor="let categoria of condicionesIva" [value]="categoria.id">
               {{ categoria.nombre }}
             </mat-option>
@@ -55,12 +55,20 @@
         <app-error-messages [control]="txCondicionIva"></app-error-messages>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-4" *ngIf="!pedirCUIT">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>DNI</mat-label>
           <input type="text" matInput [formControl]="txDNI"/>
         </mat-form-field>
         <app-error-messages [control]="txDNI"></app-error-messages>
+      </div>
+
+      <div class="col-md-4" *ngIf="pedirCUIT">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>CUIT</mat-label>
+          <input type="text" matInput [formControl]="txCUIT"/>
+        </mat-form-field>
+        <app-error-messages [control]="txCUIT"></app-error-messages>
       </div>
 
       <div class="col-md-4">
