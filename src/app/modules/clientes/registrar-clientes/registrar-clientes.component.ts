@@ -119,6 +119,7 @@ export class RegistrarClientesComponent implements OnInit {
     this.txFechaNacimiento.setValue(this.formatDate(this.usuario.fechaNacimiento));
     this.txCodigoPostal.setValue(this.usuario.codigoPostal);
     this.txDNI.setValue(this.usuario.dni);
+    this.txCUIT.setValue(this.usuario.cuit);
     this.ddGenero.setValue(this.usuario.idGenero);
     this.txProvincia.setValue(this.usuario.domicilio?.localidad?.provincia?.nombre);
     this.txLocalidad.setValue(this.usuario.domicilio?.localidad?.nombre);
@@ -135,6 +136,10 @@ export class RegistrarClientesComponent implements OnInit {
         .then((id) => {
           this.idLocalidad = id;
         })
+    }
+
+    if (this.usuario.cuit) {
+      this.pedirCUIT = true;
     }
 
     if (this.formDesactivado) {
@@ -313,6 +318,7 @@ export class RegistrarClientesComponent implements OnInit {
       this.usuario.fechaNacimiento = this.txFechaNacimiento.value;
       this.usuario.codigoPostal = this.txCodigoPostal.value;
       this.usuario.dni = this.txDNI.value;
+      this.usuario.cuit = this.txCUIT.value;
       this.usuario.idGenero = this.ddGenero.value;
       this.usuario.domicilio = domicilio;
       this.usuario.domicilio.localidad.id = this.idLocalidad;
