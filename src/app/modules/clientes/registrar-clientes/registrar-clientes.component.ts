@@ -84,7 +84,7 @@ export class RegistrarClientesComponent implements OnInit {
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
       txCodigoPostal: ['', []],
       txDNI: ['', [Validators.maxLength(8)]],
-      txCUIT: ['', [Validators.maxLength(10)]],
+      txCUIT: ['', [Validators.maxLength(11)]],
       ddGenero: ['', []],
       txProvincia: ['', []],
       txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
@@ -261,6 +261,7 @@ export class RegistrarClientesComponent implements OnInit {
       cliente.fechaNacimiento = this.txFechaNacimiento.value;
       cliente.codigoPostal = this.txCodigoPostal.value;
       cliente.dni = this.txDNI.value;
+      cliente.cuit = this.txCUIT.value;
       cliente.idGenero = this.ddGenero.value;
       cliente.domicilio = domicilio;
       cliente.domicilio.localidad.id = this.idLocalidad;
@@ -280,7 +281,7 @@ export class RegistrarClientesComponent implements OnInit {
           cliente.id = respuesta.id!;
           this.isLoading = false;
           this.form.enable();
-          this.referencia.buscar();
+          this.dialogRef.close(cliente);
         } else {
           this.notificacionService.openSnackBarError('Error al registrar el cliente, inténtelo nuevamente');
           this.isLoading = false;

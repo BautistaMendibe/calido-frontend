@@ -13,6 +13,7 @@ export class Usuario {
   idGenero: number;
   domicilio: Domicilio;
   dni: string;
+  cuit: string;
   cuil: string;
   contrasena: string;
   roles: Rol[];
@@ -31,6 +32,7 @@ export class Usuario {
     domicilio?: Domicilio,
     dni?: string,
     cuil?: string,
+    cuit?: string,
     contrasena?: string,
     roles?: Rol[],
     mail?: string,
@@ -47,6 +49,7 @@ export class Usuario {
     this.domicilio = domicilio!;
     this.dni = dni!;
     this.cuil = cuil!;
+    this.cuit = cuit!;
     this.contrasena = contrasena!;
     this.roles = roles!;
     this.mail = mail!;
