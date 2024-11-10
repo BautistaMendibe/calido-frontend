@@ -1,1 +1,164 @@
-<p>detalle-arqueo works!</p>
+<div class="container py-3 col-xl-11">
+
+  <!-- Título -->
+  <br>
+  <p class="titulo">Arqueo de Caja</p>
+  <br>
+
+  <!-- Información de apertura, estado y caja -->
+  <div class="row row-equal-height">
+    <div class="col-md-6">
+      <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
+        <h4 style="color: grey">Información del Arqueo de Caja</h4>
+        <mat-divider></mat-divider>
+        <br>
+        <p><strong>Caja:</strong> 1</p>
+        <p><strong>Fecha de apertura:</strong> 10/11/2024 09:00 AM</p>
+        <p><strong>Estado:</strong> En proceso</p>
+      </mat-card>
+    </div>
+
+    <!-- Ingresos/Egresos Manuales -->
+    <div class="col-md-6">
+      <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
+        <h4 style="color: grey">Añadir movimiento manual</h4>
+        <mat-divider></mat-divider>
+        <br>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Tipo de movimiento</mat-label>
+          <mat-select>
+            <mat-option value="ingreso">Ingreso</mat-option>
+            <mat-option value="egreso">Egreso</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Descripción</mat-label>
+          <input matInput type="text" placeholder="Descripción del movimiento">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Importe</mat-label>
+          <input matInput type="number" placeholder="0.00">
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="w-100 mt-2">Añadir movimiento</button>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Filtro y Tabla de Ventas -->
+  <div class="row mt-4">
+    <div class="col-md-4"> <!-- Ancho reducido para el filtro -->
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Filtrar por forma de venta</mat-label>
+        <mat-select>
+          <mat-option value="todas">Todas</mat-option>
+          <mat-option value="efectivo">Efectivo</mat-option>
+          <mat-option value="tarjeta">Tarjeta de crédito/débito</mat-option>
+          <mat-option value="mercadopago">MercadoPago</mat-option>
+          <mat-option value="cuentaCorriente">Cuenta Corriente</mat-option>
+        </mat-select>
+        <button mat-icon-button matSuffix>
+          <mat-icon>filter_list</mat-icon>
+        </button>
+      </mat-form-field>
+    </div>
+    <div class="col-md-12 mt-3">
+      <mat-table class="custom-table mat-elevation-z1" [dataSource]="[]">
+        <ng-container matColumnDef="fecha">
+          <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
+          <mat-cell *matCellDef="let venta">10/11/2024</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="descripcion">
+          <mat-header-cell *matHeaderCellDef>Descripción</mat-header-cell>
+          <mat-cell *matCellDef="let venta">Venta de producto</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="formaPago">
+          <mat-header-cell *matHeaderCellDef>Forma de Pago</mat-header-cell>
+          <mat-cell *matCellDef="let venta">Efectivo</mat-cell>
+        </ng-container>
+        <ng-container matColumnDef="importe">
+          <mat-header-cell *matHeaderCellDef>Importe</mat-header-cell>
+          <mat-cell *matCellDef="let venta">$1000.00</mat-cell>
+        </ng-container>
+
+        <mat-header-row *matHeaderRowDef="['fecha', 'descripcion', 'formaPago', 'importe']"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: ['fecha', 'descripcion', 'formaPago', 'importe']"></mat-row>
+      </mat-table>
+    </div>
+  </div>
+
+  <!-- Detalle de Ventas -->
+  <div class="row mt-4 row-equal-height">
+    <div class="col-md-6">
+      <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
+        <h4>Detalle de Ventas</h4>
+        <p><strong>Monto inicial:</strong> $1,000.00</p>
+
+        <h5>Ingresos</h5>
+        <p>
+          <strong>Efectivo:</strong> $1,500.00
+          <button mat-icon-button (click)="toggleDetalle('efectivo')">
+            <mat-icon>{{ detalleEfectivo ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </p>
+        <div *ngIf="detalleEfectivo">
+          <p> - Ventas: $1,200.00</p>
+          <p> - Movimiento Manual: $300.00</p>
+        </div>
+
+        <p>
+          <strong>Tarjeta Crédito/Débito:</strong> $800.00
+          <button mat-icon-button (click)="toggleDetalle('tarjeta')">
+            <mat-icon>{{ detalleTarjeta ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </p>
+        <div *ngIf="detalleTarjeta">
+          <p> - Ventas: $800.00</p>
+        </div>
+
+        <p>
+          <strong>MercadoPago:</strong> $400.00
+          <button mat-icon-button (click)="toggleDetalle('mercadopago')">
+            <mat-icon>{{ detalleMercadoPago ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </p>
+        <div *ngIf="detalleMercadoPago">
+          <p> - Ventas: $400.00</p>
+        </div>
+
+        <h5>Egresos</h5>
+        <p>
+          <strong>Efectivo:</strong> $200.00
+          <button mat-icon-button (click)="toggleDetalle('egreso')">
+            <mat-icon>{{ detalleEgreso ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </p>
+        <div *ngIf="detalleEgreso">
+          <p> - Pago a proveedor: $200.00</p>
+        </div>
+      </mat-card>
+    </div>
+
+    <!-- Dinero en Caja -->
+    <div class="col-md-6">
+      <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
+        <h4>Dinero en Caja</h4>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cantidad de dinero en caja</mat-label>
+          <input matInput type="number" placeholder="0.00">
+        </mat-form-field>
+        <p><strong>Total registrado en sistema:</strong> $1,500.00</p>
+        <p><strong>Diferencia:</strong> $-100.00</p>
+      </mat-card>
+    </div>
+  </div>
+
+  <!-- Botón Finalizar Arqueo -->
+  <div class="row mt-4">
+    <div class="col d-flex justify-content-end">
+      <button mat-raised-button color="accent" class="btn round">Finalizar Arqueo</button>
+    </div>
+  </div>
+</div>

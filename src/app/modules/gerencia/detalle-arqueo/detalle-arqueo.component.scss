@@ -1,0 +1,11 @@
+.mat-card-tamano-uniforme {
+  height: 100%;
+}
+
+.row-equal-height > .col-md-6 {
+  display: flex;
+}
+
+.row-equal-height > .col-md-6 > mat-card {
+  flex: 1;
+}
