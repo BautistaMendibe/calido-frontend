@@ -29,7 +29,7 @@
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Saldo</mat-label>
-          <input matInput formControlName="txBalance" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
+          <input matInput formControlName="txBalance" type="text" mask="separator.2" prefix="$ " thousandSeparator=",">
         </mat-form-field>
         <app-error-messages [control]="txBalance"></app-error-messages>
       </div>

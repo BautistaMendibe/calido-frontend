@@ -63,7 +63,7 @@
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Monto total</mat-label>
-          <input type="text" matInput [formControl]="txMontoTotal"/>
+          <input type="text" matInput [formControl]="txMontoTotal" mask="separator.2" prefix="$ " thousandSeparator=","/>
         </mat-form-field>
         <app-error-messages [control]="txMontoTotal"></app-error-messages>
       </div>
@@ -124,7 +124,7 @@
 
               <ng-container matColumnDef="subTotalVenta">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>SUBTOTAL</mat-header-cell>
-                <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta }}</mat-cell>
+                <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta | number:'1.2-2':'es-AR' }}</mat-cell>
               </ng-container>
 
 
