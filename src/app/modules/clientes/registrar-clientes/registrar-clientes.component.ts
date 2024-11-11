@@ -37,6 +37,7 @@ export class RegistrarClientesComponent implements OnInit {
   public esConsulta: boolean;
   public formDesactivado: boolean;
   public isLoading: boolean = false;
+  public pedirCUIT: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -83,6 +84,7 @@ export class RegistrarClientesComponent implements OnInit {
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
       txCodigoPostal: ['', []],
       txDNI: ['', [Validators.maxLength(8)]],
+      txCUIT: ['', [Validators.maxLength(11)]],
       ddGenero: ['', []],
       txProvincia: ['', []],
       txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
@@ -117,12 +119,12 @@ export class RegistrarClientesComponent implements OnInit {
     this.txFechaNacimiento.setValue(this.formatDate(this.usuario.fechaNacimiento));
     this.txCodigoPostal.setValue(this.usuario.codigoPostal);
     this.txDNI.setValue(this.usuario.dni);
+    this.txCUIT.setValue(this.usuario.cuit);
     this.ddGenero.setValue(this.usuario.idGenero);
     this.txProvincia.setValue(this.usuario.domicilio?.localidad?.provincia?.nombre);
     this.txLocalidad.setValue(this.usuario.domicilio?.localidad?.nombre);
     this.txCalle.setValue(this.usuario.domicilio?.calle);
     this.txNumero.setValue(this.usuario.domicilio?.numero);
-    this.txCondicionIva.setValue(this.usuario.idCondicionIva);
 
     if (this.usuario.domicilio?.localidad?.provincia?.id) {
       this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id)
@@ -133,6 +135,10 @@ export class RegistrarClientesComponent implements OnInit {
         .then((id) => {
           this.idLocalidad = id;
         })
+    }
+
+    if (this.usuario.cuit) {
+      this.pedirCUIT = true;
     }
 
     if (this.formDesactivado) {
@@ -188,6 +194,11 @@ export class RegistrarClientesComponent implements OnInit {
     this.ventaServive.buscarCategorias().subscribe((categorias) => {
       if (categorias.length > 0) {
         this.condicionesIva = categorias;
+        if (this.usuario) {
+          this.txCondicionIva.setValue(this.usuario.idCondicionIva);
+        } else {
+          this.txCondicionIva.setValue(3);
+        }
       }
     });
   }
@@ -258,6 +269,7 @@ export class RegistrarClientesComponent implements OnInit {
       cliente.fechaNacimiento = this.txFechaNacimiento.value;
       cliente.codigoPostal = this.txCodigoPostal.value;
       cliente.dni = this.txDNI.value;
+      cliente.cuit = this.txCUIT.value;
       cliente.idGenero = this.ddGenero.value;
       cliente.domicilio = domicilio;
       cliente.domicilio.localidad.id = this.idLocalidad;
@@ -277,7 +289,7 @@ export class RegistrarClientesComponent implements OnInit {
           cliente.id = respuesta.id!;
           this.isLoading = false;
           this.form.enable();
-          this.referencia.buscar();
+          this.dialogRef.close(cliente);
         } else {
           this.notificacionService.openSnackBarError('Error al registrar el cliente, inténtelo nuevamente');
           this.isLoading = false;
@@ -309,6 +321,7 @@ export class RegistrarClientesComponent implements OnInit {
       this.usuario.fechaNacimiento = this.txFechaNacimiento.value;
       this.usuario.codigoPostal = this.txCodigoPostal.value;
       this.usuario.dni = this.txDNI.value;
+      this.usuario.cuit = this.txCUIT.value;
       this.usuario.idGenero = this.ddGenero.value;
       this.usuario.domicilio = domicilio;
       this.usuario.domicilio.localidad.id = this.idLocalidad;
@@ -328,6 +341,10 @@ export class RegistrarClientesComponent implements OnInit {
         }
       })
     }
+  }
+
+  public pedirCuit(id: number) {
+    this.pedirCUIT = id == 1 || id == 2;
   }
 
   // Getters
@@ -358,6 +375,10 @@ export class RegistrarClientesComponent implements OnInit {
 
   get txDNI(): FormControl {
     return this.form.get('txDNI') as FormControl;
+  }
+
+  get txCUIT(): FormControl {
+    return this.form.get('txCUIT') as FormControl;
   }
 
   get ddGenero(): FormControl {
