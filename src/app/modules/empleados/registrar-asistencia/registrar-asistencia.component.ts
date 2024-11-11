@@ -1,5 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -7,6 +15,7 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {Asistencia} from "../../../models/asistencia";
 import {ConsultarAsistenciaComponent} from "../consultar-asistencia/consultar-asistencia.component";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {Licencia} from "../../../models/licencia.model";
 
 @Component({
   selector: 'app-registrar-asistencia',
@@ -24,6 +33,8 @@ export class RegistrarAsistenciaComponent implements OnInit {
   public asistencia: Asistencia;
   public esConsulta: boolean;
   public formDesactivado: boolean;
+
+  public fechaHoy: Date = new Date();
 
   constructor(
     private fb: FormBuilder,
@@ -50,7 +61,7 @@ export class RegistrarAsistenciaComponent implements OnInit {
     this.buscarEmpleados();
 
     if (this.esConsulta && this.asistencia) {
-      this.rellenarFormularioDataUsuario();
+      this.rellenarFormularioDataAsistencia();
     }
   }
 
@@ -65,13 +76,33 @@ export class RegistrarAsistenciaComponent implements OnInit {
       txEmpleados: ['', [Validators.required]],
       txFecha: ['', [Validators.required]],
       txHoraEntrada: ['', [Validators.required]],
-      txHoraSalida: ['', [Validators.required]],
+      txHoraSalida: ['', [Validators.required, this.horaSalidaMayorQueEntradaValidator]],
       txComentario: ['', [Validators.maxLength(200)]],
+    });
+
+    this.form.get('txHoraEntrada')?.valueChanges.subscribe(() => {
+      this.form.get('txHoraSalida')?.updateValueAndValidity();
     });
   }
 
+  horaSalidaMayorQueEntradaValidator = (control: AbstractControl): ValidationErrors | null => {
+    const formGroup = control.parent as FormGroup;
+    if (!formGroup) return null;
 
-  private rellenarFormularioDataUsuario() {
+    const horaEntrada = formGroup.get('txHoraEntrada')?.value;
+    const horaSalida = control.value;
+
+    if (horaEntrada && horaSalida) {
+
+      if (horaSalida <= horaEntrada) {
+        return { horaInvalida: true };
+      }
+    }
+
+    return null;
+  };
+
+  private rellenarFormularioDataAsistencia() {
 
     this.txEmpleados.setValue(this.asistencia.idUsuario);
     this.txFecha.setValue(this.asistencia.fecha);
@@ -90,7 +121,6 @@ export class RegistrarAsistenciaComponent implements OnInit {
   }
 
   public registrarNuevaAsistencia() {
-
     if (this.form.valid) {
       const asistencia: Asistencia = new Asistencia();
 
@@ -100,6 +130,22 @@ export class RegistrarAsistenciaComponent implements OnInit {
       asistencia.horaSalida = this.txHoraSalida.value;
       asistencia.comentario = this.txComentario.value;
 
+      // Validación de superposición con licencias
+      const fechaAsistencia = new Date(asistencia.fecha);
+      const existeSuperposicionLicencia = this.referencia.licencias.some((licenciaExistente: Licencia) => {
+        const fechaInicioExistente = new Date(licenciaExistente.fechaInicio);
+        const fechaFinExistente = new Date(licenciaExistente.fechaFin);
+
+        // Comprobar si la fecha de asistencia coincide con las fechas de la licencia (incluidos los extremos)
+        return (
+          (fechaAsistencia >= fechaInicioExistente && fechaAsistencia <= fechaFinExistente)
+        );
+      });
+
+      if (existeSuperposicionLicencia) {
+        this.notificacionService.openSnackBarError('No puede registrar asistencia en días que tiene licencia.');
+        return; // No continuar si hay superposición con licencias
+      }
 
       this.usuariosService.registrarAsistencia(asistencia).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
@@ -109,10 +155,8 @@ export class RegistrarAsistenciaComponent implements OnInit {
         } else {
           this.notificacionService.openSnackBarError('Error al registrar una asistencia, inténtelo nuevamente');
         }
-      })
-
+      });
     }
-
   }
 
   public modificarAsistencia() {
@@ -125,6 +169,23 @@ export class RegistrarAsistenciaComponent implements OnInit {
       asistencia.horaSalida = this.txHoraSalida.value;
       asistencia.comentario = this.txComentario.value;
 
+      // Validación de superposición con licencias
+      const fechaAsistencia = new Date(asistencia.fecha);
+      const existeSuperposicionLicencia = this.referencia.licencias.some((licenciaExistente: Licencia) => {
+        const fechaInicioExistente = new Date(licenciaExistente.fechaInicio);
+        const fechaFinExistente = new Date(licenciaExistente.fechaFin);
+
+        // Comprobar si la fecha de asistencia coincide con las fechas de la licencia (incluidos los extremos)
+        return (
+          (fechaAsistencia >= fechaInicioExistente && fechaAsistencia <= fechaFinExistente)
+        );
+      });
+
+      if (existeSuperposicionLicencia) {
+        this.notificacionService.openSnackBarError('No puede modificar la asistencia a días que tiene licencia.');
+        return; // No continuar si hay superposición con licencias
+      }
+
       this.usuariosService.modificarAsistencia(asistencia).subscribe((res) => {
         if (res.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('Asistencia modificada con éxito');
@@ -133,9 +194,10 @@ export class RegistrarAsistenciaComponent implements OnInit {
         } else {
           this.notificacionService.openSnackBarError(res.mensaje ? res.mensaje : 'Error al modificar la asistencia');
         }
-      })
+      });
     }
   }
+
 
 
   public cancelar() {

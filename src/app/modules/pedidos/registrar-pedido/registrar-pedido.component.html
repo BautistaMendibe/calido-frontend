@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -23,6 +23,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txProveedor"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -35,6 +36,7 @@
             [matAutocomplete]="autoCompleteTransporte"
           />
         </mat-form-field>
+        <app-error-messages [control]="txTransporte"></app-error-messages>
         <mat-autocomplete #autoCompleteTransporte="matAutocomplete">
           <mat-option *ngFor="let transporte of transportesFiltrados" [value]="transporte.nombre" [id]="transporte.id.toString()">
             {{transporte.nombre}}
@@ -49,6 +51,7 @@
           <mat-datepicker-toggle matSuffix [for]="pickerPedido"></mat-datepicker-toggle>
           <mat-datepicker #pickerPedido></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFechaPedido"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -58,6 +61,7 @@
           <mat-datepicker-toggle matSuffix [for]="pickerEntrega"></mat-datepicker-toggle>
           <mat-datepicker #pickerEntrega></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFechaEntrega"></app-error-messages>
       </div>
     </div>
 
@@ -67,6 +71,7 @@
           <mat-label>Observaciones</mat-label>
           <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
+        <app-error-messages [control]="txObservaciones"></app-error-messages>
       </div>
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
@@ -77,6 +82,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txEstadoPedido"></app-error-messages>
       </div>
     </div>
 
@@ -84,7 +90,7 @@
     <br *ngIf="productos.length == 0">
 
     <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="productos.length == 0">
+    <div class="spinner-wrapper" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
 
@@ -105,24 +111,24 @@
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0">
+    <mat-card class="mat-card" [hidden]="productos.length === 0">
       <mat-card-content>
         <div class="row">
 
           <div class="col-md-12">
-            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
+            <mat-table [dataSource]="dataSourceProductos" matSort class="custom-table" [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
               <ng-container matColumnDef="imgProducto">
                 <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   <img [src]="producto.imgProducto" class="img-thumbnail"/>
                 </mat-cell>
               </ng-container>
-              <ng-container matColumnDef="producto">
-                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="costo">
-                <mat-header-cell *matHeaderCellDef>COSTO COMPRA</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>COSTO COMPRA</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   $ {{ producto.costo | number:'1.2-2':'es-AR' }}
                 </mat-cell>
@@ -152,9 +158,6 @@
               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
               <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
             </mat-table>
-            <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
-              No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-            </h6>
             <mat-paginator *ngIf="this.productos.length > 0"
                            [length]="this.productos.length"
                            [disabled]="formDesactivado"
@@ -166,6 +169,10 @@
     </mat-card>
   </form>
 
+  <h5 *ngIf="!isLoading && !(this.productos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
+
   <br>
   <mat-divider></mat-divider>
 
@@ -173,8 +180,9 @@
     <div class="col-md">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Costo de Compra</mat-label>
-        <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
+      <app-error-messages [control]="txSubtotal"></app-error-messages>
     </div>
     <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
       <span>+</span>
@@ -182,8 +190,9 @@
     <div class="col-md">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Costo de Transporte</mat-label>
-        <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
+      <app-error-messages [control]="txMontoEnvio"></app-error-messages>
     </div>
     <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
       <span>+</span>
@@ -195,6 +204,7 @@
           <mat-option value="21">IVA (21%)</mat-option>
         </mat-select>
       </mat-form-field>
+      <app-error-messages [control]="txImpuestos"></app-error-messages>
     </div>
     <div class="col-md-auto d-flex align-items-center justify-content-center symbol-cost">
       <span>-</span>
@@ -208,6 +218,7 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
+      <app-error-messages [control]="txDescuento"></app-error-messages>
     </div>
   </div>
 
@@ -215,8 +226,9 @@
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Total</mat-label>
-        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
+      <app-error-messages [control]="txTotal"></app-error-messages>
     </div>
   </div>
 

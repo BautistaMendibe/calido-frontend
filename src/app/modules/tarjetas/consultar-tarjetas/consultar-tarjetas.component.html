@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Tarjetas</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaTarjeta()">Registrar nueva tarjeta</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaTarjeta()">Registrar nueva tarjeta</button>
       </div>
     </div>
 
@@ -20,6 +20,7 @@
             <mat-label>Tarjeta</mat-label>
             <input type="text" matInput [formControl]="txTarjeta"/>
           </mat-form-field>
+          <app-error-messages [control]="txTarjeta"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,6 +32,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTipoTarjeta"></app-error-messages>
         </div>
       </div>
     </form>
@@ -51,23 +53,22 @@
 
   <br>
 
-
   <mat-card-header class="header-card">
     <h2 style="color: grey">Tarjetas encontradas</h2>
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="tarjetas.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="tarjetas.length > 0">
+  <mat-card class="mat-card" [hidden]="tarjetas.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
-            <ng-container matColumnDef="tarjeta">
-              <mat-header-cell *matHeaderCellDef>TARJETA</mat-header-cell>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>TARJETA</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="Tarjeta">{{ tarjeta.nombre }}</mat-cell>
             </ng-container>
 
@@ -85,7 +86,7 @@
               </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="acciones">
+            <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let tarjeta" data-label="Acciones">
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verTarjeta(tarjeta, false)">
@@ -105,11 +106,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.tarjetas.length" class="alert alert-secondary text-center">
-            No se encuentran tarjetas para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.tarjetas.length > 0"
+          <mat-paginator
                          [length]="this.tarjetas.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -117,6 +114,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.tarjetas.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran tarjetas para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

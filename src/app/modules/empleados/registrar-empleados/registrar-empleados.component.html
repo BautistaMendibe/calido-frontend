@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -21,6 +21,7 @@
           <mat-label>Nombre</mat-label>
           <input type="text" matInput [formControl]="txNombre"/>
         </mat-form-field>
+        <app-error-messages [control]="txNombre"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -28,6 +29,7 @@
           <mat-label>Apellido</mat-label>
           <input type="text" matInput [formControl]="txApellido"/>
         </mat-form-field>
+        <app-error-messages [control]="txApellido"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -37,11 +39,7 @@
           <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
           <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
         </mat-form-field>
-        <div *ngIf="form.get('txFechaNacimiento')?.touched || form.get('txFechaNacimiento')?.dirty">
-          <div *ngIf="form.get('txFechaNacimiento')?.hasError('fechaInvalida')">
-            La fecha de nacimiento debe ser anterior a hoy.
-          </div>
-        </div>
+        <app-error-messages [control]="txFechaNacimiento"></app-error-messages>
       </div>
     </div>
 
@@ -49,9 +47,10 @@
 
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>CUIT/CUIL</mat-label>
+          <mat-label>CUIL</mat-label>
           <input type="text" mask="00-00000000-0" matInput [formControl]="txCuil"/>
         </mat-form-field>
+        <app-error-messages [control]="txCuil"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -59,6 +58,7 @@
           <mat-label>DNI</mat-label>
           <input type="text" matInput [formControl]="txDNI"/>
         </mat-form-field>
+        <app-error-messages [control]="txDNI"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -70,6 +70,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="ddGenero"></app-error-messages>
       </div>
     </div>
 
@@ -86,6 +87,7 @@
                  [formControl]="txProvincia"
                  [matAutocomplete]="autoCompleteProvincia">
         </mat-form-field>
+        <app-error-messages [control]="txProvincia"></app-error-messages>
         <mat-autocomplete #autoCompleteProvincia="matAutocomplete" (optionSelected)="seleccionarProvincia()">
           <mat-option *ngFor="let provincia of this.provinciasFiltradas" [value]="provincia.nombre">
             {{provincia.nombre}}
@@ -101,6 +103,7 @@
                  (input)="filtrarLocalidades()"
                  [matAutocomplete]="autoCompleteLocalidad">
         </mat-form-field>
+        <app-error-messages [control]="txLocalidad"></app-error-messages>
         <mat-autocomplete #autoCompleteLocalidad="matAutocomplete" (optionSelected)="seleccionarLocalidad()">
           <mat-option *ngFor="let localidad of this.localidadesFiltradas" [value]="localidad.nombre">
             {{localidad.nombre}}
@@ -113,12 +116,14 @@
           <mat-label>Calle</mat-label>
           <input type="text" matInput [formControl]="txCalle"/>
         </mat-form-field>
+        <app-error-messages [control]="txCalle"></app-error-messages>
       </div>
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Número</mat-label>
           <input type="text" matInput [formControl]="txNumero"/>
         </mat-form-field>
+        <app-error-messages [control]="txNumero"></app-error-messages>
       </div>
       <div class="row pt-2">
         <div class="col-md-3">
@@ -126,6 +131,7 @@
             <mat-label>Código Postal</mat-label>
             <input type="text" matInput [formControl]="txCodigoPostal"/>
           </mat-form-field>
+          <app-error-messages [control]="txCodigoPostal"></app-error-messages>
         </div>
       </div>
     </div>
@@ -140,6 +146,7 @@
           <mat-label>Nombre de usuario</mat-label>
           <input type="text" matInput [formControl]="txNombreUsuario"/>
         </mat-form-field>
+        <app-error-messages [control]="txNombreUsuario"></app-error-messages>
       </div>
 
         <div class="col-md-4">
@@ -149,10 +156,8 @@
             <button mat-icon-button matSuffix (mousedown)="$event.preventDefault(); hidePassword = !hidePassword" type="button">
               <mat-icon>{{ hidePassword ? 'visibility_off' : 'visibility' }}</mat-icon>
             </button>
-              <mat-error *ngIf="form.get('txContrasena')?.hasError('required')">La contraseña es requerida</mat-error>
-              <mat-error *ngIf="form.get('txContrasena')?.hasError('minlength')">La contraseña debe tener al menos 8 caracteres</mat-error>
-              <mat-error *ngIf="form.get('txContrasena')?.hasError('pattern')">La contraseña debe contener al menos una letra mayúscula y un número</mat-error>
           </mat-form-field>
+          <app-error-messages [control]="txContrasena"></app-error-messages>
         </div>
 
         <!-- Selector de roles múltiples -->
@@ -168,12 +173,14 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txRoles"></app-error-messages>
         </div>
     </div>
 
   </form>
 
   <br>
+  <mat-divider class="my-3"></mat-divider>
 
   <!-- Btn de cancelar, registrar y modificar -->
   <div class="row text-right">

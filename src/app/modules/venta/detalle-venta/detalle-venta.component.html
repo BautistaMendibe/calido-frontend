@@ -2,11 +2,12 @@
   <br>
   <div class="row">
     <div class="col-sm-6 mt-2">
-      <p class="titulo">Consultar venta N° {{venta.id}}</p>
+      <p class="titulo">Consultar venta</p>
+      <p *ngIf="venta.anulada">Venta anulada</p>
     </div>
     <div class="col-sm-6">
       <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
-        <button mat-icon-button color="primary" matTooltip="Deshacer verta" (click)="desHacerVenta()">
+        <button *ngIf="!venta.anulada" mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta()">
           <mat-icon class="eliminar">settings_backup_restore</mat-icon>
         </button>
         <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
@@ -16,18 +17,29 @@
     </div>
   </div>
 
-  <mat-divider></mat-divider>
+  <br>
+
+  <h3 class="subtitulo">Datos generales:</h3>
+  <mat-divider class="my-3"></mat-divider>
   <br>
 
   <form [formGroup]="form">
     <div class="row">
-      <h3 class="subtitulo">Datos generales:</h3>
-      <br>
+
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Número de venta</mat-label>
+          <input type="text" matInput [formControl]="txNumeroVenta"/>
+        </mat-form-field>
+        <app-error-messages [control]="txNumeroVenta"></app-error-messages>
+      </div>
+
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de venta</mat-label>
           <input type="text" matInput [formControl]="txFecha"/>
         </mat-form-field>
+        <app-error-messages [control]="txFecha"></app-error-messages>
       </div>
 
       <div class="col-md-4">
@@ -35,43 +47,48 @@
           <mat-label>Forma de pago</mat-label>
           <input type="text" matInput [formControl]="txFormaDePago"/>
         </mat-form-field>
+        <app-error-messages [control]="txFormaDePago"></app-error-messages>
       </div>
 
+    </div>
+    <div class="row">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Tipo de factura</mat-label>
           <input type="text" matInput [formControl]="txTipoFactura"/>
         </mat-form-field>
+        <app-error-messages [control]="txTipoFactura"></app-error-messages>
       </div>
-    </div>
-    <div class="row">
+
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Monto total</mat-label>
-          <input type="text" matInput [formControl]="txMontoTotal"/>
+          <input type="text" matInput [formControl]="txMontoTotal" mask="separator.2" prefix="$ " thousandSeparator=","/>
         </mat-form-field>
+        <app-error-messages [control]="txMontoTotal"></app-error-messages>
       </div>
     </div>
 
-    <mat-divider></mat-divider>
+    <br>
+    <h3 class="subtitulo">Cliente:</h3>
+    <mat-divider class="my-3"></mat-divider>
     <br>
 
     <div class="row">
-      <h3 class="subtitulo">Cliente:</h3>
-      <br>
-      <div class="col-md">
+
+      <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Cliente</mat-label>
           <input type="text" matInput [formControl]="txCliente"/>
         </mat-form-field>
       </div>
-      <div class="col-md">
+      <div class="col-md-4" *ngIf="this.venta.cliente.id != -1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Dni</mat-label>
           <input type="text" matInput [formControl]="txDniCliente"/>
         </mat-form-field>
       </div>
-      <div class="col-md">
+      <div class="col-md-4" *ngIf="this.venta.cliente.id != -1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Mail</mat-label>
           <input type="text" matInput [formControl]="txMailCliente"/>
@@ -79,10 +96,10 @@
       </div>
     </div>
 
-    <mat-divider></mat-divider>
     <br>
-
     <h3 class="subtitulo">Productos vendidos:</h3>
+    <mat-divider class="my-3"></mat-divider>
+
     <mat-card>
       <mat-card-content>
         <div class="row">
@@ -95,19 +112,19 @@
                 </mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="producto">
-                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="cantidad">
-                <mat-header-cell *matHeaderCellDef>CANTIDAD</mat-header-cell>
+              <ng-container matColumnDef="cantidadSeleccionada">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>CANTIDAD</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="Cantidad">{{ producto.cantidadSeleccionada }}</mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="subTotal">
-                <mat-header-cell *matHeaderCellDef>SUBTOTAL</mat-header-cell>
-                <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta }}</mat-cell>
+              <ng-container matColumnDef="subTotalVenta">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>SUBTOTAL</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta | number:'1.2-2':'es-AR' }}</mat-cell>
               </ng-container>
 
 
@@ -116,8 +133,7 @@
 
             </mat-table>
 
-
-            <mat-paginator *ngIf="this.venta.productos.length > 0"
+            <mat-paginator
                            [length]="this.venta.productos.length"
                            [pageSize]="10"
                            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -126,7 +142,13 @@
       </mat-card-content>
     </mat-card>
 
-    <br><br>
+    <h5 *ngIf="!(this.venta.productos.length > 0)" class="alert alert-secondary text-center">
+      No se encuentran productos de la venta para mostrar, por favor realice una nueva búsqueda.
+    </h5>
+
+    <br>
+    <mat-divider class="my-3"></mat-divider>
+
     <div class="row text-right">
       <div class="col d-flex justify-content-end">
         <button mat-button color="accent" class="btn round" (click)="cerrar()" id="btnLimpiarFiltro">

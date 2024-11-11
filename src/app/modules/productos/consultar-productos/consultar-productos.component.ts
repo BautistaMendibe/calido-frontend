@@ -1,4 +1,4 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnInit, OnDestroy, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {Producto} from "../../../models/producto.model";
 import {FormBuilder, FormGroup, FormControl} from "@angular/forms";
@@ -15,6 +15,8 @@ import {Proveedor} from "../../../models/proveedores.model";
 import {Marca} from "../../../models/Marcas.model";
 import {MarcasService} from "../../../services/marcas.service";
 import {ProveedoresService} from "../../../services/proveedores.service";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-productos',
@@ -26,12 +28,16 @@ export class ConsultarProductosComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public form: FormGroup;
   public productos: Producto[] = [];
-  public columnas: string[] = ['imgProducto', 'producto', 'costoCompra', 'precioBase', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
+  public columnas: string[] = ['imgProducto', 'nombre', 'costoCompra', 'precioConIVA', 'tipoProducto', 'proveedor', 'marca', 'acciones'];
   private filtros: FiltrosProductos;
   public listaTipoProducto: TipoProducto[] = [];
   public listaProveedores: Proveedor[] = [];
   public listaMarcas: Marca[] = [];
   private unsubscribe$: Subject<void> = new Subject<void>();
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -79,15 +85,19 @@ export class ConsultarProductosComponent implements OnInit {
       marca: this.txMarca.value,
     };
 
+    this.isLoading = true;
     this.productosService.consultarProductos(this.filtros)
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (productos) => {
           this.productos = productos;
-          this.tableDataSource.data = productos;
+          this.tableDataSource.data = this.productos;
+          this.tableDataSource.paginator = this.paginator;
+          this.tableDataSource.sort = this.sort;
+          this.isLoading = false;
         },
         error: (err) => {
-          console.error('Error al consultar productos:', err);
+          this.isLoading = false;
         }
       });
   }
@@ -96,10 +106,10 @@ export class ConsultarProductosComponent implements OnInit {
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '85%',
+        width: '75%',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
         autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
         data: {
           referencia: this,
           esConsulta: false,
@@ -119,10 +129,10 @@ export class ConsultarProductosComponent implements OnInit {
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '85%',
+        width: '75%',
+        maxHeight: '80vh',
         autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
+        panelClass: 'dialog-container',
         data: {
           producto: producto,
           esConsulta: true,

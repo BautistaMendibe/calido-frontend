@@ -1,0 +1,28 @@
+.diasSeleccionados {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 4px;
+  font-size: 14px;
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.btn-upload {
+  color: #333;
+  text-transform: none;
+  display: flex;
+  font-size: 14px;
+  align-items: center;
+  background-color: #f0f0f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}

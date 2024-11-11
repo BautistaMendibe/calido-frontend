@@ -27,8 +27,7 @@ import {TipoComprobante} from "../../../models/tipoComprobante.model";
   styleUrl: './consultar-comprobante.component.scss'
 })
 export class ConsultarComprobanteComponent implements OnInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+
   public tableDataSource: MatTableDataSource<Comprobante> = new MatTableDataSource<Comprobante>([]);
   public form: FormGroup;
 
@@ -40,6 +39,10 @@ export class ConsultarComprobanteComponent implements OnInit {
   public columnas: string[] = ['fechaEmision', 'numeroComprobante', 'tipoComprobante', 'proveedor', 'responsable', 'total', 'acciones'];
 
   private filtros: FiltrosComprobantes;
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   private formatter = new Intl.NumberFormat('es-AR', {
     style: 'currency',
@@ -60,7 +63,6 @@ export class ConsultarComprobanteComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosComprobantes();
-    this.tableDataSource.paginator = this.paginator;
   }
 
   ngOnInit() {
@@ -98,9 +100,13 @@ export class ConsultarComprobanteComponent implements OnInit {
       tipoComprobante: this.txTipoComprobante.value,
     };
 
+    this.isLoading = true;
     this.comprobantesService.consultarComprobantes(this.filtros).subscribe((comprobantes) => {
       this.comprobantes = comprobantes;
       this.tableDataSource.data = comprobantes;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

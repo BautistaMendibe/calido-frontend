@@ -31,7 +31,6 @@ export class RegistrarProductoComponent implements OnInit {
   public productoImg: string | ArrayBuffer | null = null;
   private selectedFile: File | null = null;
   public esConsulta: boolean;
-  public listaPorcentajesGanancia: { value: number, label: string }[] = [];
   public editarPrecioDeVenta: boolean = false;
   public promociones: Promocion[] = [];
 
@@ -84,14 +83,14 @@ export class RegistrarProductoComponent implements OnInit {
   private crearFormulario() {
     this.form = this.fb.group({
       txNombre: [this.data.producto?.nombre || '', [Validators.required, Validators.pattern('^[^0-9]+$')]],
-      txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13)]],
-      txCosto: [Number(this.data.producto?.costo) || '', [Validators.required, Validators.pattern('^[0-9]+$')]],
+      txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13), Validators.pattern(/^[0-9]+$/)]],
+      txCosto: [Number(this.data.producto?.costo) || '', [Validators.required, Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       txTipoProducto: [this.data.producto?.tipoProducto?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txProveedor: [this.data.producto?.proveedor?.id || '', [Validators.required]],
       txMargenGanancia: [this.data.producto?.margenGanancia, [Validators.required, Validators.min(0), Validators.max(100)]], // Margen por defecto: 10%
       txPrecioSinIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
-      txPrecioConIva: [{ value: this.data.producto?.precioSinIVA, disabled: true }, [Validators.required]],
+      txPrecioConIva: [{ value: this.data.producto?.precioConIVA, disabled: true }, [Validators.required]],
       txDescripcion: [this.data.producto?.descripcion || '', [Validators.maxLength(200)]],
       txPromocion: [this.data.producto?.promocion?.id, []],
     });
@@ -105,6 +104,12 @@ export class RegistrarProductoComponent implements OnInit {
 
     const costoFinal = costo * (1 + margenGanancia / 100) * (1 - porcentajeDescuento / 100);
     this.txPrecioSinIva.setValue(costoFinal.toFixed(2), { emitEvent: false });
+    this.calcularCostoFinalConIva(costoFinal);
+  }
+
+  private calcularCostoFinalConIva(costoFinalSinIva: number) {
+    const costoFinalConIva: number = costoFinalSinIva * 1.21;
+    this.txPrecioConIva.setValue(costoFinalConIva.toFixed(2), { emitEvent: false });
   }
 
   private buscarTiposProductos() {
@@ -143,7 +148,7 @@ export class RegistrarProductoComponent implements OnInit {
 
       this.promociones = [promocion, ...promociones];
 
-      if (!this.data.producto.promocion?.id) {
+      if (!this.data.producto?.promocion?.id) {
         this.txPromocion.setValue(promocion.id);
       }
     });
@@ -181,6 +186,7 @@ export class RegistrarProductoComponent implements OnInit {
       nombre: this.txNombre.value,
       costo: parseFloat(this.txCosto.value) || 0,
       precioSinIVA: parseFloat(this.txPrecioSinIva.value) || 0,
+      precioConIVA: parseFloat(this.txPrecioConIva.value) || 0,
       descripcion: this.txDescripcion.value,
       codigoBarra: this.txCodigoBarras.value,
       imgProducto: this.productoImg as string,
@@ -218,12 +224,6 @@ export class RegistrarProductoComponent implements OnInit {
     this.txPrecioConIva.disable();
     this.data.formDesactivado = false;
     this.data.editar = true;
-  }
-
-  public getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) return 'Este campo es obligatorio';
-    if (control.hasError('pattern')) return 'Formato inválido';
-    return '';
   }
 
   public onFileSelected(event: Event) {

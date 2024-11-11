@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -19,6 +19,7 @@
           <mat-label>Tarjeta</mat-label>
           <input type="text" matInput [formControl]="txTarjeta"/>
         </mat-form-field>
+        <app-error-messages [control]="txTarjeta"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -30,19 +31,20 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txTipoTarjeta"></app-error-messages>
       </div>
 
     <mat-divider class="my-3"></mat-divider>
     <br>
 
     <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="listaCuotas.length == 0">
+    <div class="spinner-wrapper" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
 
     <br>
 
-      <mat-card *ngIf="listaCuotas.length > 0">
+      <mat-card class="mat-card" [hidden]="listaCuotas.length === 0">
         <mat-card-content>
           <div class="row">
             <div class="col-md-12">
@@ -77,26 +79,8 @@
                              [ngModelOptions]="{standalone: true}"
                              (blur)="disableEdit(cuota, 'interes')"
                              (keydown.enter)="disableEdit(cuota, 'interes')"
-                             (input)="cuota.interes = Math.max(0, cuota.interes)"
-                             class="full-width-input" />
-                    </div>
-                  </mat-cell>
-                </ng-container>
-
-                <!-- Columna de recargo -->
-                <ng-container matColumnDef="recargo">
-                  <mat-header-cell *matHeaderCellDef>% RECARGO</mat-header-cell>
-                  <mat-cell *matCellDef="let cuota">
-                    <div (click)="toggleEdit(cuota, 'recargo')" class="editable-cell">
-                      <span *ngIf="!cuota.isEditingRecargo">{{ cuota.recargo }}%</span>
-                      <input *ngIf="cuota.isEditingRecargo"
-                             type="number"
-                             [(ngModel)]="cuota.recargo"
-                             [disabled]="!isSelected(cuota)"
-                             [ngModelOptions]="{standalone: true}"
-                             (blur)="disableEdit(cuota, 'recargo')"
-                             (keydown.enter)="disableEdit(cuota, 'recargo')"
-                             (input)="cuota.recargo = Math.max(0, cuota.recargo)"
+                             (input)="cuota.interes = Math.min(100, Math.max(0, +cuota.interes || 0))"
+                             min="0" max="100" maxlength="3"
                              class="full-width-input" />
                     </div>
                   </mat-cell>
@@ -115,7 +99,8 @@
                              [ngModelOptions]="{standalone: true}"
                              (blur)="disableEdit(cuota, 'descuento')"
                              (keydown.enter)="disableEdit(cuota, 'descuento')"
-                             (input)="cuota.descuento = Math.max(0, cuota.descuento)"
+                             (input)="cuota.descuento = Math.min(100, Math.max(0, +cuota.descuento || 0))"
+                             min="0" max="100" maxlength="3"
                              class="full-width-input" />
                     </div>
                   </mat-cell>
@@ -125,12 +110,9 @@
               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
               <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
               </mat-table>
-              <h6 *ngIf="!listaCuotas.length" class="alert alert-secondary text-center">
-                No se encuentran cuotas disponibles, por favor realice una nueva búsqueda.
-              </h6>
 
               <!-- Paginador -->
-              <mat-paginator *ngIf="listaCuotas.length > 0"
+              <mat-paginator
                              [length]="listaCuotas.length"
                              [disabled]="formDesactivado"
                              [pageSize]="10"
@@ -140,6 +122,9 @@
         </mat-card-content>
       </mat-card>
 
+      <h5 *ngIf="!isLoading && !(this.listaCuotas.length > 0)" class="alert alert-secondary text-center">
+        No se encuentran cuotas disponibles, por favor realice una nueva búsqueda.
+      </h5>
     </div>
   </form>
 

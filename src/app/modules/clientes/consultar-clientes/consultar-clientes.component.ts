@@ -19,8 +19,6 @@ import {RegistrarClientesComponent} from "../registrar-clientes/registrar-client
 })
 export class ConsultarClientesComponent implements OnInit {
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
   public clientes: Usuario[] = [];
@@ -28,6 +26,9 @@ export class ConsultarClientesComponent implements OnInit {
   public isLoading: boolean = false;
 
   private filtros: FiltrosEmpleados;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -39,8 +40,6 @@ export class ConsultarClientesComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosEmpleados();
-    this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
   }
 
   ngOnInit() {
@@ -69,7 +68,9 @@ export class ConsultarClientesComponent implements OnInit {
 
     this.usuariosService.consultarClientes(this.filtros).subscribe((clientes) => {
       this.clientes = clientes;
-      this.tableDataSource.data = clientes;
+      this.tableDataSource.data = this.clientes;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
       this.isLoading = false;
     });
   }
@@ -80,7 +81,7 @@ export class ConsultarClientesComponent implements OnInit {
       {
         width: '75%',
         autoFocus: false,
-        height: '85vh',
+        height: '80vh',
         panelClass: 'custom-dialog-container',
         data: {
           referencia: this,
@@ -95,6 +96,25 @@ export class ConsultarClientesComponent implements OnInit {
         this.buscar();
       }
     });
+  }
+
+  public verUsuario(usuario: Usuario, editar: boolean) {
+    this.dialog.open(
+      RegistrarClientesComponent,
+      {
+        width: '75%',
+        maxHeight: '80vh',
+        panelClass: 'custom-dialog-container',
+        autoFocus: false,
+        data: {
+          usuario: usuario,
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar,
+          editar: editar,
+        }
+      }
+    );
   }
 
   public eliminarUsuario(idUsuario: number) {

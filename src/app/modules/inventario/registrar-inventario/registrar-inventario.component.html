@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -22,6 +22,7 @@
                  [formControl]="txProducto"
                  [matAutocomplete]="autoCompleteProducto">
         </mat-form-field>
+        <app-error-messages [control]="txProducto"></app-error-messages>
         <mat-autocomplete #autoCompleteProducto="matAutocomplete" (optionSelected)="enSeleccionDeProducto($event)">
           <mat-option *ngFor="let producto of this.productosFiltrados" [value]="producto.nombre" [id]="producto.id.toString()">
             {{ producto.nombre }}
@@ -34,12 +35,14 @@
           <mat-label *ngIf="!esRegistro">Cantidad en Inventario</mat-label>
           <input type="text" matInput [formControl]="txCantidadEnInventario"/>
         </mat-form-field>
+        <app-error-messages [control]="txCantidadEnInventario"></app-error-messages>
       </div>
       <div class="col-md" *ngIf="!esRegistro">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Valor de Inventario</mat-label>
           <input type="text" matInput [formControl]="txValorEnInventario"/>
         </mat-form-field>
+        <app-error-messages [control]="txValorEnInventario"></app-error-messages>
       </div>
     </div>
   </form>
@@ -55,12 +58,23 @@
   <div class="row pt-4" *ngIf="movimientosProducto.length > 0 && !esRegistro">
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Fecha Movimiento</mat-label>
+        <mat-label>Fecha Desde</mat-label>
         <input matInput [matDatepicker]="pickerFecha" [formControl]="txBuscarFecha" />
         <mat-datepicker-toggle matSuffix [for]="pickerFecha"></mat-datepicker-toggle>
         <mat-datepicker #pickerFecha></mat-datepicker>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscarFecha"></app-error-messages>
+    </div>
+    <div class="col-md-3">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Fecha Hasta</mat-label>
+        <input matInput [matDatepicker]="pickerFechaHasta" [formControl]="txBuscarFechaHasta" />
+        <mat-datepicker-toggle matSuffix [for]="pickerFechaHasta"></mat-datepicker-toggle>
+        <mat-datepicker #pickerFechaHasta></mat-datepicker>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+      <app-error-messages [control]="txBuscarFechaHasta"></app-error-messages>
     </div>
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
@@ -68,19 +82,20 @@
         <input type="text" matInput [formControl]="txBuscarTipo"/>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscarTipo"></app-error-messages>
     </div>
   </div>
 
   <br>
 
-  <mat-card *ngIf="movimientosProducto.length > 0 && !esRegistro">
+  <mat-card [hidden]="!(movimientosProducto.length > 0 && !esRegistro)">
     <mat-card-content>
       <div class="row">
 
         <div class="col-md-12">
           <mat-table [dataSource]="dataSourceMovimientosProducto" matSort [class.disabled-table]="formDesactivado || tablaMovimientosDesactivada">
             <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef>FECHA MOVIMIENTO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA MOVIMIENTO</mat-header-cell>
               <mat-cell *matCellDef="let movimiento">{{ movimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="producto">
@@ -92,20 +107,17 @@
               <mat-cell *matCellDef="let movimiento">{{ movimiento.cantidad }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="tipoMovimiento">
-              <mat-header-cell *matHeaderCellDef>TIPO DE MOVIMIENTO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>TIPO DE MOVIMIENTO</mat-header-cell>
               <mat-cell *matCellDef="let movimiento">{{ movimiento.tipoMovimiento }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="referencia">
-              <mat-header-cell *matHeaderCellDef>REFERENCIA</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>REFERENCIA</mat-header-cell>
               <mat-cell *matCellDef="let movimiento">{{ movimiento.referencia }}</mat-cell>
             </ng-container>
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
           </mat-table>
-          <h6 *ngIf="!this.movimientosProducto.length" class="alert alert-secondary text-center">
-            No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-          </h6>
-          <mat-paginator *ngIf="this.movimientosProducto.length > 0"
+          <mat-paginator
                          [length]="this.movimientosProducto.length"
                          [disabled]="formDesactivado"
                          [pageSize]="10"
@@ -115,8 +127,12 @@
     </mat-card-content>
   </mat-card>
 
-  <mat-divider class="my-3" *ngIf="!esRegistro"></mat-divider>
-  <br>
+  <h5 *ngIf="!isLoading && !(this.movimientosProducto.length > 0) && !esRegistro" class="alert alert-secondary text-center">
+    No se encuentran movimientos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
+
+  <mat-divider class="my-3"></mat-divider>
+  <br *nfIf="!esRegistro">
 
   <!-- Btn de cancelar, registrar y modificar -->
   <div class="row text-right">

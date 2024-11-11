@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -18,12 +18,14 @@
           <mat-label>Nombre</mat-label>
           <input type="text" matInput [formControl]="txNombre"/>
         </mat-form-field>
+        <app-error-messages [control]="txNombre"></app-error-messages>
       </div>
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Porcentaje de descuento</mat-label>
-          <input type="text" matInput [formControl]="txPorcentajeDescuento"/>
+          <input type="text" matInput [formControl]="txPorcentajeDescuento" maxlength="3" (input)="validarPorcentaje()"/>
         </mat-form-field>
+        <app-error-messages [control]="txPorcentajeDescuento"></app-error-messages>
       </div>
     </div>
   </form>
@@ -31,7 +33,9 @@
 
 
   <h3 class="subtitulo" *ngIf="promocion">Productos incluídos en la promoción:</h3>
-  <h3 class="subtitulo" *ngIf="!promocion">Seleccionar los productos incluídos:</h3>
+  <h3 class="subtitulo" *ngIf="!promocion">Selecciona los productos incluídos:</h3>
+  <mat-divider class="my-3"></mat-divider>
+
   <!-- loading -->
   <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
@@ -44,6 +48,7 @@
         <input type="text" matInput [formControl]="txBuscar"/>
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
+      <app-error-messages [control]="txBuscar"></app-error-messages>
     </div>
     <div class="col-md-8">
       <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="esConsulta">
@@ -52,11 +57,19 @@
     </div>
   </div>
 
-  <mat-card *ngIf="!isLoading && listaProductos.length > 0">
+  <mat-card [hidden]="isLoading || listaProductos.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta">
+
+            <ng-container matColumnDef="seleccionar">
+              <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Seleccionar">
+                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
+              </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="imgProducto">
               <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
               <mat-cell *matCellDef="let producto">
@@ -64,30 +77,31 @@
               </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="producto">
-              <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="precio">
-              <mat-header-cell *matHeaderCellDef>PRECIO DE VENTA</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Precio">$ {{ producto.precioFinalVenta }}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="seleccionar">
-              <mat-header-cell *matHeaderCellDef>SELECCIONAR</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Seleccionar">
-                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
+            <ng-container matColumnDef="precioConIVA">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PRECIO DE VENTA</mat-header-cell>
+              <mat-cell *matCellDef="let producto" data-label="Precio">
+                <div class="precio-container">
+                  <span [ngClass]="{'precio-tachado': producto.estaEnPromocion}">
+                    {{ producto.precioConIVA | mask: 'separator.2' : { prefix: '$', thousandSeparator: ',' } }}
+                  </span>
+                  <span *ngIf="producto.estaEnPromocion" class="precio-promocion">
+                    {{ (producto.precioConIVA * (1 - this.txPorcentajeDescuento.value / 100)) | mask: 'separator.2' : { prefix: '$', thousandSeparator: ',' } }}
+                  </span>
+                </div>
               </mat-cell>
             </ng-container>
-
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
 
           </mat-table>
 
-          <mat-paginator *ngIf="this.listaProductos.length > 0"
+          <mat-paginator
                          [length]="this.listaProductos.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -96,7 +110,12 @@
     </mat-card-content>
   </mat-card>
 
+  <h5 *ngIf="!isLoading && !(this.listaProductos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
+
   <br>
+  <mat-divider class="my-3"></mat-divider>
 
   <!-- Btn de cancelar y registrar -->
   <div class="row text-right">

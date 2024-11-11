@@ -1,10 +1,12 @@
-import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Inject, OnInit, Output, ViewChild} from '@angular/core';
 import {Producto} from "../../../models/producto.model";
 import {MatTableDataSource} from "@angular/material/table";
 import {FormControl, FormGroup} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-buscar-productos',
@@ -15,14 +17,18 @@ export class BuscarProductosComponent implements OnInit {
 
   public form: FormGroup;
 
-  public columnas: string[] = ['select', 'imgProducto', 'producto', 'costo', 'tipoProducto', 'proveedor', 'marca'];
+  public columnas: string[] = ['select', 'imgProducto', 'nombre', 'costo', 'tipoProducto', 'proveedor', 'marca'];
   public productos: Producto[] = [];
   public productosFiltrados: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
+  public isLoading: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productos);
 
   @Output() nuevosProductosSeleccionados = new EventEmitter<Producto[]>();
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private productosService: ProductosService,
@@ -49,9 +55,13 @@ export class BuscarProductosComponent implements OnInit {
       filtros.proveedor = this.data.proveedorId;
     }
 
+    this.isLoading = true;
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
       this.productos = productos;
-      this.dataSourceProductos.data = productos;
+      this.dataSourceProductos.data = this.productos;
+      this.dataSourceProductos.paginator = this.paginator;
+      this.dataSourceProductos.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Clientes</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoCliente()">Registrar nuevo cliente</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoCliente()">Registrar nuevo cliente</button>
       </div>
     </div>
 
@@ -19,18 +19,21 @@
             <mat-label>Nombre</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Apellido</mat-label>
             <input type="text" matInput [formControl]="txApellido"/>
           </mat-form-field>
+          <app-error-messages [control]="txApellido"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Email</mat-label>
             <input type="text" matInput [formControl]="txMail"/>
           </mat-form-field>
+          <app-error-messages [control]="txMail"></app-error-messages>
         </div>
       </div>
     </form>
@@ -61,29 +64,28 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="clientes.length > 0">
+  <mat-card class="mat-card" [hidden]="clientes.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Nombre">{{ usuario.nombre + ' ' + usuario.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="mail">
-              <mat-header-cell *matHeaderCellDef>EMAIL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>EMAIL</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Mail">{{ usuario.mail }}</mat-cell>
             </ng-container>
 
-
-            <ng-container matColumnDef="acciones">
+            <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Acciones">
-                <button class="btn" mat-icon-button matTooltip="Ver">
+                <button class="btn" mat-icon-button matTooltip="Ver" (click)="verUsuario(usuario, false)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button class="btn" mat-icon-button matTooltip="Modificar">
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verUsuario(usuario, true)">
                   <mat-icon class="editar">edit</mat-icon>
                 </button>
                 <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarUsuario(usuario.id)">
@@ -97,7 +99,7 @@
 
           </mat-table>
 
-          <mat-paginator *ngIf="this.clientes.length > 0"
+          <mat-paginator
                          [length]="this.clientes.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

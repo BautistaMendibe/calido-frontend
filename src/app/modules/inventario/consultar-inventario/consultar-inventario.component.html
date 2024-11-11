@@ -20,6 +20,7 @@
             <mat-label>Producto</mat-label>
             <input type="text" matInput [formControl]="txProducto"/>
           </mat-form-field>
+          <app-error-messages [control]="txProducto"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,10 +32,10 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
       </div>
     </form>
-
 
     <!-- Btn de buscar y limpiar -->
     <div class="row text-right">
@@ -51,17 +52,16 @@
 
   <br>
 
-
   <mat-card-header class="header-card">
     <h2 style="color: grey">Productos en inventario encontrados</h2>
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="detallesProducto.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="detallesProducto.length > 0">
+  <mat-card [hidden]="detallesProducto.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
@@ -88,8 +88,8 @@
               <mat-cell *matCellDef="let detalleProducto" data-label="Marca">{{ detalleProducto.producto?.marca?.nombre }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="cantidadEnInventario">
-              <mat-header-cell *matHeaderCellDef>CANT. EN INVENTARIO</mat-header-cell>
+            <ng-container matColumnDef="cantEnInventario">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>CANT. EN INVENTARIO</mat-header-cell>
               <mat-cell *matCellDef="let detalleProducto" data-label="CantidadEnInventario">{{ detalleProducto.cantEnInventario }}</mat-cell>
             </ng-container>
 
@@ -113,11 +113,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.detallesProducto.length" class="alert alert-secondary text-center">
-            No se encuentran comprobantes para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.detallesProducto.length > 0"
+          <mat-paginator
                          [length]="this.detallesProducto.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -125,6 +121,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.detallesProducto.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran comprobantes para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

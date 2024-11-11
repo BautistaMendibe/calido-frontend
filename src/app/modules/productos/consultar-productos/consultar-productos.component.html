@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="d-flex justify-content-between align-items-center w-100">
         <p class="titulo">Productos</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoProducto()">Registrar nuevo producto</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoProducto()">Registrar nuevo producto</button>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -16,6 +16,7 @@
             <mat-label>Producto</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
@@ -26,6 +27,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTipo"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
@@ -36,6 +38,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
@@ -46,6 +49,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txMarca"></app-error-messages>
         </div>
       </div>
     </form>
@@ -65,35 +69,35 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="productos.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="productos.length > 0">
+  <mat-card class="mat-card" [hidden]="productos.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="imgProducto">
               <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
               <mat-cell *matCellDef="let producto">
                 <img [src]="producto.imgProducto" class="img-thumbnail"/>
               </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="producto">
-              <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+            <ng-container matColumnDef="nombre">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
               <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="costoCompra">
-              <mat-header-cell *matHeaderCellDef >COSTO COMPRA</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>COSTO COMPRA</mat-header-cell>
               <mat-cell *matCellDef="let producto">
                 $ {{ producto.costo | number:'1.2-2':'es-AR' }}
               </mat-cell>
             </ng-container>
-            <ng-container matColumnDef="precioBase">
+            <ng-container matColumnDef="precioConIVA">
               <mat-header-cell *matHeaderCellDef>PRECIO DE VENTA</mat-header-cell>
               <mat-cell *matCellDef="let producto">
-                $ {{ producto.precioSinIVA | number:'1.2-2':'es-AR' }}
+                $ {{ producto.precioConIVA | number:'1.2-2':'es-AR' }}
               </mat-cell>
             </ng-container>
             <ng-container matColumnDef="tipoProducto">
@@ -108,7 +112,7 @@
               <mat-header-cell *matHeaderCellDef>MARCA</mat-header-cell>
               <mat-cell *matCellDef="let producto">{{ producto.marca?.nombre }}</mat-cell>
             </ng-container>
-            <ng-container matColumnDef="acciones">
+            <ng-container matColumnDef="acciones" >
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let producto" data-label="Acciones">
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verProducto(producto, false)">
@@ -125,10 +129,7 @@
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
           </mat-table>
-          <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
-            No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-          </h6>
-          <mat-paginator *ngIf="this.productos.length > 0"
+          <mat-paginator
                          [length]="this.productos.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -136,4 +137,8 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.productos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
 </div>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {Subject} from "rxjs";
@@ -12,6 +12,8 @@ import {TarjetasService} from "../../../services/tarjetas.service";
 import {TipoTarjeta} from "../../../models/tipoTarjeta.model";
 import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
 import {Cuota} from "../../../models/Cuota.model";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-consultar-tarjetas',
@@ -22,11 +24,14 @@ export class ConsultarTarjetasComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Tarjeta> = new MatTableDataSource<Tarjeta>([]);
   public form: FormGroup;
   public tarjetas: Tarjeta[] = [];
-  public columnas: string[] = ['tarjeta', 'tipoTarjeta', 'cuotas', 'acciones'];
+  public columnas: string[] = ['nombre', 'tipoTarjeta', 'cuotas', 'acciones'];
   private filtros: FiltrosTarjetas;
   public listaTiposTarjetas: TipoTarjeta[] = [];
   public listaCuotas: Cuota[] = [];
-  private unsubscribe$: Subject<void> = new Subject<void>();
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -65,9 +70,13 @@ export class ConsultarTarjetasComponent implements OnInit {
       tipoTarjeta: this.txTipoTarjeta.value,
     };
 
+    this.isLoading = true;
     this.tarjetasService.consultarTarjetas(this.filtros).subscribe((tarjetas) => {
       this.tarjetas = tarjetas;
-      this.tableDataSource.data = tarjetas;
+      this.tableDataSource.data = this.tarjetas;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

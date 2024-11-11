@@ -1,0 +1,69 @@
+.diasSeleccionados {
+  background-color: #f0f0f0;
+  color: #333;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 4px;
+  font-size: 14px;
+  display: inline-block;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.btn-upload {
+  color: #333;
+  text-transform: none;
+  display: flex;
+  font-size: 14px;
+  align-items: center;
+  background-color: #f0f0f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+}
+
+.btn-upload {
+  color: #333;
+  text-transform: none;
+  display: flex;
+  font-size: 14px;
+  align-items: center;
+  background-color: #f0f0f0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+
+  mat-icon {
+    margin-right: 8px;
+  }
+
+  &:hover {
+    background-color: #e0e0e0;
+  }
+
+  &.drag-over {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    border: 2px dashed #e15b35;
+  }
+}
+
+.upload-label {
+  display: inline-block;
+  margin-top: 10px;
+  cursor: pointer;
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+.file-name {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #666;
+}

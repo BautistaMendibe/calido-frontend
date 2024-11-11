@@ -1,15 +1,14 @@
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-promociones.component";
 import {Producto} from "../../../models/producto.model";
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import {MatTableDataSource} from "@angular/material/table";
-import {BuscarProductosComponent} from "../../productos/buscar-productos/buscar-productos.component";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -21,12 +20,15 @@ export class RegistrarPromocionComponent implements OnInit{
   public form: FormGroup;
   public listaProductos: Producto[] = [];
   public productosSelecionados: Producto[] = [];
+  public productosSeleccionadosOriginales: Producto[] = [];
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public columnas: string[] = ['imgProducto', 'producto', 'precio', 'seleccionar'];
+  public columnas: string[] = ['seleccionar', 'imgProducto', 'nombre', 'precioConIVA'];
   public isLoading: boolean = false;
   public promocion: Promocion;
   public esConsulta: boolean;
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -71,8 +73,7 @@ export class RegistrarPromocionComponent implements OnInit{
       txPorcentajeDescuento: ['',
         [
         Validators.required,
-        Validators.min(0),
-        Validators.max(100),
+        this.validarPorcentaje(),
         Validators.pattern("^[0-9]*$")
         ]],
       txBuscar: ['', []],
@@ -89,6 +90,11 @@ export class RegistrarPromocionComponent implements OnInit{
       }
 
       this.tableDataSource.data = this.listaProductos;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+
+      this.ordenarTablaPorSeleccionados();
+
       this.isLoading = false;
     });
   }
@@ -97,6 +103,7 @@ export class RegistrarPromocionComponent implements OnInit{
     this.txNombre.setValue(this.promocion.nombre);
     this.txPorcentajeDescuento.setValue(this.promocion.porcentajeDescuento);
     this.productosSelecionados = this.promocion.productos;
+    this.productosSeleccionadosOriginales = [...this.productosSelecionados];
     if (this.esConsulta) {
       this.form.disable();
     }
@@ -111,6 +118,22 @@ export class RegistrarPromocionComponent implements OnInit{
     });
   }
 
+  public validarPorcentaje(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      const value = control.value;
+
+      // Verifica si el valor es un número y está fuera de los límites
+      if (value && (Number(value) <= 0 || Number(value) > 100)) {
+        // Si el valor es menor o igual a 0 o mayor a 100, devuelve el error
+        control.setValue(Math.max(1, Math.min(100, Number(value))));
+        return { 'invalidPercentage': { value: control.value } };
+      }
+
+      return null;
+    };
+  }
+
+
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSelecionados.findIndex(p => p.id === producto.id);
     if (index > -1) {
@@ -120,6 +143,21 @@ export class RegistrarPromocionComponent implements OnInit{
       this.productosSelecionados.push(producto);
       producto.estaEnPromocion = true;
     }
+
+    // Ordenar productos: primero los que están en promoción
+    this.ordenarTablaPorSeleccionados();
+  }
+
+  private ordenarTablaPorSeleccionados() {
+    const productosOrdenados = this.tableDataSource.data.sort((a, b) => {
+      if (a.estaEnPromocion === b.estaEnPromocion) {
+        return 0; // Si ambos tienen el mismo estado, no cambiar el orden
+      }
+      return a.estaEnPromocion ? -1 : 1; // a va antes que b si a está en promoción
+    });
+
+    // Actualizar la data de MatTableDataSource
+    this.tableDataSource.data = productosOrdenados;
   }
 
   public registrarNuevoProducto() {
@@ -173,14 +211,33 @@ export class RegistrarPromocionComponent implements OnInit{
   }
 
   public modificarPromocion() {
-    //this.promocionesService.modificarPromocion(this.promocion).subscribe((respuesta) => {
-    //  if (respuesta.mensaje == 'OK') {
-    //    this.notificacionService.openSnackBarSuccess('La promoción se modificó con éxito');
-    //    this.dialogRef.close(true);
-    //  } else {
-    //    this.notificacionService.openSnackBarError('Error al modificar la promoción, intentelo nuevamente');
-    //  }
-    //})
+    if (this.form.valid) {
+      if (this.productosSelecionados.length == 0) {
+        this.notificacionService.openSnackBarError('Debe seleccionar al menos un producto para la promoción.');
+        return;
+      }
+
+      const promocion: Promocion = new Promocion();
+      promocion.id = this.promocion.id;
+      promocion.nombre = this.txNombre.value;
+      promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
+
+      const productosAgregados = this.productosSelecionados;
+      promocion.productos = productosAgregados;
+
+      promocion.productosEliminados = this.productosSeleccionadosOriginales.filter(producto =>
+        !this.productosSelecionados.includes(producto)
+      );
+
+      this.promocionesService.modificarPromocion(promocion).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('La promoción se modificó con éxito');
+          this.dialogRef.close(true);
+        } else {
+          this.notificacionService.openSnackBarError('Error al modificar la promoción, intentelo nuevamente');
+        }
+      })
+    }
   }
 
   public habilitarEdicion() {

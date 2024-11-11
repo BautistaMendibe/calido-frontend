@@ -7,7 +7,7 @@
 </div>
 
 <div *ngIf="!isSearchingConfiguration" class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Configuración</p>
@@ -27,12 +27,14 @@
             <mat-label>ID Usuario</mat-label>
             <input type="text" matInput [formControl]="idUsuario"/>
           </mat-form-field>
+          <app-error-messages [control]="idUsuario"></app-error-messages>
         </div>
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Nombre de Usuario</mat-label>
             <input type="text" matInput [formControl]="nombreUsuario"/>
           </mat-form-field>
+          <app-error-messages [control]="nombreUsuario"></app-error-messages>
         </div>
       </div>
 
@@ -46,6 +48,7 @@
             <mat-label>Razón Social</mat-label>
             <input type="text" matInput [formControl]="razonSocial" />
           </mat-form-field>
+          <app-error-messages [control]="razonSocial"></app-error-messages>
         </div>
       </div>
 
@@ -55,30 +58,35 @@
             <mat-label>Provincia</mat-label>
             <input type="text" matInput [formControl]="provincia" />
           </mat-form-field>
+          <app-error-messages [control]="provincia"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Localidad</mat-label>
             <input type="text" matInput [formControl]="ciudad" />
           </mat-form-field>
+          <app-error-messages [control]="ciudad"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Código Postal</mat-label>
             <input type="text" matInput [formControl]="codigoPostal" />
           </mat-form-field>
+          <app-error-messages [control]="codigoPostal"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Calle</mat-label>
             <input type="text" matInput [formControl]="calle" />
           </mat-form-field>
+          <app-error-messages [control]="calle"></app-error-messages>
         </div>
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Número</mat-label>
             <input type="text" matInput [formControl]="numero" />
           </mat-form-field>
+          <app-error-messages [control]="numero"></app-error-messages>
         </div>
       </div>
 
@@ -89,6 +97,7 @@
             <mat-label>CUIT</mat-label>
             <input type="text" mask="00-00000000-0" matInput [formControl]="cuit" />
           </mat-form-field>
+          <app-error-messages [control]="cuit"></app-error-messages>
         </div>
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
@@ -97,12 +106,14 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="fechaInicioActividades"></app-error-messages>
         </div>
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Condición frente al IVA</mat-label>
             <input type="text" matInput [formControl]="condicionIva" />
           </mat-form-field>
+          <app-error-messages [control]="condicionIva"></app-error-messages>
         </div>
       </div>
 
@@ -124,6 +135,16 @@
       </div>
 
       <br><br>
+
+      <h4 style="color: grey">Facturación de ventas</h4>
+      <div class="row">
+        <mat-checkbox [formControl]="facturacionAutomatica">Facturación automática</mat-checkbox>
+      </div>
+      <div class="row">
+        <h5 style="margin-left: 10px">Esto significa que la facturación en AFIP de cada venta se realizará de manera automática después de realizarse.</h5>
+      </div>
+
+      <br><br>
       <h4 style="color: grey">Información Adicional</h4>
 
       <!-- Usuario de Instagram y Contraseña de Instagram -->
@@ -133,12 +154,14 @@
             <mat-label>Usuario de Instagram</mat-label>
             <input type="text" matInput [formControl]="usuarioInstagram" />
           </mat-form-field>
+          <app-error-messages [control]="usuarioInstagram"></app-error-messages>
         </div>
         <div class="col-md-6">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Contraseña de Instagram</mat-label>
             <input type="password" matInput [formControl]="contrasenaInstagram" />
           </mat-form-field>
+          <app-error-messages [control]="contrasenaInstagram"></app-error-messages>
         </div>
       </div>
     </form>

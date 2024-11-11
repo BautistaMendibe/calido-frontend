@@ -57,6 +57,15 @@ import { DetalleVentaComponent } from './modules/venta/detalle-venta/detalle-ven
 import { VisualizacionesComponent } from './modules/Estadisticas/visualizaciones/visualizaciones.component';
 import { VisualizacionesVentasComponent } from './modules/Estadisticas/visualizaciones-ventas/visualizaciones-ventas.component';
 import { VisualizacionesComprasComponent } from './modules/Estadisticas/visualizaciones-compras/visualizaciones-compras.component';
+import { SolicitarLicenciaComponent } from './modules/empleados/solicitar-licencia/solicitar-licencia.component';
+import { RegistrarLicenciaComponent } from './modules/empleados/registrar-licencia/registrar-licencia.component';
+import { ConsultarArqueoCajaComponent } from './modules/gerencia/consultar-arqueo-caja/consultar-arqueo-caja.component';
+import { ConsultarCajaComponent } from './modules/gerencia/consultar-caja/consultar-caja.component';
+import { RegistrarCajaComponent } from './modules/gerencia/registrar-caja/registrar-caja.component';
+import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arqueo-caja/registrar-arqueo-caja.component';
+import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
+import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
+import {MatPaginatorModule} from "@angular/material/paginator";
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -101,6 +110,14 @@ registerLocaleData(localeEs, 'es');
     VisualizacionesComponent,
     VisualizacionesVentasComponent,
     VisualizacionesComprasComponent
+    SolicitarLicenciaComponent,
+    RegistrarLicenciaComponent,
+    ConsultarArqueoCajaComponent,
+    ConsultarCajaComponent,
+    RegistrarCajaComponent,
+    RegistrarArqueoCajaComponent,
+    DetalleArqueoComponent,
+    ErrorMessagesComponent
   ],
   imports: [
     BrowserModule,
@@ -116,7 +133,8 @@ registerLocaleData(localeEs, 'es');
     PickerComponent,
     NgxMaskDirective,
     NgxMaskPipe,
-    FormsModule
+    FormsModule,
+    MatPaginatorModule
   ],
   providers: [
     HealthService,
@@ -130,6 +148,7 @@ registerLocaleData(localeEs, 'es');
     },
     { provide: LOCALE_ID, useValue: 'es' },
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [ErrorMessagesComponent]
 })
 export class AppModule { }

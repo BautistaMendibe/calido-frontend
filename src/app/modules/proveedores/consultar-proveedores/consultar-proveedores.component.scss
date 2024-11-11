@@ -1,0 +1,14 @@
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+}

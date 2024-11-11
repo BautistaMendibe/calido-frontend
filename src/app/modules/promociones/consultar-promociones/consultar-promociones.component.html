@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Promociones</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaPromocion()">Registrar nueva promoción</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaPromocion()">Registrar nueva promoción</button>
       </div>
     </div>
 
@@ -19,6 +19,7 @@
             <mat-label>Promoción</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
       </div>
     </form>
@@ -39,7 +40,6 @@
 
   <br>
 
-
   <mat-card-header class="header-card">
     <h2 style="color: grey">Promociones encontradas</h2>
   </mat-card-header>
@@ -49,23 +49,23 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="promociones.length > 0 && !isLoading">
+  <mat-card class="mat-card" [hidden]="!(promociones.length > 0 && !isLoading)">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>PROMOCIÓN</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PROMOCIÓN</mat-header-cell>
               <mat-cell *matCellDef="let promocion" data-label="Promoción">{{ promocion.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="porcentajeDescuento">
-              <mat-header-cell *matHeaderCellDef>% DESCUENTO</mat-header-cell>
-              <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>DESCUENTO</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Porcentaje de descuento" class="text-center">{{ promocion.porcentajeDescuento + '%' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="producto">
-              <mat-header-cell *matHeaderCellDef>PRODUCTOS</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTOS</mat-header-cell>
               <mat-cell *matCellDef="let promocion">
                 <div class="productos-container">
                   <ng-container *ngFor="let producto of promocion.productos.slice(0, 3)">
@@ -101,7 +101,7 @@
 
           </mat-table>
 
-          <mat-paginator *ngIf="this.promociones.length > 0"
+          <mat-paginator
                          [length]="this.promociones.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>

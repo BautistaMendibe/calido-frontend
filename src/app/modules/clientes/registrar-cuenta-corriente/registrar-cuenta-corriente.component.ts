@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {
   ConsultarCuentasCorrientesComponent
@@ -15,6 +15,8 @@ import {Producto} from "../../../models/producto.model";
 import {VentasService} from "../../../services/ventas.services";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {DetalleVentaComponent} from "../../venta/detalle-venta/detalle-venta.component";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -29,12 +31,17 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public esRegistro: boolean;
   public formDesactivado: boolean;
   private referencia: ConsultarCuentasCorrientesComponent;
+  public fechaHoy: Date = new Date();
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public ventas: Venta[] = [];
-  public columnas: string[] = ['nroventa', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
+  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
 
   public listaVentasDeshabilitada: boolean = false;
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -68,6 +75,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
     if (this.data.editar) {
       this.listaVentasDeshabilitada = false;
+      this.txCreada.disable();
+      this.txCliente.disable();
     }
 
     this.buscarUsuarios();
@@ -94,9 +103,13 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   public buscarVentas(idUsuario: number) {
+    this.isLoading = true;
     this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
       this.ventas = ventas;
       this.tableDataSource.data = ventas;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isLoading = false;
     })
   }
 
@@ -104,7 +117,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '80%',
+        width: '90%',
         autoFocus: false,
         maxHeight: '80vh',
         panelClass: 'custom-dialog-container',
@@ -182,13 +195,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public habilitarEdicion(){
     this.form.enable();
+    this.txCreada.disable();
+    this.txCliente.disable();
     this.formDesactivado = false;
     this.data.editar = true;
-  }
-
-  public getErrorMessage(control: FormControl): string {
-    if (control.hasError('required')) return 'Este campo es obligatorio';
-    return '';
   }
 
   private filtrosSuscripciones() {

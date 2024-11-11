@@ -43,6 +43,7 @@ export class ConsultarPedidosComponent implements OnInit {
   public columnas: string[] = ['fechaEmision', 'numeroPedido', "proveedor", 'total', 'estado', 'acciones'];
 
   private filtros: FiltrosPedidos;
+  public isLoading: boolean = false;
 
   private formatter = new Intl.NumberFormat('es-AR', {
     style: 'currency',
@@ -100,9 +101,13 @@ export class ConsultarPedidosComponent implements OnInit {
       estado: this.txEstado.value
     };
 
+    this.isLoading = true;
     this.pedidosService.consultarPedidos(this.filtros).subscribe((pedidos) => {
       this.pedidos = pedidos;
-      this.tableDataSource.data = pedidos;
+      this.tableDataSource.data = this.pedidos;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isLoading = false;
     });
   }
 

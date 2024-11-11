@@ -1,4 +1,4 @@
-<div class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11 form-emergente">
   <br>
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
@@ -23,6 +23,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txTipoComprobante"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -30,6 +31,7 @@
           <mat-label>Número de Comprobante</mat-label>
           <input type="text" matInput [formControl]="txNumeroComprobante"/>
         </mat-form-field>
+        <app-error-messages [control]="txNumeroComprobante"></app-error-messages>
       </div>
 
       <div class="col-md-3">
@@ -41,22 +43,24 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txProveedor"></app-error-messages>
       </div>
 
       <div class="col-md-3">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de Emisión</mat-label>
-          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" />
+          <input matInput [matDatepicker]="pickerEmision" [formControl]="txFechaEmision" [max]="fechaHoy"/>
           <mat-datepicker-toggle matSuffix [for]="pickerEmision"></mat-datepicker-toggle>
           <mat-datepicker #pickerEmision></mat-datepicker>
         </mat-form-field>
+        <app-error-messages [control]="txFechaEmision"></app-error-messages>
       </div>
 
     </div>
 
     <div class="row pt-4">
 
-      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+      <div class="col-md-3" *ngIf="txTipoComprobante?.value === 1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Responsable</mat-label>
           <mat-select [formControl]="txResponsable">
@@ -65,9 +69,10 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txResponsable"></app-error-messages>
       </div>
 
-      <div class="col-md-3" *ngIf="form.get('txTipoComprobante')?.value === 1">
+      <div class="col-md-3" *ngIf="txTipoComprobante?.value === 1">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Recibido por</mat-label>
           <mat-select [formControl]="txReceptor">
@@ -76,6 +81,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
+        <app-error-messages [control]="txReceptor"></app-error-messages>
       </div>
 
       <div class="col-md">
@@ -83,43 +89,61 @@
           <mat-label>Observaciones</mat-label>
           <input type="text" matInput [formControl]="txObservaciones"/>
         </mat-form-field>
+        <app-error-messages [control]="txObservaciones"></app-error-messages>
       </div>
     </div>
 
     <!-- Selector de órdenes de compra para ese proveedor -->
-    <div class="row" *ngFor="let filaPedidos of agruparPedidos(listaPedidosPorProveedor, 4)">
-      <div class="col-12 col-md-6 col-lg-3 p-4" *ngFor="let pedido of filaPedidos"> <!-- 4 columnas por fila -->
-        <div
-          class="card pedido-card"
-          [ngClass]="{ 'selected-pedido-card': pedido.id === numeroOrdenSeleccionada }"
-          (click)="seleccionarPedido(pedido.id)"
-        >
-          <!-- Contenido del pedido -->
-          <div class="row align-items-center text-center my-3 pedido-id">
-            <div class="col">
-              <strong>Orden de compra:</strong> {{ pedido.id }}
+    <div class="row">
+      <ng-container *ngIf="listaPedidosPorProveedor.length > 0; else noPedidos">
+        <ng-container *ngFor="let filaPedidos of agruparPedidos(listaPedidosPorProveedor, 4)">
+          <div class="col-12 col-md-6 col-lg-3 p-4" *ngFor="let pedido of filaPedidos"> <!-- 4 columnas por fila -->
+            <div
+              class="card pedido-card"
+              [ngClass]="{ 'selected-pedido-card': pedido.id === numeroOrdenSeleccionada }"
+              (click)="seleccionarPedido(pedido.id)"
+            >
+              <!-- Contenido del pedido -->
+              <div class="row align-items-center text-center my-3 pedido-id">
+                <div class="col">
+                  <strong>Orden de compra:</strong> {{ pedido.id }}
+                </div>
+              </div>
+
+              <div class="row align-items-center text-center mb-3 pedido-fecha">
+                <div class="col">
+                  <strong>Fecha Emisión:</strong> {{ pedido.fechaEmision | date:'shortDate' }}
+                </div>
+              </div>
+
+              <div class="row align-items-center text-center mb-3 pedido-total">
+                <div class="col">
+                  <strong>Total:</strong> ${{ pedido.total }}
+                </div>
+              </div>
+
+              <div class="row align-items-center text-center mb-3 pedido-id">
+                <div class="col">
+                  <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+                </div>
+              </div>
             </div>
           </div>
+        </ng-container>
+      </ng-container>
 
-          <div class="row align-items-center text-center mb-3 pedido-fecha">
-            <div class="col">
-              <strong>Fecha Emisión:</strong> {{ pedido.fechaEmision | date:'shortDate' }}
-            </div>
-          </div>
-
-          <div class="row align-items-center text-center mb-3 pedido-total">
-            <div class="col">
-              <strong>Total:</strong> ${{ pedido.total }}
-            </div>
-          </div>
-
-          <div class="row align-items-center text-center mb-3 pedido-estado">
-            <div class="col">
-              <strong>Estado:</strong> {{ pedido.estadoPedido.nombre }}
+      <ng-template #noPedidos>
+        <div class="col-12 p-4">
+          <div class="card selected-pedido-card text-center no-pedidos-card">
+            <div class="row align-items-center my-3">
+              <div class="col">
+                <span *ngIf="!txProveedor.value">Selecciona un proveedor para visualizar los pedidos a los que puedes registrarle un comprobante</span>
+                <span *ngIf="txProveedor.value">No hay pedidos creados para el proveedor seleccionado</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      </ng-template>
     </div>
 
     <mat-divider class="my-3" *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)"></mat-divider>
@@ -131,6 +155,7 @@
           <input type="text" matInput [formControl]="txBuscar"/>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
+        <app-error-messages [control]="txBuscar"></app-error-messages>
       </div>
       <div class="col-md-8">
         <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="formDesactivado || tablaProductosDesactivada">
@@ -141,7 +166,7 @@
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0 && !(data.esRegistro && !ordenSeleccionada)">
+    <mat-card [hidden]="!(productos.length > 0 && !(data.esRegistro && !ordenSeleccionada))">
       <mat-card-content>
         <div class="row">
 
@@ -153,12 +178,12 @@
                   <img [src]="producto.imgProducto" class="img-thumbnail"/>
                 </mat-cell>
               </ng-container>
-              <ng-container matColumnDef="producto">
-                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="costo">
-                <mat-header-cell *matHeaderCellDef>COSTO COMPRA</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>COSTO COMPRA</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   $ {{ producto.costo | number:'1.2-2':'es-AR' }}
                 </mat-cell>
@@ -188,10 +213,7 @@
               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
               <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
             </mat-table>
-            <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
-              No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-            </h6>
-            <mat-paginator *ngIf="this.productos.length > 0"
+            <mat-paginator
                            [length]="this.productos.length"
                            [disabled]="formDesactivado"
                            [pageSize]="10"
@@ -201,6 +223,10 @@
       </mat-card-content>
     </mat-card>
   </form>
+
+  <h5 *ngIf="!isLoading && !(this.productos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
 
   <br>
   <mat-divider></mat-divider>
@@ -215,7 +241,7 @@
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Subtotal</mat-label>
-        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
     </div>
   </div>

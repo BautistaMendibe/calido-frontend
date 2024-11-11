@@ -18,3 +18,23 @@
   pointer-events: none;
   opacity: 0.6;
 }
+
+h3 {
+  color: #5e5e5e;
+}
+
+.precio-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.precio-tachado {
+  text-decoration: line-through;
+  color: gray;
+  font-size: 12px;
+}
+
+.precio-promocion {
+  display: block;
+  margin-top: 5px;
+}

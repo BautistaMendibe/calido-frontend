@@ -9,7 +9,7 @@
     <mat-divider></mat-divider>
     <br>
 
-    <h4>Filtros de búsqueda</h4>
+    <h4 style="color: grey">Filtros de búsqueda</h4>
     <form [formGroup]="form">
       <div class="row pt-4">
         <div class="col-md-3">
@@ -17,6 +17,7 @@
             <mat-label>Número de venta</mat-label>
             <input type="text" matInput [formControl]="txNumero"/>
           </mat-form-field>
+          <app-error-messages [control]="txNumero"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -27,6 +28,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txFormaDePago"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -37,6 +39,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTiposFactura"></app-error-messages>
         </div>
       </div>
       <div class="row pt-4">
@@ -47,6 +50,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaDesde"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
@@ -55,6 +59,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaHasta"></app-error-messages>
         </div>
       </div>
     </form>
@@ -80,29 +85,29 @@
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="ventas.length > 0">
+  <mat-card [hidden]="ventas.length === 0 || isLoading">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
           <mat-table [dataSource]="tableDataSource" matSort>
 
-            <ng-container matColumnDef="nroventa">
-              <mat-header-cell *matHeaderCellDef>NÚMERO DE VENTA</mat-header-cell>
+            <ng-container matColumnDef="id">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>NÚMERO DE VENTA</mat-header-cell>
               <mat-cell *matCellDef="let venta">{{ venta.id }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="montoTotal">
-              <mat-header-cell *matHeaderCellDef>MONTO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
               <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="fecha">
-              <mat-header-cell *matHeaderCellDef >FECHA</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
               <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="formaDePago">
-              <mat-header-cell *matHeaderCellDef>FORMA DE PAGO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FORMA DE PAGO</mat-header-cell>
               <mat-cell *matCellDef="let venta">
                  {{ venta.formaDePago?.nombre }}
               </mat-cell>
@@ -130,22 +135,29 @@
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verVenta(venta)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta(venta)">
+                <button *ngIf="venta.anulada == 0" mat-icon-button color="primary" matTooltip="Anular venta" (click)="anularVenta(venta)">
                   <mat-icon class="eliminar">settings_backup_restore</mat-icon>
                 </button>
                 <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante(venta)">
                   <mat-icon class="imprimir">print</mat-icon>
                 </button>
+                <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null && venta.anulada == 0" mat-icon-button color="primary"  matTooltip="Facturar venta" (click)="facturarVenta(venta)">
+                  <mat-icon class="facturar">attach_money</mat-icon>
+                </button>
               </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+            <mat-row *matRowDef="let row; columns: columnas;"
+                     [ngClass]="{'anulada-row': row.anulada}"
+                     [matTooltip]="row.anulada ? 'Venta anulada' : ''"></mat-row>
           </mat-table>
-          <mat-paginator *ngIf="this.ventas.length > 0"
-                         [length]="this.ventas.length"
-                         [pageSize]="10"
-                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+
+          <mat-paginator
+            [length]="this.ventas.length"
+            [pageSize]="10"
+            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+          </mat-paginator>
         </div>
       </div>
     </mat-card-content>

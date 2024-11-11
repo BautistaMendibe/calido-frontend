@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -10,6 +10,8 @@ import {Tarjeta} from "../../../models/tarjeta.model";
 import {TarjetasService} from "../../../services/tarjetas.service";
 import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
 import {Cuota} from "../../../models/Cuota.model";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-tarjeta',
@@ -24,8 +26,9 @@ export class RegistrarTarjetaComponent implements OnInit {
   public tarjetas: Tarjeta[] = [];
   public listaCuotas: Cuota[] = [];
   public cuotasSeleccionadas: CuotaPorTarjeta[] = [];
-  public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'recargo', 'descuento'];
+  public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'descuento'];
   public listaTiposTarjetas: TipoTarjeta[] = [];
+  public isLoading: boolean = false;
 
   public tarjeta: Tarjeta;
   public esConsulta: boolean;
@@ -35,6 +38,9 @@ export class RegistrarTarjetaComponent implements OnInit {
   protected readonly Math = Math;
 
   public dataSourceCuotas = new MatTableDataSource(this.listaCuotas);
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -93,9 +99,13 @@ export class RegistrarTarjetaComponent implements OnInit {
   }
 
   private buscarCuotas() {
+    this.isLoading = true;
     this.tarjetasService.buscarCuotas().subscribe((cuotas) => {
       this.listaCuotas = cuotas;
       this.dataSourceCuotas.data = this.listaCuotas;
+      this.dataSourceCuotas.paginator = this.paginator;
+      this.dataSourceCuotas.sort = this.sort;
+      this.isLoading = false;
     });
   }
 
@@ -114,7 +124,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         if (fila) {
           (fila as any).selected = true;
           (fila as any).interes = cuota.interes;
-          (fila as any).recargo = cuota.recargo;
           (fila as any).descuento = cuota.descuento;
 
           // Simula una selección, para agregar la cuota a la lista de cuotas seleccionadas
@@ -153,7 +162,6 @@ export class RegistrarTarjetaComponent implements OnInit {
 
         cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
         cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
-        cuotaPorTarjeta.recargo = cuotaSeleccionada.recargo;
         cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
 
         // Agregar la cuota a la lista de la tarjeta
@@ -187,7 +195,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
         cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
         cuotaPorTarjeta.idTarjeta = cuotaSeleccionada.idTarjeta;
-        cuotaPorTarjeta.recargo = cuotaSeleccionada.recargo;
         cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
 
         // Agregar la cuota a la lista de la tarjeta
@@ -224,9 +231,9 @@ export class RegistrarTarjetaComponent implements OnInit {
         id: cuota.id,
         interes: cuota.interes,
         idCuota: idCuota,
-        idTarjeta: this.tarjeta.id,
-        recargo: cuota.recargo,
-        descuento: cuota.descuento
+        idTarjeta: this.tarjeta?.id,
+        descuento: cuota.descuento,
+        cantidadCuota: cuota.cantidadCuotas
       };
 
       // Agregar a la lista de cuotas seleccionadas

@@ -14,7 +14,7 @@
     <br *ngIf="productos.length == 0">
 
     <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="productos.length == 0">
+    <div class="spinner-wrapper" *ngIf="isLoading">
       <mat-spinner></mat-spinner>
     </div>
 
@@ -25,12 +25,13 @@
           <input type="text" matInput [formControl]="txBuscar"/>
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
+        <app-error-messages [control]="txBuscar"></app-error-messages>
       </div>
     </div>
 
     <br>
 
-    <mat-card *ngIf="productos.length > 0">
+    <mat-card [hidden]="productos.length === 0">
       <mat-card-content>
         <div class="row">
 
@@ -50,12 +51,12 @@
                   <img [src]="producto.imgProducto" class="img-thumbnail"/>
                 </mat-cell>
               </ng-container>
-              <ng-container matColumnDef="producto">
-                <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
+              <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
                 <mat-cell *matCellDef="let producto">{{ producto.nombre }}</mat-cell>
               </ng-container>
               <ng-container matColumnDef="costo">
-                <mat-header-cell *matHeaderCellDef>COSTO COMPRA</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>COSTO COMPRA</mat-header-cell>
                 <mat-cell *matCellDef="let producto">
                   $ {{ producto.costo | number:'1.2-2':'es-AR' }}
                 </mat-cell>
@@ -75,10 +76,7 @@
               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
               <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
             </mat-table>
-            <h6 *ngIf="!this.productos.length" class="alert alert-secondary text-center">
-              No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-            </h6>
-            <mat-paginator *ngIf="this.productos.length > 0"
+            <mat-paginator
                            [length]="this.productos.length"
                            [pageSize]="10"
                            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -87,6 +85,10 @@
       </mat-card-content>
     </mat-card>
     </form>
+
+  <h5 *ngIf="!isLoading && !(this.productos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+  </h5>
 
   <mat-divider class="my-3"></mat-divider>
 

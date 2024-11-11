@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {
   AbstractControl,
   FormBuilder,
@@ -17,6 +17,8 @@ import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {MovimientoProducto} from "../../../models/movimientoProducto";
 import {MatTableDataSource} from "@angular/material/table";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
 
 @Component({
   selector: 'app-registrar-inventario',
@@ -38,6 +40,10 @@ export class RegistrarInventarioComponent implements OnInit {
   public movimientosProducto: MovimientoProducto[] = [];
   public dataSourceMovimientosProducto = new MatTableDataSource(this.movimientosProducto);
   public tablaMovimientosDesactivada: boolean = false;
+  public isLoading: boolean = false;
+
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -75,6 +81,10 @@ export class RegistrarInventarioComponent implements OnInit {
     if (this.esConsulta && this.detalle) {
       this.rellenarFormularioDataDetalleProducto();
     }
+
+    if (this.data.editar) {
+      this.txProducto.disable();
+    }
   }
 
   private crearFormulario() {
@@ -83,6 +93,7 @@ export class RegistrarInventarioComponent implements OnInit {
       txCantidadEnInventario: ['', [Validators.required, Validators.pattern("^[0-9]*$")]],
       txValorEnInventario: [{value: '', disabled: true}],
       txBuscarFecha: [''],
+      txBuscarFechaHasta: [''],
       txBuscarTipo: ['']
     });
   }
@@ -110,6 +121,7 @@ export class RegistrarInventarioComponent implements OnInit {
     this.formDesactivado = false;
     this.tablaMovimientosDesactivada = false;
     this.txValorEnInventario.disable();
+    this.txProducto.disable();
   }
 
   /**
@@ -142,9 +154,13 @@ export class RegistrarInventarioComponent implements OnInit {
   }
 
   private buscarMovimientosPorProducto(idProducto: number) {
+    this.isLoading = true;
     this.productoService.consultarMovimientosPorProducto(idProducto).subscribe((movimientos) => {
       this.movimientosProducto = movimientos;
       this.dataSourceMovimientosProducto.data = this.movimientosProducto;
+      this.dataSourceMovimientosProducto.paginator = this.paginator;
+      this.dataSourceMovimientosProducto.sort = this.sort;
+      this.isLoading = false;
     });
   }
 
@@ -203,21 +219,45 @@ export class RegistrarInventarioComponent implements OnInit {
       });
     }
 
-    if (this.txBuscarFecha) {
-      this.txBuscarFecha.valueChanges.subscribe((fechaSeleccionada: Date) => {
-        if (fechaSeleccionada) {
-          const fechaFiltrada = new Date(fechaSeleccionada);
-          fechaFiltrada.setHours(0, 0, 0, 0);
+    if (this.txBuscarFecha || this.txBuscarFechaHasta) {
+      const aplicarFiltros = () => {
+        const fechaSeleccionada: Date = this.txBuscarFecha ? this.txBuscarFecha.value : null;
+        const fechaHasta: Date = this.txBuscarFechaHasta ? this.txBuscarFechaHasta.value : null;
 
-          this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
+        this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
+          let coincideFecha = true;
+
+          if (fechaSeleccionada) {
+            const fechaFiltrada = new Date(fechaSeleccionada);
+            fechaFiltrada.setHours(0, 0, 0, 0); // Normalizar hora
+
             const fechaMovimiento = new Date(movimiento.fecha);
-            fechaMovimiento.setHours(0, 0, 0, 0);
+            fechaMovimiento.setHours(0, 0, 0, 0); // Normalizar hora
 
-            return fechaMovimiento.getTime() === fechaFiltrada.getTime();
-          });
-        } else {
-          this.dataSourceMovimientosProducto.data = this.movimientosProducto;
-        }
+            if (fechaHasta) {
+              const fechaHastaFiltrada = new Date(fechaHasta);
+              fechaHastaFiltrada.setHours(0, 0, 0, 0); // Normalizar hora
+
+              // Filtrar por rango de fechas
+              coincideFecha = fechaMovimiento.getTime() >= fechaFiltrada.getTime() &&
+                fechaMovimiento.getTime() <= fechaHastaFiltrada.getTime();
+            } else {
+              // Filtrar por fecha exacta si no se especifica fechaHasta
+              coincideFecha = fechaMovimiento.getTime() === fechaFiltrada.getTime();
+            }
+          }
+
+          return coincideFecha;
+        });
+      };
+
+      // Suscribir cambios en txBuscarFecha y txBuscarFechaHasta
+      this.txBuscarFecha?.valueChanges.subscribe(() => {
+        aplicarFiltros();
+      });
+
+      this.txBuscarFechaHasta?.valueChanges.subscribe(() => {
+        aplicarFiltros();
       });
     }
 
@@ -225,13 +265,14 @@ export class RegistrarInventarioComponent implements OnInit {
       this.txBuscarTipo.valueChanges.subscribe((tipoSeleccionado: string) => {
         const aplicarFiltros = () => {
           const fechaSeleccionada: Date = this.txBuscarFecha ? this.txBuscarFecha.value : null;
+          const fechaHasta: Date = this.txBuscarFechaHasta ? this.txBuscarFechaHasta.value : null;
           const tipoSeleccionado: string = this.txBuscarTipo ? this.txBuscarTipo.value : null;
 
           this.dataSourceMovimientosProducto.data = this.movimientosProducto.filter(movimiento => {
             let coincideFecha = true;
             let coincideTipo = true;
 
-            // Filtrar por fecha
+            // Filtrar por fecha o rango
             if (fechaSeleccionada) {
               const fechaFiltrada = new Date(fechaSeleccionada);
               fechaFiltrada.setHours(0, 0, 0, 0); // Normalizar hora
@@ -239,7 +280,17 @@ export class RegistrarInventarioComponent implements OnInit {
               const fechaMovimiento = new Date(movimiento.fecha);
               fechaMovimiento.setHours(0, 0, 0, 0); // Normalizar hora
 
-              coincideFecha = fechaMovimiento.getTime() === fechaFiltrada.getTime();
+              if (fechaHasta) {
+                const fechaHastaFiltrada = new Date(fechaHasta);
+                fechaHastaFiltrada.setHours(0, 0, 0, 0); // Normalizar hora
+
+                // Filtrar por rango de fechas
+                coincideFecha = fechaMovimiento.getTime() >= fechaFiltrada.getTime() &&
+                  fechaMovimiento.getTime() <= fechaHastaFiltrada.getTime();
+              } else {
+                // Filtrar por fecha exacta si no se especifica fechaHasta
+                coincideFecha = fechaMovimiento.getTime() === fechaFiltrada.getTime();
+              }
             }
 
             // Filtrar por tipo (incluyendo búsqueda parcial)
@@ -252,6 +303,10 @@ export class RegistrarInventarioComponent implements OnInit {
         };
 
         this.txBuscarFecha?.valueChanges.subscribe(() => {
+          aplicarFiltros();
+        });
+
+        this.txBuscarFechaHasta?.valueChanges.subscribe(() => {
           aplicarFiltros();
         });
 
@@ -294,5 +349,9 @@ export class RegistrarInventarioComponent implements OnInit {
 
   get txBuscarTipo(): FormControl {
     return this.form.get('txBuscarTipo') as FormControl;
+  }
+
+  get txBuscarFechaHasta() {
+    return this.form.get('txBuscarFechaHasta') as FormControl;
   }
 }

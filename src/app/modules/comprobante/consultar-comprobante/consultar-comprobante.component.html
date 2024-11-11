@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Comprobantes</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoComprobante()">Registrar nuevo comprobante</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoComprobante()">Registrar nuevo comprobante</button>
       </div>
     </div>
 
@@ -20,6 +20,7 @@
             <mat-label>Número de Comprobante</mat-label>
             <input type="text" matInput [formControl]="txComprobante"/>
           </mat-form-field>
+          <app-error-messages [control]="txComprobante"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,6 +32,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txTipoComprobante"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -42,6 +44,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -53,6 +56,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txResponsable"></app-error-messages>
         </div>
       </div>
 
@@ -64,6 +68,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaEmisionDesde"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -73,6 +78,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaEmisionHasta"></app-error-messages>
         </div>
       </div>
     </form>
@@ -99,22 +105,22 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="comprobantes.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="comprobantes.length > 0">
+  <mat-card class="mat-card" [hidden]="comprobantes.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="fechaEmision">
-              <mat-header-cell *matHeaderCellDef>FECHA DE EMISIÓN</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA DE EMISIÓN</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Fecha de emision">{{ comprobante.fechaEmision | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="numeroComprobante">
-              <mat-header-cell *matHeaderCellDef>N° COMPROBANTE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>N° COMPROBANTE</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Comprobante">{{ comprobante.numeroComprobante }}</mat-cell>
             </ng-container>
 
@@ -136,7 +142,7 @@
             </ng-container>
 
             <ng-container matColumnDef="total">
-              <mat-header-cell *matHeaderCellDef>TOTAL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>TOTAL</mat-header-cell>
               <mat-cell *matCellDef="let comprobante" data-label="Subtotal" >$ {{ comprobante.total | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 
@@ -160,11 +166,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.comprobantes.length" class="alert alert-secondary text-center">
-            No se encuentran comprobantes para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.comprobantes.length > 0"
+          <mat-paginator
                          [length]="this.comprobantes.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -172,6 +174,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.comprobantes.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran comprobantes para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

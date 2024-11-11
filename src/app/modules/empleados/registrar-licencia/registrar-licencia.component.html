@@ -1,0 +1,128 @@
+<div class="container py-3 col-xl-11">
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">{{esConsulta ? 'Consultar Licencia' : 'Registrar Licencia'}}</p>
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+        <mat-icon class="editar">edit</mat-icon>
+      </button>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-12">
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Empleado</mat-label>
+          <mat-select [formControl]="txEmpleado">
+            <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id">
+              {{ empleado.nombre + ' ' + empleado.apellido }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-error-messages [control]="txEmpleado"></app-error-messages>
+      </div>
+
+      <div class="col-md-6">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Estado</mat-label>
+          <mat-select [formControl]="txEstado">
+            <mat-option *ngFor="let estado of listaEstados" [value]="estado.id">
+              {{ estado.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-error-messages [control]="txEstado"></app-error-messages>
+      </div>
+
+    </div>
+
+    <div class="row pt-12">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Motivo</mat-label>
+          <mat-select [formControl]="txMotivo">
+            <mat-option *ngFor="let motivo of listaMotivos" [value]="motivo.id">
+              {{ motivo.nombre }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-error-messages [control]="txMotivo"></app-error-messages>
+      </div>
+    </div>
+
+    <div class="row pt-12">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Periodo</mat-label>
+          <mat-date-range-input [rangePicker]="picker" [formGroup]="txPeriodo">
+            <input matStartDate formControlName="txPeriodoInicio" placeholder="Desde">
+            <input matEndDate formControlName="txPeriodoFin" placeholder="Hasta">
+          </mat-date-range-input>
+          <mat-date-range-picker #picker></mat-date-range-picker>
+          <button mat-icon-button matSuffix (click)="picker.open()">
+            <mat-icon>date_range</mat-icon>
+          </button>
+        </mat-form-field>
+        <app-error-messages [control]="txPeriodo"></app-error-messages>
+        <small *ngIf="diasSeleccionados > 0" class="diasSeleccionados">
+          <span *ngIf="esConsulta">El empleado solicitó <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}</span>
+          <span *ngIf="!esConsulta">{{(diasSeleccionados !== 1) ? 'Se solicitaron' : 'Se solicitó'}} <b>{{ diasSeleccionados }}</b> {{(diasSeleccionados !== 1) ? 'días' : 'día'}}</span>
+        </small>
+      </div>
+    </div>
+
+    <br>
+    <br *ngIf="diasSeleccionados > 0">
+
+    <div class="row pt-12">
+      <div class="col-md-12">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Comentario</mat-label>
+          <textarea matInput [formControl]="txComentario"
+                    cdkTextareaAutosize
+                    cdkAutosizeMinRows="3"
+                    cdkAutosizeMaxRows="10">
+          </textarea>
+        </mat-form-field>
+        <app-error-messages [control]="txComentario"></app-error-messages>
+      </div>
+    </div>
+
+    <div class="row pt-12" *ngIf="esConsulta && this.licencia.archivo?.nombre">
+      <div class="col-md-12">
+        <button mat-raised-button
+                color="primary"
+                class="btn-upload"
+                (click)="descargarArchivo()">
+          <mat-icon>download</mat-icon> Descargar comprobante
+        </button>
+      </div>
+    </div>
+    <br *ngIf="esConsulta && this.licencia.archivo?.nombre">
+
+  </form>
+
+  <mat-divider></mat-divider>
+  <br>
+
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+      </button>
+      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaLicencia()" id="btnBuscar">Registrar</button>
+      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarLicencia()" id="btnBuscar2">Modificar</button>
+    </div>
+  </div>
+
+  <br>
+</div>
+
+
+

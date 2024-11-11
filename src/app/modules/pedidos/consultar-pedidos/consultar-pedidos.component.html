@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Ordenes de Compra</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoPedido()">Registrar nueva orden de compra</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoPedido()">Registrar nueva orden de compra</button>
       </div>
     </div>
 
@@ -20,6 +20,7 @@
             <mat-label>Número de orden</mat-label>
             <input type="text" matInput [formControl]="txPedido"/>
           </mat-form-field>
+          <app-error-messages [control]="txPedido"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -31,6 +32,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txProveedor"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -40,6 +42,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaEmisionDesde"></app-error-messages>
         </div>
 
         <div class="col-md-3">
@@ -49,6 +52,7 @@
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
+          <app-error-messages [control]="txFechaEmisionHasta"></app-error-messages>
         </div>
       </div>
 
@@ -62,6 +66,7 @@
               </mat-option>
             </mat-select>
           </mat-form-field>
+          <app-error-messages [control]="txEstado"></app-error-messages>
         </div>
       </div>
     </form>
@@ -88,22 +93,22 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="pedidos.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="pedidos.length > 0">
+  <mat-card class="mat-card" [hidden]="pedidos.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="fechaEmision">
-              <mat-header-cell *matHeaderCellDef>FECHA DE EMISIÓN</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA DE EMISIÓN</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Fecha de emision">{{ pedido.fechaEmision | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="numeroPedido">
-              <mat-header-cell *matHeaderCellDef>NÚMERO DE ORDEN</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>NÚMERO DE ORDEN</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Pedido">{{ pedido.id }}</mat-cell>
             </ng-container>
 
@@ -113,12 +118,12 @@
             </ng-container>
 
             <ng-container matColumnDef="total">
-              <mat-header-cell *matHeaderCellDef>TOTAL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>TOTAL</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Subtotal" >$ {{ pedido.total | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="estado">
-              <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>ESTADO</mat-header-cell>
               <mat-cell *matCellDef="let pedido" data-label="Estado">
                 <mat-icon
                   *ngIf="pedido.estadoPedido.id === 1 || pedido.estadoPedido.id === 3"
@@ -154,11 +159,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.pedidos.length" class="alert alert-secondary text-center">
-            No se encuentran pedidos para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.pedidos.length > 0"
+          <mat-paginator
                          [length]="this.pedidos.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -166,6 +167,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.pedidos.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran pedidos para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

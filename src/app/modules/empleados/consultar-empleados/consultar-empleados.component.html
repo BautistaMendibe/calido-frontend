@@ -1,9 +1,9 @@
 <div class="container py-3 col-xl-11">
-  <mat-card class="mat-elevation-z12 p-4">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Empleados</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoEmpleado()">Registrar nuevo empleado</button>
+        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevoEmpleado()">Registrar nuevo empleado</button>
       </div>
     </div>
 
@@ -16,12 +16,10 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Empleado</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
-          <!--
-          <caja-control-messages [control]="txCodigo"></caja-control-messages>
-          -->
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
       </div>
     </form>
@@ -48,36 +46,36 @@
   </mat-card-header>
 
   <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="empleados.length == 0">
+  <div class="spinner-wrapper" *ngIf="isLoading">
     <mat-spinner></mat-spinner>
   </div>
 
-  <mat-card *ngIf="empleados.length > 0">
+  <mat-card class="mat-card" [hidden]="empleados.length === 0">
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
             <ng-container matColumnDef="nombreUsuario">
-              <mat-header-cell *matHeaderCellDef>USUARIO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>USUARIO</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Usuario">{{ usuario.nombreUsuario }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef>NOMBRE</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Nombre">{{ usuario.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="apellido">
-              <mat-header-cell *matHeaderCellDef>APELLIDO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>APELLIDO</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Apellido">{{ usuario.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="cuil">
-              <mat-header-cell *matHeaderCellDef>CUIT/CUIL</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef mat-sort-header>CUIL</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Cuil">{{ formatearCuil(usuario.cuil) }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="acciones">
+            <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let usuario" data-label="Acciones">
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verEmpleado(usuario, false)">
@@ -97,11 +95,7 @@
 
           </mat-table>
 
-          <h6 *ngIf="!this.empleados.length" class="alert alert-secondary text-center">
-            No se encuentran empleados para mostrar, realice una nueva búsqueda.
-          </h6>
-
-          <mat-paginator *ngIf="this.empleados.length > 0"
+          <mat-paginator
                          [length]="this.empleados.length"
                          [pageSize]="10"
                          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
@@ -109,6 +103,10 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <h5 *ngIf="!isLoading && !(this.empleados.length > 0)" class="alert alert-secondary text-center">
+    No se encuentran empleados para mostrar, realice una nueva búsqueda.
+  </h5>
 </div>
 
 

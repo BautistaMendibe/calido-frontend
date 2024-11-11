@@ -8,6 +8,7 @@ export class Producto {
   nombre: string;
   costo: number;
   precioSinIVA: number;
+  precioConIVA: number;
   tipoProducto: TipoProducto;
   proveedor: Proveedor;
   marca: Marca;
@@ -33,6 +34,7 @@ export class Producto {
     nombre?: string,
     costo?: number,
     precioSinIVA?: number,
+    precioConIVA?: number,
     tipoProducto?: TipoProducto,
     proveedor?: Proveedor,
     seleccionadoParaVenta?: boolean,
@@ -56,6 +58,7 @@ export class Producto {
     this.nombre = nombre!;
     this.costo = costo!;
     this.precioSinIVA = precioSinIVA!;
+    this.precioConIVA = precioConIVA!;
     this.tipoProducto = tipoProducto!;
     this.proveedor = proveedor!;
     this.marca = marca!;

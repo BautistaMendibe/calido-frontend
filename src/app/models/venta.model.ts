@@ -9,25 +9,54 @@ export class Venta {
   id: number | undefined;
   montoTotal: number;
   fecha: Date;
-  usuario: Usuario;
+  cliente: Usuario;
   formaDePago: FormaDePago;
   detalleVenta: DetalleVenta[];
   productos: Producto[];
   facturacion: TipoFactura;
   comprobanteAfip: ComprobanteAfip;
   idEmpleado: number;
+  tarjeta: string;
+  cantidadCuotas: number;
+  interes: number;
+  descuento: number;
+  anulada: boolean;
+  idCaja: number;
 
-  constructor(id?: number, montoTotal?: number, fecha?: Date, usuario?: Usuario, formaDePago?: FormaDePago, detalleVenta?: DetalleVenta[], productos?: Producto[], facturacion?: TipoFactura, comprobanteAfip?: ComprobanteAfip, idEmpleado?: number) {
+  constructor(
+      id?: number,
+      montoTotal?: number,
+      fecha?: Date,
+      cliente?: Usuario,
+      formaDePago?: FormaDePago,
+      detalleVenta?: DetalleVenta[],
+      productos?: Producto[],
+      facturacion?: TipoFactura,
+      comprobanteAfip?: ComprobanteAfip,
+      idEmpleado?: number,
+      tarjeta?: string,
+      cantidadCuotas?: number,
+      interes?: number,
+      descuento?: number,
+      anulada?: boolean,
+      idCaja?: number,
+  ) {
 
     this.id = id!;
     this.montoTotal = montoTotal!;
     this.fecha = fecha!;
-    this.usuario = usuario!;
+    this.cliente = cliente!;
     this.formaDePago = formaDePago!;
     this.detalleVenta = detalleVenta!;
     this.productos = productos!;
     this.facturacion = facturacion!;
     this.comprobanteAfip = comprobanteAfip!;
     this.idEmpleado = idEmpleado!;
+    this.tarjeta = tarjeta!;
+    this.cantidadCuotas = cantidadCuotas!;
+    this.interes = interes!;
+    this.descuento = descuento!;
+    this.anulada = anulada!;
+    this.idCaja = idCaja!;
   }
 }

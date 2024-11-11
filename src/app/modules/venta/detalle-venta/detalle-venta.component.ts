@@ -1,10 +1,15 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Venta} from "../../../models/venta.model";
 import {DatePipe} from "@angular/common";
 import {MatTableDataSource} from "@angular/material/table";
 import {Producto} from "../../../models/producto.model";
+import {MatPaginator} from "@angular/material/paginator";
+import {MatSort} from "@angular/material/sort";
+import {ConsultarVentasComponent} from "../consultar-ventas/consultar-ventas.component";
+import {NotificationService} from "../../../services/notificacion.service";
+import {SnackBarService} from "../../../services/snack-bar.service";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -16,21 +21,27 @@ export class DetalleVentaComponent implements OnInit{
   public form: FormGroup;
   public venta: Venta;
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public columnas: string[] = ['imgProducto', 'producto', 'cantidad', 'subTotal'];
+  public referencia: ConsultarVentasComponent;
+  public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
 
-
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(
     private fb: FormBuilder,
     private dialog: MatDialog,
     private dialogRef: MatDialogRef<any>,
     private datePipe: DatePipe,
+    private notificacionService: SnackBarService,
+    private notificationDialogService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: {
-      venta: Venta
+      venta: Venta,
+      referencia: ConsultarVentasComponent
     }
   ) {
     this.form = new FormGroup({});
     this.venta = this.data.venta;
+    this.referencia = this.data.referencia;
   }
 
   ngOnInit() {
@@ -38,10 +49,13 @@ export class DetalleVentaComponent implements OnInit{
     this.setearDatos();
     this.form.disable();
     this.tableDataSource.data = this.venta.productos;
+    this.tableDataSource.paginator = this.paginator;
+    this.tableDataSource.sort = this.sort;
   }
 
   private crearFormulario() {
     this.form = this.fb.group({
+      txNumeroVenta: ['', []],
       txFecha: ['', []],
       txFormaDePago: ['', []],
       txTipoFactura: ['', []],
@@ -54,21 +68,26 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   private setearDatos() {
+    this.txNumeroVenta.setValue(this.venta.id)
     this.txFecha.setValue(this.formatDate(this.venta.fecha));
     this.txFormaDePago.setValue(this.venta.formaDePago.nombre);
-    this.txTipoFactura.setValue(this.venta.comprobanteAfip.comprobante_tipo);
+    this.txTipoFactura.setValue(this.venta.facturacion?.nombre);
     this.txMontoTotal.setValue(this.venta.montoTotal);
-    this.txCliente.setValue(this.venta.usuario.nombre);
-    this.txDniCliente.setValue(this.venta.usuario.dni);
-    this.txMailCliente.setValue(this.venta.usuario.mail);
-    this.txCondicionIvaCliente.setValue(this.venta.usuario.idCondicionIva);
+    this.txCliente.setValue( this.venta.cliente.nombre ? (this.venta.cliente.nombre + ' ' + this.venta.cliente.apellido) : 'Consumidor final');
+    this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');
+    this.txMailCliente.setValue(this.venta.cliente.mail ? this.venta.cliente.mail : 'No registrado');
+    this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
   }
 
   private formatDate(fecha: Date): string | null {
     return this.datePipe.transform(fecha, 'dd/MM/yyyy HH:mm');
   }
 
-  public desHacerVenta() {}
+  public desHacerVenta() {
+    this.referencia.anularVenta(this.venta, () => {
+      this.dialogRef.close();
+    });
+  }
 
   public imprimirComprobante() {
     const url = this.venta.comprobanteAfip.comprobante_pdf_url;
@@ -78,7 +97,6 @@ export class DetalleVentaComponent implements OnInit{
   public cerrar() {
     this.dialogRef.close();
   }
-
 
   // Getters
   get txFecha(): FormControl {
@@ -111,6 +129,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txCondicionIvaCliente(): FormControl {
     return this.form.get('txCondicionIvaCliente') as FormControl;
+  }
+
+  get txNumeroVenta(): FormControl {
+    return this.form.get('txNumeroVenta') as FormControl;
   }
 
 }

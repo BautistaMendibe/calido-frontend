@@ -13,6 +13,9 @@ import {Asistencia} from "../../../models/asistencia";
 import {FiltrosAsistencias} from "../../../models/comandos/FiltrosAsistencias.comando";
 import {RegistrarAsistenciaComponent} from "../registrar-asistencia/registrar-asistencia.component";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {Licencia} from "../../../models/licencia.model";
+import {FiltrosLicencias} from "../../../models/comandos/FiltrosLicencias.comando";
+import {RegistrarLicenciaComponent} from "../registrar-licencia/registrar-licencia.component";
 
 @Component({
   selector: 'app-consultar-asistencia',
@@ -21,16 +24,25 @@ import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comand
 })
 export class ConsultarAsistenciaComponent implements OnInit {
 
+  public tableDataSource: MatTableDataSource<Asistencia> = new MatTableDataSource<Asistencia>([]);
+  public tableDataSourceLicencia: MatTableDataSource<Licencia> = new MatTableDataSource<Licencia>([]);
+  public form: FormGroup;
+
+  public asistencias: Asistencia[] = [];
+  public licencias: Licencia[] = [];
+  public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
+  public columnasLicencias = ['nombre', 'periodo', 'motivo', 'estado', 'comentario', 'acciones'];
+
+  private filtrosAsistencias: FiltrosAsistencias;
+  private filtrosLicencias: FiltrosLicencias;
+  public listaEmpleados: Usuario[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-  public tableDataSource: MatTableDataSource<Asistencia> = new MatTableDataSource<Asistencia>([]);
-  public form: FormGroup;
-  // Ver. Crear tabla empleados que cada uno tenga un usuario
-  public asistencias: Asistencia[] = [];
-  public columnas = ['nombre', 'fecha', 'horaEntrada', 'horaSalida', 'comentario', 'acciones'];
 
-  private filtros: FiltrosAsistencias;
-  public listaEmpleados: Usuario[] = [];
+  // Banderas
+  public isSearchingAsistencias: boolean = false;
+  public isSearchingLicencias: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -41,9 +53,8 @@ export class ConsultarAsistenciaComponent implements OnInit {
     private notificationDialogService: NotificationService,
   ) {
     this.form = new FormGroup({});
-    this.filtros = new FiltrosAsistencias();
-    this.tableDataSource.paginator = this.paginator;
-    this.tableDataSource.sort = this.sort;
+    this.filtrosAsistencias = new FiltrosAsistencias();
+    this.filtrosLicencias = new FiltrosLicencias();
   }
 
   ngOnInit() {
@@ -71,12 +82,28 @@ export class ConsultarAsistenciaComponent implements OnInit {
   }
 
   public buscar() {
-    this.filtros.idUsuario = this.txNombreUsuario.value || null;
-    this.filtros.fecha = this.txFecha.value || null;
+    this.filtrosAsistencias.idUsuario = this.txNombreUsuario.value || null;
+    this.filtrosAsistencias.fecha = this.txFecha.value || null;
+    this.isSearchingAsistencias = true;
 
-    this.usuariosService.consultarAsistencias(this.filtros).subscribe((asistencias) => {
+    this.filtrosLicencias.idUsuario = this.txNombreUsuario.value || null;
+    this.filtrosLicencias.fecha = this.txFecha.value || null;
+    this.isSearchingLicencias = true;
+
+    this.usuariosService.consultarAsistencias(this.filtrosAsistencias).subscribe((asistencias) => {
       this.asistencias = asistencias;
-      this.tableDataSource.data = asistencias;
+      this.tableDataSource.data = this.asistencias;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isSearchingAsistencias = false;
+    });
+
+    this.usuariosService.consultarLicencias(this.filtrosLicencias).subscribe((licencias) => {
+      this.licencias = licencias;
+      this.tableDataSourceLicencia.data = this.licencias;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
+      this.isSearchingLicencias = false;
     });
   }
 
@@ -113,6 +140,39 @@ export class ConsultarAsistenciaComponent implements OnInit {
     )
   }
 
+  public registrarNuevaLicencia() {
+    this.dialog.open(
+      RegistrarLicenciaComponent,
+      {
+        width: '75%',
+        autoFocus: false,
+        data: {
+          referencia: this,
+          esConsulta: false,
+          formDesactivado: false
+        }
+      }
+    )
+  }
+
+  public verLicencia(licencia: Licencia, editar: boolean) {
+    this.dialog.open(
+      RegistrarLicenciaComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        autoFocus: false,
+        data: {
+          licencia: licencia,
+          esConsulta: true,
+          referencia: this,
+          formDesactivado: !editar,
+          editar: editar
+        }
+      }
+    )
+  }
+
   public eliminarAsistencia(idAsistencia: number) {
     this.notificationDialogService.confirmation('¿Desea eliminar la asistencia?', 'Eliminar Asistencia')
       .afterClosed()
@@ -124,6 +184,23 @@ export class ConsultarAsistenciaComponent implements OnInit {
               this.buscar();
             } else {
               this.notificacionService.openSnackBarError('Error al eliminar la asistencia');
+            }
+          });
+        }
+      });
+  }
+
+  public eliminarLicencia(idLicencia: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar la licencia?', 'Eliminar Licencia')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuariosService.eliminarLicencia(idLicencia).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Licencia eliminada con éxito');
+              this.buscar();
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar la licencia');
             }
           });
         }

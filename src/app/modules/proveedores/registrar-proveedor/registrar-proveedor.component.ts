@@ -72,9 +72,9 @@ export class RegistrarProveedorComponent implements OnInit{
       txTelefono: ['', []],
       txEmail: ['', [this.emailValidator()]],
       txCuit: ['', []],
-      txProvincia: [ '', []],
-      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txProvincia: [ '', [Validators.required]],
+      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
     });
   }
@@ -90,7 +90,7 @@ export class RegistrarProveedorComponent implements OnInit{
     this.txCalle.setValue(this.proveedor.domicilio?.calle);
     this.txNumero.setValue(this.proveedor.domicilio?.numero);
 
-    if (this.proveedor.domicilio?.localidad) {
+    if (this.proveedor.domicilio?.localidad?.provincia?.id) {
       this.obtenerLocalidadesPorProvincia(this.proveedor.domicilio.localidad.provincia.id)
         .then(() => {
           this.localidadesFiltradas = this.filterLocalidades(this.proveedor.domicilio.localidad.nombre);
@@ -245,7 +245,7 @@ export class RegistrarProveedorComponent implements OnInit{
 
   private filterProvincias(busqueda: string) {
     const normalizarTexto = (texto: string) =>
-      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      texto ? texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase() : '';
 
     const busquedaNormalizada = normalizarTexto(busqueda);
 
@@ -256,7 +256,7 @@ export class RegistrarProveedorComponent implements OnInit{
 
   private filterLocalidades(busqueda: string) {
     const normalizarTexto = (texto: string) =>
-      texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+      texto ? texto.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase()  : '';
 
     const busquedaNormalizada = normalizarTexto(busqueda);
 

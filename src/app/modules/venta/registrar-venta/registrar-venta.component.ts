@@ -4,7 +4,7 @@ import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {NotificationService} from "../../../services/notificacion.service";
 import {Venta} from "../../../models/venta.model";
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
@@ -17,6 +17,18 @@ import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comand
 import {TipoFactura} from "../../../models/tipoFactura.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {AuthService} from "../../../services/auth.service";
+import {Tarjeta} from "../../../models/tarjeta.model";
+import {TarjetasService} from "../../../services/tarjetas.service";
+import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
+import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando";
+import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
+import {CuotaPorTarjeta} from "../../../models/cuotaPorTarjeta.model";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Caja} from "../../../models/Caja.model";
+import {CajasService} from "../../../services/cajas.service";
+import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
+import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
+import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -37,6 +49,14 @@ export class RegistrarVentaComponent implements OnInit{
   public registrandoVenta: boolean = false;
   public tiposDeFacturacion: TipoFactura[] = [];
   public listaEmpleados: Usuario[] = [];
+  public listaCajas: Caja[] = [];
+  public mostrarTarjetasCuotas: boolean = false;
+  public tarjetasRegistradas: Tarjeta[] = [];
+  public tarjetaSeleccionada: Tarjeta;
+  public cantidadCuotaSeleccionada: CuotaPorTarjeta;
+  public descuentoPorTarjeta: number = 0;
+  public interesPorTarjeta: number = 0;
+  private facturacionAutomatica: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -47,9 +67,14 @@ export class RegistrarVentaComponent implements OnInit{
     private dialog: MatDialog,
     private usuariosService: UsuariosService,
     private promocionesService: PromocionesService,
-    private authService: AuthService
+    private authService: AuthService,
+    private tarjetasService: TarjetasService,
+    private configuracionesService: ConfiguracionesService,
+    private cajasService: CajasService,
   ) {
     this.form = new FormGroup({});
+    this.tarjetaSeleccionada = new Tarjeta();
+    this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
   }
 
   ngOnInit(){
@@ -57,11 +82,22 @@ export class RegistrarVentaComponent implements OnInit{
     this.crearFormulario();
     this.buscarDataCombos();
     this.filtrosSuscripciones();
+    this.buscarFacturacionAutomatica();
   }
 
   public buscar() {
     const filtros: FiltrosProductos = new FiltrosProductos();
     this.productosService.consultarProductos(filtros).subscribe((productos) => {
+      // Ordena los productos por cantidadEnStock (descendente) y luego por nombre (alfabético ascendente)
+      productos.sort((a, b) => {
+        const stockComparison = b.cantidadEnStock - a.cantidadEnStock;
+        if (stockComparison !== 0) {
+          return stockComparison;
+        }
+        return a.nombre.localeCompare(b.nombre);
+      });
+
+      // Asigna los productos ordenados a las variables
       this.productos = productos;
       this.productosFiltrados = [...productos];
       this.cargandoProductos = false;
@@ -70,11 +106,14 @@ export class RegistrarVentaComponent implements OnInit{
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txFormaDePago: ['', []],
-      txTipoFacturacion: ['', []],
-      txCliente: ['', []],
-      txEmpleado: ['', []],
-      txBuscar: ['', []]
+      txFormaDePago: ['', [Validators.required]],
+      txTipoFacturacion: ['', [Validators.required]],
+      txCliente: ['', [Validators.required]],
+      txEmpleado: ['', [Validators.required]],
+      txBuscar: ['', []],
+      txTarjeta: ['', []],
+      txCuotas: ['', []],
+      txCaja: [1, [Validators.required]]
     });
   }
 
@@ -84,12 +123,28 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarTiposFactura();
     this.buscarEmpleados();
     this.obtenerEmpleadoLogueado();
+    this.buscarCajas();
+  }
+
+  private buscarFacturacionAutomatica() {
+    this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
+      this.facturacionAutomatica = configuracion.facturacionAutomatica;
+    });
+  }
+
+  private buscarCajas() {
+    this.cajasService.consultarCajas(new FiltrosCajas()).subscribe((cajas) => {
+      this.listaCajas = cajas;
+    });
   }
 
   private buscarUsuariosClientes() {
     const filtro: FiltrosEmpleados = new FiltrosEmpleados();
+
     this.usuariosService.consultarClientes(filtro).subscribe((usuarios) => {
       this.clientes = usuarios;
+      // Consumidor final por defecto
+      this.txCliente.setValue(-1);
     });
   }
 
@@ -122,6 +177,26 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
+  public cambiarFormaDePago(formaDePagoElegida: number) {
+    if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
+      const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
+      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO ? this.tiposTarjetasEnum.TARJETA_CREDITO : this.tiposTarjetasEnum.TARJETA_DEBITO;
+
+      this.txTarjeta.disable();
+      this.tarjetasService.consultarTarjetas(filtroTarjeta).subscribe((tarjetas) => {
+        this.tarjetasRegistradas = tarjetas;
+        this.mostrarTarjetasCuotas = true;
+        this.txTarjeta.enable();
+      });
+
+    } else {
+      this.mostrarTarjetasCuotas = false;
+      this.txTarjeta.setValue(null);
+      this.txCuotas.setValue(null);
+      this.txTarjeta.enable();
+    }
+  }
+
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
 
@@ -143,8 +218,10 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public aumentarCantidad(producto: Producto) {
-    producto.cantidadSeleccionada++;
-    this.calcularSubTotal();
+    if (producto.cantidadSeleccionada < producto.cantidadEnStock) {
+      producto.cantidadSeleccionada++;
+      this.calcularSubTotal();
+    }
   }
 
   public disminuirCantidad(producto: Producto) {
@@ -158,11 +235,15 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularSubTotal() {
+    //this.subTotal = 0;
+    //this.productosSeleccionados.forEach((producto) => {
+    //  this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
+    //});
+    //this.impuestoIva = this.subTotal * 0.21;
     this.subTotal = 0;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
+      this.subTotal += (producto.precioConIVA * producto.cantidadSeleccionada);
     });
-    this.impuestoIva = this.subTotal * 0.21;
     this.calcularTotal();
   }
 
@@ -194,14 +275,33 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularTotal() {
-    this.totalVenta = this.subTotal + this.impuestoIva;
+    //this.totalVenta = this.subTotal + this.impuestoIva;
+    this.totalVenta = this.subTotal;
+
+    if (this.cantidadCuotaSeleccionada?.id){
+       this.descuentoPorTarjeta = this.totalVenta - this.totalVenta * (1 - (this.cantidadCuotaSeleccionada.descuento / 100));
+       this.interesPorTarjeta = this.totalVenta * (1 + (this.cantidadCuotaSeleccionada.interes / 100)) - this.totalVenta;
+
+       this.totalVenta = this.totalVenta - this.descuentoPorTarjeta + this.interesPorTarjeta;
+    }
+  }
+
+  public seleccionarTarjeta(tarjetaId: number){
+    const tarjeta = this.tarjetasRegistradas.find((tarjeta) => tarjeta.id == tarjetaId);
+    this.tarjetaSeleccionada = tarjeta ? tarjeta : new Tarjeta();
+  }
+
+  public seleccionarCuota(cuotaId: number) {
+    const cuota = this.tarjetaSeleccionada.cuotaPorTarjeta.find((cuota) => cuota.id == cuotaId);
+    this.cantidadCuotaSeleccionada = cuota ? cuota : new CuotaPorTarjeta();
+    this.calcularTotal();
   }
 
   public editarProductoEnVenta(producto: Producto){
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '75%',
+        width: '90%',
         autoFocus: false,
         maxHeight: '80vh',
         panelClass: 'dialog-container',
@@ -219,7 +319,7 @@ export class RegistrarVentaComponent implements OnInit{
       if (respusta) {
         this.productosSeleccionados.map((producto: Producto) => {
           if (producto.id == respusta.id) {
-            producto.precioSinIVA = respusta.precioSinIVA;
+            producto.precioConIVA = respusta.precioConIVA;
             producto.promocion = respusta.promocion;
           }
         })
@@ -227,6 +327,18 @@ export class RegistrarVentaComponent implements OnInit{
         this.calcularSubTotal();
       }
     });
+  }
+
+  public obtenerClaseStock(producto: Producto): string {
+    if (producto.cantidadEnStock > 5) {
+      return 'stock-disponible';
+    } else if (producto.cantidadEnStock >= 1 && producto.cantidadEnStock <= 5) {
+      return 'stock-medio';
+    } else if (producto.cantidadEnStock === 0 || producto.cantidadEnStock === null) {
+      return 'sin-stock';
+    } else {
+      return 'stock-bajo';
+    }
   }
 
   public eliminarProductoDeVenta(producto: Producto) {
@@ -239,37 +351,54 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public confirmarVenta() {
-    const venta: Venta = new Venta();
+    if (this.form.valid && this.productosSeleccionados.length > 0) {
+      const venta: Venta = new Venta();
 
-    // Seteamos valores de la venta
-    venta.usuario = new Usuario();
-    venta.usuario.id = this.txCliente.value ? this.txCliente.value : null;
-    venta.fecha = new Date();
-    venta.formaDePago = new FormaDePago();
-    venta.formaDePago.id = this.txFormaDePago.value;
-    venta.facturacion = new TipoFactura();
-    venta.facturacion.id = this.txTipoFacturacion.value;
-    const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
-    venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
-    venta.montoTotal = this.totalVenta;
-    venta.detalleVenta = [];
-    venta.productos = this.productosSeleccionados;
-    venta.idEmpleado = this.txEmpleado.value;
+      // Seteamos valores de la venta
+      venta.cliente = new Usuario();
+      venta.cliente.id = this.txCliente.value ? this.txCliente.value : null;
+      venta.fecha = new Date();
+      venta.formaDePago = new FormaDePago();
+      venta.formaDePago.id = this.txFormaDePago.value;
+      venta.facturacion = new TipoFactura();
+      venta.facturacion.id = this.txTipoFacturacion.value;
+      const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
+      venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
+      venta.montoTotal = this.totalVenta;
+      venta.detalleVenta = [];
+      venta.productos = this.productosSeleccionados;
+      venta.idEmpleado = this.txEmpleado.value;
+      venta.idCaja = this.txCaja.value;
 
-    this.registrandoVenta = true;
+      // Si el pago es con tarjeta se registran esos datos
+      venta.tarjeta = this.tarjetaSeleccionada.nombre;
+      venta.cantidadCuotas = this.cantidadCuotaSeleccionada.cantidadCuota;
+      venta.interes = this.cantidadCuotaSeleccionada.interes;
+      venta.descuento = this.cantidadCuotaSeleccionada.descuento;
 
-    this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('La venta se registró con éxito');
-        venta.id = respuesta.id;
-        //this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {})
-        this.registrandoVenta = false;
-        this.limpiarVenta();
-      } else {
-        this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
-        this.registrandoVenta = false;
-      }
-    });
+      this.registrandoVenta = true;
+
+      this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
+        if (respuesta.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('Venta registrada con éxito.');
+          venta.id = respuesta.id;
+          if (this.facturacionAutomatica) {
+            this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
+              if (respuestaAfip.mensaje == 'OK') {
+                this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
+              } else {
+                this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente desde consultas.');
+              }
+            })
+          }
+          this.registrandoVenta = false;
+          this.limpiarVenta();
+        } else {
+          this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
+          this.registrandoVenta = false;
+        }
+      });
+    }
   }
 
   private limpiarVenta() {
@@ -277,19 +406,27 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = false;
       producto.cantidadSeleccionada = 0;
     });
+
+    // Limpiar productos seleccionados y totales
     this.productosSeleccionados = [];
     this.totalVenta = 0;
     this.subTotal = 0;
+
+    // Reestablecer valores
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
-    this.txCliente.setValue(null);
+
+    // Establecer txCliente en consumidor final
+    this.txCliente.setValue(-1);
+
+    this.buscar();
   }
 
   public registrarProducto() {
     this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '75%',
+        width: '90%',
         height: 'auto',
         autoFocus: false,
         maxHeight: '80vh',
@@ -366,6 +503,16 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
+  public cambioCliente(idCliente: number) {
+    const cliente = this.clientes.find((cliente) => cliente.id == idCliente);
+
+    if (cliente?.idCondicionIva == this.getCondicionIvaEnum.CONSUMIDOR_FINAL || cliente?.idCondicionIva == null) {
+      this.txTipoFacturacion.setValue(this.getTiposFacturacionEnum.FACTURA_B);
+    } else {
+      this.txTipoFacturacion.setValue(this.getTiposFacturacionEnum.FACTURA_A);
+    }
+  }
+
   // Region getters
   get txFormaDePago(): FormControl {
     return this.form.get('txFormaDePago') as FormControl;
@@ -387,4 +534,31 @@ export class RegistrarVentaComponent implements OnInit{
     return this.form.get('txBuscar') as FormControl;
   }
 
+  get txTarjeta(): FormControl {
+    return this.form.get('txTarjeta') as FormControl;
+  }
+
+  get txCuotas(): FormControl {
+    return this.form.get('txCuotas') as FormControl;
+  }
+
+  get formasDePagoEnum(): typeof FormasDePagoEnum {
+    return FormasDePagoEnum;
+  }
+
+  get tiposTarjetasEnum(): typeof TiposTarjetasEnum {
+    return TiposTarjetasEnum;
+  }
+
+  get getCondicionIvaEnum(): typeof CondicionIvaEnum {
+    return CondicionIvaEnum;
+  }
+
+  get getTiposFacturacionEnum(): typeof TiposFacturacionEnum {
+    return TiposFacturacionEnum;
+  }
+
+  get txCaja(): FormControl {
+    return this.form.get('txCaja') as FormControl;
+  }
 }

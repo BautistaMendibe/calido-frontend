@@ -30,13 +30,17 @@ import {ConsultarVentasComponent} from "./modules/venta/consultar-ventas/consult
 import {VisualizacionesComponent} from "./modules/Estadisticas/visualizaciones/visualizaciones.component";
 import {VisualizacionesVentasComponent} from "./modules/Estadisticas/visualizaciones-ventas/visualizaciones-ventas.component";
 import {VisualizacionesComprasComponent} from "./modules/Estadisticas/visualizaciones-compras/visualizaciones-compras.component";
+import {ConsultarArqueoCajaComponent} from "./modules/gerencia/consultar-arqueo-caja/consultar-arqueo-caja.component";
+import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consultar-caja.component";
+import {DetalleArqueoComponent} from "./modules/gerencia/detalle-arqueo/detalle-arqueo.component";
+
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
   {path:'login', component: LoginComponent},
   {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
   {path:'consultar-clientes', component: ConsultarClientesComponent},
-  {path:'consultar-asistencia', component: ConsultarAsistenciaComponent},
+  {path:'control-empleados', component: ConsultarAsistenciaComponent},
   {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
   {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},
   {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
@@ -46,7 +50,7 @@ const routes: Routes = [
   {path:'notificar-promocion', component: NotificarPromocionComponent},
   {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
   {path:'consultar-productos', component: ConsultarProductosComponent},
-  {path:'marcar-asistencia', component: MarcarAsistenciaComponent},
+  {path:'panel-empleado', component: MarcarAsistenciaComponent},
   {path:'registrar-venta', component: RegistrarVentaComponent},
   {path:'consultar-pedidos', component: ConsultarPedidosComponent},
   {path:'consultar-comprobante', component: ConsultarComprobanteComponent},
@@ -56,8 +60,9 @@ const routes: Routes = [
   {path:'visualizaciones', component: VisualizacionesComponent},
   {path:'visualizaciones-ventas', component: VisualizacionesVentasComponent},
   {path:'visualizaciones-compras', component: VisualizacionesComprasComponent}
-  
-  
+  {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
+  {path:'consultar-cajas', component:ConsultarCajaComponent},
+  {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent}
 ];
 
 @NgModule({

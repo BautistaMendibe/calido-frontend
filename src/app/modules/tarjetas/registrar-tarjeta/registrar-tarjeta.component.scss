@@ -29,3 +29,17 @@
   pointer-events: none;
   opacity: 0.6;
 }
+
+/* Responsive particular por tamaño de tabla */
+.form-emergente {
+  min-width: 525px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
+}
+
+.mat-card {
+  min-width: 525px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}

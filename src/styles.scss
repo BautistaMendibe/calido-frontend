@@ -1,14 +1,66 @@
 @import '@ctrl/ngx-emoji-mart/picker';
 
+/* Responsive */
+.custom-table {
+  min-width: 400px;  /* Ancho mínimo para la tabla */
+  overflow-x: auto;  /* Permitir scroll horizontal */
+}
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+}
+
+.mat-column-acciones {
+  min-width: 168px; /* Ajusta el tamaño para que no se corte el icono de borrar */
+}
+
+.botonR {
+  margin-left: 1rem; /* Margen entre el título y el botón */
+  padding: 0.5rem 1rem; /* Espacio dentro del botón */
+}
+
+.mat-card {
+  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
+
+.container {
+  overflow-x: auto;
+}
+
+.form-emergente {
+  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
+
+}
+
+/* Fin Responsive */
+
 html, body {
   height: 100%;
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow-x: auto; /* Habilita el desplazamiento horizontal */
 }
 
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
+  overflow-y: hidden;
 }
 
 .titulo {
@@ -55,8 +107,16 @@ body {
   color: #9f1212;
 }
 
+.detalle {
+  color: black;
+}
+
 .imprimir {
   color: black;
+}
+
+.facturar {
+  color: #0cb20f;
 }
 
 .col-md-3, .col-md-2 {
@@ -132,4 +192,24 @@ body {
     width: 2rem;
     height: 2rem;
   }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #b3b3b3;
+  border-radius: 10px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #808080;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
+  border-radius: 10px;
 }

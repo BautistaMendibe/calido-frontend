@@ -11,6 +11,7 @@
   justify-content: center;
   align-items: center;
   transition: border-color 0.3s;
+  min-height: 100px;
 }
 
 .upload-container:hover,
@@ -21,6 +22,16 @@
 .upload-text {
   color: #aaa;
   font-size: 18px;
+}
+
+.upload-text::after {
+  content: 'Arrastra una imagen aquí o haz clic para subir';
+}
+
+@media (max-width: 500px) {
+  .upload-text::after {
+    content: 'Sube una imagen';
+  }
 }
 
 .file-input {
@@ -78,4 +89,16 @@
       opacity: 0.3;
     }
   }
+}
+
+.container {
+  overflow-x: auto;
+}
+
+.form-emergente {
+  max-height: calc(100vh - 100px); /* Ajusta según el espacio que necesites */
+  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
 }
