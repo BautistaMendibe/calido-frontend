@@ -42,7 +42,7 @@
             <div class="card product-card"
                  [ngClass]="{
                     'selected-card': producto.seleccionadoParaVenta,
-                    'producto-sin-stock': producto.cantidadEnStock === 0
+                    'producto-sin-stock': producto.cantidadEnStock == 0 || producto.cantidadEnStock == null
                   }"
                  (click)="producto.cantidadEnStock > 0 && seleccionarProducto(producto)">
 
