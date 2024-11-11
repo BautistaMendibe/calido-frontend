@@ -12,9 +12,9 @@
         <h4 style="color: grey">Información del Arqueo de Caja</h4>
         <mat-divider></mat-divider>
         <br>
-        <p><strong>Caja:</strong> 1</p>
-        <p><strong>Fecha de apertura:</strong> 10/11/2024 09:00 AM</p>
-        <p><strong>Estado:</strong> En proceso</p>
+        <p><strong>Caja:</strong> {{ arqueo.caja ? arqueo.caja.nombre : 'No disponible' }}</p>
+        <p><strong>Fecha de apertura:</strong> {{ arqueo.fechaApertura | date: 'dd/MM/yyyy hh:ss' }}</p>
+        <p><strong>Estado:</strong> {{ arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible' }}</p>
       </mat-card>
     </div>
 
@@ -24,77 +24,125 @@
         <h4 style="color: grey">Añadir movimiento manual</h4>
         <mat-divider></mat-divider>
         <br>
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Tipo de movimiento</mat-label>
-          <mat-select>
-            <mat-option value="ingreso">Ingreso</mat-option>
-            <mat-option value="egreso">Egreso</mat-option>
-          </mat-select>
-        </mat-form-field>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Descripción</mat-label>
-          <input matInput type="text" placeholder="Descripción del movimiento">
-        </mat-form-field>
+        <!-- Form for adding manual movement -->
+        <form [formGroup]="form">
+          <div class="row">
+            <!-- Tipo de movimiento -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Tipo de movimiento</mat-label>
+                <mat-select [formControl]="txTipoMovimiento">
+                  <mat-option value="ingreso">Ingreso</mat-option>
+                  <mat-option value="egreso">Egreso</mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txTipoMovimiento"></app-error-messages>
+            </div>
 
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Importe</mat-label>
-          <input matInput type="number" placeholder="0.00">
-        </mat-form-field>
+            <!-- Forma de Pago -->
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Forma de Pago</mat-label>
+                <mat-select [formControl]="txFormaPago">
+                  <mat-option *ngFor="let formaPago of formasPago" [value]="formaPago.id">
+                    {{ formaPago.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txFormaPago"></app-error-messages>
+            </div>
+          </div>
 
-        <button mat-raised-button color="primary" class="w-100 mt-2">Añadir movimiento</button>
+          <!-- Descripción -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Descripción</mat-label>
+            <input matInput type="text" [formControl]="txDescripcion">
+          </mat-form-field>
+          <app-error-messages [control]="txDescripcion"></app-error-messages>
+
+          <!-- Monto -->
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Monto</mat-label>
+            <input matInput type="text" mask="separator.2" prefix="$" thousandSeparator="," [formControl]="txMonto">
+          </mat-form-field>
+          <app-error-messages [control]="txMonto"></app-error-messages>
+
+          <button mat-raised-button color="accent" class="btn round" id="btnBuscar">Añadir movimiento</button>
+        </form>
       </mat-card>
     </div>
   </div>
 
+  <br><br>
+
   <!-- Filtro y Tabla de Ventas -->
   <div class="row mt-4">
-    <div class="col-md-4"> <!-- Ancho reducido para el filtro -->
+    <div class="col-md-4">
       <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Filtrar por forma de venta</mat-label>
-        <mat-select>
-          <mat-option value="todas">Todas</mat-option>
-          <mat-option value="efectivo">Efectivo</mat-option>
-          <mat-option value="tarjeta">Tarjeta de crédito/débito</mat-option>
-          <mat-option value="mercadopago">MercadoPago</mat-option>
-          <mat-option value="cuentaCorriente">Cuenta Corriente</mat-option>
-        </mat-select>
-        <button mat-icon-button matSuffix>
+        <mat-label>Forma de Pago</mat-label>
+        <button mat-icon-button matPrefix>
           <mat-icon>filter_list</mat-icon>
         </button>
+        <mat-select>
+          <mat-option *ngFor="let formaPago of formasPago" [value]="formaPago.id">
+            {{ formaPago.nombre }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
     </div>
-    <div class="col-md-12 mt-3">
-      <mat-table class="custom-table mat-elevation-z1" [dataSource]="[]">
-        <ng-container matColumnDef="fecha">
-          <mat-header-cell *matHeaderCellDef>Fecha</mat-header-cell>
-          <mat-cell *matCellDef="let venta">10/11/2024</mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="descripcion">
-          <mat-header-cell *matHeaderCellDef>Descripción</mat-header-cell>
-          <mat-cell *matCellDef="let venta">Venta de producto</mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="formaPago">
-          <mat-header-cell *matHeaderCellDef>Forma de Pago</mat-header-cell>
-          <mat-cell *matCellDef="let venta">Efectivo</mat-cell>
-        </ng-container>
-        <ng-container matColumnDef="importe">
-          <mat-header-cell *matHeaderCellDef>Importe</mat-header-cell>
-          <mat-cell *matCellDef="let venta">$1000.00</mat-cell>
-        </ng-container>
 
-        <mat-header-row *matHeaderRowDef="['fecha', 'descripcion', 'formaPago', 'importe']"></mat-header-row>
-        <mat-row *matRowDef="let row; columns: ['fecha', 'descripcion', 'formaPago', 'importe']"></mat-row>
-      </mat-table>
+    <div class="col-md-12 mt-3">
+      <mat-card class="mat-card" [hidden]="ventas.length === 0">
+        <mat-card-content>
+          <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
+
+            <ng-container matColumnDef="fecha">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
+              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy hh:mm:ss' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="formaPago">
+              <mat-header-cell *matHeaderCellDef>FORMA DE PAGO</mat-header-cell>
+              <mat-cell *matCellDef="let venta">{{ venta.formaDePago.nombre }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+              <mat-header-cell *matHeaderCellDef>DESCRIPCION</mat-header-cell>
+              <mat-cell *matCellDef="let venta">{{ (venta.anulada === true) ? 'Anulación de venta' : 'Venta' }} {{ venta.id }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="tipoMovimiento">
+              <mat-header-cell *matHeaderCellDef>TIPO MOVIMIENTO</mat-header-cell>
+              <mat-cell *matCellDef="let venta">{{ (venta.montoTotal > 0) ? 'Ingreso' : 'Egreso' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="montoTotal">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
+              <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
+            </ng-container>
+
+            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+            <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+          </mat-table>
+        </mat-card-content>
+        <mat-paginator
+          [length]="this.ventas.length"
+          [pageSize]="10"
+          [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+        </mat-paginator>
+      </mat-card>
     </div>
   </div>
+
+  <br>
 
   <!-- Detalle de Ventas -->
   <div class="row mt-4 row-equal-height">
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
         <h4>Detalle de Ventas</h4>
-        <p><strong>Monto inicial:</strong> $1,000.00</p>
+        <p><strong>Monto inicial:</strong> $ {{ arqueo.montoInicial | number:'1.2-2':'es-AR' }}</p>
 
         <h5>Ingresos</h5>
         <p>
@@ -147,7 +195,7 @@
         <h4>Dinero en Caja</h4>
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Cantidad de dinero en caja</mat-label>
-          <input matInput type="number" placeholder="0.00">
+          <input matInput type="text" mask="separator.2" prefix="$" thousandSeparator=",">
         </mat-form-field>
         <p><strong>Total registrado en sistema:</strong> $1,500.00</p>
         <p><strong>Diferencia:</strong> $-100.00</p>
@@ -158,7 +206,8 @@
   <!-- Botón Finalizar Arqueo -->
   <div class="row mt-4">
     <div class="col d-flex justify-content-end">
-      <button mat-raised-button color="accent" class="btn round">Finalizar Arqueo</button>
+      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2">Finalizar Arqueo</button>
     </div>
   </div>
-</div>
+
+</div> <!-- Cierre del contenedor -->

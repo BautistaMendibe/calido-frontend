@@ -54,4 +54,9 @@ export class VentasService {
     return this.http.get<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc/${idUsuario}`);
   }
 
+  public buscarVentasFechaHora(fechaHora: string): Observable<Venta[]> {
+    const body = { fechaHora };
+    return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-fecha-hora`, body);
+  }
+
 }
