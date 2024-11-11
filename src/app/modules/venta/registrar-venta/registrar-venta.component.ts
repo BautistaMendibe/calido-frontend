@@ -27,6 +27,8 @@ import {ConfiguracionesService} from "../../../services/configuraciones.service"
 import {Caja} from "../../../models/Caja.model";
 import {CajasService} from "../../../services/cajas.service";
 import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
+import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
+import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -501,6 +503,16 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
+  public cambioCliente(idCliente: number) {
+    const cliente = this.clientes.find((cliente) => cliente.id == idCliente);
+
+    if (cliente?.idCondicionIva == this.getCondicionIvaEnum.CONSUMIDOR_FINAL || cliente?.idCondicionIva == null) {
+      this.txTipoFacturacion.setValue(this.getTiposFacturacionEnum.FACTURA_B);
+    } else {
+      this.txTipoFacturacion.setValue(this.getTiposFacturacionEnum.FACTURA_A);
+    }
+  }
+
   // Region getters
   get txFormaDePago(): FormControl {
     return this.form.get('txFormaDePago') as FormControl;
@@ -536,6 +548,14 @@ export class RegistrarVentaComponent implements OnInit{
 
   get tiposTarjetasEnum(): typeof TiposTarjetasEnum {
     return TiposTarjetasEnum;
+  }
+
+  get getCondicionIvaEnum(): typeof CondicionIvaEnum {
+    return CondicionIvaEnum;
+  }
+
+  get getTiposFacturacionEnum(): typeof TiposFacturacionEnum {
+    return TiposFacturacionEnum;
   }
 
   get txCaja(): FormControl {

@@ -119,12 +119,12 @@ export class RegistrarClientesComponent implements OnInit {
     this.txFechaNacimiento.setValue(this.formatDate(this.usuario.fechaNacimiento));
     this.txCodigoPostal.setValue(this.usuario.codigoPostal);
     this.txDNI.setValue(this.usuario.dni);
+    this.txCUIT.setValue(this.usuario.cuit);
     this.ddGenero.setValue(this.usuario.idGenero);
     this.txProvincia.setValue(this.usuario.domicilio?.localidad?.provincia?.nombre);
     this.txLocalidad.setValue(this.usuario.domicilio?.localidad?.nombre);
     this.txCalle.setValue(this.usuario.domicilio?.calle);
     this.txNumero.setValue(this.usuario.domicilio?.numero);
-    this.txCondicionIva.setValue(this.usuario.idCondicionIva);
 
     if (this.usuario.domicilio?.localidad?.provincia?.id) {
       this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id)
@@ -135,6 +135,10 @@ export class RegistrarClientesComponent implements OnInit {
         .then((id) => {
           this.idLocalidad = id;
         })
+    }
+
+    if (this.usuario.cuit) {
+      this.pedirCUIT = true;
     }
 
     if (this.formDesactivado) {
@@ -190,7 +194,11 @@ export class RegistrarClientesComponent implements OnInit {
     this.ventaServive.buscarCategorias().subscribe((categorias) => {
       if (categorias.length > 0) {
         this.condicionesIva = categorias;
-        this.txCondicionIva.setValue(3);
+        if (this.usuario) {
+          this.txCondicionIva.setValue(this.usuario.idCondicionIva);
+        } else {
+          this.txCondicionIva.setValue(3);
+        }
       }
     });
   }
@@ -313,6 +321,7 @@ export class RegistrarClientesComponent implements OnInit {
       this.usuario.fechaNacimiento = this.txFechaNacimiento.value;
       this.usuario.codigoPostal = this.txCodigoPostal.value;
       this.usuario.dni = this.txDNI.value;
+      this.usuario.cuit = this.txCUIT.value;
       this.usuario.idGenero = this.ddGenero.value;
       this.usuario.domicilio = domicilio;
       this.usuario.domicilio.localidad.id = this.idLocalidad;
