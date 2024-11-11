@@ -22,7 +22,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Saldo Desde</mat-label>
-            <input type="text" matInput [formControl]="txDesdeMonto" mask="separator.2" prefix="$" thousandSeparator=","/>
+            <input type="text" matInput [formControl]="txDesdeMonto" mask="separator.2" prefix="$ " thousandSeparator=","/>
           </mat-form-field>
           <app-error-messages [control]="txDesdeMonto"></app-error-messages>
         </div>
