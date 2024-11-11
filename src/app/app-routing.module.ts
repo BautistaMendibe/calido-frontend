@@ -27,6 +27,9 @@ import {
 import {ConsultarInventarioComponent} from "./modules/inventario/consultar-inventario/consultar-inventario.component";
 import {ConsultarTarjetasComponent} from "./modules/tarjetas/consultar-tarjetas/consultar-tarjetas.component";
 import {ConsultarVentasComponent} from "./modules/venta/consultar-ventas/consultar-ventas.component";
+import {VisualizacionesComponent} from "./modules/Estadisticas/visualizaciones/visualizaciones.component";
+import {VisualizacionesVentasComponent} from "./modules/Estadisticas/visualizaciones-ventas/visualizaciones-ventas.component";
+import {VisualizacionesComprasComponent} from "./modules/Estadisticas/visualizaciones-compras/visualizaciones-compras.component";
 
 const routes: Routes = [
   {path:'', component: HomeComponent},
@@ -50,6 +53,11 @@ const routes: Routes = [
   {path:'consultar-inventario', component:ConsultarInventarioComponent},
   {path:'consultar-tarjetas', component:ConsultarTarjetasComponent},
   {path:'consultar-ventas', component: ConsultarVentasComponent},
+  {path:'visualizaciones', component: VisualizacionesComponent},
+  {path:'visualizaciones-ventas', component: VisualizacionesVentasComponent},
+  {path:'visualizaciones-compras', component: VisualizacionesComprasComponent}
+  
+  
 ];
 
 @NgModule({

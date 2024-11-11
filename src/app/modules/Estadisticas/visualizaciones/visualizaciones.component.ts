@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-visualizaciones',
@@ -6,6 +7,12 @@ import { Component } from '@angular/core';
   styleUrl: './visualizaciones.component.scss'
 })
 export class VisualizacionesComponent {
+
+  constructor(private router: Router) {}
+
+  navigateTo(path: string) {
+    this.router.navigate([path]);
+  }
   
 
 }

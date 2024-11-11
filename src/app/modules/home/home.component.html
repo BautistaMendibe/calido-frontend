@@ -1,1 +1,117 @@
-<p>home works!</p>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .metric-box {
+      padding: 10px;
+      background-color: #f8f9fa;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      height: 100%;
+    }
+    .metric-box h3 {
+      font-size: 1.2em;
+      margin-bottom: 10px;
+    }
+    .chart-container {
+      width: 100%;
+      height: 100%;
+    }
+    .chart-iframe {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <!-- Métricas rápidas con gráfico embebido en "Ventas Diarias Totales" -->
+      <div class="col-lg-3 col-md-6 mb-4 d-flex">
+        <div class="metric-box flex-fill">
+          <h3>Ventas Diarias Totales ($)</h3>
+          <div class="chart-container">
+            <iframe class="chart-iframe" 
+                    src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/new-dashboard?from=1729942264849&to=1729963864849&timezone=browser&orgId=1&theme=light&panelId=1&__feature.dashboardSceneSolo">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métrica de Ventas Diarias en Efectivo -->
+      <div class="col-lg-3 col-md-6 mb-4 d-flex">
+        <div class="metric-box flex-fill">
+          <h3>Ventas en Efectivo ($)</h3>
+          <div class="chart-container">
+            <iframe class="chart-iframe" 
+                    src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/new-dashboard?from=1729949513038&to=1729992713040&timezone=browser&orgId=1&theme=light&panelId=5&__feature.dashboardSceneSolo">
+            </iframe>
+          </div>
+        </div>
+      </div>
+
+      <!-- Métrica de Ventas Diarias en Tarjeta -->
+      <div class="col-lg-3 col-md-6 mb-4 d-flex">
+        <div class="metric-box flex-fill">
+          <h3>Ventas en Tarjeta ($)</h3>
+          <div class="chart-container">
+            <iframe class="chart-iframe" 
+                    src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/new-dashboard?from=1729949513038&to=1729992713040&timezone=browser&orgId=1&theme=light&panelId=6&__feature.dashboardSceneSolo">
+            </iframe>
+          </div>
+        </div>
+      </div>
+       <!-- Métrica de Ventas Diarias en Tarjeta -->
+       <div class="col-lg-3 col-md-6 mb-4 d-flex">
+        <div class="metric-box flex-fill">
+          <h3>Ticket Promedio ($)</h3>
+          <div class="chart-container">
+            <iframe class="chart-iframe"   src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/home?from=1730397399435&to=1730418999435&timezone=browser&var-start_date=2024-10-29&var-end_date=2024-10-30&orgId=1&theme=light&panelId=10&__feature.dashboardSceneSolo" width="450" height="200" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+
+     
+    </div>
+    <div class="row mt-4">
+        <!-- Gráfico 1 duplicado -->
+        <div class="col-md-12 mb-4">
+          <div class="chart-box">
+            <h3>Ventas Diarias</h3>
+            <iframe src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/new-dashboard?from=1729960313039&to=1729981913040&timezone=browser&orgId=1&theme=light&panelId=4&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
+          </div>
+        </div>
+        <!-- Gráfico 2 -->
+     
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-6 mb-4">
+          <div class="chart-box">
+            <h3>Ventas totales por forma de pago</h3>
+            <iframe src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/home?from=1730466386616&to=1730487986616&timezone=browser&var-start_date=2024-10-29&var-end_date=2024-10-30&orgId=1&theme=light&panelId=11&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
+          </div>
+        </div>
+        <div class="col-md-6 mb-4">
+          <div class="chart-box">
+            <h3>Ventas por fecha y hora</h3>
+            <iframe src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/home?from=1728259200000&to=1730246400000&timezone=browser&var-start_date=2024-10-29&var-end_date=2024-10-30&tab=queries&orgId=1&theme=light&panelId=12&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
+          </div>
+        </div>
+      </div>
+      
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
+
+

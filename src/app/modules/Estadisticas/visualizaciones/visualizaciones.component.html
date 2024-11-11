@@ -1,1 +1,22 @@
-<p>visualizaciones works!</p>
+<div class="container my-4">
+  <div class="row mt-4">
+    <!-- Tarjeta de Ventas -->
+    <div class="col-md-6 mb-4">
+      <div class="card-link" (click)="navigateTo('visualizaciones-ventas')">
+        <div class="metric-box">
+          <h3>Gráficos de Ventas</h3>
+          <p>Explora las estadísticas de ventas</p>
+        </div>
+      </div>
+    </div>
+    <!-- Tarjeta de Compras -->
+    <div class="col-md-6 mb-4">
+      <div class="card-link" (click)="navigateTo('visualizaciones-compras')" >
+        <div class="metric-box">
+          <h3>Gráficos de Compras</h3>
+          <p>Explora las estadísticas de compras</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

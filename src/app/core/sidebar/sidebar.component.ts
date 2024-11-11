@@ -37,7 +37,7 @@ export class SidebarComponent implements OnInit {
     {id: 6, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
     {id: 7, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
     {id: 8, nombre: 'Estadisticas', path:'./visualizaciones', icon: 'data_usage', activo: false, subMenu: [
-      {id: 1, nombre: 'visualizaciones', path:'./visualizaciones', icon: '', activo: false, subMenu: []},
+      {id: 1, nombre: 'visualizaciones', path:'visualizaciones', icon: '', activo: false, subMenu: []},
       {id: 2, nombre: 'reportes', path:'./visualizaciones', icon: '', activo: false, requiresAdmin: true, subMenu: []}
     ]},
     {id: 9, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
