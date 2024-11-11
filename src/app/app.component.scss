@@ -6,7 +6,7 @@
 
 mat-drawer-container {
   min-height: calc(100vh - 64px) !important;
-  background-color: #f5f5f5;
+  background-color: #fdfdfd;
 }
 
 .offSidebar {
@@ -17,7 +17,7 @@ mat-drawer-container {
   min-height: calc(100vh - 64px) !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  background-color: white;
+  background-color: #fdfdfd;
 }
 
 app-header {
