@@ -83,7 +83,7 @@ export class RegistrarProductoComponent implements OnInit {
   private crearFormulario() {
     this.form = this.fb.group({
       txNombre: [this.data.producto?.nombre || '', [Validators.required, Validators.pattern('^[^0-9]+$')]],
-      txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13)]],
+      txCodigoBarras: [this.data.producto?.codigoBarra || '', [Validators.required, Validators.maxLength(13), Validators.pattern(/^[0-9]+$/)]],
       txCosto: [Number(this.data.producto?.costo) || '', [Validators.required, Validators.pattern('^[0-9]+$')]],
       txTipoProducto: [this.data.producto?.tipoProducto?.nombre || '', [Validators.pattern('^[^0-9]+$')]],
       txMarca: [this.data.producto?.marca?.nombre || '', [Validators.pattern('^[^0-9]+$')]],

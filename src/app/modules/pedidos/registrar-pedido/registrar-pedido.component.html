@@ -180,7 +180,7 @@
     <div class="col-md">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Costo de Compra</mat-label>
-        <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txSubtotal" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
       <app-error-messages [control]="txSubtotal"></app-error-messages>
     </div>
@@ -190,7 +190,7 @@
     <div class="col-md">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Costo de Transporte</mat-label>
-        <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txMontoEnvio" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
       <app-error-messages [control]="txMontoEnvio"></app-error-messages>
     </div>
@@ -226,7 +226,7 @@
     <div class="col-md-3">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Total</mat-label>
-        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$" thousandSeparator="," />
+        <input type="text" matInput [formControl]="txTotal" mask="separator.2" prefix="$ " thousandSeparator="," />
       </mat-form-field>
       <app-error-messages [control]="txTotal"></app-error-messages>
     </div>
