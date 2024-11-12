@@ -194,6 +194,7 @@ export class RegistrarProductoComponent implements OnInit {
       marca: { nombre: this.txMarca.value, id: this.getMarcaId(this.txMarca.value) },
       proveedor: { id: this.txProveedor.value },
       margenGanancia: parseFloat(this.txMargenGanancia.value) || 0,
+      promocion: { id: this.txPromocion.value || null}
     } as Producto;
   }
 
