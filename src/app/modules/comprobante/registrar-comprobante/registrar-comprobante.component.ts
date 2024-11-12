@@ -236,6 +236,7 @@ export class RegistrarComprobanteComponent implements OnInit {
 
     this.calcularCantidadProductos();
     this.calcularTotalProductos();
+    this.dataSourceProductos._updateChangeSubscription();
 
     if (this.formDesactivado) {
       this.form.disable();
