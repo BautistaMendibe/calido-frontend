@@ -127,6 +127,19 @@
         <app-error-messages [control]="txMargenGanancia"></app-error-messages>
       </div>
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+        <span>=</span>
+      </div>
+      <div class="col-md-2">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Precio con IVA (+21%)</mat-label>
+          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$ " thousandSeparator="," />
+        </mat-form-field>
+        <app-error-messages [control]="txPrecioConIva"></app-error-messages>
+      </div>
+    </div>
+
+    <div class="row pt-4">
+      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>-</span>
       </div>
       <div class="col-md-2">
@@ -143,12 +156,12 @@
       <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
         <span>=</span>
       </div>
-      <div class="col-md-3">
+      <div class="col-md-2">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Precio final de venta (+21%)</mat-label>
-          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$ " thousandSeparator="," />
+          <mat-label>Precio Final de Venta</mat-label>
+          <input type="text" matInput [formControl]="txPrecioFinalVenta" mask="separator.2" prefix="$ " thousandSeparator="," />
         </mat-form-field>
-        <app-error-messages [control]="txPrecioConIva"></app-error-messages>
+        <app-error-messages [control]="txPrecioFinalVenta"></app-error-messages>
       </div>
     </div>
 
