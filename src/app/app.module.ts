@@ -54,6 +54,9 @@ import { ConsultarTarjetasComponent } from './modules/tarjetas/consultar-tarjeta
 import { RegistrarTarjetaComponent } from './modules/tarjetas/registrar-tarjeta/registrar-tarjeta.component';
 import { ConsultarVentasComponent } from './modules/venta/consultar-ventas/consultar-ventas.component';
 import { DetalleVentaComponent } from './modules/venta/detalle-venta/detalle-venta.component';
+import { VisualizacionesComponent } from './modules/Estadisticas/visualizaciones/visualizaciones.component';
+import { VisualizacionesVentasComponent } from './modules/Estadisticas/visualizaciones-ventas/visualizaciones-ventas.component';
+import { VisualizacionesComprasComponent } from './modules/Estadisticas/visualizaciones-compras/visualizaciones-compras.component';
 import { SolicitarLicenciaComponent } from './modules/empleados/solicitar-licencia/solicitar-licencia.component';
 import { RegistrarLicenciaComponent } from './modules/empleados/registrar-licencia/registrar-licencia.component';
 import { ConsultarArqueoCajaComponent } from './modules/gerencia/consultar-arqueo-caja/consultar-arqueo-caja.component';
@@ -104,6 +107,9 @@ registerLocaleData(localeEs, 'es');
     RegistrarTarjetaComponent,
     ConsultarVentasComponent,
     DetalleVentaComponent,
+    VisualizacionesComponent,
+    VisualizacionesVentasComponent,
+    VisualizacionesComprasComponent,
     SolicitarLicenciaComponent,
     RegistrarLicenciaComponent,
     ConsultarArqueoCajaComponent,

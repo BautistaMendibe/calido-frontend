@@ -1,0 +1,30 @@
+.card-link {
+    text-decoration: none;
+    cursor: pointer;
+  }
+  
+  .metric-box {
+    background: linear-gradient(135deg, #f39c12, #e67e22); /* Degradado de tonos naranjas */
+    padding: 20px;
+    border-radius: 15px; /* Bordes redondeados */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2); /* Sombra para profundidad */
+    color: #fff;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .metric-box:hover {
+    transform: translateY(-5px); /* Efecto de levantamiento al hacer hover */
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); /* Aumentar la sombra al hacer hover */
+  }
+  
+  .metric-box h3 {
+    font-size: 24px;
+    margin-bottom: 8px;
+    font-weight: bold;
+  }
+  
+  .metric-box p {
+    font-size: 16px;
+  }
+  

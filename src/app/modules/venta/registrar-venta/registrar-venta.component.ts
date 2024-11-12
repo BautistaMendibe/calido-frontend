@@ -232,6 +232,7 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = false;
     }
     this.validarCantidadProductosSeleccionados();
+    this.calcularSubTotal();
   }
 
   private calcularSubTotal() {
@@ -334,7 +335,7 @@ export class RegistrarVentaComponent implements OnInit{
       return 'stock-disponible';
     } else if (producto.cantidadEnStock >= 1 && producto.cantidadEnStock <= 5) {
       return 'stock-medio';
-    } else if (producto.cantidadEnStock === 0) {
+    } else if (producto.cantidadEnStock === 0 || producto.cantidadEnStock === null) {
       return 'sin-stock';
     } else {
       return 'stock-bajo';

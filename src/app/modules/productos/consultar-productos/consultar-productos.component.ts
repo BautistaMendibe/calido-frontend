@@ -129,10 +129,10 @@ export class ConsultarProductosComponent implements OnInit {
     const ref = this.dialog.open(
       RegistrarProductoComponent,
       {
-        width: '85%',
+        width: '75%',
+        maxHeight: '80vh',
         autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
+        panelClass: 'dialog-container',
         data: {
           producto: producto,
           esConsulta: true,
