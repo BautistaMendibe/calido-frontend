@@ -189,11 +189,20 @@ export class RegistrarVentaComponent implements OnInit{
         this.txTarjeta.enable();
       });
 
+      if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
+        this.mostrarTarjetasCuotas = false;
+        this.txCuotas.setValue(null);
+        this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
+        this.calcularTotal();
+      }
+
     } else {
       this.mostrarTarjetasCuotas = false;
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
       this.txTarjeta.enable();
+      this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
+      this.calcularTotal();
     }
   }
 
