@@ -181,6 +181,7 @@ export class RegistrarProductoComponent implements OnInit {
   }
 
   private construirProducto(id?: number): Producto {
+    const promocionProducto = this.promociones.find((promo) => promo.id == this.txPromocion.value);
     return {
       id: id || undefined,
       nombre: this.txNombre.value,
@@ -194,7 +195,7 @@ export class RegistrarProductoComponent implements OnInit {
       marca: { nombre: this.txMarca.value, id: this.getMarcaId(this.txMarca.value) },
       proveedor: { id: this.txProveedor.value },
       margenGanancia: parseFloat(this.txMargenGanancia.value) || 0,
-      promocion: { id: this.txPromocion.value || null}
+      promocion: promocionProducto
     } as Producto;
   }
 
