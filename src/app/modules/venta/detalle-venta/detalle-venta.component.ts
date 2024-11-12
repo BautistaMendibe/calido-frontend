@@ -64,6 +64,8 @@ export class DetalleVentaComponent implements OnInit{
       txDniCliente: ['', []],
       txMailCliente: ['', []],
       txCondicionIvaCliente: ['', []],
+      txDescuento: ['', []],
+      txInteres: ['', []],
     });
   }
 
@@ -77,6 +79,8 @@ export class DetalleVentaComponent implements OnInit{
     this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');
     this.txMailCliente.setValue(this.venta.cliente.mail ? this.venta.cliente.mail : 'No registrado');
     this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
+    this.txDescuento.setValue(this.venta.descuento);
+    this.txInteres.setValue(this.venta.interes);
   }
 
   private formatDate(fecha: Date): string | null {
@@ -133,6 +137,14 @@ export class DetalleVentaComponent implements OnInit{
 
   get txNumeroVenta(): FormControl {
     return this.form.get('txNumeroVenta') as FormControl;
+  }
+
+  get txDescuento(): FormControl {
+    return this.form.get('txDescuento') as FormControl;
+  }
+
+  get txInteres(): FormControl {
+    return this.form.get('txInteres') as FormControl;
   }
 
 }
