@@ -109,7 +109,7 @@ registerLocaleData(localeEs, 'es');
     DetalleVentaComponent,
     VisualizacionesComponent,
     VisualizacionesVentasComponent,
-    VisualizacionesComprasComponent
+    VisualizacionesComprasComponent,
     SolicitarLicenciaComponent,
     RegistrarLicenciaComponent,
     ConsultarArqueoCajaComponent,

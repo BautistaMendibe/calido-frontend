@@ -59,7 +59,7 @@ const routes: Routes = [
   {path:'consultar-ventas', component: ConsultarVentasComponent},
   {path:'visualizaciones', component: VisualizacionesComponent},
   {path:'visualizaciones-ventas', component: VisualizacionesVentasComponent},
-  {path:'visualizaciones-compras', component: VisualizacionesComprasComponent}
+  {path:'visualizaciones-compras', component: VisualizacionesComprasComponent},
   {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
   {path:'consultar-cajas', component:ConsultarCajaComponent},
   {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent}
