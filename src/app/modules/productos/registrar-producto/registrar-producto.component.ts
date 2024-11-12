@@ -1,4 +1,4 @@
-import {Component, ElementRef, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {Form, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { ConsultarProductosComponent } from "../consultar-productos/consultar-productos.component";
 import { Proveedor } from "../../../models/proveedores.model";
@@ -33,7 +33,6 @@ export class RegistrarProductoComponent implements OnInit {
   public esConsulta: boolean;
   public editarPrecioDeVenta: boolean = false;
   public promociones: Promocion[] = [];
-  @ViewChild('txPromocion') txPromocionInput!: ElementRef;
 
   constructor(
     private fb: FormBuilder,
@@ -191,6 +190,7 @@ export class RegistrarProductoComponent implements OnInit {
       const producto = this.construirProducto();
       this.productosService.registrarProducto(producto).subscribe((respuesta) => {
         this.gestionarRespuesta(respuesta, 'El producto se registró con éxito');
+        this.data.referencia.tableDataSource._updateChangeSubscription();
       });
     }
   }
@@ -201,6 +201,7 @@ export class RegistrarProductoComponent implements OnInit {
       if (!this.editarPrecioDeVenta) {
         this.productosService.modificarProducto(producto).subscribe((respuesta) => {
           this.gestionarRespuesta(respuesta, 'El producto se modificó con éxito');
+          this.data.referencia.tableDataSource._updateChangeSubscription();
         });
       } else {
         this.dialogRef.close(producto);
