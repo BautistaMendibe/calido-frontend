@@ -66,6 +66,7 @@ import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arque
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { VentasDiaComponent } from './modules/home/ventas-dia/ventas-dia.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -117,7 +118,8 @@ registerLocaleData(localeEs, 'es');
     RegistrarCajaComponent,
     RegistrarArqueoCajaComponent,
     DetalleArqueoComponent,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
+    VentasDiaComponent
   ],
   imports: [
     BrowserModule,
