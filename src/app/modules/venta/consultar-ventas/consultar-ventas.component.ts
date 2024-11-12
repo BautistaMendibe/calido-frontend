@@ -123,7 +123,11 @@ export class ConsultarVentasComponent implements OnInit {
   }
 
   public anularVenta(venta: Venta, onSuccess?: () => void) {
-    this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Generar nota de crédito')
+    let mensajeTitulo: string = '';
+
+    venta.comprobanteAfip.comprobante_nro ? mensajeTitulo = 'Generar nota de crédito' : mensajeTitulo = 'Anular venta';
+
+    this.notificationDialogService.confirmation('¿Desea anular esta venta?', mensajeTitulo)
       .afterClosed()
       .subscribe((value) => {
         if (value) {
