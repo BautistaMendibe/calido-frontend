@@ -232,6 +232,7 @@ export class RegistrarVentaComponent implements OnInit{
       producto.seleccionadoParaVenta = false;
     }
     this.validarCantidadProductosSeleccionados();
+    this.calcularSubTotal();
   }
 
   private calcularSubTotal() {

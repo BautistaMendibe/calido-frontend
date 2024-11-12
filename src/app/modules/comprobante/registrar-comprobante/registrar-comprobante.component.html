@@ -166,7 +166,7 @@
 
     <br>
 
-    <mat-card [hidden]="!(productos.length > 0 && !(data.esRegistro && !ordenSeleccionada))">
+    <mat-card [hidden]="productos.length === 0 || (data.esRegistro && !ordenSeleccionada)">
       <mat-card-content>
         <div class="row">
 
