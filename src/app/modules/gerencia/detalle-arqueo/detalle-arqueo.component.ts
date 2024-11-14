@@ -95,8 +95,12 @@ export class DetalleArqueoComponent implements OnInit {
       const [hours, minutes, seconds] = (arqueo.horaApertura as unknown as string).split(':').map(Number);
       fechaHora.setHours(hours, minutes, seconds || 0);
 
-      this.ventasService.buscarVentasFechaHora(fechaHora.toISOString()).subscribe((ventas: Venta[]) => {
+      // Convierte a un string 'es-AR' la fecha y hora del arqueo
+      const fechaHoraLocal = fechaHora.toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' }).replace('T', ' ');
+
+      this.ventasService.buscarVentasFechaHora(fechaHoraLocal).subscribe((ventas: Venta[]) => {
         this.ventas = ventas;
+        console.log(ventas);
         this.determinarAnulacion();
         this.tableDataSource.data = this.ventas;
         this.tableDataSource.paginator = this.paginator;

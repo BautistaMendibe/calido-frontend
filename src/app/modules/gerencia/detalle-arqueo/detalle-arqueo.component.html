@@ -13,7 +13,7 @@
         <mat-divider></mat-divider>
         <br>
         <p><strong>Caja:</strong> {{ arqueo.caja ? arqueo.caja.nombre : 'No disponible' }}</p>
-        <p><strong>Fecha de apertura:</strong> {{ arqueo.fechaApertura | date: 'dd/MM/yyyy hh:ss' }}</p>
+        <p><strong>Fecha de apertura:</strong> {{ arqueo.fechaApertura | date: 'dd/MM/yyyy' }} {{ arqueo.horaApertura }}</p>
         <p><strong>Estado:</strong> {{ arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible' }}</p>
       </mat-card>
     </div>
@@ -99,7 +99,7 @@
 
             <ng-container matColumnDef="fecha">
               <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy hh:mm:ss' }}</mat-cell>
+              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy HH:mm:ss' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="formaPago">

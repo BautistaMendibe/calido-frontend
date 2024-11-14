@@ -26,7 +26,7 @@ export class RegistrarTarjetaComponent implements OnInit {
   public tarjetas: Tarjeta[] = [];
   public listaCuotas: Cuota[] = [];
   public cuotasSeleccionadas: CuotaPorTarjeta[] = [];
-  public columnas: string[] = ['seleccionar', 'cuota', 'interes', 'descuento'];
+  public columnas: string[] = ['seleccionar', 'cuota', 'interes'];
   public listaTiposTarjetas: TipoTarjeta[] = [];
   public isLoading: boolean = false;
 
@@ -124,7 +124,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         if (fila) {
           (fila as any).selected = true;
           (fila as any).interes = cuota.interes;
-          (fila as any).descuento = cuota.descuento;
 
           // Simula una selección, para agregar la cuota a la lista de cuotas seleccionadas
           const event = { checked: true };
@@ -162,7 +161,6 @@ export class RegistrarTarjetaComponent implements OnInit {
 
         cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
         cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
-        cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
 
         // Agregar la cuota a la lista de la tarjeta
         tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
@@ -195,7 +193,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
         cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
         cuotaPorTarjeta.idTarjeta = cuotaSeleccionada.idTarjeta;
-        cuotaPorTarjeta.descuento = cuotaSeleccionada.descuento;
 
         // Agregar la cuota a la lista de la tarjeta
         tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
@@ -232,7 +229,6 @@ export class RegistrarTarjetaComponent implements OnInit {
         interes: cuota.interes,
         idCuota: idCuota,
         idTarjeta: this.tarjeta?.id,
-        descuento: cuota.descuento,
         cantidadCuota: cuota.cantidadCuotas
       };
 

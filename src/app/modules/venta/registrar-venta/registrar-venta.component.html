@@ -240,11 +240,6 @@
 
           <div class="summary-container">
             <div>
-              <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.descuento">
-                <span>Descuento por tarjeta ({{ this.cantidadCuotaSeleccionada.descuento ? (this.cantidadCuotaSeleccionada.descuento | number:'1.2-2':'es-AR') : 0 }}%)</span>
-                <span class="text-summary">$ {{ this.descuentoPorTarjeta | number:'1.2-2':'es-AR' }}</span>
-              </div>
-              <div class="dotted-line" *ngIf="cantidadCuotaSeleccionada.descuento && cantidadCuotaSeleccionada.interes"></div>
               <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.interes">
                 <span>Interés por tarjeta ({{this.cantidadCuotaSeleccionada.interes ? (this.cantidadCuotaSeleccionada.interes | number:'1.2-2':'es-AR') : 0}}%)</span>
                 <span class="text-summary">$ {{ this.interesPorTarjeta | number:'1.2-2':'es-AR' }}</span>

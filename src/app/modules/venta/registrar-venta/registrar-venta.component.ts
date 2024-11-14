@@ -283,7 +283,6 @@ export class RegistrarVentaComponent implements OnInit{
     this.totalVenta = this.subTotal;
 
     if (this.cantidadCuotaSeleccionada?.id){
-       this.descuentoPorTarjeta = this.totalVenta - this.totalVenta * (1 - (this.cantidadCuotaSeleccionada.descuento / 100));
        this.interesPorTarjeta = this.totalVenta * (1 + (this.cantidadCuotaSeleccionada.interes / 100)) - this.totalVenta;
 
        this.totalVenta = this.totalVenta - this.descuentoPorTarjeta + this.interesPorTarjeta;
@@ -378,7 +377,6 @@ export class RegistrarVentaComponent implements OnInit{
       venta.tarjeta = this.tarjetaSeleccionada.nombre;
       venta.cantidadCuotas = this.cantidadCuotaSeleccionada.cantidadCuota;
       venta.interes = this.cantidadCuotaSeleccionada.interes;
-      venta.descuento = this.cantidadCuotaSeleccionada.descuento;
 
       this.registrandoVenta = true;
 
