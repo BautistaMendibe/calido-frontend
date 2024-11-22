@@ -67,6 +67,8 @@ import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detall
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import { VentasDiaComponent } from './modules/home/ventas-dia/ventas-dia.component';
+import { VentasMensualesComponent } from './modules/home/ventas-mensuales/ventas-mensuales.component';
+import { BaseChartDirective } from 'ng2-charts';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -119,7 +121,8 @@ registerLocaleData(localeEs, 'es');
     RegistrarArqueoCajaComponent,
     DetalleArqueoComponent,
     ErrorMessagesComponent,
-    VentasDiaComponent
+    VentasDiaComponent,
+    VentasMensualesComponent
   ],
   imports: [
     BrowserModule,
@@ -136,7 +139,8 @@ registerLocaleData(localeEs, 'es');
     NgxMaskDirective,
     NgxMaskPipe,
     FormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    BaseChartDirective
   ],
   providers: [
     HealthService,

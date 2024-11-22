@@ -1,0 +1,16 @@
+<mat-card>
+  <div class="col p-4">
+    <div class="row">
+      <h2>Ventas mensuales</h2>
+    </div>
+
+    <div style="display: block;">
+      <canvas baseChart
+              [datasets]="barChartData"
+              [labels]="barChartLabels"
+              [options]="barChartOptions"
+              [legend]="true">
+      </canvas>
+    </div>
+  </div>
+</mat-card>
