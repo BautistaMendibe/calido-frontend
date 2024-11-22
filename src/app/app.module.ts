@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HealthService} from "./services/health.service";
-import { LoginComponent } from './modules/login/login.component';
+import { LoginComponent } from './modules/auth/login/login.component';
 import { LayoutComponent } from './core/layout/layout.component';
 import { HeaderComponent } from './core/header/header.component';
 import {MaterialModule} from "./shared/material-module";
@@ -66,6 +66,7 @@ import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arque
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { RecuperarContrasenaComponent } from './modules/auth/recuperar-contrasena/recuperar-contrasena.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -117,7 +118,8 @@ registerLocaleData(localeEs, 'es');
     RegistrarCajaComponent,
     RegistrarArqueoCajaComponent,
     DetalleArqueoComponent,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
+    RecuperarContrasenaComponent
   ],
   imports: [
     BrowserModule,

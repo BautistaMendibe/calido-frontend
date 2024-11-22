@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {LoginComponent} from "./modules/login/login.component";
+import {LoginComponent} from "./modules/auth/login/login.component";
 import {HomeComponent} from "./modules/home/home.component";
 import {ConsultarEmpleadosComponent} from "./modules/empleados/consultar-empleados/consultar-empleados.component";
 import {ConsultarProductosComponent} from "./modules/productos/consultar-productos/consultar-productos.component";
@@ -33,6 +33,7 @@ import {VisualizacionesComprasComponent} from "./modules/Estadisticas/visualizac
 import {ConsultarArqueoCajaComponent} from "./modules/gerencia/consultar-arqueo-caja/consultar-arqueo-caja.component";
 import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consultar-caja.component";
 import {DetalleArqueoComponent} from "./modules/gerencia/detalle-arqueo/detalle-arqueo.component";
+import {RecuperarContrasenaComponent} from "./modules/auth/recuperar-contrasena/recuperar-contrasena.component";
 
 
 const routes: Routes = [
@@ -62,7 +63,8 @@ const routes: Routes = [
   {path:'visualizaciones-compras', component: VisualizacionesComprasComponent},
   {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
   {path:'consultar-cajas', component:ConsultarCajaComponent},
-  {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent}
+  {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent},
+  {path: 'recuperar-contrasena', component: RecuperarContrasenaComponent}
 ];
 
 @NgModule({

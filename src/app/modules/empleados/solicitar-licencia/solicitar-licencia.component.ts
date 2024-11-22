@@ -155,7 +155,6 @@ export class SolicitarLicenciaComponent implements OnInit {
                   return;
                 }
               } catch (error) {
-                console.log(error);
                 this.notificacionService.openSnackBarError('Error al subir el archivo');
                 return;
               }

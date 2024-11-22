@@ -8,12 +8,12 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import {UsuariosService} from "../../services/usuarios.service";
+import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
-import {SnackBarService} from "../../services/snack-bar.service";
-import {ConfiguracionesService} from "../../services/configuraciones.service";
-import {Usuario} from "../../models/usuario.model";
+import {AuthService} from "../../../services/auth.service";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Usuario} from "../../../models/usuario.model";
 
 @Component({
   selector: 'app-login',
@@ -73,9 +73,7 @@ export class LoginComponent implements OnInit{
         [
           Validators.required,
           Validators.minLength(8),
-          Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)
-        ]
-      ],
+          Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
       txConfirmarContrasena: ['', [Validators.required]]
@@ -165,6 +163,10 @@ export class LoginComponent implements OnInit{
         }
       });
     }
+  }
+
+  public cambiarContrasena() {
+    this.router.navigate(['/recuperar-contrasena'])
   }
 
   // Region getters

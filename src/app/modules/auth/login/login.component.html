@@ -1,11 +1,13 @@
 <div *ngIf="!isLoading" class="row justify-content-center mt-5">
   <div class="col-8">
     <form [formGroup]="formLogin">
-      <div class="col">
-        <h1 class="titulo">{{ existeConfiguracion ? 'Iniciar sesión' : 'Registrar usuario' }}</h1>
-      </div>
 
       <mat-card class="mat-card">
+
+        <div class="col titulo-container">
+          <h1 class="titulo">{{ existeConfiguracion ? 'Iniciar sesión' : 'Registrar usuario' }}</h1>
+        </div>
+
         <mat-card-content>
 
           <!-- Campos adicionales solo para el registro -->
@@ -37,6 +39,9 @@
               </mat-form-field>
               <app-error-messages [control]="txNombreUsuario"></app-error-messages>
             </div>
+          </div>
+
+          <div class="row d-flex">
             <div class="col">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Contraseña</mat-label>
@@ -47,6 +52,11 @@
               </mat-form-field>
               <app-error-messages [control]="txContrasena"></app-error-messages>
             </div>
+
+            <div *ngIf="existeConfiguracion">
+              <p class="olvidaste-text" (click)="cambiarContrasena()">¿Olvidaste tu contraseña?</p>
+            </div>
+
             <div *ngIf="!existeConfiguracion" class="col">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Confirmar Contraseña</mat-label>
@@ -64,7 +74,7 @@
             <div class="col d-flex justify-content-end">
               <button mat-raised-button class="btn round" color="accent" id="btnLoguearse"
                       (click)="existeConfiguracion ? iniciarSesion() : registrarse()">
-                {{ existeConfiguracion ? 'Continuar' : 'Registrarse' }}
+                {{ existeConfiguracion ? 'Continuar' : 'Registrarte' }}
               </button>
             </div>
 

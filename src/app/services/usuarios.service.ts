@@ -14,6 +14,7 @@ import {Motivo} from "../models/motivo.model";
 import {Licencia} from "../models/licencia.model";
 import {FiltrosLicencias} from "../models/comandos/FiltrosLicencias.comando";
 import {EstadoLicencia} from "../models/estadoLicencia.model";
+import {RecuperarContrasena} from "../models/RecuperarContrasena.model";
 
 @Injectable({
   providedIn: 'root'
@@ -122,5 +123,13 @@ export class UsuariosService {
 
   public modificarLicencia(licencia: Licencia): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-licencia`, licencia);
+  }
+
+  public recuperarContrasena(recuperarContrasena: RecuperarContrasena): Observable<SpResult> {
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/recuperar-contrasena`, recuperarContrasena);
+  }
+
+  public cambiarContrasena(recuperarContrasena: RecuperarContrasena): Observable<SpResult> {
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cambiar-contrasena`, recuperarContrasena);
   }
 }

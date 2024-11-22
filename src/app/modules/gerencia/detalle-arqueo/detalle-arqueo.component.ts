@@ -100,7 +100,6 @@ export class DetalleArqueoComponent implements OnInit {
 
       this.ventasService.buscarVentasFechaHora(fechaHoraLocal).subscribe((ventas: Venta[]) => {
         this.ventas = ventas;
-        console.log(ventas);
         this.determinarAnulacion();
         this.tableDataSource.data = this.ventas;
         this.tableDataSource.paginator = this.paginator;
@@ -153,8 +152,6 @@ export class DetalleArqueoComponent implements OnInit {
     this.totalPorFormaPago = this.formasPago
       .filter(forma => totales[forma.nombre] !== undefined)
       .map(forma => [forma.nombre, totales[forma.nombre]] as [string, number]);
-
-    console.log(this.totalPorFormaPago);
   }
 
   get txTipoMovimiento(): FormControl {
