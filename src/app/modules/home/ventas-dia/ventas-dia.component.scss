@@ -1,12 +1,12 @@
 h2 {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: lighter;
-  color: #5c5c5c;
+  color: #404040;
 }
 
 h1 {
   font-weight: bold;
-  font-size: 28px;
+  font-size: 20px;
 }
 
 img {
@@ -14,10 +14,17 @@ img {
   height: 20px;
 }
 
-.mayorAlDiaAnterior {
-  color: green;
-  font-size: 15px;
-  margin-left: 10px;
-  margin-top: 10px;
-  font-weight: lighter;
+.color-indicator {
+  width: 15px;
+  height: 15px;
+  border-radius: 20%;
+  margin: 0 auto 5px auto;
+}
+
+.today {
+  background-color: #5dade2;
+}
+
+.yesterday {
+  background-color: #a1a1a1;
 }
