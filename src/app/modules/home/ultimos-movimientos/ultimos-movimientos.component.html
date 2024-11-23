@@ -15,7 +15,7 @@
 
     <!-- Contenedor de la lista con scroll -->
     <div class="transaction-list-container">
-      <div *ngFor="let ultimoMovimiento of ultimosMovimientos">
+      <div *ngFor="let ultimoMovimiento of movimientosFiltrados">
         <div class="transaction-item">
           <div class="icon-container">
             <mat-icon>{{ ultimoMovimiento.icon }}</mat-icon>
