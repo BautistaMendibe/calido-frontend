@@ -8,27 +8,28 @@
     <div class="col">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Buscar</mat-label>
-        <input type="text" [formControl]="txBuscar" id="txBuscar" matInput/>
+        <input type="text" [formControl]="txBuscar" id="txBuscar" matInput />
         <mat-icon matPrefix>search</mat-icon>
       </mat-form-field>
     </div>
 
-    <div *ngFor="let ultimoMovimiento of ultimosMovimientos">
-      <div class="transaction-item">
-        <div class="icon-container">
-          <mat-icon></mat-icon>
-        </div>
-        <div class="details">
-          <div class="name">{{ ultimoMovimiento.tipo }}</div>
-          <div class="subtitle">{{ ultimoMovimiento.codigo }}</div>
-        </div>
-        <div class="amount-time">
-          <div class="amount">{{ ultimoMovimiento.cantidad ? '$' + ultimoMovimiento.cantidad : '-' }}</div>
-          <div class="time">{{ ultimoMovimiento.dia + ' ' + ultimoMovimiento.hora }}</div>
+    <!-- Contenedor de la lista con scroll -->
+    <div class="transaction-list-container">
+      <div *ngFor="let ultimoMovimiento of ultimosMovimientos">
+        <div class="transaction-item">
+          <div class="icon-container">
+            <mat-icon>{{ ultimoMovimiento.icon }}</mat-icon>
+          </div>
+          <div class="details">
+            <div class="name">{{ ultimoMovimiento.tipo }}</div>
+            <div class="subtitle">{{ ultimoMovimiento.codigo }}</div>
+          </div>
+          <div class="amount-time">
+            <div class="amount">{{ ultimoMovimiento.cantidad ? '$' + ultimoMovimiento.cantidad : '-' }}</div>
+            <div class="time">{{ ultimoMovimiento.dia + ' ' + ultimoMovimiento.hora }}</div>
+          </div>
         </div>
       </div>
     </div>
-
   </div>
 </mat-card>
-

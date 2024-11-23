@@ -25,6 +25,12 @@ h3 {
   margin: 0;
 }
 
+.transaction-list-container {
+  max-height: 300px; /* Altura máxima del contenedor */
+  overflow-y: auto;  /* Habilita el desplazamiento vertical */
+  padding-right: 5px; /* Espaciado para evitar que el scroll tape el contenido */
+}
+
 .transaction-item {
   display: flex;
   align-items: center;
@@ -32,6 +38,10 @@ h3 {
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
   font-family: Arial, sans-serif;
+
+  &:last-child {
+    border-bottom: none; /* Quita la línea para el último elemento */
+  }
 
   .icon-container {
     margin-right: 10px;

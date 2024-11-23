@@ -69,6 +69,31 @@ export class UltimosMovimientosComponent implements OnInit {
         icon: 'settings_backup_restore',
         codigo: 234
       },
+      {
+        hora: '10:30',
+        cantidad: 34232,
+        tipo: 'Anulación de venta',
+        dia: '23/11',
+        icon: 'settings_backup_restore',
+        codigo: 234
+      },
+      {
+        hora: '10:30',
+        cantidad: 34232,
+        tipo: 'Anulación de venta',
+        dia: '23/11',
+        icon: 'settings_backup_restore',
+        codigo: 234
+      },{
+        hora: '10:30',
+        cantidad: 34232,
+        tipo: 'Anulación de venta',
+        dia: '23/11',
+        icon: 'settings_backup_restore',
+        codigo: 234
+      },
+
+
     ]
   }
 
