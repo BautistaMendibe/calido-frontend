@@ -83,9 +83,9 @@ export class VentasDiaComponent implements OnInit{
       },
       tooltip: {
         enabled: true,
-        backgroundColor: 'rgba(0, 0, 0, 0.8)',
-        titleColor: '#0e0e0e',
-        bodyColor: '#bc7777',
+        backgroundColor: 'rgba(64,64,64,0.8)',
+        titleColor: '#ffffff',
+        bodyColor: '#ffffff',
       },
     },
     elements: {
@@ -94,8 +94,9 @@ export class VentasDiaComponent implements OnInit{
         borderWidth: 2,
       },
       point: {
-        radius: 0,
-        hoverRadius: 5,
+        radius: 1,
+        hoverRadius: 8,
+        hitRadius: 10,
       },
     },
     layout: {
