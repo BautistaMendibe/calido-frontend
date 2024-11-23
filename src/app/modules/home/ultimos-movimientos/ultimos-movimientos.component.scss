@@ -37,10 +37,15 @@ h3 {
   justify-content: space-between;
   padding: 10px;
   border-bottom: 1px solid #e0e0e0;
+  margin-right: 10px;
 
   &:last-child {
     border-bottom: none;
   }
+
+  scrollbar-width: thin;
+  scrollbar-color: #d3d3d3 transparent;
+
 
   .icon-container {
     margin-right: 10px;
