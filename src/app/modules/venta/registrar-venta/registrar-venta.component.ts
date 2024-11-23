@@ -57,6 +57,7 @@ export class RegistrarVentaComponent implements OnInit{
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
   private facturacionAutomatica: boolean = false;
+  public PagoRealizado: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -381,6 +382,26 @@ export class RegistrarVentaComponent implements OnInit{
       venta.descuento = this.cantidadCuotaSeleccionada.descuento;
 
       this.registrandoVenta = true;
+      console.log(venta)
+      if (venta.formaDePago.id == this.formasDePagoEnum.QR) {
+        console.log(venta)
+        this.notificacionService.openSnackBarSuccess('Generando pago.')
+        this.ventasService.pagarConSIROQR(venta).subscribe((respuestaPago) => {
+          if (respuestaPago.mensaje == 'OK') {
+            this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
+            this.notificacionService.openSnackBarSuccess('MOSTRANDO QR.');
+            this.PagoRealizado = false;
+              // CONSULTAR EL ESTADO DEL PAGO
+              // codigo de llamada API de consulta
+
+              // AL CAMBIAR EL ESTADO
+              // PagoRealizado = true;
+          } else {
+            this.notificacionService.openSnackBarError('Error al generar el pago. Intentelo nuevamente.');
+          }
+        })
+
+      }
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {

@@ -59,4 +59,8 @@ export class VentasService {
     return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-fecha-hora`, body);
   }
 
+  public pagarConSIROQR(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/generar-pago`, venta);
+  }
+
 }
