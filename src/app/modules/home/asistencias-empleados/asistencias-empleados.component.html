@@ -4,6 +4,23 @@
       <h2>Asistencias</h2>
     </div>
 
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
 
+    <div class="asistencia-list-container" *ngIf="asistencias">
+      <div *ngFor="let asistencia of asistencias">
+        <div class="asistencia-item">
+          <div class="icon-container">
+            <mat-icon>person</mat-icon>
+          </div>
+          <div class="details">
+            <div class="name">{{ asistencia.usuario.nombre + ' ' + asistencia.usuario.apellido }}</div>
+            <div class="subtitle">Llegada: {{ asistencia.horaEntrada }}</div>
+            <div class="subtitle" *ngIf="asistencia.horaSalida">Salida: {{ asistencia.horaSalida }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </mat-card>
