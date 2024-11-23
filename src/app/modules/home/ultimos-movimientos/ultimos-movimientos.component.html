@@ -4,6 +4,15 @@
       <h2>Últimos movimientos</h2>
     </div>
 
+    <!-- Input de búsqueda -->
+    <div class="col">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Buscar</mat-label>
+        <input type="text" [formControl]="txBuscar" id="txBuscar" matInput/>
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
 
   </div>
 </mat-card>
