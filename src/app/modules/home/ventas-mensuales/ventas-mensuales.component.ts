@@ -34,6 +34,7 @@ export class VentasMensualesComponent implements OnInit {
 
   public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
+    maintainAspectRatio: false,
     scales: {
       y: {
         beginAtZero: true,
@@ -41,12 +42,24 @@ export class VentasMensualesComponent implements OnInit {
           stepSize: 10,
         },
       },
-      x: {},
+      x: {
+        ticks: {
+          autoSkip: false,
+          maxRotation: 45,
+          minRotation: 0,
+
+        },
+      },
     },
     plugins: {
       legend: {
-        display: true,
+        display: false,
         position: 'top',
+      },
+    },
+    elements: {
+      bar: {
+
       },
     },
   };
@@ -58,7 +71,7 @@ export class VentasMensualesComponent implements OnInit {
 
   public barChartData: ChartDataset<'bar', number[]>[] = [
     {
-      data: [10, 15, 30, 25, 50, 60, 70, 80, 90, 100, 110, 120],
+      data: [100, 75, 30, 25, 50, 60, 100, 150, 90, 100, 110, 120],
       label: 'Ventas',
       backgroundColor: 'rgba(225, 91, 53,0.5)',
       borderColor: 'rgba(225, 91, 53, 1)',
