@@ -71,6 +71,7 @@ import { VentasMensualesComponent } from './modules/home/ventas-mensuales/ventas
 import { BaseChartDirective } from 'ng2-charts';
 import { UltimosMovimientosComponent } from './modules/home/ultimos-movimientos/ultimos-movimientos.component';
 import { ProductosStockLimitadoComponent } from './modules/home/productos-stock-limitado/productos-stock-limitado.component';
+import { AsistenciasEmpleadosComponent } from './modules/home/asistencias-empleados/asistencias-empleados.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -126,7 +127,8 @@ registerLocaleData(localeEs, 'es');
     VentasDiaComponent,
     VentasMensualesComponent,
     UltimosMovimientosComponent,
-    ProductosStockLimitadoComponent
+    ProductosStockLimitadoComponent,
+    AsistenciasEmpleadosComponent
   ],
   imports: [
     BrowserModule,
