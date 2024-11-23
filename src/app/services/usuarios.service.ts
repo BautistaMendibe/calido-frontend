@@ -123,4 +123,8 @@ export class UsuariosService {
   public modificarLicencia(licencia: Licencia): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-licencia`, licencia);
   }
+
+  public buscarUltimosClientes(): Observable<Usuario[]>{
+    return this.http.get<Usuario[]>(`${this.urlBackend}/${this.controllerName}/buscar-ultimos-clientes`);
+  }
 }

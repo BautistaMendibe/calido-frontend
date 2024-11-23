@@ -72,6 +72,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { UltimosMovimientosComponent } from './modules/home/ultimos-movimientos/ultimos-movimientos.component';
 import { ProductosStockLimitadoComponent } from './modules/home/productos-stock-limitado/productos-stock-limitado.component';
 import { AsistenciasEmpleadosComponent } from './modules/home/asistencias-empleados/asistencias-empleados.component';
+import { UltimosClientesRegistradosComponent } from './modules/home/ultimos-clientes-registrados/ultimos-clientes-registrados.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -128,7 +129,8 @@ registerLocaleData(localeEs, 'es');
     VentasMensualesComponent,
     UltimosMovimientosComponent,
     ProductosStockLimitadoComponent,
-    AsistenciasEmpleadosComponent
+    AsistenciasEmpleadosComponent,
+    UltimosClientesRegistradosComponent
   ],
   imports: [
     BrowserModule,
