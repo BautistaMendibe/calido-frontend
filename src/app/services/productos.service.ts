@@ -58,4 +58,8 @@ export class ProductosService {
   public consultarMovimientosPorProducto(idProducto: number): Observable<MovimientoProducto[]>{
     return this.http.get<MovimientoProducto[]>(`${this.urlBackend}/${this.controllerName}/buscar-movimientos-por-producto/${idProducto}`);
   }
+
+  public consultarProductosConStockLimitado(): Observable<Producto[]>{
+    return this.http.get<Producto[]>(`${this.urlBackend}/${this.controllerName}/consultar-productos-stock-limitado`);
+  }
 }

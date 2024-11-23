@@ -7,7 +7,25 @@
           <mat-icon style="font-size: 20px; color: #e15b35">receipt</mat-icon>
         </button>
       </div>
+    </div>
 
+    <div class="product-list-container">
+      <div *ngFor="let producto of listaProductos">
+        <div class="product-item">
+          <div class="icon-container">
+            <!-- Imagen circular del producto -->
+            <img [src]="producto.imgProducto" alt="Imagen del producto" class="product-image" />
+          </div>
+          <div class="details">
+            <div class="name">{{ producto.nombre }}</div>
+            <div class="subtitle">CB: {{ producto.codigoBarra }}</div>
+            <div class="subtitle">Proveedor: {{ producto.proveedor.nombre }}</div>
+          </div>
+          <div class="amount">
+            {{ producto.cantidadEnStock }}
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </mat-card>
