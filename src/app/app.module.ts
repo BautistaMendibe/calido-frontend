@@ -69,6 +69,8 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import { VentasDiaComponent } from './modules/home/ventas-dia/ventas-dia.component';
 import { VentasMensualesComponent } from './modules/home/ventas-mensuales/ventas-mensuales.component';
 import { BaseChartDirective } from 'ng2-charts';
+import { UltimosMovimientosComponent } from './modules/home/ultimos-movimientos/ultimos-movimientos.component';
+import { ProductosStockLimitadoComponent } from './modules/home/productos-stock-limitado/productos-stock-limitado.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -122,7 +124,9 @@ registerLocaleData(localeEs, 'es');
     DetalleArqueoComponent,
     ErrorMessagesComponent,
     VentasDiaComponent,
-    VentasMensualesComponent
+    VentasMensualesComponent,
+    UltimosMovimientosComponent,
+    ProductosStockLimitadoComponent
   ],
   imports: [
     BrowserModule,
