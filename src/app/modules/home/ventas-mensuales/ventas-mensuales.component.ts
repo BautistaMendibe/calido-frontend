@@ -40,14 +40,28 @@ export class VentasMensualesComponent implements OnInit {
         beginAtZero: true,
         ticks: {
           stepSize: 10,
+          font: {
+            size: 10,
+          },
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.2)',
+          lineWidth: 0.1,
         },
       },
       x: {
         ticks: {
           autoSkip: false,
-          maxRotation: 45,
+          maxRotation: 0,
           minRotation: 0,
-
+          padding: 5,
+          font: {
+            size: 10,
+          },
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.2)',
+          lineWidth: 0.1,
         },
       },
     },
