@@ -5,7 +5,7 @@
     </div>
 
     <div class="row align-items-start">
-      <div class="col-3">
+      <div class="col-3 mt-2">
         <div class="d-flex align-items-center">
           <div class="color-indicator today"></div>
           <h3 class="ms-2">Hoy</h3>
@@ -26,7 +26,8 @@
       </div>
 
       <div class="col">
-        <canvas baseChart
+        <canvas style="display: block; height: calc(100% - 30px); margin-top: 22px"
+                baseChart
                 [type]="'line'"
                 [datasets]="lineChartData"
                 [labels]="lineChartLabels"
