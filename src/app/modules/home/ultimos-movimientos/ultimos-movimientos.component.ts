@@ -1,5 +1,6 @@
 import {Component, ElementRef, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {UltimosMovimientosComando} from "../../../models/comandos/dashboard/UltimosMovimientos.comando";
 
 @Component({
   selector: 'app-ultimos-movimientos',
@@ -9,6 +10,7 @@ import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 export class UltimosMovimientosComponent implements OnInit {
 
   public form: FormGroup;
+  public ultimosMovimientos: UltimosMovimientosComando[] = [];
 
   constructor(private fb: FormBuilder) {
     this.form = new FormGroup({});
@@ -16,10 +18,58 @@ export class UltimosMovimientosComponent implements OnInit {
 
   ngOnInit() {
     this.crearForm();
+    this.buscarUltimosMovimientos();
   }
 
   private crearForm() {
+    this.form = this.fb.group({
+      txBuscar: ['', []],
+    });
+  }
 
+  private buscarUltimosMovimientos() {
+    this.ultimosMovimientos = [
+      {
+        hora: '12:30',
+        cantidad: 0,
+        tipo: 'Orden de compra',
+        dia: '23/11',
+        icon: 'receipt',
+        codigo: 443
+      },
+      {
+        hora: '11:30',
+        cantidad: 12334,
+        tipo: 'Venta',
+        dia: '23/11',
+        icon: 'loyalty',
+        codigo: 342
+      },
+      {
+        hora: '11:25',
+        cantidad: 13334,
+        tipo: 'Venta',
+        dia: '23/11',
+        icon: 'loyalty',
+        codigo: 343
+      },
+      {
+        hora: '11:10',
+        cantidad: 12334,
+        tipo: 'Venta',
+        dia: '23/11',
+        icon: 'loyalty',
+        codigo: 323
+      },
+      {
+        hora: '10:30',
+        cantidad: 34232,
+        tipo: 'Anulación de venta',
+        dia: '23/11',
+        icon: 'settings_backup_restore',
+        codigo: 234
+      },
+    ]
   }
 
 
