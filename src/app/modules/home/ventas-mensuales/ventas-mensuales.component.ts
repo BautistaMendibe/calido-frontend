@@ -9,6 +9,7 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
+import {VentasMensualesComando} from "../../../models/comandos/dashboard/VentasMensuales.comando";
 
 // Registra los componentes necesarios de Chart.js
 ChartJS.register(
@@ -27,6 +28,8 @@ ChartJS.register(
   styleUrls: ['./ventas-mensuales.component.scss']
 })
 export class VentasMensualesComponent implements OnInit {
+
+  public ventasMesuales: VentasMensualesComando[] = [];
 
   constructor() {}
 

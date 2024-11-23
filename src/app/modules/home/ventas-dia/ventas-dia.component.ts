@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Venta} from "../../../models/venta.model";
 import {VentasService} from "../../../services/ventas.services";
 import {Chart, ChartDataset, ChartOptions, registerables} from 'chart.js';
+import {VentasDiariasComando} from "../../../models/comandos/dashboard/VentasDiarias.comando";
 
 Chart.register(...registerables);
 
@@ -11,13 +12,8 @@ Chart.register(...registerables);
   styleUrl: './ventas-dia.component.scss'
 })
 export class VentasDiaComponent implements OnInit{
-
-  public cantidadVentasHoy = 0;
-  public cantidadVentasAyer = 0;
-  public diferenciaCantidadVentas = 0;
-
-  private ventasHoy: Venta[] = [];
-  private ventasAyer: Venta[] = [];
+  private ventasHoy: VentasDiariasComando[] = [];
+  private ventasAyer: VentasDiariasComando[] = [];
 
   constructor(private ventasService: VentasService) {
   }
@@ -25,29 +21,6 @@ export class VentasDiaComponent implements OnInit{
   ngOnInit() {
     //this.buscarTotalVentasHoy();
   }
-
-  private buscarTotalVentasHoy() {
-    const hoy = new Date();
-    const ayer = new Date(hoy);
-    ayer.setDate(hoy.getDate() - 1);
-
-
-    this.ventasService.buscarVentasFechaHora(hoy as unknown as string).subscribe((ventas) => {
-      this.ventasHoy = ventas;
-      this.cantidadVentasHoy = ventas.length;
-
-      this.ventasService.buscarVentasFechaHora(ayer as unknown as string).subscribe((ventas) => {
-        this.ventasAyer = ventas;
-        this.cantidadVentasAyer = ventas.length;
-
-        this.calcularDiferenciaVentasAyerHoy();
-      });
-
-    });
-  }
-
-  private calcularDiferenciaVentasAyerHoy() {}
-
 
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
