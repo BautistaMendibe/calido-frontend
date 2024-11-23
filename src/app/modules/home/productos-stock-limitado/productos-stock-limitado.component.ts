@@ -11,6 +11,7 @@ import {Producto} from "../../../models/producto.model";
 export class ProductosStockLimitadoComponent implements OnInit {
 
   public listaProductos: Producto[] = [];
+  public buscando:boolean = false;
 
   constructor(private productoService: ProductosService, private router: Router) { }
 
@@ -23,9 +24,11 @@ export class ProductosStockLimitadoComponent implements OnInit {
   };
 
   private buscarProductosStockLimitado() {
+    this.buscando = true;
     this.productoService.consultarProductosConStockLimitado().subscribe((productos: Producto[]) => {
       this.listaProductos = productos;
-    })
+      this.buscando = false;
+    });
   }
 
 }

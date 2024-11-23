@@ -9,7 +9,11 @@
       </div>
     </div>
 
-    <div class="product-list-container">
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div class="product-list-container" *ngIf="listaProductos">
       <div *ngFor="let producto of listaProductos">
         <div class="product-item">
           <div class="icon-container">
