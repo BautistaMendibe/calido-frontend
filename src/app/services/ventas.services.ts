@@ -60,6 +60,7 @@ export class VentasService {
   }
 
   public pagarConSIROQR(venta: Venta): Observable<SpResult>{
+    console.log('Endpoint:', `${this.urlBackend}/${this.controllerName}/generar-pago`);
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/generar-pago`, venta);
   }
 

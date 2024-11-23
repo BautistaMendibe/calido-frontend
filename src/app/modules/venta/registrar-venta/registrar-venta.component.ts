@@ -382,24 +382,25 @@ export class RegistrarVentaComponent implements OnInit{
       venta.descuento = this.cantidadCuotaSeleccionada.descuento;
 
       this.registrandoVenta = true;
-      console.log(venta)
+      console.log('Payload:', venta);
       if (venta.formaDePago.id == this.formasDePagoEnum.QR) {
         console.log(venta)
         this.notificacionService.openSnackBarSuccess('Generando pago.')
-        this.ventasService.pagarConSIROQR(venta).subscribe((respuestaPago) => {
-          if (respuestaPago.mensaje == 'OK') {
-            this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
-            this.notificacionService.openSnackBarSuccess('MOSTRANDO QR.');
-            this.PagoRealizado = false;
-              // CONSULTAR EL ESTADO DEL PAGO
-              // codigo de llamada API de consulta
-
-              // AL CAMBIAR EL ESTADO
-              // PagoRealizado = true;
-          } else {
-            this.notificacionService.openSnackBarError('Error al generar el pago. Intentelo nuevamente.');
+        this.ventasService.pagarConSIROQR(venta).subscribe({
+          next: (respuestaPago) => {
+            console.log('Respuesta recibida:', respuestaPago);
+            if (respuestaPago.mensaje === 'OK') {
+              this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
+              console.log('MOSTRANDO QR');
+            } else {
+              this.notificacionService.openSnackBarError('Error al generar el pago.');
+            }
+          },
+          error: (err) => {
+            console.error('Error en la llamada:', err);
+            this.notificacionService.openSnackBarError('Error en la solicitud.');
           }
-        })
+        });
 
       }
 
