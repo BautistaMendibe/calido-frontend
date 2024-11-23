@@ -92,7 +92,7 @@ export class VentasDiaComponent implements OnInit{
       data: [200, 300, 400, 500, 573, 600, 550, 500],
       label: 'Today',
       borderColor: 'rgba(225, 91, 53, 1)',
-      backgroundColor: 'rgb(85,24,5)',
+      backgroundColor: 'rgb(248,135,99)',
       borderWidth: 2,
       fill: false,
     },
