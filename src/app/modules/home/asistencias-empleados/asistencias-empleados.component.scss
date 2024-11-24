@@ -25,6 +25,15 @@ h3 {
   margin: 0;
 }
 
+.no-asistencias-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px; /* Ajusta la altura según tus necesidades */
+  text-align: center;
+  color: #757575;
+}
+
 
 .asistencia-list-container {
   max-height: 300px; /* Altura máxima del contenedor */
