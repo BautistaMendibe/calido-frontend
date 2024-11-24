@@ -3,7 +3,7 @@ mat-card {
   border-radius: 8px;
   padding: 10px 15px;
   color: #494949;
-  height: 250px;
+  height: 300px;
 }
 
 h2 {
@@ -36,7 +36,7 @@ h3 {
 
 
 .asistencia-list-container {
-  max-height: 300px; /* Altura máxima del contenedor */
+  max-height: 230px; /* Altura máxima del contenedor */
   overflow-y: auto;  /* Habilita el scroll vertical */
   padding-right: 5px; /* Espaciado para evitar que el scroll tape contenido */
 }
@@ -86,6 +86,6 @@ h3 {
   }
 }
 
-.product-item:hover {
+.asistencia-item:hover {
   background: #f8f8f8; /* Cambia el fondo al pasar el mouse */
 }
