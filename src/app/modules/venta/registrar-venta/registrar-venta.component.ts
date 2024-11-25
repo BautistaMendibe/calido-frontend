@@ -29,6 +29,7 @@ import {CajasService} from "../../../services/cajas.service";
 import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
 import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
+import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -382,7 +383,7 @@ export class RegistrarVentaComponent implements OnInit{
       venta.descuento = this.cantidadCuotaSeleccionada.descuento;
 
       this.registrandoVenta = true;
-      console.log('Payload:', venta);
+
       if (venta.formaDePago.id == this.formasDePagoEnum.QR) {
         console.log(venta)
         this.notificacionService.openSnackBarSuccess('Generando pago.')
@@ -392,6 +393,7 @@ export class RegistrarVentaComponent implements OnInit{
             if (respuestaPago.mensaje === 'OK') {
               this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
               console.log('MOSTRANDO QR');
+              this.mostrarQR();
             } else {
               this.notificacionService.openSnackBarError('Error al generar el pago.');
             }
@@ -537,6 +539,14 @@ export class RegistrarVentaComponent implements OnInit{
     } else {
       this.txTipoFacturacion.setValue(this.getTiposFacturacionEnum.FACTURA_A);
     }
+  }
+
+  public mostrarQR(): void {
+    const qrImageUrl = 'assets/imgs/QR_SIRO.png'; // Ruta de tu imagen QR en el frontend
+    this.dialog.open(QRVentanaComponent, {
+      data: { imageUrl: qrImageUrl },
+      width: '400px'
+    });
   }
 
   // Region getters

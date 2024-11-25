@@ -28,7 +28,7 @@ import { ConsultarConfiguracionesComponent } from './modules/configuraciones/con
 import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
 import { RegistrarProductoComponent } from './modules/productos/registrar-producto/registrar-producto.component';
 import { MessagesComponent } from './shared/messages/messages.component';
-import {MatDialogClose} from "@angular/material/dialog";
+import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { RegistrarVentaComponent } from './modules/venta/registrar-venta/registrar-venta.component';
@@ -66,6 +66,7 @@ import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arque
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { QRVentanaComponent } from './modules/qr-ventana/qr-ventana.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -117,7 +118,8 @@ registerLocaleData(localeEs, 'es');
     RegistrarCajaComponent,
     RegistrarArqueoCajaComponent,
     DetalleArqueoComponent,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
+    QRVentanaComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +136,9 @@ registerLocaleData(localeEs, 'es');
     NgxMaskDirective,
     NgxMaskPipe,
     FormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatDialogContent,
+    MatDialogActions
   ],
   providers: [
     HealthService,

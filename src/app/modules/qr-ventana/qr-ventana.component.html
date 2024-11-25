@@ -1,0 +1,9 @@
+<div>
+  <h2 mat-dialog-title>Código QR</h2>
+  <mat-dialog-content>
+    <img [src]="data.imageUrl" alt="Código QR" style="max-width: 100%; height: auto;" />
+  </mat-dialog-content>
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="closeDialog()">Cerrar</button>
+  </mat-dialog-actions>
+</div>
