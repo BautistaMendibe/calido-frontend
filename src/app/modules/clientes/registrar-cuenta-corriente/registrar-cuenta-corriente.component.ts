@@ -36,7 +36,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public ventas: Venta[] = [];
-  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
+  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
 
   public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
@@ -145,6 +145,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
           this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
+              this.buscarVentas(this.txCliente.value);
+              this.tableDataSource._updateChangeSubscription();
             } else {
               this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
             }
@@ -234,10 +236,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   public habilitarEdicion(){
-    this.form.enable();
-    this.txCreada.disable();
-    this.txCliente.disable();
-    this.txBalance.disable();
+    this.txBuscar.enable();
     this.formDesactivado = false;
     this.data.editar = true;
   }

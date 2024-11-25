@@ -70,12 +70,6 @@
               <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA DE CREACIÓN</mat-header-cell>
               <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.fechaDesde | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
-            <ng-container matColumnDef="balanceTotal">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>SALDO</mat-header-cell>
-              <mat-cell *matCellDef="let cuentaCorriente">
-                $ {{ cuentaCorriente.balanceTotal | number:'1.2-2':'es-AR' }}
-              </mat-cell>
-            </ng-container>
             <ng-container matColumnDef="acciones" class="mat-column-acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let cuentaCorriente" data-label="Acciones">

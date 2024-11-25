@@ -102,6 +102,13 @@
                 </mat-cell>
               </ng-container>
 
+              <ng-container matColumnDef="estado">
+                <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+                <mat-cell *matCellDef="let venta">
+                  {{ venta.fechaFacturacion ? 'Facturada' : 'No facturada'}}
+                </mat-cell>
+              </ng-container>
+
               <ng-container matColumnDef="productos">
                 <mat-header-cell *matHeaderCellDef>PRODUCTOS</mat-header-cell>
                 <mat-cell *matCellDef="let venta">

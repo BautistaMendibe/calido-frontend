@@ -24,7 +24,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   public tableDataSource: MatTableDataSource<CuentaCorriente> = new MatTableDataSource<CuentaCorriente>([]);
   public form: FormGroup;
   public cuentas: CuentaCorriente[] = [];
-  public columnas: string[] = ['id', 'nombre', 'apellido', 'fechaDesde', 'balanceTotal', 'acciones'];
+  public columnas: string[] = ['id', 'nombre', 'apellido', 'fechaDesde', 'acciones'];
   private filtros: FiltrosCuentasCorrientes;
   private unsubscribe$: Subject<void> = new Subject<void>();
   public isLoading: boolean = false;
