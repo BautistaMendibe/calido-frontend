@@ -73,6 +73,7 @@ import { UltimosMovimientosComponent } from './modules/home/ultimos-movimientos/
 import { ProductosStockLimitadoComponent } from './modules/home/productos-stock-limitado/productos-stock-limitado.component';
 import { AsistenciasEmpleadosComponent } from './modules/home/asistencias-empleados/asistencias-empleados.component';
 import { UltimosClientesRegistradosComponent } from './modules/home/ultimos-clientes-registrados/ultimos-clientes-registrados.component';
+import { OrdenesDeCompraComponent } from './modules/home/ordenes-de-compra/ordenes-de-compra.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -130,7 +131,8 @@ registerLocaleData(localeEs, 'es');
     UltimosMovimientosComponent,
     ProductosStockLimitadoComponent,
     AsistenciasEmpleadosComponent,
-    UltimosClientesRegistradosComponent
+    UltimosClientesRegistradosComponent,
+    OrdenesDeCompraComponent
   ],
   imports: [
     BrowserModule,
