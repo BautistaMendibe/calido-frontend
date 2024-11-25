@@ -9,7 +9,8 @@ import {
   Tooltip,
   Legend
 } from 'chart.js';
-import {VentasMensualesComando} from "../../../models/comandos/dashboard/VentasMensuales.comando";
+import {VentasMensuales} from "../../../models/comandos/dashboard/VentasMensuales.comando";
+import {VentasService} from "../../../services/ventas.services";
 
 // Registra los componentes necesarios de Chart.js
 ChartJS.register(
@@ -29,11 +30,22 @@ ChartJS.register(
 })
 export class VentasMensualesComponent implements OnInit {
 
-  public ventasMesuales: VentasMensualesComando[] = [];
+  public ventasMesuales: VentasMensuales[] = [];
+  public buscando: boolean = false;
 
-  constructor() {}
+  constructor(private ventasService: VentasService) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.buscarCantidadVentasMensuales();
+  }
+
+  private buscarCantidadVentasMensuales() {
+    this.buscando = true;
+    this.ventasService.buscarCantidadVentasMensuales().subscribe((cantidadVentasMensuales) => {
+      this.ventasMesuales = cantidadVentasMensuales;
+      this.buscando = false;
+    });
+  }
 
   public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,

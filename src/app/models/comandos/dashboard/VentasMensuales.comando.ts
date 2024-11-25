@@ -1,9 +1,9 @@
-export class VentasMensualesComando {
+export class VentasMensuales {
   mes: string;
-  cantidad: number;
+  total: number;
 
-  constructor(mes?: string, cantidad?: number) {
+  constructor(mes?: string, total?: number) {
     this.mes = mes!;
-    this.cantidad = cantidad!;
+    this.total = total!;
   }
 }
