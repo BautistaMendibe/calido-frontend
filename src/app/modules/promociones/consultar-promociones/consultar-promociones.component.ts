@@ -24,7 +24,7 @@ export class ConsultarPromocionesComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Promocion> = new MatTableDataSource<Promocion>([]);
   public form: FormGroup;
   public promociones: Promocion[] = [];
-  public columnas: string[] = ['nombre', 'porcentajeDescuento', 'producto', 'acciones'];
+  public columnas: string[] = ['nombre', 'porcentajeDescuento', 'producto', 'fechaHasta', 'acciones'];
   private filtros: FiltrosPromociones;
   public isLoading: boolean = false;
 
