@@ -9,6 +9,7 @@ import {TipoProducto} from "../models/tipoProducto.model";
 import {DetalleProducto} from "../models/detalleProducto";
 import {FiltrosDetallesProductos} from "../models/comandos/FiltrosDetallesProductos";
 import {MovimientoProducto} from "../models/movimientoProducto";
+import {ProductoStockLimitadoComando} from "../models/comandos/dashboard/ProductoStockLimitado.comando";
 
 @Injectable({
   providedIn: 'root'
@@ -59,7 +60,7 @@ export class ProductosService {
     return this.http.get<MovimientoProducto[]>(`${this.urlBackend}/${this.controllerName}/buscar-movimientos-por-producto/${idProducto}`);
   }
 
-  public consultarProductosConStockLimitado(): Observable<Producto[]>{
-    return this.http.get<Producto[]>(`${this.urlBackend}/${this.controllerName}/consultar-productos-stock-limitado`);
+  public consultarProductosConStockLimitado(): Observable<ProductoStockLimitadoComando[]>{
+    return this.http.get<ProductoStockLimitadoComando[]>(`${this.urlBackend}/${this.controllerName}/consultar-productos-stock-limitado`);
   }
 }
