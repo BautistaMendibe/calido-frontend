@@ -3,7 +3,7 @@ mat-card {
   border-radius: 8px;
   padding: 10px 15px;
   color: #494949;
-  max-height: 550px;
+  height: 450px;
 }
 
 h2 {
@@ -26,7 +26,7 @@ h3 {
 }
 
 .product-list-container {
-  max-height: 300px; /* Altura máxima del contenedor */
+  max-height: 330px; /* Altura máxima del contenedor */
   overflow-y: auto;  /* Habilita el scroll vertical */
   padding-right: 5px; /* Espaciado para evitar que el scroll tape contenido */
 }
