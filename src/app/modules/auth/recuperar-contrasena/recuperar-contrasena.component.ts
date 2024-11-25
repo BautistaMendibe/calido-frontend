@@ -21,7 +21,6 @@ import {RecuperarContrasena} from "../../../models/RecuperarContrasena.model";
 })
 export class RecuperarContrasenaComponent implements OnInit {
   public formRecuperar: FormGroup;
-  public existeConfiguracion: boolean = false;
   public isLoading: boolean = true;
   public hidePassword: boolean = true;
   public hideConfirmPassword: boolean = true;

@@ -34,7 +34,7 @@
                 <app-error-messages [control]="txContrasena"></app-error-messages>
               </div>
 
-              <div *ngIf="!existeConfiguracion" class="col">
+              <div *ngIf="existeToken" class="col">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Confirmar Contraseña</mat-label>
                   <input [type]="hideConfirmPassword ? 'password' : 'text'" matInput [formControl]="txConfirmarContrasena"/>

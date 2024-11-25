@@ -17,6 +17,7 @@ import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comand
 import {DetalleVentaComponent} from "../../venta/detalle-venta/detalle-venta.component";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -50,6 +51,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     private notificacionService: SnackBarService,
     private ventasService: VentasService,
     private dialog: MatDialog,
+    private notificationDialogService: NotificationService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarCuentasCorrientesComponent;
       esConsulta: boolean;
@@ -73,6 +75,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       this.form.disable();
     }
 
+    this.txBalance.disable();
+
     if (this.data.editar) {
       this.listaVentasDeshabilitada = false;
       this.txCreada.disable();
@@ -85,20 +89,22 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     if (this.esConsulta || this.data.editar) {
       this.buscarVentas(this.data.cuentaCorriente.idUsuario);
     }
+
+    this.txCliente.valueChanges.subscribe(() => { this.buscarVentas(this.txCliente.value); this.calcularBalance(); });
   }
 
   private crearFormulario() {
     this.form = this.fb.group({
       txCliente: [this.data.cuentaCorriente?.usuario?.id || '', [Validators.required]],
       txCreada: [this.data.cuentaCorriente?.fechaDesde || new Date(), [Validators.required]],
-      txBalance: [this.data.cuentaCorriente?.balanceTotal || '', [Validators.required]],
+      txBalance: ['', [Validators.required]],
       txBuscar: ['']
     });
   }
 
   private buscarUsuarios() {
     this.usuarioService.consultarClientes(new FiltrosEmpleados()).subscribe((clientes) => {
-      this.listaClientes = clientes;
+      this.listaClientes = clientes.filter(cliente => cliente.id !== -1); // Sacar el consumidor final
     });
   }
 
@@ -109,8 +115,42 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       this.tableDataSource.data = ventas;
       this.tableDataSource.paginator = this.paginator;
       this.tableDataSource.sort = this.sort;
+
+      this.calcularBalance();
       this.isLoading = false;
     })
+  }
+
+  private calcularBalance() {
+    let total = 0;
+
+    this.ventas.forEach(venta => {
+      // En caso de que no tenga comprobante (sin facturar), tenemos que sumarlo al balance negativo.
+      if (venta.comprobanteAfip.comprobante_nro == null) {
+        total += venta.montoTotal || 0;
+      }
+    });
+
+    // Convertimos el total a negativo
+    total = total * -1;
+
+    this.txBalance.setValue(total);
+  }
+
+  public facturarVenta(venta: Venta) {
+    this.notificationDialogService.confirmation('¿Desea facturar esta venta?', 'Facturar venta')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
+            } else {
+              this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
+            }
+          });
+        }
+      });
   }
 
   public verProducto(producto: Producto) {
@@ -197,6 +237,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.form.enable();
     this.txCreada.disable();
     this.txCliente.disable();
+    this.txBalance.disable();
     this.formDesactivado = false;
     this.data.editar = true;
   }
