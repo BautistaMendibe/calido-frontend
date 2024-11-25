@@ -466,6 +466,14 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public filtrosSuscripciones() {
+    this.txTipoFacturacion.valueChanges.subscribe(() => {
+      if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_A && this.txCliente.value === -1) {
+        this.txCliente.setValue(null);
+      } else if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_B && this.txCliente.value === null) {
+        this.txCliente.setValue(-1);
+      }
+    })
+
     this.txBuscar.valueChanges.subscribe(() => {
       const textoBusqueda = this.normalizarTexto(this.txBuscar.value || '');
 

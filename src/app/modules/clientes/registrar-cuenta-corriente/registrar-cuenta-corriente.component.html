@@ -105,7 +105,7 @@
               <ng-container matColumnDef="estado">
                 <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
                 <mat-cell *matCellDef="let venta">
-                  {{ venta.fechaFacturacion ? 'Facturada' : 'No facturada'}}
+                  {{ venta.fechaAnulacion ? 'Anulada' : (venta.fechaFacturacion ? 'Facturada' : 'No Facturada') }}
                 </mat-cell>
               </ng-container>
 

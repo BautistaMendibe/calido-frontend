@@ -192,7 +192,10 @@
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cliente</mat-label>
               <mat-select [formControl]="txCliente" (selectionChange)="cambioCliente($event.value)">
-                <mat-option *ngFor="let cliente of this.clientes" [value]="cliente.id">
+                <mat-option
+                  *ngFor="let cliente of this.clientes"
+                  [value]="cliente.id"
+                  [disabled]="txTipoFacturacion.value === getTiposFacturacionEnum.FACTURA_A && cliente.id === -1">
                   {{ cliente.nombre + ' ' + cliente.apellido }}
                 </mat-option>
               </mat-select>
