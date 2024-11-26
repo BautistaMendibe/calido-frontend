@@ -4,7 +4,7 @@
       <h2>Ventas mensuales</h2>
     </div>
 
-    <div style="display: block; height: calc(100% - 50px);">
+    <div style="display: block; height: calc(100% - 50px);" *ngIf="ventasMesuales.length > 0">
       <canvas baseChart
               [datasets]="barChartData"
               [labels]="barChartLabels"

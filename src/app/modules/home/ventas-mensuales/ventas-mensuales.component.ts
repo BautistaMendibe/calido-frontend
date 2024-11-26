@@ -43,6 +43,8 @@ export class VentasMensualesComponent implements OnInit {
     this.buscando = true;
     this.ventasService.buscarCantidadVentasMensuales().subscribe((cantidadVentasMensuales) => {
       this.ventasMesuales = cantidadVentasMensuales;
+      this.barChartLabels = this.ventasMesuales.map(venta => venta.mes);
+      this.barChartData[0].data = this.ventasMesuales.map(venta => venta.total);
       this.buscando = false;
     });
   }
@@ -100,7 +102,7 @@ export class VentasMensualesComponent implements OnInit {
 
   public barChartData: ChartDataset<'bar', number[]>[] = [
     {
-      data: [100, 75, 30, 25, 50, 60, 100, 150, 90, 100, 110, 120],
+      data: [],
       label: 'Ventas',
       backgroundColor: 'rgba(246,121,86,0.5)',
       borderColor: 'rgba(225, 91, 53, 1)',
