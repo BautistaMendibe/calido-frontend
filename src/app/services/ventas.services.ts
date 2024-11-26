@@ -12,6 +12,7 @@ import {CondicionIva} from "../models/CondicionIva.model";
 import {TipoFactura} from "../models/tipoFactura.model";
 import {FiltrosVentas} from "../models/comandos/FiltrosVentas.comando";
 import {VentasMensuales} from "../models/comandos/dashboard/VentasMensuales.comando";
+import {VentasDiariaComando} from "../models/comandos/dashboard/VentasDiaria.comando";
 
 
 @Injectable({
@@ -62,6 +63,13 @@ export class VentasService {
 
   public buscarCantidadVentasMensuales(): Observable<VentasMensuales[]>{
     return this.http.get<VentasMensuales[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-mensuales`);
+  }
+
+  public buscarVentasPorDiaYHoraDashboard(fecha: string): Observable<VentasDiariaComando[]>{
+    const body = {
+      fecha: fecha,
+    }
+    return this.http.post<VentasDiariaComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-dia-hora`, body);
   }
 
 }

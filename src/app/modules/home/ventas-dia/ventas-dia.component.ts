@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {Venta} from "../../../models/venta.model";
 import {VentasService} from "../../../services/ventas.services";
 import {Chart, ChartDataset, ChartOptions, registerables} from 'chart.js';
-import {VentasDiariasComando} from "../../../models/comandos/dashboard/VentasDiarias.comando";
+import {VentasDiariaComando} from "../../../models/comandos/dashboard/VentasDiaria.comando";
 
 Chart.register(...registerables);
 
@@ -12,14 +11,53 @@ Chart.register(...registerables);
   styleUrl: './ventas-dia.component.scss'
 })
 export class VentasDiaComponent implements OnInit{
-  private ventasHoy: VentasDiariasComando[] = [];
-  private ventasAyer: VentasDiariasComando[] = [];
+  public ventasHoy: VentasDiariaComando[] = [];
+  public ventasAyer: VentasDiariaComando[] = [];
+  public buscandoHoy: boolean = false;
+  public buscandoAyer: boolean = false;
+
 
   constructor(private ventasService: VentasService) {
   }
 
   ngOnInit() {
-    //this.buscarTotalVentasHoy();
+    this.buscarTotalVentasHoy();
+    this.buscarTotalVentasAyer();
+  }
+
+  private buscarTotalVentasHoy() {
+    const fechaHora = new Date();
+    const hours = fechaHora.getHours();
+    const minutes = fechaHora.getMinutes();
+    const seconds = fechaHora.getSeconds() || 0;
+
+    fechaHora.setHours(hours, minutes, seconds);
+    this.buscandoHoy = true;
+
+    this.ventasService.buscarVentasPorDiaYHoraDashboard(fechaHora.toISOString()).subscribe((ventas) => {
+      this.ventasHoy = ventas;
+      this.lineChartData[0].data = this.ventasHoy.map(venta => venta.total);
+      this.buscandoHoy = false;
+    });
+  }
+
+
+  private buscarTotalVentasAyer() {
+    const hoy = new Date();
+    const ayer = new Date(hoy);
+    ayer.setDate(hoy.getDate() - 1);
+    const hours = ayer.getHours();
+    const minutes = ayer.getMinutes();
+    const seconds = ayer.getSeconds() || 0;
+    ayer.setHours(hours, minutes, seconds);
+    this.buscandoAyer = true;
+
+    this.ventasService.buscarVentasPorDiaYHoraDashboard(ayer.toISOString()).subscribe((ventas) => {
+      this.ventasAyer = ventas;
+      this.lineChartLabels = this.ventasAyer.map(venta => venta.hora);
+      this.lineChartData[1].data = this.ventasHoy.map(venta => venta.total);
+      this.buscandoAyer = false;
+    });
   }
 
   public lineChartOptions: ChartOptions<'line'> = {
@@ -89,7 +127,7 @@ export class VentasDiaComponent implements OnInit{
   public lineChartData: ChartDataset<'line', number[]>[] = [
     {
       type: 'line',
-      data: [200, 300, 400, 500, 573, 600, 550, 500],
+      data: [],
       label: 'Today',
       borderColor: 'rgba(225, 91, 53, 1)',
       backgroundColor: 'rgb(248,135,99)',
@@ -98,7 +136,7 @@ export class VentasDiaComponent implements OnInit{
     },
     {
       type: 'line',
-      data: [150, 250, 350, 400, 451, 480, 470, 420],
+      data: [],
       label: 'Yesterday',
       borderColor: 'rgba(128, 128, 128, 1)',
       backgroundColor: 'rgba(128, 128, 128, 0.1)',
