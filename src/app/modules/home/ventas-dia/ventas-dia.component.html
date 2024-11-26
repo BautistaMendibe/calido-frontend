@@ -4,6 +4,10 @@
       <h2>Ventas diarias</h2>
     </div>
 
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
     <div class="row align-items-start" *ngIf="!buscando && ventas.length > 0">
       <div class="col-3 mt-2">
         <div class="d-flex align-items-center">

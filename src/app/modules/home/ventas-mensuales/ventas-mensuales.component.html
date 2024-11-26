@@ -4,7 +4,11 @@
       <h2>Ventas mensuales</h2>
     </div>
 
-    <div style="display: block; height: calc(100% - 50px);" *ngIf="ventasMesuales.length > 0">
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div style="display: block; height: calc(100% - 50px);" *ngIf="ventasMesuales.length > 0 && !buscando">
       <canvas baseChart
               [datasets]="barChartData"
               [labels]="barChartLabels"
