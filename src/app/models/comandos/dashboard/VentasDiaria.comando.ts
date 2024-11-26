@@ -1,11 +1,15 @@
 export class VentasDiariaComando {
   hora: string;
-  total: number;
-  totalDelDia: number;
+  totalHoy: number;
+  totalAyer: number;
+  totalDelDiaHoy: number;
+  totalDelDiaAyer: number;
 
-  constructor(hora?: string, total?: number, totalDelDia?: number) {
+  constructor(hora?: string, totalHoy?: number, totalAyer?: number, totalDelDiaHoy?: number, totalDelDiaAyer?: number) {
     this.hora = hora!;
-    this.total = total!;
-    this.totalDelDia = totalDelDia!;
+    this.totalHoy = totalHoy!;
+    this.totalAyer = totalAyer!;
+    this.totalDelDiaHoy = totalDelDiaHoy!;
+    this.totalDelDiaAyer = totalDelDiaAyer!;
   }
 }

@@ -4,7 +4,7 @@
       <h2>Ventas diarias</h2>
     </div>
 
-    <div class="row align-items-start" *ngIf="!buscandoHoy && !buscandoAyer">
+    <div class="row align-items-start" *ngIf="!buscando && ventas.length > 0">
       <div class="col-3 mt-2">
         <div class="d-flex align-items-center">
           <div class="color-indicator today"></div>
@@ -12,7 +12,7 @@
         </div>
         <div class="d-flex align-items-baseline">
           <p class="currency-symbol">$</p>
-          <h1 class="value ms-1">{{ventasHoy[0].totalDelDia}}</h1>
+          <h1 class="value ms-1">{{ventas[0].totalDelDiaHoy}}</h1>
         </div>
 
         <div class="d-flex align-items-center mt-2">
@@ -21,7 +21,7 @@
         </div>
         <div class="d-flex align-items-baseline">
           <p class="currency-symbol">$</p>
-          <h1 class="value ms-1">{{ventasAyer[0].totalDelDia}}</h1>
+          <h1 class="value ms-1">{{ventas[0].totalDelDiaAyer}}</h1>
         </div>
       </div>
 

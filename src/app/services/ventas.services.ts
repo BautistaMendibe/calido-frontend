@@ -65,11 +65,8 @@ export class VentasService {
     return this.http.get<VentasMensuales[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-mensuales`);
   }
 
-  public buscarVentasPorDiaYHoraDashboard(fecha: string): Observable<VentasDiariaComando[]>{
-    const body = {
-      fecha: fecha,
-    }
-    return this.http.post<VentasDiariaComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-dia-hora`, body);
+  public buscarVentasPorDiaYHoraDashboard(): Observable<VentasDiariaComando[]>{
+    return this.http.get<VentasDiariaComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-dia-hora`);
   }
 
 }

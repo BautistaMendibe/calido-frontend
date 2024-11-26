@@ -11,54 +11,29 @@ Chart.register(...registerables);
   styleUrl: './ventas-dia.component.scss'
 })
 export class VentasDiaComponent implements OnInit{
-  public ventasHoy: VentasDiariaComando[] = [];
-  public ventasAyer: VentasDiariaComando[] = [];
-  public buscandoHoy: boolean = false;
-  public buscandoAyer: boolean = false;
+  public ventas: VentasDiariaComando[] = [];
+  public buscando: boolean = false;
 
 
   constructor(private ventasService: VentasService) {
   }
 
   ngOnInit() {
-    this.buscarTotalVentasHoy();
-    this.buscarTotalVentasAyer();
+    this.buscarTotalVentas();
   }
 
-  private buscarTotalVentasHoy() {
-    const fechaHora = new Date();
-    const hours = fechaHora.getHours();
-    const minutes = fechaHora.getMinutes();
-    const seconds = fechaHora.getSeconds() || 0;
+  private buscarTotalVentas() {
+    this.buscando = true;
 
-    fechaHora.setHours(hours, minutes, seconds);
-    this.buscandoHoy = true;
-
-    this.ventasService.buscarVentasPorDiaYHoraDashboard(fechaHora.toISOString()).subscribe((ventas) => {
-      this.ventasHoy = ventas;
-      this.lineChartData[0].data = this.ventasHoy.map(venta => venta.total);
-      this.buscandoHoy = false;
+    this.ventasService.buscarVentasPorDiaYHoraDashboard().subscribe((ventas) => {
+      this.ventas = ventas;
+      this.lineChartLabels = this.ventas.map(venta => venta.hora);
+      this.lineChartData[0].data = this.ventas.map(venta => venta.totalHoy);
+      this.lineChartData[1].data = this.ventas.map(venta => venta.totalAyer);
+      this.buscando = false;
     });
   }
 
-
-  private buscarTotalVentasAyer() {
-    const hoy = new Date();
-    const ayer = new Date(hoy);
-    ayer.setDate(hoy.getDate() - 1);
-    const hours = ayer.getHours();
-    const minutes = ayer.getMinutes();
-    const seconds = ayer.getSeconds() || 0;
-    ayer.setHours(hours, minutes, seconds);
-    this.buscandoAyer = true;
-
-    this.ventasService.buscarVentasPorDiaYHoraDashboard(ayer.toISOString()).subscribe((ventas) => {
-      this.ventasAyer = ventas;
-      this.lineChartLabels = this.ventasAyer.map(venta => venta.hora);
-      this.lineChartData[1].data = this.ventasHoy.map(venta => venta.total);
-      this.buscandoAyer = false;
-    });
-  }
 
   public lineChartOptions: ChartOptions<'line'> = {
     responsive: true,
