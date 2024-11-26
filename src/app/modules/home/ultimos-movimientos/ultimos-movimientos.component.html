@@ -5,7 +5,7 @@
     </div>
 
     <!-- Input de búsqueda -->
-    <div class="col">
+    <div class="col" *ngIf="ultimosMovimientos.length > 0 && !buscando">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Buscar</mat-label>
         <input type="text" [formControl]="txBuscar" id="txBuscar" matInput />
@@ -13,20 +13,24 @@
       </mat-form-field>
     </div>
 
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
     <!-- Contenedor de la lista con scroll -->
-    <div class="transaction-list-container">
+    <div class="transaction-list-container" *ngIf="ultimosMovimientos.length > 0 && !buscando">
       <div *ngFor="let ultimoMovimiento of movimientosFiltrados">
         <div class="transaction-item">
           <div class="icon-container">
-            <mat-icon>{{ ultimoMovimiento.icon }}</mat-icon>
+            <mat-icon>{{ ultimoMovimiento.icono }}</mat-icon>
           </div>
           <div class="details">
-            <div class="name">{{ ultimoMovimiento.tipo }}</div>
+            <div class="name">{{ ultimoMovimiento.nombre }}</div>
             <div class="subtitle">N°: {{ ultimoMovimiento.codigo }}</div>
           </div>
           <div class="amount-time">
-            <div class="amount">{{ ultimoMovimiento.cantidad ? '$' + ultimoMovimiento.cantidad : '-' }}</div>
-            <div class="time">{{ ultimoMovimiento.dia + ' ' + ultimoMovimiento.hora }}</div>
+            <div class="amount">{{ ultimoMovimiento.costo ? '$' + ultimoMovimiento.costo : '-' }}</div>
+            <div class="time">{{ ultimoMovimiento.fecha | date: 'dd/MM/yyyy' }}</div>
           </div>
         </div>
       </div>

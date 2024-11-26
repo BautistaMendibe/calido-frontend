@@ -1,17 +1,19 @@
 export class UltimosMovimientosComando {
-  hora: string;
-  cantidad: number;
-  tipo: string;
-  dia: string;
-  icon: string;
+  id: number;
+  nombre: string;
   codigo: number;
+  costo: number;
+  fecha: Date;
+  icono: string;
+  usuario: string;
 
-  constructor(hora?: string, cantidad?: number, tipo?: string, dia?: string, icon?: string, codigo?: number) {
-    this.hora = hora!;
-    this.cantidad = cantidad!;
-    this.tipo = tipo!;
-    this.dia = dia!;
-    this.icon = icon!;
+  constructor(nombre?: string, id?: number, codigo?:number, costo?: number, fecha?: Date, icono?: string, usuario?: string) {
+    this.nombre = nombre!;
+    this.id = id!;
     this.codigo = codigo!;
+    this.costo = costo!;
+    this.fecha = fecha!;
+    this.icono = icono!;
+    this.usuario = usuario!;
   }
 }

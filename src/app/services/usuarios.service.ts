@@ -14,6 +14,7 @@ import {Motivo} from "../models/motivo.model";
 import {Licencia} from "../models/licencia.model";
 import {FiltrosLicencias} from "../models/comandos/FiltrosLicencias.comando";
 import {EstadoLicencia} from "../models/estadoLicencia.model";
+import {UltimosMovimientosComando} from "../models/comandos/dashboard/UltimosMovimientos.comando";
 
 @Injectable({
   providedIn: 'root'
@@ -126,5 +127,9 @@ export class UsuariosService {
 
   public buscarUltimosClientes(): Observable<Usuario[]>{
     return this.http.get<Usuario[]>(`${this.urlBackend}/${this.controllerName}/buscar-ultimos-clientes`);
+  }
+
+  public buscarUltimosMovimientos(): Observable<UltimosMovimientosComando[]>{
+    return this.http.get<UltimosMovimientosComando[]>(`${this.urlBackend}/${this.controllerName}/buscar-ultimos-logs`);
   }
 }
