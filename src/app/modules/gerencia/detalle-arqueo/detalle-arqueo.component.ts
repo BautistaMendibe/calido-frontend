@@ -24,6 +24,7 @@ export class DetalleArqueoComponent implements OnInit {
   public idArqueo: string | null = null;
   public arqueo: Arqueo = new Arqueo();
   public formasPago: FormaDePago[] = [];
+  public filtradoPorFormasPago: FormaDePago[] = [];
   public ventas: Venta[] = [];
   public isLoading: boolean = false;
   public movimientosManuales: MovimientoManual[] = [];
@@ -31,6 +32,7 @@ export class DetalleArqueoComponent implements OnInit {
   public totalOtrosMedios: number = 0;
   public diferenciaCaja: number = 0;
   public diferenciaOtrosMedios: number = 0;
+  public formaPagoDefecto!: number;
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public columnas: string[] = ['fecha', 'formaPago', 'descripcion', 'tipoMovimiento', 'montoTotal'];
@@ -102,6 +104,13 @@ export class DetalleArqueoComponent implements OnInit {
         }
         return forma;
       });
+
+      const todas = new FormaDePago();
+      todas.id = 0;
+      todas.nombre = 'Todas';
+
+      this.filtradoPorFormasPago = [todas, ...this.formasPago]
+      this.formaPagoDefecto = todas.id;
     });
   }
 
@@ -114,6 +123,17 @@ export class DetalleArqueoComponent implements OnInit {
         this.buscarVentas();
       }
     });
+  }
+
+  public filtrarTabla(idFormaPago: number): void {
+    if (idFormaPago === 0) {
+      // Si se selecciona "Todas", muestra todos los datos
+      this.tableDataSource.filter = '';
+    } else {
+      // Filtra por la forma de pago seleccionada
+      this.tableDataSource.filterPredicate = (data: any) => data.formaDePago.id === idFormaPago;
+      this.tableDataSource.filter = idFormaPago.toString();
+    }
   }
 
   public buscarVentas() {
@@ -161,25 +181,34 @@ export class DetalleArqueoComponent implements OnInit {
         .reduce((sum: number, venta: Venta) => sum + venta.montoTotal, 0);
 
       const ingresosMovimientos = this.movimientosManuales
-        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento === 1)
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento === 'ingreso')
         .reduce((sum: number, mov: MovimientoManual) => sum + mov.monto, 0);
 
       forma.totalIngresos = ingresosVentas + ingresosMovimientos;
       forma.detallesIngresos = [
-        { concepto: 'Ventas', monto: ingresosVentas },
-        { concepto: 'Movimientos Manuales', monto: ingresosMovimientos },
+        { concepto: 'Ventas facturadas', monto: ingresosVentas },
+        { concepto: 'Movimientos manuales', monto: ingresosMovimientos },
       ];
 
       // Calcula los egresos
-      const egresosMovimientos = this.movimientosManuales
-        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento === 2)
-        .reduce((sum: number, mov: MovimientoManual) => sum + mov.monto, 0);
+      const egresosVentas = this.ventas
+        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaAnulacion !== null)
+        .reduce((sum: number, venta: Venta) => sum + (venta.montoTotal * -1), 0);
 
-      forma.totalEgresos = egresosMovimientos;
+      const egresosMovimientos = this.movimientosManuales
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento === 'egreso')
+        .reduce((sum: number, mov: MovimientoManual) => sum + (mov.monto * -1), 0);
+
+      forma.totalEgresos = egresosVentas + egresosMovimientos;
       forma.detallesEgresos = [
-        { concepto: 'Movimientos Manuales', monto: egresosMovimientos },
+        { concepto: 'Ventas anuladas', monto: egresosVentas },
+        { concepto: 'Movimientos manuales', monto: egresosMovimientos },
       ];
     });
+  }
+
+  public registrarMovimiento() {
+
   }
 
   get txTipoMovimiento(): FormControl {
