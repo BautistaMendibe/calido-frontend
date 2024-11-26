@@ -1,9 +1,27 @@
-<div>
-  <h2 mat-dialog-title>Código QR</h2>
-  <mat-dialog-content>
-    <img [src]="data.imageUrl" alt="Código QR" style="max-width: 100%; height: auto;" />
-  </mat-dialog-content>
-  <mat-dialog-actions align="end">
-    <button mat-button (click)="closeDialog()">Cerrar</button>
-  </mat-dialog-actions>
+
+<div class="container py-3 col-xl-11 form-emergente">
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">Pago con QR</p>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="row pt-4">
+    <div class="col-md-12 d-flex justify-content-center">
+      <img [src]="data.imageUrl" alt="Código QR" style="max-width: 100%; height: auto;" />
+    </div>
+  </div>
+
+  <div class="row pt-4">
+    <div class="col-md-12 d-flex justify-content-center">
+      <p class="titulo">Estado: <span id="estadoPago">{{ estadoPago }}</span></p>
+    </div>
+  </div>
+
+  <div class="row pt-4">
+    <div class="col d-flex justify-content-end">
+      <button mat-raised-button color="accent" class="btn round" (click)="closeDialog()" id="btnBuscar">Cerrar</button>
+    </div>
+  </div>
 </div>

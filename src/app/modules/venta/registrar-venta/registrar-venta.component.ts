@@ -385,17 +385,53 @@ export class RegistrarVentaComponent implements OnInit{
       this.registrandoVenta = true;
 
       if (venta.formaDePago.id == this.formasDePagoEnum.QR) {
-        console.log(venta)
-        this.notificacionService.openSnackBarSuccess('Generando pago.')
+        console.log(venta);
+        this.notificacionService.openSnackBarSuccess('Generando pago.');
+
         this.ventasService.pagarConSIROQR(venta).subscribe({
           next: (respuestaPago) => {
             console.log('Respuesta recibida:', respuestaPago);
-            if (respuestaPago.mensaje === 'OK') {
+            if ((respuestaPago as { Hash: string }).Hash) {
               this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
+
+              // Usa IdReferenciaOperacion para consultar el estado del pago
+              const idReferencia = (respuestaPago as { IdReferenciaOperacion: string }).IdReferenciaOperacion;
+              console.log('IdReferenciaOperacion:', idReferencia);
+
               console.log('MOSTRANDO QR');
-              this.mostrarQR();
-            } else {
-              this.notificacionService.openSnackBarError('Error al generar el pago.');
+              this.mostrarQR(idReferencia);
+
+              if (idReferencia) {
+                this.ventasService.consultaPagoSIROQR(idReferencia).subscribe({
+                  next: (respuestaConsulta) => {
+                    if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
+                      // Accedemos al último elemento del array
+                      const resultado = respuestaConsulta[respuestaConsulta.length - 1];
+
+                      // Extraemos los valores
+
+                      const pagoExitoso = resultado.PagoExitoso;
+                      const estado = resultado.Estado;
+
+                      console.log('Pago Exitoso:', pagoExitoso);
+                      console.log('Estado:', estado);
+
+                      // Lógica basada en los valores
+                      if (pagoExitoso && estado === 'PROCESADA') {
+                        this.notificacionService.openSnackBarSuccess('El pago fue exitoso.');
+                      } else {
+                        this.notificacionService.openSnackBarError(`El pago está en estado: ${estado}.`);
+                      }
+                    } else {
+                      this.notificacionService.openSnackBarError('No se encontró información del pago.');
+                    }
+                  },
+                  error: (err) => {
+                    console.error('Error al consultar el estado del pago:', err);
+                    this.notificacionService.openSnackBarError('Ocurrió un error al consultar el estado del pago.');
+                  }
+                });
+              }
             }
           },
           error: (err) => {
@@ -403,7 +439,6 @@ export class RegistrarVentaComponent implements OnInit{
             this.notificacionService.openSnackBarError('Error en la solicitud.');
           }
         });
-
       }
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
@@ -541,10 +576,11 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
-  public mostrarQR(): void {
+  public mostrarQR(idReferenciaOperacion: string): void {
     const qrImageUrl = 'assets/imgs/QR_SIRO.png'; // Ruta de tu imagen QR en el frontend
     this.dialog.open(QRVentanaComponent, {
-      data: { imageUrl: qrImageUrl },
+      data: { imageUrl: qrImageUrl,
+        idReferenciaOperacion: idReferenciaOperacion},
       width: '400px'
     });
   }

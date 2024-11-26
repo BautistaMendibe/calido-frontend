@@ -60,8 +60,12 @@ export class VentasService {
   }
 
   public pagarConSIROQR(venta: Venta): Observable<SpResult>{
-    console.log('Endpoint:', `${this.urlBackend}/${this.controllerName}/generar-pago`);
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/generar-pago`, venta);
+  }
+
+  public consultaPagoSIROQR(IdReferenciaOperacion: string): Observable<SpResult>{
+    const body = { IdReferenciaOperacion: IdReferenciaOperacion };
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/consultar-pago`, body);
   }
 
 }
