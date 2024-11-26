@@ -9,3 +9,157 @@
 .row-equal-height > .col-md-6 > mat-card {
   flex: 1;
 }
+
+/* Contenedor del monto inicial */
+.monto-inicial-container {
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+/* Contenedor de cada forma de pago */
+.forma-pago-container {
+  border: 1px solid #ccc;
+  padding: 15px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  background-color: #fefefe;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.1);
+}
+
+/* Título de la forma de pago */
+.forma-pago-nombre {
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  display: flex;
+  align-items: center;
+}
+
+/* Icono y texto alineados a la izquierda */
+.forma-pago-icon {
+  margin-right: 8px; /* Espacio entre el ícono y el texto */
+}
+
+.forma-pago-nombre span {
+  flex: 1;
+}
+
+.mat-icon-button {
+  margin-left: auto;
+  color: #333;
+}
+
+/* Detalles de ingresos y egresos */
+.forma-pago-detalles {
+  padding: 10px;
+  border-top: 1px solid #ddd;
+  margin-top: 10px;
+}
+
+/* Títulos de ingresos y egresos */
+.ingresos-titulo, .egresos-titulo {
+  font-size: 1rem;
+  font-weight: bold;
+  color: mediumseagreen;
+}
+
+.egresos-titulo {
+  color: indianred;
+}
+
+/* Totales */
+.ingresos-total, .egresos-total {
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+/* Detalles */
+.detalle {
+  font-size: 0.9rem;
+  color: #555;
+  margin-left: 15px;
+}
+
+/* Contenedor principal */
+.totales-container {
+  margin-top: 20px;
+  padding: 15px;
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Contenedor de cada sección */
+.diferencia-container {
+  margin-bottom: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #fefefe;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Cabecera de la sección */
+.diferencia-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.diferencia-icon {
+  color: #333;
+  margin-right: 10px;
+}
+
+.diferencia-container:nth-child(2) .diferencia-icon {
+  color: #2196f3; /* Azul para Otros Medios */
+}
+
+.diferencia-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+/* Cuerpo de la sección */
+.diferencia-body {
+  padding: 10px 0;
+}
+
+/* Elementos de cada total */
+.total-item {
+  display: flex;
+  justify-content: space-between;
+  margin: 10px 0;
+}
+
+.label {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* Clase base para diferencia (rojo) */
+.value {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Clase para valores negativos de diferencia (rojo) */
+.negativo {
+  color: indianred;
+}
+
+/* Clase para valores cero de diferencia (azul) */
+.cero {
+  color: cornflowerblue;
+}
+
+/* Clase para valores positivos de diferencia (verde) */
+.positivo {
+  color: mediumseagreen;
+}
+
+
+

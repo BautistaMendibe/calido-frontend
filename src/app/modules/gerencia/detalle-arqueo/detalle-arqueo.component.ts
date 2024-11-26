@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {CajasService} from "../../../services/cajas.service";
@@ -12,6 +12,7 @@ import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {FormaDePago} from "../../../models/formaDePago.model";
+import {MovimientoManual} from "../../../models/movimientoManual.model";
 
 @Component({
   selector: 'app-detalle-arqueo',
@@ -25,19 +26,17 @@ export class DetalleArqueoComponent implements OnInit {
   public formasPago: FormaDePago[] = [];
   public ventas: Venta[] = [];
   public isLoading: boolean = false;
-  public totalPorFormaPago: [string, number][] = [];
+  public movimientosManuales: MovimientoManual[] = [];
+  public totalCaja: number = 0;
+  public totalOtrosMedios: number = 0;
+  public diferenciaCaja: number = 0;
+  public diferenciaOtrosMedios: number = 0;
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public columnas: string[] = ['fecha', 'formaPago', 'descripcion', 'tipoMovimiento', 'montoTotal'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  tipoMovimiento: string = '';
-  detalleEfectivo: boolean = false;
-  detalleTarjeta: boolean = false;
-  detalleMercadoPago: boolean = false;
-  detalleEgreso: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -65,12 +64,44 @@ export class DetalleArqueoComponent implements OnInit {
       txDescripcion: ['', []],
       txMonto: ['', []],
       txFormaPago: ['', []],
+      txCantidadDineroCaja: ['', [Validators.required]],
+      txCantidadDineroOtrosMedios: ['', [Validators.required]],
     });
   }
 
   public buscarFormasPago() {
     this.ventasService.buscarFormasDePago().subscribe((formasPago) => {
-      this.formasPago = formasPago;
+      // Asignar las formas de pago recibidas del servicio
+      this.formasPago = formasPago.map((forma) => {
+        // Agregar el ícono representativo según el ID
+        switch (forma.id) {
+          case 1: // Efectivo
+            forma.icon = 'payments';
+            break;
+          case 2: // Tarjeta de débito
+            forma.icon = 'credit_card';
+            break;
+          case 3: // Tarjeta de crédito
+            forma.icon = 'credit_score';
+            break;
+          case 4: // Mercado Pago
+            forma.icon = 'account_balance_wallet';
+            break;
+          case 5: // Transferencia
+            forma.icon = 'account_balance';
+            break;
+          case 6: // Cuenta Corriente
+            forma.icon = 'receipt';
+            break;
+          case 7: // QR
+            forma.icon = 'qr_code';
+            break;
+          default:
+            forma.icon = 'help';
+            break;
+        }
+        return forma;
+      });
     });
   }
 
@@ -105,7 +136,7 @@ export class DetalleArqueoComponent implements OnInit {
         this.tableDataSource.paginator = this.paginator;
         this.tableDataSource.sort = this.sort;
         this.isLoading = false;
-        this.calcularTotalesPorFormaPago();
+        this.calcularFormasPago();
       });
     }
   }
@@ -118,40 +149,37 @@ export class DetalleArqueoComponent implements OnInit {
     });
   }
 
-  toggleDetalle(tipo: string): void {
-    switch (tipo) {
-      case 'efectivo':
-        this.detalleEfectivo = !this.detalleEfectivo;
-        break;
-      case 'tarjeta':
-        this.detalleTarjeta = !this.detalleTarjeta;
-        break;
-      case 'mercadopago':
-        this.detalleMercadoPago = !this.detalleMercadoPago;
-        break;
-      case 'egreso':
-        this.detalleEgreso = !this.detalleEgreso;
-        break;
-    }
+  public toggleDetalle(forma: any): void {
+    forma.detalleVisible = !forma.detalleVisible;
   }
 
-  public calcularTotalesPorFormaPago() {
-    const totales: { [key: string]: number } = {};
+  public calcularFormasPago(): void {
+    this.formasPago.forEach((forma) => {
+      // Calcula los ingresos
+      const ingresosVentas = this.ventas
+        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaAnulacion === null)
+        .reduce((sum: number, venta: Venta) => sum + venta.montoTotal, 0);
 
-    for (let venta of this.ventas) {
-      const formaPago = venta.formaDePago.nombre;
-      const monto = parseFloat(String(venta.montoTotal));
+      const ingresosMovimientos = this.movimientosManuales
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento === 1)
+        .reduce((sum: number, mov: MovimientoManual) => sum + mov.monto, 0);
 
-      if (totales[formaPago]) {
-        totales[formaPago] += monto;
-      } else {
-        totales[formaPago] = monto;
-      }
-    }
+      forma.totalIngresos = ingresosVentas + ingresosMovimientos;
+      forma.detallesIngresos = [
+        { concepto: 'Ventas', monto: ingresosVentas },
+        { concepto: 'Movimientos Manuales', monto: ingresosMovimientos },
+      ];
 
-    this.totalPorFormaPago = this.formasPago
-      .filter(forma => totales[forma.nombre] !== undefined)
-      .map(forma => [forma.nombre, totales[forma.nombre]] as [string, number]);
+      // Calcula los egresos
+      const egresosMovimientos = this.movimientosManuales
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento === 2)
+        .reduce((sum: number, mov: MovimientoManual) => sum + mov.monto, 0);
+
+      forma.totalEgresos = egresosMovimientos;
+      forma.detallesEgresos = [
+        { concepto: 'Movimientos Manuales', monto: egresosMovimientos },
+      ];
+    });
   }
 
   get txTipoMovimiento(): FormControl {
@@ -168,5 +196,13 @@ export class DetalleArqueoComponent implements OnInit {
 
   get txFormaPago(): FormControl {
     return this.form.get('txFormaPago') as FormControl;
+  }
+
+  get txCantidadDineroCaja(): FormControl {
+    return this.form.get('txCantidadDineroCaja') as FormControl;
+  }
+
+  get txCantidadDineroOtrosMedios(): FormControl {
+    return this.form.get('txCantidadDineroOtrosMedios') as FormControl;
   }
 }

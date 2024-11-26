@@ -9,12 +9,23 @@
   <div class="row row-equal-height">
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4 style="color: grey">Información del Arqueo de Caja</h4>
+        <h4 style="color: grey">Información del arqueo de caja</h4>
         <mat-divider></mat-divider>
         <br>
-        <p><strong>Caja:</strong> {{ arqueo.caja ? arqueo.caja.nombre : 'No disponible' }}</p>
-        <p><strong>Fecha de apertura:</strong> {{ arqueo.fechaApertura | date: 'dd/MM/yyyy' }} {{ arqueo.horaApertura }}</p>
-        <p><strong>Estado:</strong> {{ arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible' }}</p>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Caja</mat-label>
+          <input matInput type="text" [value]="arqueo.caja ? arqueo.caja.nombre : 'No disponible'" readonly>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="text" [value]="(arqueo.fechaApertura | date: 'dd/MM/yyyy') + ' ' + arqueo.horaApertura"  readonly>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Estado</mat-label>
+          <input matInput type="text" [value]="arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible'" readonly>
+        </mat-form-field>
       </mat-card>
     </div>
 
@@ -141,64 +152,135 @@
   <div class="row mt-4 row-equal-height">
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4>Detalle de Ventas</h4>
-        <p><strong>Monto inicial:</strong> $ {{ arqueo.montoInicial | number:'1.2-2':'es-AR' }}</p>
+        <h4 style="color: grey">Detalle de Ventas</h4>
+        <mat-divider></mat-divider>
+        <br>
 
-        <h5>Ingresos</h5>
-        <p>
-          <strong>Efectivo:</strong> $1,500.00
-          <button mat-icon-button (click)="toggleDetalle('efectivo')">
-            <mat-icon>{{ detalleEfectivo ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleEfectivo">
-          <p> - Ventas: $1,200.00</p>
-          <p> - Movimiento Manual: $300.00</p>
+        <!-- Monto inicial -->
+        <div>
+          <mat-form-field appearance="outline" class="w-100 monto-inicial">
+            <mat-label>Monto Inicial</mat-label>
+            <input
+              matInput
+              type="text"
+              [value]="'$ ' + arqueo.montoInicial"
+              readonly
+            />
+          </mat-form-field>
         </div>
 
-        <p>
-          <strong>Tarjeta Crédito/Débito:</strong> $800.00
-          <button mat-icon-button (click)="toggleDetalle('tarjeta')">
-            <mat-icon>{{ detalleTarjeta ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleTarjeta">
-          <p> - Ventas: $800.00</p>
-        </div>
+        <!-- Formas de pago -->
+        <div *ngFor="let forma of formasPago" class="forma-pago-container">
+          <div class="forma-pago-header">
+            <h5 class="forma-pago-nombre">
+              <mat-icon class="forma-pago-icon">{{ forma.icon }}</mat-icon>
+              <span>{{ forma.nombre }}</span>
+              <button mat-icon-button (click)="toggleDetalle(forma)">
+                <mat-icon>{{ forma.detalleVisible ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </h5>
+          </div>
 
-        <p>
-          <strong>MercadoPago:</strong> $400.00
-          <button mat-icon-button (click)="toggleDetalle('mercadopago')">
-            <mat-icon>{{ detalleMercadoPago ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleMercadoPago">
-          <p> - Ventas: $400.00</p>
-        </div>
+          <div *ngIf="forma.detalleVisible" class="forma-pago-detalles">
+            <!-- Ingresos -->
+            <div class="ingresos-container">
+              <h6 class="ingresos-titulo">Ingresos</h6>
+              <p class="ingresos-total">
+                <strong>Total:</strong> $ {{ forma.totalIngresos | number:'1.2-2':'es-AR' }}
+              </p>
+              <p *ngFor="let detalle of forma.detallesIngresos" class="detalle">
+                - {{ detalle.concepto }}: $  {{ detalle.monto | number:'1.2-2':'es-AR' }}
+              </p>
+            </div>
 
-        <h5>Egresos</h5>
-        <p>
-          <strong>Efectivo:</strong> $200.00
-          <button mat-icon-button (click)="toggleDetalle('egreso')">
-            <mat-icon>{{ detalleEgreso ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleEgreso">
-          <p> - Pago a proveedor: $200.00</p>
+            <!-- Egresos -->
+            <div class="egresos-container">
+              <h6 class="egresos-titulo">Egresos</h6>
+              <p class="egresos-total">
+                <strong>Total:</strong> $ {{ forma.totalEgresos | number:'1.2-2':'es-AR' }}
+              </p>
+              <p *ngFor="let detalle of forma.detallesEgresos" class="detalle">
+                - {{ detalle.concepto }}: $ {{ detalle.monto | number:'1.2-2':'es-AR' }}
+              </p>
+            </div>
+          </div>
         </div>
       </mat-card>
     </div>
 
+
     <!-- Dinero en Caja -->
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4>Dinero en Caja</h4>
+        <h4 style="color: grey">Resumen del arqueo de hoy</h4>
+        <mat-divider></mat-divider>
+        <br>
+
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Cantidad de dinero en caja</mat-label>
-          <input matInput type="text" mask="separator.2" prefix="$" thousandSeparator=",">
+          <input matInput [formControl]="txCantidadDineroCaja" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
         </mat-form-field>
-        <p><strong>Total registrado en sistema:</strong> $1,500.00</p>
-        <p><strong>Diferencia:</strong> $-100.00</p>
+        <app-error-messages [control]="txCantidadDineroCaja"></app-error-messages>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cantidad de dinero de otros medios</mat-label>
+          <input matInput [formControl]="txCantidadDineroOtrosMedios" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
+        </mat-form-field>
+        <app-error-messages [control]="txCantidadDineroOtrosMedios"></app-error-messages>
+
+        <div class="totales-container">
+          <!-- Caja -->
+          <div class="diferencia-container">
+            <div class="diferencia-header">
+              <mat-icon class="diferencia-icon">payments</mat-icon>
+              <h4 class="diferencia-title">Resumen de caja</h4>
+            </div>
+            <div class="diferencia-body">
+              <p class="total-item">
+                <span class="label">Total registrado en caja por sistema:</span>
+                <span class="value sistema">$ {{ this.totalCaja | number:'1.2-2':'es-AR' }}</span>
+              </p>
+              <p class="total-item">
+                <span class="label">Diferencia según el usuario:</span>
+                <span
+                  class="value"
+                  [ngClass]="{
+                    'negativo': this.diferenciaCaja < 0,
+                    'cero': this.diferenciaCaja === 0,
+                    'positivo': this.diferenciaCaja > 0
+                  }">
+                  $ {{ this.diferenciaCaja | number:'1.2-2':'es-AR' }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Otros Medios -->
+          <div class="diferencia-container">
+            <div class="diferencia-header">
+              <mat-icon class="diferencia-icon">credit_card</mat-icon>
+              <h4 class="diferencia-title">Resumen de otros medios</h4>
+            </div>
+            <div class="diferencia-body">
+              <p class="total-item">
+                <span class="label">Total registrado en otros medios por sistema:</span>
+                <span class="value sistema">$ {{ this.totalOtrosMedios | number:'1.2-2':'es-AR' }}</span>
+              </p>
+              <p class="total-item">
+                <span class="label">Diferencia según el usuario:</span>
+                <span
+                  class="value"
+                  [ngClass]="{
+                    'negativo': this.diferenciaOtrosMedios < 0,
+                    'cero': this.diferenciaOtrosMedios === 0,
+                    'positivo': this.diferenciaOtrosMedios > 0
+                  }">
+                  $ {{ this.diferenciaOtrosMedios | number:'1.2-2':'es-AR' }}
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
       </mat-card>
     </div>
   </div>
