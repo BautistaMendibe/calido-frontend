@@ -7,6 +7,9 @@ import {Caja} from "../../../models/Caja.model";
 import {ConsultarArqueoCajaComponent} from "../consultar-arqueo-caja/consultar-arqueo-caja.component";
 import {Arqueo} from "../../../models/Arqueo.model";
 import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {Usuario} from "../../../models/usuario.model";
 
 @Component({
   selector: 'app-registrar-arqueo-caja',
@@ -23,6 +26,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
 
   public fechaHoy: Date;
   public listaCajas: Caja[] = [];
+  public listaEmpleados: Usuario[] = [];
 
   constructor(
     private fb: FormBuilder,
@@ -30,6 +34,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
     private cajasService: CajasService,
+    private usuariosService: UsuariosService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarArqueoCajaComponent;
       esConsulta: boolean;
@@ -50,6 +55,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   ngOnInit() {
     this.crearFormulario();
     this.buscarCajas();
+    this.buscarEmpleados();
 
     if (this.formDesactivado) {
       this.form.disable();
@@ -62,12 +68,19 @@ export class RegistrarArqueoCajaComponent implements OnInit {
       txFechaApertura: [this.data.arqueo?.fechaApertura || new Date(), [Validators.required]],
       txHoraApertura: [this.data.arqueo?.horaApertura || '', [Validators.required]],
       txMontoInicial: [this.data.arqueo?.montoInicial || '', [Validators.required]],
+      txResponsable: [this.data.arqueo?.responsable?.id || '', [Validators.required]]
     });
   }
 
   private buscarCajas(){
     this.cajasService.consultarCajas(new FiltrosCajas()).subscribe((cajas) => {
       this.listaCajas = cajas;
+    });
+  }
+
+  private buscarEmpleados(){
+    this.usuariosService.consultarEmpleados(new FiltrosEmpleados()).subscribe((empleados) => {
+      this.listaEmpleados = empleados;
     });
   }
 
@@ -97,7 +110,8 @@ export class RegistrarArqueoCajaComponent implements OnInit {
       idCaja: this.txCaja.value,
       fechaApertura: this.txFechaApertura.value,
       horaApertura: this.txHoraApertura.value,
-      montoInicial: this.txMontoInicial.value
+      montoInicial: this.txMontoInicial.value,
+      responsable: this.txResponsable.value
     } as Arqueo;
   }
 
@@ -123,6 +137,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
 
     if (this.data.arqueo?.idEstadoArqueo == 2) {
       this.txMontoInicial.disable();
+      this.txResponsable.disable();
     }
 
     this.formDesactivado = false;
@@ -144,5 +159,9 @@ export class RegistrarArqueoCajaComponent implements OnInit {
 
   get txMontoInicial() {
     return this.form.get('txMontoInicial') as FormControl;
+  }
+
+  get txResponsable() {
+    return this.form.get('txResponsable') as FormControl;
   }
 }
