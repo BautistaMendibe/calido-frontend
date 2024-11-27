@@ -104,7 +104,7 @@
                   <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verArqueo(arqueo, true)" [disabled]="this.arqueo?.idEstadoArqueo == 2">
                     <mat-icon class="editar">edit</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarArqueo(arqueo.id)">
+                  <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarArqueo(arqueo.id)" [disabled]="this.arqueo?.idEstadoArqueo == 2">
                     <mat-icon class="eliminar">delete</mat-icon>
                   </button>
                   <button mat-icon-button color="primary" matTooltip="Ver Detalle Arqueo" (click)="verDetalleArqueo(arqueo.id)">
