@@ -142,20 +142,23 @@ export class DetalleArqueoComponent implements OnInit {
     this.cajasService.consultarMovimientosManuales(idArqueo).subscribe((movimientos: MovimientoManual[]) => {
       this.movimientosManuales = movimientos;
 
-      // mapear los movimientos manuales al formato de la tabla
-      if (this.movimientosManuales.length > 0) {
-        const movimientosParaTabla = movimientos.map((movimiento) => ({
-          id: movimiento.id,
-          fecha: movimiento.fechaMovimiento,
-          formaDePago: { id: movimiento.formaPago.id, nombre: movimiento.formaPago.nombre },
-          descripcion: movimiento.descripcion,
-          tipoMovimiento: movimiento.tipoMovimiento,
-          montoTotal: movimiento.tipoMovimiento.toLowerCase() === 'egreso' ? -Math.abs(movimiento.monto) : Math.abs(movimiento.monto) // si es egreso debería ser negativo
-        }) as unknown as Venta); // perdon al que sea que lea esto
+      // Mapeamos los movimientos manuales al formato de la tabla
+      const movimientosParaTabla = movimientos.map((movimiento) => ({
+        id: movimiento.id,
+        fecha: movimiento.fechaMovimiento,
+        formaDePago: { id: movimiento.formaPago.id, nombre: movimiento.formaPago.nombre },
+        descripcion: movimiento.descripcion,
+        tipoMovimiento: movimiento.tipoMovimiento,
+        montoTotal: movimiento.tipoMovimiento.toLowerCase() === 'egreso' ? -Math.abs(movimiento.monto) : Math.abs(movimiento.monto) // Si es egreso debería ser negativo
+      }) as unknown as Venta);
 
-        this.tableDataSource.data = [...this.tableDataSource.data, ...movimientosParaTabla];
-      }
+      // Filtrar datos que NO son movimientos manuales
+      const datosNoMovimientos = this.tableDataSource.data.filter((item: any) => !this.movimientosManuales.some(mov => mov.id === item.id));
 
+      // Combinar datos no relacionados con los nuevos movimientos
+      this.tableDataSource.data = [...datosNoMovimientos, ...movimientosParaTabla];
+
+      // Si el arqueo está cerrado, rellenamos los datos y deshabilitamos el formulario
       if (this.arqueo.horaCierre) {
         this.rellenarDatosFormulario();
         this.deshabilitarFormulario();
