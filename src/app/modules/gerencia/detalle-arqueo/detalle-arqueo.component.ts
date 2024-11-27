@@ -305,7 +305,7 @@ export class DetalleArqueoComponent implements OnInit {
 
         if (forma.id === 6) egresos = 0;
 
-        this.totalOtrosMedios += ingresos - egresos;
+        this.totalOtrosMedios += ingresos + egresos;
       }
     });
 
