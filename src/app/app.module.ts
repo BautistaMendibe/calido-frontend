@@ -66,6 +66,14 @@ import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arque
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { VentasDiaComponent } from './modules/home/ventas-dia/ventas-dia.component';
+import { VentasMensualesComponent } from './modules/home/ventas-mensuales/ventas-mensuales.component';
+import { BaseChartDirective } from 'ng2-charts';
+import { UltimosMovimientosComponent } from './modules/home/ultimos-movimientos/ultimos-movimientos.component';
+import { ProductosStockLimitadoComponent } from './modules/home/productos-stock-limitado/productos-stock-limitado.component';
+import { AsistenciasEmpleadosComponent } from './modules/home/asistencias-empleados/asistencias-empleados.component';
+import { UltimosClientesRegistradosComponent } from './modules/home/ultimos-clientes-registrados/ultimos-clientes-registrados.component';
+import { OrdenesDeCompraComponent } from './modules/home/ordenes-de-compra/ordenes-de-compra.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -117,7 +125,14 @@ registerLocaleData(localeEs, 'es');
     RegistrarCajaComponent,
     RegistrarArqueoCajaComponent,
     DetalleArqueoComponent,
-    ErrorMessagesComponent
+    ErrorMessagesComponent,
+    VentasDiaComponent,
+    VentasMensualesComponent,
+    UltimosMovimientosComponent,
+    ProductosStockLimitadoComponent,
+    AsistenciasEmpleadosComponent,
+    UltimosClientesRegistradosComponent,
+    OrdenesDeCompraComponent
   ],
   imports: [
     BrowserModule,
@@ -134,7 +149,8 @@ registerLocaleData(localeEs, 'es');
     NgxMaskDirective,
     NgxMaskPipe,
     FormsModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    BaseChartDirective
   ],
   providers: [
     HealthService,
