@@ -1,0 +1,34 @@
+<mat-card>
+  <div class="col p-1">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <h2>Productos con stock mínimo</h2>
+        <button class="btn" mat-icon-button matTooltip="Crear orden de compra" (click)="crearOrdenDeCompra()">
+          <mat-icon style="font-size: 20px; color: #e15b35">receipt</mat-icon>
+        </button>
+      </div>
+    </div>
+
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div class="product-list-container" *ngIf="listaProductos">
+      <div *ngFor="let producto of listaProductos">
+        <div class="product-item">
+          <div class="icon-container">
+            <img [src]="producto.imgProducto" alt="Imagen del producto" class="product-image" />
+          </div>
+          <div class="details">
+            <div class="name">{{ producto.nombre }}</div>
+            <div class="subtitle">CB: {{ producto.codigoBarra }}</div>
+            <div class="subtitle">Proveedor: {{ producto.proveedor }}</div>
+          </div>
+          <div class="amount">
+            {{ producto.cantidadEnStock }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>

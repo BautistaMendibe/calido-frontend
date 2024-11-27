@@ -1,0 +1,39 @@
+<mat-card>
+  <div class="col p-1">
+    <div class="row">
+      <h2>Últimos movimientos</h2>
+    </div>
+
+    <!-- Input de búsqueda -->
+    <div class="col" *ngIf="ultimosMovimientos.length > 0 && !buscando">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Buscar</mat-label>
+        <input type="text" [formControl]="txBuscar" id="txBuscar" matInput />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <!-- Contenedor de la lista con scroll -->
+    <div class="transaction-list-container" *ngIf="ultimosMovimientos.length > 0 && !buscando">
+      <div *ngFor="let ultimoMovimiento of movimientosFiltrados">
+        <div class="transaction-item">
+          <div class="icon-container">
+            <mat-icon>{{ ultimoMovimiento.icono }}</mat-icon>
+          </div>
+          <div class="details">
+            <div class="name">{{ ultimoMovimiento.nombre }}</div>
+            <div class="subtitle">N°: {{ ultimoMovimiento.codigo }}</div>
+          </div>
+          <div class="amount-time">
+            <div class="amount">{{ ultimoMovimiento.costo ? '$' + ultimoMovimiento.costo : '-' }}</div>
+            <div class="time">{{ ultimoMovimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</mat-card>

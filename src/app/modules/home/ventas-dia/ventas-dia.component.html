@@ -1,0 +1,43 @@
+<mat-card>
+  <div class="col p-1">
+    <div class="row">
+      <h2>Ventas diarias</h2>
+    </div>
+
+    <div class="spinner-wrapper" *ngIf="buscando">
+      <mat-spinner></mat-spinner>
+    </div>
+
+    <div class="row align-items-start" *ngIf="!buscando && ventas.length > 0">
+      <div class="col-3 mt-2">
+        <div class="d-flex align-items-center">
+          <div class="color-indicator today"></div>
+          <h3 class="ms-2">Hoy</h3>
+        </div>
+        <div class="d-flex align-items-baseline">
+          <p class="currency-symbol">$</p>
+          <h1 class="value ms-1">{{ventas[0].totalDelDiaHoy}}</h1>
+        </div>
+
+        <div class="d-flex align-items-center mt-2">
+          <div class="color-indicator yesterday"></div>
+          <h3 class="ms-2">Ayer</h3>
+        </div>
+        <div class="d-flex align-items-baseline">
+          <p class="currency-symbol">$</p>
+          <h1 class="value ms-1">{{ventas[0].totalDelDiaAyer}}</h1>
+        </div>
+      </div>
+
+      <div class="col">
+        <canvas style="display: block; height: calc(100% - 30px); margin-top: 22px"
+                baseChart
+                [type]="'line'"
+                [datasets]="lineChartData"
+                [labels]="lineChartLabels"
+                [options]="lineChartOptions">
+        </canvas>
+      </div>
+    </div>
+  </div>
+</mat-card>

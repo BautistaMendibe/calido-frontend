@@ -1,0 +1,55 @@
+mat-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #494949;
+  height: 250px;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: lighter;
+  color: #575757;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0;
+}
+
+.currency-symbol {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.value {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.color-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.today {
+  background-color: #e15b35;
+}
+
+.yesterday {
+  background-color: #979797;
+}
+
+canvas {
+  height: 100% !important;
+  width: 100% !important;
+}

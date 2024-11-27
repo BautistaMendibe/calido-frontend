@@ -1,0 +1,131 @@
+mat-card {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 10px 15px;
+  color: #494949;
+  height: 270px;
+}
+
+h2 {
+  font-size: 15px;
+  font-weight: lighter;
+  color: #575757;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 0;
+}
+
+h3 {
+  font-size: 14px;
+  font-weight: normal;
+  margin: 0;
+}
+
+.no-ordenes-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px; /* Ajusta la altura según tus necesidades */
+  text-align: center;
+  color: #757575;
+}
+
+
+.ordenes-list-container {
+  max-height: 180px; /* Altura máxima del contenedor */
+  overflow-y: auto;  /* Habilita el scroll vertical */
+  padding-right: 5px; /* Espaciado para evitar que el scroll tape contenido */
+}
+
+.orden-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #e0e0e0;
+  margin-right: 10px;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  .icon-container {
+    margin-right: 20px;
+
+    .product-image {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%; /* Hace la imagen circular */
+      object-fit: cover; /* Ajusta la imagen al contenedor circular */
+    }
+  }
+
+  .details {
+    flex: 1;
+
+    .name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 2px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      color: #757575;
+    }
+  }
+
+  .amount {
+    font-weight: bold;
+    font-size: 16px;
+    text-align: right;
+  }
+
+  .time {
+    font-size: 12px;
+    color: #757575;
+  }
+}
+
+.orden-item:hover {
+  background: #f8f8f8; /* Cambia el fondo al pasar el mouse */
+}
+
+.estado-recibido {
+  background-color: #d4edda;
+  color: #318142;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.estado-recibido-diferencias {
+  background-color: #fff3cd;
+  color: #eab318;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.estado-cancelado {
+  background-color: #ffdfe2;
+  color: #83393f;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.estado-pendiente {
+  background-color: #dffaff;
+  color: #397a83;
+  padding: 5px;
+  border-radius: 3px;
+}
+
+.estado-devuelto {
+  background-color: #eedfff;
+  color: #5d3983;
+  padding: 5px;
+  border-radius: 3px;
+}
