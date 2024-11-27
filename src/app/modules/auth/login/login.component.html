@@ -13,14 +13,14 @@
           <!-- Campos adicionales solo para el registro -->
           <div *ngIf="!existeConfiguracion">
             <div class="row">
-              <div class="col-6">
+              <div class="col">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Nombre</mat-label>
                   <input type="text" matInput [formControl]="txNombre"/>
                 </mat-form-field>
                 <app-error-messages [control]="txNombre"></app-error-messages>
               </div>
-              <div class="col-6">
+              <div class="col">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Apellido</mat-label>
                   <input type="text" matInput [formControl]="txApellido"/>
@@ -38,6 +38,14 @@
                 <input type="text" matInput [formControl]="txNombreUsuario"/>
               </mat-form-field>
               <app-error-messages [control]="txNombreUsuario"></app-error-messages>
+            </div>
+
+            <div class="col" *ngIf="!existeConfiguracion">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Email</mat-label>
+                <input type="email" matInput [formControl]="txMail"/>
+              </mat-form-field>
+              <app-error-messages [control]="txMail"></app-error-messages>
             </div>
           </div>
 

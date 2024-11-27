@@ -76,7 +76,8 @@ export class LoginComponent implements OnInit{
           Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
-      txConfirmarContrasena: ['', [Validators.required]]
+      txConfirmarContrasena: ['', [Validators.required]],
+      txMail: ['', [Validators.required, this.emailValidator()]]
     }, { validators: this.passwordMatchValidator.bind(this) });
   }
 
@@ -95,6 +96,18 @@ export class LoginComponent implements OnInit{
       confirmPassword.setErrors(null);
       return null;
     }
+  }
+
+  private emailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+      const valid = emailPattern.test(control.value);
+      return valid ? null : { invalidEmail: { value: control.value } };
+    };
   }
 
   public iniciarSesion(){
@@ -130,6 +143,7 @@ export class LoginComponent implements OnInit{
       superusuario.nombre = this.txNombre.value;
       superusuario.apellido = this.txApellido.value;
       superusuario.contrasena = this.txContrasena.value;
+      superusuario.mail = this.txMail.value;
 
       this.usuariosService.registrarSuperusuario(superusuario).subscribe({
         next: (resultadoUsuario) => {
@@ -188,6 +202,10 @@ export class LoginComponent implements OnInit{
 
   get txConfirmarContrasena(): FormControl {
     return this.formLogin.get('txConfirmarContrasena') as FormControl
+  }
+
+  get txMail(): FormControl {
+    return this.formLogin.get('txMail') as FormControl;
   }
   // endregion
 }
