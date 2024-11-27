@@ -189,11 +189,20 @@ export class RegistrarVentaComponent implements OnInit{
         this.txTarjeta.enable();
       });
 
+      if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
+        this.mostrarTarjetasCuotas = false;
+        this.txCuotas.setValue(null);
+        this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
+        this.calcularTotal();
+      }
+
     } else {
       this.mostrarTarjetasCuotas = false;
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
       this.txTarjeta.enable();
+      this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
+      this.calcularTotal();
     }
   }
 
@@ -236,14 +245,9 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularSubTotal() {
-    //this.subTotal = 0;
-    //this.productosSeleccionados.forEach((producto) => {
-    //  this.subTotal += (producto.precioSinIVA * producto.cantidadSeleccionada);
-    //});
-    //this.impuestoIva = this.subTotal * 0.21;
     this.subTotal = 0;
     this.productosSeleccionados.forEach((producto) => {
-      this.subTotal += (producto.precioConIVA * producto.cantidadSeleccionada);
+      this.subTotal += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadSeleccionada);
     });
     this.calcularTotal();
   }
@@ -276,7 +280,6 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   private calcularTotal() {
-    //this.totalVenta = this.subTotal + this.impuestoIva;
     this.totalVenta = this.subTotal;
 
     if (this.cantidadCuotaSeleccionada?.id){

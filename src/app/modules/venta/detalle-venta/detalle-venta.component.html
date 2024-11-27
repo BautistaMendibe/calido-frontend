@@ -69,6 +69,24 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="col-md-4" *ngIf="venta.descuento">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Descuento por tarjeta</mat-label>
+          <input type="text" matInput [formControl]="txDescuento" mask="separator.2" prefix="% " thousandSeparator=","/>
+        </mat-form-field>
+        <app-error-messages [control]="txDescuento"></app-error-messages>
+      </div>
+
+      <div class="col-md-4" *ngIf="venta.interes">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Interés por tarjeta</mat-label>
+          <input type="text" matInput [formControl]="txInteres" mask="separator.2" prefix="% " thousandSeparator=","/>
+        </mat-form-field>
+        <app-error-messages [control]="txInteres"></app-error-messages>
+      </div>
+    </div>
+
     <br>
     <h3 class="subtitulo">Cliente:</h3>
     <mat-divider class="my-3"></mat-divider>

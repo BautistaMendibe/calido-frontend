@@ -37,5 +37,6 @@ export class ErrorMessagesComponent {
     { key: 'horaInvalida', message: () => 'Hora salida debe ser mayor a hora entrada.' },
     { key: 'passwordMismatch', message: () => 'Las contraseñas no coinciden.' },
     { key: 'invalidPercentage', message: () => 'El porcentaje debe ser mayor a 0 y menor o igual a 100.' },
+    { key: 'invalidEmail', message: () => 'El email ingresado no es válido.' },
   ];
 }

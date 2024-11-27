@@ -81,7 +81,7 @@
               <!-- Precio del producto -->
               <div class="row align-items-center text-center mb-3">
                 <div class="col">
-                  <strong [ngClass]="!producto.seleccionadoParaVenta ? 'product-price' : 'product-price-seleccionado'" >$ {{producto.precioConIVA | number:'1.2-2':'es-AR' }}</strong>
+                  <strong [ngClass]="!producto.seleccionadoParaVenta ? 'product-price' : 'product-price-seleccionado'" >$ {{producto.precioConIVA * (1 - (this.producto.promocion ? this.producto.promocion.porcentajeDescuento : 0) / 100) | number:'1.2-2':'es-AR' }}</strong>
                 </div>
               </div>
             </div>
@@ -212,8 +212,8 @@
             <div class="d-flex justify-content-between align-items-center border-bottom p-3 producto-item">
               <div class="col-4 d-flex flex-column">
                 <span class="m-0"><b>{{ producto.nombre }}</b></span>
-                <span class="text-muted">P/U: $ {{ producto.precioConIVA | number:'1.2-2':'es-AR' }}</span>
-                <span class="text-muted" *ngIf="producto.promocion?.id" [matTooltip]="producto.promocion.nombre">Promoción: - {{ producto.promocion.porcentajeDescuento + '%' }}</span>
+                <span class="text-muted">P/U: $ {{ (producto.precioConIVA) | number:'1.2-2':'es-AR' }}</span>
+                <span class="text-muted" *ngIf="(producto.promocion?.id) &&  producto.promocion?.id != -1" [matTooltip]="producto.promocion.nombre">Promoción: - {{ producto.promocion.porcentajeDescuento + '%' }}</span>
               </div>
               <div class="d-flex align-items-center col-4 justify-content-center">
                 <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
@@ -221,7 +221,7 @@
                 <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)" [disabled]="producto.cantidadSeleccionada == producto.cantidadEnStock">+</button>
               </div>
               <div class="text-end col-4">
-                <span class="m-0 costo"><b>$ {{ producto.precioConIVA * producto.cantidadSeleccionada | number:'1.2-2':'es-AR' }}</b></span>
+                <span class="m-0 costo"><b>$ {{ (producto.precioConIVA * (1 - (this.producto.promocion ? this.producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadSeleccionada | number:'1.2-2':'es-AR' }}</b></span>
                 <div class="iconos-editar-eliminar ">
                   <button mat-icon-button [matTooltip]="'Editar en esta venta'" (click)="editarProductoEnVenta(producto)">
                     <mat-icon>edit</mat-icon>
@@ -239,17 +239,6 @@
         <div class="container mt-4" *ngIf="productosSeleccionados.length > 0 && cantidadCuotaSeleccionada.id">
 
           <div class="summary-container">
-            <!--
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span class="text-summary">$ {{ subTotal | number:'1.2-2':'es-AR' }}</span>
-            </div>
-            <div class="dotted-line"></div>
-            <div class="summary-row">
-              <span>IVA (21,00%)</span>
-              <span class="text-summary">$ {{ impuestoIva | number:'1.2-2':'es-AR' }}</span>
-            </div>
-            -->
             <div>
               <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.descuento">
                 <span>Descuento por tarjeta ({{ this.cantidadCuotaSeleccionada.descuento ? (this.cantidadCuotaSeleccionada.descuento | number:'1.2-2':'es-AR') : 0 }}%)</span>
