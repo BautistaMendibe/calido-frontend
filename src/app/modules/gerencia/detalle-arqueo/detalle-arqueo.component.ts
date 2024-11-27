@@ -51,7 +51,7 @@ export class DetalleArqueoComponent implements OnInit {
     private cajasService: CajasService,
     private ventasService: VentasService,
     private route: ActivatedRoute,
-    private notificationDialogService: NotificationService,
+    private notificationDialogService: NotificationService
   ) {
     this.form = new FormGroup({});
   }
@@ -127,16 +127,14 @@ export class DetalleArqueoComponent implements OnInit {
       if (arqueos.length > 0) {
         this.arqueo = arqueos[0];
         this.buscarVentas();
-
-        if (this.arqueo.horaCierre) {
-          this.rellenarDatosFormulario();
-          this.deshabilitarFormulario();
-        }
       }
     });
   }
 
   private rellenarDatosFormulario() {
+    this.calcularFormasPago();
+    this.txCantidadDineroCaja.setValue(this.arqueo.cantidadDineroCajaUsuario);
+    this.txCantidadDineroOtrosMedios.setValue(this.arqueo.cantidadDineroOtrosUsuario);
   }
 
   public buscarMovimientos() {
@@ -158,7 +156,13 @@ export class DetalleArqueoComponent implements OnInit {
         this.tableDataSource.data = [...this.tableDataSource.data, ...movimientosParaTabla];
       }
 
-      this.calcularFormasPago();
+      if (this.arqueo.horaCierre) {
+        this.rellenarDatosFormulario();
+        this.deshabilitarFormulario();
+      } else {
+        this.calcularFormasPago();
+      }
+
       this.isLoading = false;
     });
   }
@@ -237,14 +241,14 @@ export class DetalleArqueoComponent implements OnInit {
 
   public calcularFormasPago(): void {
     this.formasPago.forEach((forma) => {
-      // Calcula los ingresos
+      // Asegurar números
       const ingresosVentas = this.ventas
         .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaFacturacion && !v.fechaAnulacion)
-        .reduce((sum: number, venta: Venta) => sum + venta.montoTotal, 0);
+        .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
 
       const ingresosMovimientos = this.movimientosManuales
         .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'ingreso')
-        .reduce((sum: number, mov: MovimientoManual) => sum + mov.monto, 0);
+        .reduce((sum: number, mov: MovimientoManual) => sum + Number(mov.monto), 0);
 
       forma.totalIngresos = ingresosVentas + ingresosMovimientos;
       forma.detallesIngresos = [
@@ -252,78 +256,60 @@ export class DetalleArqueoComponent implements OnInit {
         { concepto: 'Movimientos manuales', monto: ingresosMovimientos },
       ];
 
-      // Calcula los egresos
+      // Egresos
       const egresosVentas = this.ventas
         .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && (v.fechaAnulacion || !v.fechaFacturacion))
-        .reduce((sum: number, venta: Venta) => sum + venta.montoTotal, 0);
+        .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
 
       const egresosMovimientos = this.movimientosManuales
         .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'egreso')
-        .reduce((sum: number, mov: MovimientoManual) => sum + (mov.monto * -1), 0);
+        .reduce((sum: number, mov: MovimientoManual) => sum + (Number(mov.monto) * -1), 0);
 
       forma.totalEgresos = egresosVentas + egresosMovimientos;
       forma.detallesEgresos = [
-        {
-          concepto: forma.id === 6 ? 'Cuentas corrientes pendientes de pago' : 'Ventas anuladas',
-          monto: egresosVentas
-        },
-        { concepto: 'Movimientos manuales', monto: egresosMovimientos }
+        { concepto: forma.id === 6 ? 'Cuentas corrientes pendientes de pago' : 'Ventas anuladas', monto: egresosVentas },
+        { concepto: 'Movimientos manuales', monto: egresosMovimientos },
       ];
     });
 
-    this.calcularTotalesYDiferencias(this.formasPago)
+    this.calcularTotalesYDiferencias(this.formasPago);
   }
 
   private calcularTotalesYDiferencias(listaFormasPago: FormaDePago[]): void {
-    // Inicializar totales
     this.totalCaja = 0;
     this.totalOtrosMedios = 0;
     this.diferenciaCaja = 0;
     this.diferenciaOtrosMedios = 0;
 
-    // Buscar la forma de pago en efectivo
     const formaEfectivo = listaFormasPago.find((forma) => forma.nombre.toLowerCase() === 'efectivo');
 
     if (formaEfectivo) {
-      // Calcular total en caja (efectivo)
       this.totalCaja =
         (Number(this.arqueo?.montoInicial) || 0) +
-        (formaEfectivo.totalIngresos || 0) +
-        (formaEfectivo.totalEgresos || 0);
+        (Number(formaEfectivo.totalIngresos) || 0) +
+        (Number(formaEfectivo.totalEgresos) || 0);
 
-      // Calcular diferencia en caja
-      const montoUsuarioCaja = this.txCantidadDineroCaja.value || 0;
-      if (montoUsuarioCaja || montoUsuarioCaja === 0) {
-        // si el total llegase a ser negativo, la resta pasa a ser suma
-        this.diferenciaCaja = this.totalCaja < 0
-          ? montoUsuarioCaja + this.totalCaja
-          : montoUsuarioCaja - this.totalCaja;
-      }
+      const montoUsuarioCaja = Number(this.txCantidadDineroCaja.value) || 0;
+      this.diferenciaCaja = this.totalCaja < 0
+        ? montoUsuarioCaja + this.totalCaja
+        : montoUsuarioCaja - this.totalCaja;
     }
 
-    // Calcular totales para otros medios
     listaFormasPago.forEach((forma) => {
       if (forma.nombre.toLowerCase() !== 'efectivo') {
-        const ingresos = forma.totalIngresos || 0;
-        let egresos = forma.totalEgresos || 0;
+        const ingresos = Number(forma.totalIngresos) || 0;
+        let egresos = Number(forma.totalEgresos) || 0;
 
-        // Excluir egresos por cuenta corriente (id 6)
-        if (forma.id === 6) {
-          egresos = 0;
-        }
+        if (forma.id === 6) egresos = 0;
 
         this.totalOtrosMedios += ingresos - egresos;
       }
     });
 
-    // Calcular diferencia en otros medios
-    const montoUsuarioOtrosMedios = this.txCantidadDineroOtrosMedios.value || 0;
-    if (montoUsuarioOtrosMedios || montoUsuarioOtrosMedios === 0) {
-      // si el total llegase a ser negativo, la resta pasa a ser suma
-      this.diferenciaOtrosMedios = this.totalOtrosMedios < 0
-        ? montoUsuarioOtrosMedios + this.totalOtrosMedios
-        : montoUsuarioOtrosMedios - this.totalOtrosMedios;
-    }
+    const montoUsuarioOtrosMedios = Number(this.txCantidadDineroOtrosMedios.value) || 0;
+    this.diferenciaOtrosMedios = this.totalOtrosMedios < 0
+      ? montoUsuarioOtrosMedios + this.totalOtrosMedios
+      : montoUsuarioOtrosMedios - this.totalOtrosMedios;
   }
 
   public registrarMovimiento() {
@@ -408,6 +394,8 @@ export class DetalleArqueoComponent implements OnInit {
       arqueo.diferenciaOtros = this.diferenciaOtrosMedios;
       arqueo.montoSistemaCaja = this.totalCaja;
       arqueo.montoSistemaOtros = this.totalOtrosMedios;
+      arqueo.cantidadDineroCajaUsuario = this.txCantidadDineroCaja.value;
+      arqueo.cantidadDineroOtrosUsuario = this.txCantidadDineroOtrosMedios.value;
 
       this.notificationDialogService.confirmation(
         `¿Desea cerrar el arqueo?

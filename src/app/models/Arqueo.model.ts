@@ -19,6 +19,8 @@ export class Arqueo {
   montoSistemaCaja: number;
   montoSistemaOtros: number;
   diferenciaOtros: number;
+  cantidadDineroCajaUsuario: number;
+  cantidadDineroOtrosUsuario: number;
 
   constructor(
     id?: number,
@@ -35,7 +37,9 @@ export class Arqueo {
     caja?: Caja,
     montoSistemaCaja?: number,
     montoSistemaOtros?: number,
-    diferenciaOtros?: number
+    diferenciaOtros?: number,
+    cantidadDineroCajaUsuario?: number,
+    cantidadDineroOtrosUsuario?: number
   ) {
     this.id = id!;
     this.fechaApertura = fechaApertura!;
@@ -52,5 +56,7 @@ export class Arqueo {
     this.montoSistemaCaja = montoSistemaCaja!;
     this.montoSistemaOtros = montoSistemaOtros!;
     this.diferenciaOtros = diferenciaOtros!;
+    this.cantidadDineroCajaUsuario = cantidadDineroCajaUsuario!;
+    this.cantidadDineroOtrosUsuario = cantidadDineroOtrosUsuario!;
   }
 }
