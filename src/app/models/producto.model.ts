@@ -29,6 +29,8 @@ export class Producto {
   estaEnPromocion: boolean;
   promocion: Promocion;
 
+  leyenda: string;
+
   constructor(
     id?: number,
     nombre?: string,
@@ -52,7 +54,8 @@ export class Producto {
     descuentoPromocion?: number,
     descuentoTarjeta?: number,
     estaEnPromocion?: boolean,
-    promocion?: Promocion
+    promocion?: Promocion,
+    leyenda?: string
   ) {
     this.id = id!;
     this.nombre = nombre!;
@@ -77,5 +80,6 @@ export class Producto {
     this.descuentoTarjeta = descuentoTarjeta!;
     this.estaEnPromocion = estaEnPromocion!;
     this.promocion = promocion!;
+    this.leyenda = leyenda!;
   }
 }

@@ -367,11 +367,11 @@ export class RegistrarVentaComponent implements OnInit{
       venta.facturacion.id = this.txTipoFacturacion.value;
       const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
       venta.facturacion.nombre = selectedTipoFacturacion?.nombre;
-      venta.montoTotal = this.totalVenta;
       venta.detalleVenta = [];
       venta.productos = this.productosSeleccionados;
       venta.idEmpleado = this.txEmpleado.value;
       venta.idCaja = this.txCaja.value;
+      venta.montoTotal = this.totalVenta;
 
       // Si el pago es con tarjeta se registran esos datos
       venta.tarjeta = this.tarjetaSeleccionada.nombre;
