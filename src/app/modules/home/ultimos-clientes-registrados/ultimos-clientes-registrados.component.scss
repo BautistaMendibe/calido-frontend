@@ -27,9 +27,9 @@ h3 {
 
 
 .clientes-list-container {
-  max-height: 230px; /* Altura máxima del contenedor */
+  max-height: 200px; /* Altura máxima del contenedor */
   overflow-y: auto;  /* Habilita el scroll vertical */
-  padding-right: 5px; /* Espaciado para evitar que el scroll tape contenido */
+  padding-right: 5px;  /* Espaciado para evitar que el scroll tape contenido */
 }
 
 .cliente-item {
