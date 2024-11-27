@@ -89,9 +89,14 @@
 
   <br><br>
 
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+
   <!-- Filtro y Tabla de Ventas -->
   <div class="row mt-4">
-    <div class="col-md-4">
+    <div class="col-md-4" *ngIf="!(ventas.length === 0 && movimientosManuales.length === 0)">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Forma de Pago</mat-label>
         <button mat-icon-button matPrefix>
@@ -106,7 +111,7 @@
     </div>
 
     <div class="col-md-12 mt-3">
-      <mat-card class="mat-card" [hidden]="ventas.length === 0">
+      <mat-card class="mat-card" [hidden]="ventas.length === 0 && movimientosManuales.length === 0">
         <mat-card-content>
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
 
@@ -122,7 +127,12 @@
 
             <ng-container matColumnDef="descripcion">
               <mat-header-cell *matHeaderCellDef>DESCRIPCION</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ (venta.anulada === true) ? 'Anulación de venta' : 'Venta' }} {{ venta.id }}</mat-cell>
+              <mat-cell *matCellDef="let venta">
+                <!-- Mostrar descripción personalizada si está disponible -->
+                {{ venta.descripcion ? venta.descripcion : ((venta.anulada === true) ? 'Anulación de venta' : 'Venta') }}
+                <!-- Mostrar el ID si es una venta -->
+                {{ (venta.id && !venta.descripcion) ? '(ID: ' + venta.id + ')' : '' }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="tipoMovimiento">
@@ -133,6 +143,20 @@
             <ng-container matColumnDef="montoTotal">
               <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
               <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="acciones">
+              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
+              <mat-cell *matCellDef="let venta" data-label="Acciones">
+                <button
+                  mat-icon-button
+                  color="primary"
+                  matTooltip="Eliminar"
+                  *ngIf="venta.descripcion"
+                  (click)="eliminarMovimiento(venta.id)">
+                  <mat-icon class="eliminar">delete</mat-icon>
+                </button>
+              </mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
@@ -148,6 +172,10 @@
     </div>
   </div>
 
+  <h5 *ngIf="!isLoading && this.ventas.length === 0 && this.movimientosManuales.length === 0" class="alert alert-secondary text-center">
+    Aún no hay movimientos registrados en la jornada laboral. Aparecerán aquí cuando los haya.
+  </h5>
+
   <br>
 
   <!-- Detalle de Ventas -->
@@ -161,7 +189,7 @@
         <!-- Monto inicial -->
         <div>
           <mat-form-field appearance="outline" class="w-100 monto-inicial">
-            <mat-label>Monto Inicial</mat-label>
+            <mat-label>Monto Inicial (Efectivo en caja)</mat-label>
             <input
               matInput
               type="text"
@@ -204,6 +232,9 @@
               <p *ngFor="let detalle of forma.detallesEgresos" class="detalle">
                 - {{ detalle.concepto }}: $ {{ detalle.monto | number:'1.2-2':'es-AR' }}
               </p>
+              <p class="leyenda-cta-cte" *ngIf="forma.id === 6">
+                Los egresos de Cuenta Corriente se muestran de forma informativa, no se suman al total de egresos.
+              </p>
             </div>
           </div>
         </div>
@@ -214,12 +245,12 @@
     <!-- Dinero en Caja -->
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4 style="color: grey">Resumen del arqueo de hoy</h4>
+        <h4 style="color: grey">Resumen del arqueo</h4>
         <mat-divider></mat-divider>
         <br>
 
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Cantidad de dinero en caja</mat-label>
+          <mat-label>Cantidad de dinero en efectivo caja</mat-label>
           <input matInput [formControl]="txCantidadDineroCaja" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
         </mat-form-field>
         <app-error-messages [control]="txCantidadDineroCaja"></app-error-messages>
@@ -247,9 +278,9 @@
                 <span
                   class="value"
                   [ngClass]="{
-                    'negativo': this.diferenciaCaja < 0,
-                    'cero': this.diferenciaCaja === 0,
-                    'positivo': this.diferenciaCaja > 0
+                    'negativo': (Math.round(this.diferenciaCaja * 100) / 100) < 0,
+                    'cero': (Math.round(this.diferenciaCaja * 100) / 100) === 0,
+                    'positivo': (Math.round(this.diferenciaCaja * 100) / 100) > 0
                   }">
                   $ {{ this.diferenciaCaja | number:'1.2-2':'es-AR' }}
                 </span>
@@ -273,9 +304,9 @@
                 <span
                   class="value"
                   [ngClass]="{
-                    'negativo': this.diferenciaOtrosMedios < 0,
-                    'cero': this.diferenciaOtrosMedios === 0,
-                    'positivo': this.diferenciaOtrosMedios > 0
+                    'negativo': (Math.round(this.diferenciaOtrosMedios * 100) / 100) < 0,
+                    'cero': (Math.round(this.diferenciaOtrosMedios * 100) / 100) === 0,
+                    'positivo': (Math.round(this.diferenciaOtrosMedios * 100) / 100) > 0
                   }">
                   $ {{ this.diferenciaOtrosMedios | number:'1.2-2':'es-AR' }}
                 </span>
@@ -290,7 +321,7 @@
   <!-- Botón Finalizar Arqueo -->
   <div class="row mt-4">
     <div class="col d-flex justify-content-end">
-      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2">Finalizar Arqueo</button>
+      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2" (click)="cerrarArqueo()">Finalizar Arqueo</button>
     </div>
   </div>
 
