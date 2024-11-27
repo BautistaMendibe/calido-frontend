@@ -14,17 +14,17 @@
         <br>
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Caja</mat-label>
-          <input matInput type="text" [value]="arqueo.caja ? arqueo.caja.nombre : 'No disponible'" readonly>
+          <input matInput type="text" [value]="arqueo.caja ? arqueo.caja.nombre : 'No disponible'" readonly [disabled]="formDesactivado">
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha</mat-label>
-          <input matInput type="text" [value]="(arqueo.fechaApertura | date: 'dd/MM/yyyy') + ' ' + arqueo.horaApertura"  readonly>
+          <input matInput type="text" [value]="(arqueo.fechaApertura | date: 'dd/MM/yyyy') + ' ' + arqueo.horaApertura"  readonly [disabled]="formDesactivado">
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Estado</mat-label>
-          <input matInput type="text" [value]="arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible'" readonly>
+          <input matInput type="text" [value]="arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible'" readonly [disabled]="formDesactivado">
         </mat-form-field>
       </mat-card>
     </div>
@@ -80,7 +80,7 @@
           <app-error-messages [control]="txMonto"></app-error-messages>
 
           <div class="btnBuscarCointainer">
-            <button mat-raised-button color="accent" class="btn round" id="btnBuscar" (click)="registrarMovimiento()">Añadir movimiento</button>
+            <button mat-raised-button color="accent" class="btn round" id="btnBuscar" (click)="registrarMovimiento()" [disabled]="formDesactivado">Añadir movimiento</button>
           </div>
         </form>
       </mat-card>
@@ -153,7 +153,8 @@
                   color="primary"
                   matTooltip="Eliminar"
                   *ngIf="venta.descripcion"
-                  (click)="eliminarMovimiento(venta.id)">
+                  (click)="eliminarMovimiento(venta.id)"
+                  [disabled]="formDesactivado">
                   <mat-icon class="eliminar">delete</mat-icon>
                 </button>
               </mat-cell>
@@ -195,6 +196,7 @@
               type="text"
               [value]="'$ ' + arqueo.montoInicial"
               readonly
+              [disabled]="formDesactivado"
             />
           </mat-form-field>
         </div>
@@ -321,7 +323,7 @@
   <!-- Botón Finalizar Arqueo -->
   <div class="row mt-4">
     <div class="col d-flex justify-content-end">
-      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2" (click)="cerrarArqueo()">Finalizar Arqueo</button>
+      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2" (click)="cerrarArqueo()" [disabled]="formDesactivado">Finalizar Arqueo</button>
     </div>
   </div>
 

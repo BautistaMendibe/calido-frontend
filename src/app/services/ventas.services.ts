@@ -3,11 +3,8 @@ import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
-import {Usuario} from "../models/usuario.model";
 import {FormaDePago} from "../models/formaDePago.model";
 import {Venta} from "../models/venta.model";
-
-import { FiltrosCuentasCorrientes } from "../models/comandos/FiltrosCuentasCorrientes";
 import {CondicionIva} from "../models/CondicionIva.model";
 import {TipoFactura} from "../models/tipoFactura.model";
 import {FiltrosVentas} from "../models/comandos/FiltrosVentas.comando";
@@ -56,8 +53,8 @@ export class VentasService {
     return this.http.get<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc/${idUsuario}`);
   }
 
-  public buscarVentasFechaHora(fechaHora: string): Observable<Venta[]> {
-    const body = { fechaHora };
+  public buscarVentasFechaHora(fechaHora: string | null, fechaHoraCierre: string | null): Observable<Venta[]> {
+    const body = { fechaHora, fechaHoraCierre };
     return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-fecha-hora`, body);
   }
 

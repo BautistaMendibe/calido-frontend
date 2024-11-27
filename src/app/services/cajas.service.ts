@@ -66,4 +66,8 @@ export class CajasService {
   public consultarMovimientosManuales(idArqueo: number): Observable<MovimientoManual[]>{
     return this.http.get<MovimientoManual[]>(`${this.urlBackend}/${this.controllerName}/consultar-movimientos-manuales/${idArqueo}`);
   }
+
+  public cerrarArqueo(arqueo: Arqueo): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cerrar-arqueo`, arqueo);
+  }
 }

@@ -30,6 +30,7 @@ export class DetalleArqueoComponent implements OnInit {
   public isLoading: boolean = false;
   public movimientosManuales: MovimientoManual[] = [];
   public formaPagoDefecto!: number;
+  public formDesactivado: boolean = false;
 
   // Totales y diferencias
   public totalCaja: number = 0;
@@ -59,8 +60,8 @@ export class DetalleArqueoComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.idArqueo = params.get('id');
       this.crearFormulario();
-      this.buscarFormasPago();
       this.buscarArqueo();
+      this.buscarFormasPago();
       this.filtroSuscripciones();
     });
   }
@@ -126,8 +127,16 @@ export class DetalleArqueoComponent implements OnInit {
       if (arqueos.length > 0) {
         this.arqueo = arqueos[0];
         this.buscarVentas();
+
+        if (this.arqueo.horaCierre) {
+          this.rellenarDatosFormulario();
+          this.deshabilitarFormulario();
+        }
       }
     });
+  }
+
+  private rellenarDatosFormulario() {
   }
 
   public buscarMovimientos() {
@@ -169,19 +178,39 @@ export class DetalleArqueoComponent implements OnInit {
     if (this.arqueo) {
       this.isLoading = true;
       const arqueo = this.arqueo;
+
+      // Crear `fechaHora` con la fecha de apertura
       const fechaHora = new Date(arqueo.fechaApertura);
 
-      // Genera un DATE a partir de la fecha y hora de apertura del arqueo
-      const [hours, minutes, seconds] = (arqueo.horaApertura as unknown as string).split(':').map(Number);
-      fechaHora.setHours(hours, minutes, seconds || 0);
+      // Ajustar la hora para `fechaHora` utilizando `horaApertura`
+      if (arqueo.horaApertura) {
+        const [hours, minutes, seconds] = (arqueo.horaApertura as unknown as string).split(':').map(Number);
+        fechaHora.setHours(hours, minutes, seconds || 0);
+      }
 
-      // Convierte a un string 'es-AR' la fecha y hora del arqueo
-      const fechaHoraLocal = fechaHora.toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' }).replace('T', ' ');
+      // Convertir `fechaHora` al formato de timestamp en zona horaria argentina
+      const fechaHoraLocal = fechaHora
+        .toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' })
+        .replace('T', ' ');
 
-      this.ventasService.buscarVentasFechaHora(fechaHoraLocal).subscribe((ventas: Venta[]) => {
+      let fechaHoraCierreLocal = null;
+
+      // Manejar `fechaHoraCierre` si está disponible
+      if (arqueo.horaCierre) {
+        const fechaHoraCierre = new Date(arqueo.fechaApertura); // Usar la misma fecha base
+        const [hoursCierre, minutesCierre, secondsCierre] = (arqueo.horaCierre as unknown as string).split(':').map(Number);
+        fechaHoraCierre.setHours(hoursCierre, minutesCierre, secondsCierre || 0);
+
+        fechaHoraCierreLocal = fechaHoraCierre
+          .toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' })
+          .replace('T', ' ');
+      }
+
+      // Llamar al servicio con las fechas calculadas
+      this.ventasService.buscarVentasFechaHora(fechaHoraLocal, fechaHoraCierreLocal).subscribe((ventas: Venta[]) => {
         this.ventas = ventas.map((venta) => ({
           ...venta,
-          montoTotal: parseFloat(venta.montoTotal as unknown as string) || 0 // por algun motivo algunas ventas tienen el monto como string
+          montoTotal: parseFloat(venta.montoTotal as unknown as string) || 0, // Convertir a número si es necesario
         }));
 
         this.determinarAnulacion();
@@ -192,6 +221,7 @@ export class DetalleArqueoComponent implements OnInit {
       });
     }
   }
+
 
   private determinarAnulacion() {
     this.ventas.forEach(venta => {
@@ -263,13 +293,11 @@ export class DetalleArqueoComponent implements OnInit {
 
       // Calcular diferencia en caja
       const montoUsuarioCaja = this.txCantidadDineroCaja.value || 0;
-      if (montoUsuarioCaja !== 0) {
+      if (montoUsuarioCaja || montoUsuarioCaja === 0) {
         // si el total llegase a ser negativo, la resta pasa a ser suma
         this.diferenciaCaja = this.totalCaja < 0
           ? montoUsuarioCaja + this.totalCaja
           : montoUsuarioCaja - this.totalCaja;
-      } else {
-        this.diferenciaCaja = 0;
       }
     }
 
@@ -290,13 +318,11 @@ export class DetalleArqueoComponent implements OnInit {
 
     // Calcular diferencia en otros medios
     const montoUsuarioOtrosMedios = this.txCantidadDineroOtrosMedios.value || 0;
-    if (montoUsuarioOtrosMedios !== 0) {
+    if (montoUsuarioOtrosMedios || montoUsuarioOtrosMedios === 0) {
       // si el total llegase a ser negativo, la resta pasa a ser suma
       this.diferenciaOtrosMedios = this.totalOtrosMedios < 0
         ? montoUsuarioOtrosMedios + this.totalOtrosMedios
         : montoUsuarioOtrosMedios - this.totalOtrosMedios;
-    } else {
-      this.diferenciaOtrosMedios = 0;
     }
   }
 
@@ -364,7 +390,7 @@ export class DetalleArqueoComponent implements OnInit {
               this.calcularFormasPago();
 
             } else {
-              this.notificacionService.openSnackBarError('Error al eliminar los movimientos');
+              this.notificacionService.openSnackBarError('Error al eliminar el movimiento, intenta nuevamente.');
             }
           });
         }
@@ -372,7 +398,36 @@ export class DetalleArqueoComponent implements OnInit {
   }
 
   public cerrarArqueo() {
-    
+    if ((this.txCantidadDineroCaja?.value || this.txCantidadDineroCaja?.value == 0) &&
+      (this.txCantidadDineroOtrosMedios?.value || this.txCantidadDineroOtrosMedios?.value == 0)) {
+
+      const arqueo = new Arqueo();
+      arqueo.id = Number(this.idArqueo);
+      arqueo.horaCierre = new Date();
+      arqueo.diferencia = this.diferenciaCaja;
+      arqueo.diferenciaOtros = this.diferenciaOtrosMedios;
+      arqueo.montoSistemaCaja = this.totalCaja;
+      arqueo.montoSistemaOtros = this.totalOtrosMedios;
+
+      this.notificationDialogService.confirmation(
+        `¿Desea cerrar el arqueo?
+        Esta acción no es reversible.`,
+        'Cerrar Arqueo'
+      ) //Está seguro?
+        .afterClosed()
+        .subscribe((value) => {
+          if (value) {
+            this.cajasService.cerrarArqueo(arqueo).subscribe((respuesta) => {
+              if (respuesta.mensaje == 'OK') {
+                this.notificacionService.openSnackBarSuccess('Arqueo cerrado con éxito');
+                this.deshabilitarFormulario();
+              } else {
+                this.notificacionService.openSnackBarError('Error al cerrar arqueo, intenta nuevamente.');
+              }
+            });
+          }
+        });
+    }
   }
 
   private filtroSuscripciones() {
@@ -385,6 +440,11 @@ export class DetalleArqueoComponent implements OnInit {
     this.txCantidadDineroOtrosMedios.valueChanges.subscribe(() => {
       this.calcularTotalesYDiferencias(this.formasPago);
     });
+  }
+
+  private deshabilitarFormulario() {
+    this.form.disable();
+    this.formDesactivado = true;
   }
 
   get txTipoMovimiento(): FormControl {

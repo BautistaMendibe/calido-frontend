@@ -120,6 +120,11 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     this.txCaja.disable();
     this.txFechaApertura.disable();
     this.txHoraApertura.disable();
+
+    if (this.data.arqueo?.idEstadoArqueo == 2) {
+      this.txMontoInicial.disable();
+    }
+
     this.formDesactivado = false;
     this.data.editar = true;
   }
