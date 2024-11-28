@@ -50,7 +50,42 @@ export class GenerarReportesComponent implements OnInit{
             new FiltrosReportesComando()
           )
         ]
-      )
+      ),
+
+      new SeccionReporteComando(
+        'Proveedores',
+        'local_shipping',
+        [
+          new ReporteComando(
+            'Cantidad de ventas por tipo de producto',
+            '',
+            new FiltrosReportesComando()
+          ),
+          new ReporteComando(
+            'Cantidad de ventas por proveedor',
+            '',
+            new FiltrosReportesComando()
+          ),
+        ]
+      ),
+
+      new SeccionReporteComando(
+        'Productos',
+        'shopping_cart',
+        [
+          new ReporteComando(
+            'Cantidad de ventas por tipo de producto',
+            '',
+            new FiltrosReportesComando()
+          ),
+          new ReporteComando(
+            'Cantidad de ventas por proveedor',
+            '',
+            new FiltrosReportesComando()
+          ),
+        ]
+      ),
+
     ]
   }
 }
