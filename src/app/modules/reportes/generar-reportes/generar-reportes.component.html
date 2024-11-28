@@ -24,7 +24,7 @@
             </div>
             <div *ngIf="reporte.activo" class="mt-2 row mb-2">
               <div class="col d-flex">
-                <div class="col-md-4" style="margin-left: 15px">
+                <div class="col-md-3" style="margin-left: 15px">
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Fecha Desde</mat-label>
                     <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaDesde" readonly/>
@@ -32,7 +32,7 @@
                     <mat-datepicker #pickerDesde></mat-datepicker>
                   </mat-form-field>
                 </div>
-                <div class="col-md-4" style="margin-left: 15px">
+                <div class="col-md-3" style="margin-left: 15px">
                   <mat-form-field appearance="outline" class="w-100">
                     <mat-label>Fecha Hasta</mat-label>
                     <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaHasta" readonly/>
@@ -40,7 +40,7 @@
                     <mat-datepicker #pickerHasta></mat-datepicker>
                   </mat-form-field>
                 </div>
-                <button mat-raised-button color="accent" class="btn round" style="margin-left: 20px; margin-top: 10px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+                <button mat-raised-button color="accent" class="btn round" style="margin-left: 30px; margin-top: 10px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
               </div>
             </div>
         </div>
