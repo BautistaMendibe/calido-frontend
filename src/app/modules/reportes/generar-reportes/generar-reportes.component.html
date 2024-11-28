@@ -1,1 +1,33 @@
-<p>generar-reportes works!</p>
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">Generar reportes</p>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+
+
+  <br>
+    <div>
+      <div class="seccion-container">
+        <h5 class="seccion-nombre">
+          <mat-icon class="icono-seccion">sell</mat-icon>
+          <span>Ventas</span>
+        </h5>
+        <br>
+
+        <div class="reporte-container">
+          <span class="titulo-reporte">Cantidad de ventas por tipo de producto</span>
+          <button mat-icon-button (click)="true">
+            <mat-icon>{{ true ? 'expand_less' : 'expand_more' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+
+  </div>
+
+  </mat-card>
+</div>
+
