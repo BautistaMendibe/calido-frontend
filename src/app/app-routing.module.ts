@@ -34,6 +34,7 @@ import {ConsultarArqueoCajaComponent} from "./modules/gerencia/consultar-arqueo-
 import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consultar-caja.component";
 import {DetalleArqueoComponent} from "./modules/gerencia/detalle-arqueo/detalle-arqueo.component";
 import {RecuperarContrasenaComponent} from "./modules/auth/recuperar-contrasena/recuperar-contrasena.component";
+import {GenerarReportesComponent} from "./modules/reportes/generar-reportes/generar-reportes.component";
 
 
 const routes: Routes = [
@@ -64,7 +65,8 @@ const routes: Routes = [
   {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
   {path:'consultar-cajas', component:ConsultarCajaComponent},
   {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent},
-  {path: 'recuperar-contrasena', component: RecuperarContrasenaComponent}
+  {path: 'recuperar-contrasena', component: RecuperarContrasenaComponent},
+  {path: 'generar-reportes', component: GenerarReportesComponent}
 ];
 
 @NgModule({
