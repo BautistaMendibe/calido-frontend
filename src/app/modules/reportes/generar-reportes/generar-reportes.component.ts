@@ -3,6 +3,7 @@ import {SeccionReporteComando} from "../../../models/comandos/reportes/SeccionRe
 import {ReporteComando} from "../../../models/comandos/reportes/Reporte.comando";
 import {FiltrosReportesComando} from "../../../models/comandos/FiltrosReportes.comando";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {SnackBarService} from "../../../services/snack-bar.service";
 
 @Component({
   selector: 'app-generar-reportes',
@@ -14,7 +15,7 @@ export class GenerarReportesComponent implements OnInit{
   public secciones: SeccionReporteComando[] = [];
   public form: FormGroup;
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, private notificacionService: SnackBarService) {
     this.form = new FormGroup({});
   }
 
@@ -35,6 +36,20 @@ export class GenerarReportesComponent implements OnInit{
   }
 
   public generarReporte(reporte: ReporteComando) {
+    const validarFecha = this.validarFechas();
+    if (validarFecha) {
+      //generar reporte
+    } else {
+      this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
+    }
+  }
+
+  private validarFechas(): boolean {
+    if (this.txFechaDesde.value <= this.txFechaHasta.value) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   private obtenerSecciones() {
