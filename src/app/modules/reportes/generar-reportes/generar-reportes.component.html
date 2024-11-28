@@ -6,8 +6,6 @@
       </div>
     </div>
     <mat-divider></mat-divider>
-
-
   <br>
     <div *ngFor="let seccion of secciones">
       <div class="seccion-container">
@@ -17,13 +15,22 @@
         </h5>
         <br>
 
-        <div class="reporte-container" *ngFor="let reporte of seccion.reportes" (click)="expandirReporte(reporte)">
-            <span class="titulo-reporte">{{reporte.nombre}}</span>
-            <button mat-icon-button>
-              <mat-icon>{{ reporte.activo ? 'expand_less' : 'expand_more' }}</mat-icon>
-            </button>
-        </div>
+        <div class="reporte-container" *ngFor="let reporte of seccion.reportes">
+            <div class="d-flex justify-content-between" (click)="expandirReporte(reporte)">
+              <span class="titulo-reporte">{{reporte.nombre}}</span>
+              <button mat-icon-button>
+                <mat-icon>{{ reporte.activo ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </div>
+            <div *ngIf="reporte.activo" class="mt-2 row mb-2">
+              <div class="col-8">
 
+              </div>
+              <div class="col-4 justify-content-end d-flex">
+                <button mat-raised-button color="accent" class="btn round mb-4 me-4" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+              </div>
+            </div>
+        </div>
       </div>
   </div>
   </mat-card>

@@ -20,6 +20,9 @@ export class GenerarReportesComponent implements OnInit{
     reporte.activo = !reporte.activo;
   }
 
+  public generarReporte(reporte: ReporteComando) {
+  }
+
   private obtenerSecciones() {
     this.secciones = [
       new SeccionReporteComando(
