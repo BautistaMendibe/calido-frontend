@@ -9,25 +9,23 @@
 
 
   <br>
-    <div>
+    <div *ngFor="let seccion of secciones">
       <div class="seccion-container">
         <h5 class="seccion-nombre">
-          <mat-icon class="icono-seccion">sell</mat-icon>
-          <span>Ventas</span>
+          <mat-icon class="icono-seccion">{{seccion.icono}}</mat-icon>
+          <span>{{seccion.nombre}}</span>
         </h5>
         <br>
 
-        <div class="reporte-container">
-          <span class="titulo-reporte">Cantidad de ventas por tipo de producto</span>
-          <button mat-icon-button (click)="true">
-            <mat-icon>{{ true ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
+        <div class="reporte-container" *ngFor="let reporte of seccion.reportes" (click)="expandirReporte(reporte)">
+            <span class="titulo-reporte">{{reporte.nombre}}</span>
+            <button mat-icon-button>
+              <mat-icon>{{ reporte.activo ? 'expand_less' : 'expand_more' }}</mat-icon>
+            </button>
         </div>
+
       </div>
-
-
   </div>
-
   </mat-card>
 </div>
 
