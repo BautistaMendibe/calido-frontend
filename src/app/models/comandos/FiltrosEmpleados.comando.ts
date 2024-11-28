@@ -3,4 +3,6 @@ export class FiltrosEmpleados {
   apellido?: string;
   mail?: string;
   id?: number;
+  CUIL?: string;
+  nUsuario?: string;
 }

@@ -48,10 +48,9 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombreUsuario: ['', []],
       txNombre: ['', []],
-      txApellido: ['', []],
-      txCuil: ['', []],
+      txUsuario: ['', []],
+      txCUIL: ['', []],
     });
   }
 
@@ -62,8 +61,11 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
+    this.filtros.nUsuario = this.txUsuario.value;
+    this.filtros.CUIL = this.txCUIL.value;
 
     this.isLoading = true;
+
     this.usuariosService.consultarEmpleados(this.filtros).subscribe((empleados) => {
       this.empleados = empleados;
       this.tableDataSource.data = this.empleados;
@@ -146,16 +148,13 @@ export class ConsultarEmpleadosComponent implements OnInit {
     return this.form.get('txNombre') as FormControl;
   }
 
-  get txApellido(): FormControl {
-    return this.form.get('txApellido') as FormControl;
+  get txUsuario(): FormControl {
+    return this.form.get('txUsuario') as FormControl;
   }
 
-  get txDNI(): FormControl {
-    return this.form.get('txDNI') as FormControl;
+  get txCUIL(): FormControl {
+    return this.form.get('txCUIL') as FormControl;
   }
 
-  get txGenero(): FormControl {
-    return this.form.get('txGenero') as FormControl;
-  }
 
 }
