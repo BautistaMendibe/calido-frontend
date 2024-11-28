@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {SeccionReporteComando} from "../../../models/comandos/reportes/SeccionReporte.comando";
 import {ReporteComando} from "../../../models/comandos/reportes/Reporte.comando";
 import {FiltrosReportesComando} from "../../../models/comandos/FiltrosReportes.comando";
+import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 
 @Component({
   selector: 'app-generar-reportes',
@@ -11,9 +12,22 @@ import {FiltrosReportesComando} from "../../../models/comandos/FiltrosReportes.c
 export class GenerarReportesComponent implements OnInit{
 
   public secciones: SeccionReporteComando[] = [];
+  public form: FormGroup;
+
+  constructor(private fb: FormBuilder) {
+    this.form = new FormGroup({});
+  }
 
   ngOnInit() {
     this.obtenerSecciones();
+    this.crearForm();
+  }
+
+  private crearForm() {
+    this.form = this.fb.group({
+      txFechaDesde: [''],
+      txFechaHasta: [''],
+    });
   }
 
   public expandirReporte(reporte: ReporteComando) {
@@ -87,5 +101,16 @@ export class GenerarReportesComponent implements OnInit{
       ),
 
     ]
+  }
+
+
+
+  //getters
+  get txFechaDesde(): FormControl {
+    return this.form.get('txFechaDesde') as FormControl;
+  }
+
+  get txFechaHasta(): FormControl {
+    return this.form.get('txFechaHasta') as FormControl;
   }
 }
