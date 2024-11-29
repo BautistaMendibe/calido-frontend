@@ -36,3 +36,17 @@
   background-color: #f1f0f0;
   cursor: pointer;
 }
+
+.btn-generar-reporte {
+  margin-left: 30px;
+  margin-top: 10px;
+}
+
+
+@media(max-width: 1004px) {
+  .btn-generar-reporte {
+    width: 100%;
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+}
