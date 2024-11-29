@@ -82,10 +82,11 @@ export class ReportesService {
         },
 
         '\n\n',
+
         {
           table: {
             headerRows: 1,
-            widths: [40, '*', 50, 'auto', 80], // Ajusta los anchos según tu contenido
+            widths: ['*', '*'], // Ajusta los anchos según el número de columnas y contenido
             body: [
               // Encabezado de la tabla
               [
@@ -94,10 +95,10 @@ export class ReportesService {
                 }),
               ],
               // Cuerpo de la tabla (filas de datos)
-              ...reporte.data[0]?.datos.map((_, index) => {
+              ...Array.from({ length: reporte.data[0]?.datos.length || 0 }, (_, rowIndex) => {
                 return reporte.data.map((datosReporte) => {
                   return {
-                    text: datosReporte.datos[index],
+                    text: datosReporte.datos[rowIndex] || '', // Muestra el dato o vacío si no existe
                     style: 'itemNumber',
                   };
                 });

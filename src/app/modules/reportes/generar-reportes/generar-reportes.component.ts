@@ -8,6 +8,8 @@ import {DataReporteComando} from "../../../models/comandos/reportes/DataReporte.
 import {ReportesService} from "../../../services/reportes.service";
 import {Configuracion} from "../../../models/configuracion.model";
 import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
 
 @Component({
     selector: 'app-generar-reportes',
@@ -24,8 +26,10 @@ export class GenerarReportesComponent implements OnInit {
         private fb: FormBuilder,
         private notificacionService: SnackBarService,
         private reporteService: ReportesService,
-        private configuracionesService: ConfiguracionesService) {
-        this.form = new FormGroup({});
+        private configuracionesService: ConfiguracionesService
+    ) {
+      this.form = new FormGroup({});
+      pdfMake.vfs = pdfFonts.pdfMake.vfs;
     }
 
     ngOnInit() {
@@ -56,9 +60,10 @@ export class GenerarReportesComponent implements OnInit {
     public generarReporte(reporte: ReporteComando) {
         const validarFecha = this.validarFechas();
         if (validarFecha) {
-            this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
-                reporte.data = data;
-            });
+            //this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
+            //    reporte.data = data;
+            //    this.reporteService.generarPDF(reporte, this.configuracion);
+            //});
             this.reporteService.generarPDF(reporte, this.configuracion);
         } else {
             this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
