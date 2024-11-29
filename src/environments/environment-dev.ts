@@ -1,5 +1,5 @@
 export const environmentDEV = {
-  production: false,
-  backendUrl: 'http://localhost:8080',
+  production: true,
+  backendUrl: 'spare-toinette-calido-841cee5f.koyeb.app',
   //backendUrl: 'calido-backend.vercel.app'
 };
