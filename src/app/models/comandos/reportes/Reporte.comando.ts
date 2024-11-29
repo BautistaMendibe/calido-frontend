@@ -6,14 +6,14 @@ export class ReporteComando {
   funcionSP: string;
   filtros: FiltrosReportesComando;
   activo: boolean = false;
-  data: DataReporteComando;
+  data: DataReporteComando[];
 
 
   constructor(
     nombre: string,
     funcionSP: string,
     filtros?: FiltrosReportesComando,
-    data?: DataReporteComando
+    data?: DataReporteComando[]
   ) {
     this.nombre = nombre!;
     this.funcionSP = funcionSP!;
