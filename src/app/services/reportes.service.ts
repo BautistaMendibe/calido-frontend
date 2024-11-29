@@ -181,7 +181,7 @@ export class ReportesService {
           fontSize: 22,
           bold: true,
           alignment: 'left',
-          margin: [0, 20, 0, 15]
+          margin: [0, 20, 0, 10]
         },
         invoiceSubTitle: {
           fontSize: 10,
