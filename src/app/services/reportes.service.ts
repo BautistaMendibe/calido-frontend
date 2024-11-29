@@ -32,7 +32,7 @@ export class ReportesService {
         {
           columns: [
             {
-              image: `${configuracion.logo}`,
+              image: `${configuracion.logo ? configuracion.logo : ''}`,
               width: 40
             },
             {
