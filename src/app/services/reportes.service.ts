@@ -35,11 +35,23 @@ export class ReportesService {
               image: `${configuracion.logo}`,
               width: 40
             },
-
             {
               stack: [
                 {
-                  text: 'REPORTE',
+                  text: `${configuracion.razonSocial}\n${configuracion.calle} ${configuracion.numero}\n${configuracion.ciudad}, ${configuracion.provincia}, ${configuracion.codigoPostal}\nArgentina`,
+                  style: 'companyDetails',
+                }
+              ],
+            },
+          ]
+        },
+
+        {
+          columns: [
+            {
+              stack: [
+                {
+                  text: 'Reporte',
                   style: 'invoiceTitle'
                 },
                 {
@@ -49,12 +61,12 @@ export class ReportesService {
                         {
                           text: 'Fecha emisión',
                           style: 'invoiceSubTitle',
-                          width: '*'
+                          width: 80
                         },
                         {
                           text: fechaEmision,
                           style: 'invoiceSubValue',
-                          width: 100
+                          width: '*'
                         },
                       ],
                     },
@@ -63,12 +75,12 @@ export class ReportesService {
                         {
                           text: 'Fecha desde',
                           style: 'invoiceSubTitle',
-                          width: '*'
+                          width: 80
                         },
                         {
                           text: reporte.filtros.fechaDesde ? reporte.filtros.fechaDesde.toLocaleDateString() : '-',
                           style: 'invoiceSubValue',
-                          width: 100
+                          width: '*'
                         },
                       ],
                     },
@@ -77,12 +89,12 @@ export class ReportesService {
                         {
                           text: 'Fecha hasta',
                           style: 'invoiceSubTitle',
-                          width: '*'
+                          width: 80
                         },
                         {
                           text: reporte.filtros.fechaHasta ? reporte.filtros.fechaHasta.toLocaleDateString() : '-',
                           style: 'invoiceSubValue',
-                          width: 100
+                          width: '*'
                         },
                       ],
                     },
@@ -92,14 +104,7 @@ export class ReportesService {
             }
           ]
         },
-        {
-          stack: [
-            {
-              text: `${configuracion.razonSocial}\n${configuracion.calle} ${configuracion.numero}\n${configuracion.ciudad}, ${configuracion.provincia}, ${configuracion.codigoPostal}\nArgentina`,
-              style: 'companyDetails',
-            }
-          ],
-        },
+
         {
           columns: [
             {
@@ -177,29 +182,29 @@ export class ReportesService {
           alignment: 'right'
         },
         companyDetails: {
-          fontSize: 12,
-          margin: [0, 10, 0, 10],
+          fontSize: 11,
+          margin: [0, 0, 0, 0],
           alignment: 'left'
         },
         invoiceTitle: {
           fontSize: 22,
           bold: true,
-          alignment: 'right',
-          margin: [0, 0, 0, 15]
+          alignment: 'left',
+          margin: [0, 15, 0, 15]
         },
         invoiceSubTitle: {
-          fontSize: 12,
-          alignment: 'right'
+          fontSize: 10,
+          alignment: 'left'
         },
         invoiceSubValue: {
-          fontSize: 12,
-          alignment: 'right'
+          fontSize: 10,
+          alignment: 'left'
         },
         invoiceBillingTitle: {
           fontSize: 14,
           bold: true,
           alignment: 'left',
-          margin: [0, 20, 0, 5]
+          margin: [0, 20, 0, 0]
         },
         invoiceBillingDetails: {
           alignment: 'left'
