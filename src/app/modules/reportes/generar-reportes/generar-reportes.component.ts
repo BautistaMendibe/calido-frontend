@@ -5,6 +5,9 @@ import {FiltrosReportesComando} from "../../../models/comandos/FiltrosReportes.c
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {DataReporteComando} from "../../../models/comandos/reportes/DataReporte.comando";
+import {ReportesService} from "../../../services/reportes.service";
+import {Configuracion} from "../../../models/configuracion.model";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
 
 @Component({
     selector: 'app-generar-reportes',
@@ -15,14 +18,20 @@ export class GenerarReportesComponent implements OnInit {
 
     public secciones: SeccionReporteComando[] = [];
     public form: FormGroup;
+    public configuracion: Configuracion = new Configuracion();
 
-    constructor(private fb: FormBuilder, private notificacionService: SnackBarService) {
+    constructor(
+        private fb: FormBuilder,
+        private notificacionService: SnackBarService,
+        private reporteService: ReportesService,
+        private configuracionesService: ConfiguracionesService) {
         this.form = new FormGroup({});
     }
 
     ngOnInit() {
         this.obtenerSecciones();
         this.crearForm();
+        this.buscarConfiguraciones();
     }
 
     private crearForm() {
@@ -34,6 +43,12 @@ export class GenerarReportesComponent implements OnInit {
         });
     }
 
+    private async buscarConfiguraciones() {
+      this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
+        this.configuracion = configuracion;
+      });
+    }
+
     public expandirReporte(reporte: ReporteComando) {
         reporte.activo = !reporte.activo;
     }
@@ -41,7 +56,10 @@ export class GenerarReportesComponent implements OnInit {
     public generarReporte(reporte: ReporteComando) {
         const validarFecha = this.validarFechas();
         if (validarFecha) {
-
+            this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
+                reporte.data = data;
+            });
+            this.reporteService.generarPDF(reporte, this.configuracion);
         } else {
             this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
         }

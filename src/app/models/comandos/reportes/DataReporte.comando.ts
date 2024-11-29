@@ -1,11 +1,11 @@
 export class DataReporteComando {
-    columa: string;
+    columna: string;
     datos: any[];
     constructor(
         columna: string,
         datos?: any[],
     ) {
-        this.columa = columna!;
+        this.columna = columna!;
         this.datos = datos!;
     }
 }
