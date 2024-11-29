@@ -51,7 +51,7 @@ export class ReportesService {
             {
               stack: [
                 {
-                  text: 'Reporte',
+                  text: reporte.nombre,
                   style: 'invoiceTitle'
                 },
                 {
@@ -105,16 +105,7 @@ export class ReportesService {
           ]
         },
 
-        {
-          columns: [
-            {
-              text: reporte.nombre.toUpperCase(),
-              style: 'invoiceBillingTitle'
-            },
-          ]
-        },
-
-        '\n\n',
+        '\n',
 
         {
           table: {
@@ -190,7 +181,7 @@ export class ReportesService {
           fontSize: 22,
           bold: true,
           alignment: 'left',
-          margin: [0, 15, 0, 15]
+          margin: [0, 20, 0, 15]
         },
         invoiceSubTitle: {
           fontSize: 10,
