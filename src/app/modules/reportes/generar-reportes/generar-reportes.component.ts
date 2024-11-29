@@ -28,6 +28,8 @@ export class GenerarReportesComponent implements OnInit{
     this.form = this.fb.group({
       txFechaDesde: [''],
       txFechaHasta: [''],
+      txFiltroNumerico: [''],
+      txFiltroString: [''],
     });
   }
 
@@ -38,7 +40,7 @@ export class GenerarReportesComponent implements OnInit{
   public generarReporte(reporte: ReporteComando) {
     const validarFecha = this.validarFechas();
     if (validarFecha) {
-      //generar reporte
+
     } else {
       this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
     }
@@ -128,4 +130,13 @@ export class GenerarReportesComponent implements OnInit{
   get txFechaHasta(): FormControl {
     return this.form.get('txFechaHasta') as FormControl;
   }
+
+  get txFiltroNumerico(): FormControl {
+    return this.form.get('txFiltroNumerico') as FormControl;
+  }
+
+  get txFiltroString(): FormControl {
+    return this.form.get('txFiltroString') as FormControl;
+  }
+
 }
