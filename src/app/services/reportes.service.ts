@@ -47,7 +47,7 @@ export class ReportesService {
                     {
                       columns: [
                         {
-                          text: 'Fecha Emisión',
+                          text: 'Fecha emisión',
                           style: 'invoiceSubTitle',
                           width: '*'
                         },
@@ -55,8 +55,36 @@ export class ReportesService {
                           text: fechaEmision,
                           style: 'invoiceSubValue',
                           width: 100
-                        }
-                      ]
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        {
+                          text: 'Fecha desde',
+                          style: 'invoiceSubTitle',
+                          width: '*'
+                        },
+                        {
+                          text: reporte.filtros.fechaDesde ? reporte.filtros.fechaDesde.toLocaleDateString() : '-',
+                          style: 'invoiceSubValue',
+                          width: 100
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        {
+                          text: 'Fecha hasta',
+                          style: 'invoiceSubTitle',
+                          width: '*'
+                        },
+                        {
+                          text: reporte.filtros.fechaHasta ? reporte.filtros.fechaHasta.toLocaleDateString() : '-',
+                          style: 'invoiceSubValue',
+                          width: 100
+                        },
+                      ],
                     },
                   ],
                 }
