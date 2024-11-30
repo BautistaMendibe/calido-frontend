@@ -16,9 +16,10 @@ export class ReportesService {
   private urlBackend = environmentDEV.backendUrl;
   private controllerName = 'reportes';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+  }
 
-  public obtenerDataReporte(reporte: ReporteComando): Observable<DataReporteComando[]>{
+  public obtenerDataReporte(reporte: ReporteComando): Observable<DataReporteComando[]> {
     return this.http.post<DataReporteComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-data-reporte`, reporte);
   }
 
@@ -114,18 +115,17 @@ export class ReportesService {
             body: [
               // Encabezado de la tabla
               [
-                ...reporte.data.map((datosReporte) => {
-                  return { text: datosReporte.columna, style: ['itemsHeader', 'center'] };
-                }),
+                ...reporte.columnas.map((columna) => ({
+                  text: columna,
+                  style: ['itemsHeader', 'center'],
+                })),
               ],
               // Cuerpo de la tabla (filas de datos)
-              ...Array.from({ length: reporte.data[0]?.datos.length || 0 }, (_, rowIndex) => {
-                return reporte.data.map((datosReporte) => {
-                  return {
-                    text: datosReporte.datos[rowIndex] || '', // Muestra el dato o vacío si no existe
-                    style: 'itemNumber',
-                  };
-                });
+              ...reporte.data.map((dato) => {
+                return dato.datos.map((datosReporte) => ({
+                  text: datosReporte || '',
+                  style: 'itemNumber',
+                }));
               }),
             ],
           },
@@ -204,8 +204,7 @@ export class ReportesService {
           margin: [0, 7, 0, 3],
           bold: true
         },
-        invoiceBillingAddress: {
-        },
+        invoiceBillingAddress: {},
         itemsHeader: {
           margin: [0, 5, 0, 5],
           bold: true
@@ -273,7 +272,6 @@ export class ReportesService {
     const win = window.open('', '_blank');
     pdfMake.createPdf(docDefinition).open({}, win);
   }
-
 
 
 }

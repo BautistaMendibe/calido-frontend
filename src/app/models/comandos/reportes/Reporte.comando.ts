@@ -7,17 +7,20 @@ export class ReporteComando {
   filtros: FiltrosReportesComando;
   activo: boolean = false;
   data: DataReporteComando[];
+  columnas: string[];
 
 
   constructor(
     nombre: string,
     funcionSP: string,
     filtros?: FiltrosReportesComando,
-    data?: DataReporteComando[]
+    columnas?: string[],
+    data?: DataReporteComando[],
   ) {
     this.nombre = nombre!;
     this.funcionSP = funcionSP!;
     this.filtros = filtros!;
     this.data = data!;
+    this.columnas = columnas!;
   }
 }
