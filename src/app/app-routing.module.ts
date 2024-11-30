@@ -34,37 +34,152 @@ import {ConsultarArqueoCajaComponent} from "./modules/gerencia/consultar-arqueo-
 import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consultar-caja.component";
 import {DetalleArqueoComponent} from "./modules/gerencia/detalle-arqueo/detalle-arqueo.component";
 import {RecuperarContrasenaComponent} from "./modules/auth/recuperar-contrasena/recuperar-contrasena.component";
+import {authGuard} from "./auth.guard";
 
-
+/**
+ * Rutas de la aplicación
+ * path: ruta de la aplicación
+ * component: componente que se renderizará en la ruta
+ * canActivate: indicar si el componente debe mostrarse según roles
+ * data: roles permitidos para acceder a la ruta
+ */
 const routes: Routes = [
-  {path:'', component: HomeComponent},
-  {path:'login', component: LoginComponent},
-  {path:'consultar-empleados', component: ConsultarEmpleadosComponent},
-  {path:'consultar-clientes', component: ConsultarClientesComponent},
-  {path:'control-empleados', component: ConsultarAsistenciaComponent},
-  {path:'consultar-cuentas-corrientes', component:ConsultarCuentasCorrientesComponent},
-  {path:'registrar-cuenta-corriente', component: RegistrarCuentaCorrienteComponent},
-  {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
-  {path:'consultar-productos', component: ConsultarProductosComponent},
-  {path:'consultar-proveedores', component: ConsultarProveedoresComponent},
-  {path:'consultar-promociones', component: ConsultarPromocionesComponent},
-  {path:'notificar-promocion', component: NotificarPromocionComponent},
-  {path:'consultar-configuraciones', component: ConsultarConfiguracionesComponent},
-  {path:'consultar-productos', component: ConsultarProductosComponent},
-  {path:'panel-empleado', component: MarcarAsistenciaComponent},
-  {path:'registrar-venta', component: RegistrarVentaComponent},
-  {path:'consultar-pedidos', component: ConsultarPedidosComponent},
-  {path:'consultar-comprobante', component: ConsultarComprobanteComponent},
-  {path:'consultar-inventario', component:ConsultarInventarioComponent},
-  {path:'consultar-tarjetas', component:ConsultarTarjetasComponent},
-  {path:'consultar-ventas', component: ConsultarVentasComponent},
-  {path:'visualizaciones', component: VisualizacionesComponent},
-  {path:'visualizaciones-ventas', component: VisualizacionesVentasComponent},
-  {path:'visualizaciones-compras', component: VisualizacionesComprasComponent},
-  {path:'consultar-arqueo-caja', component:ConsultarArqueoCajaComponent},
-  {path:'consultar-cajas', component:ConsultarCajaComponent},
-  {path: 'detalle-arqueo/:id', component:DetalleArqueoComponent},
-  {path: 'recuperar-contrasena', component: RecuperarContrasenaComponent}
+  {
+    path: '',
+    component: HomeComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado', 'Cajero', 'Vendedor'] },
+  },
+  {
+    path: 'login',
+    component: LoginComponent
+  },
+  {
+    path: 'consultar-empleados',
+    component: ConsultarEmpleadosComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-clientes',
+    component: ConsultarClientesComponent
+  },
+  {
+    path: 'control-empleados',
+    component: ConsultarAsistenciaComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-cuentas-corrientes',
+    component: ConsultarCuentasCorrientesComponent
+  },
+  {
+    path: 'registrar-cuenta-corriente',
+    component: RegistrarCuentaCorrienteComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Cajero', 'Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-proveedores',
+    component: ConsultarProveedoresComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-productos',
+    component: ConsultarProductosComponent
+  },
+  {
+    path: 'consultar-promociones',
+    component: ConsultarPromocionesComponent
+  },
+  {
+    path: 'notificar-promocion',
+    component: NotificarPromocionComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-configuraciones',
+    component: ConsultarConfiguracionesComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Encargado'] },
+  },
+  {
+    path: 'panel-empleado',
+    component: MarcarAsistenciaComponent
+  },
+  {
+    path: 'registrar-venta',
+    component: RegistrarVentaComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Cajero', 'Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-pedidos',
+    component: ConsultarPedidosComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-comprobante',
+    component: ConsultarComprobanteComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-inventario',
+    component: ConsultarInventarioComponent
+  },
+  {
+    path: 'consultar-tarjetas',
+    component: ConsultarTarjetasComponent
+  },
+  {
+    path: 'consultar-ventas',
+    component: ConsultarVentasComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Cajero', 'Administrador', 'Encargado'] },
+  },
+  {
+    path: 'visualizaciones',
+    component: VisualizacionesComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'visualizaciones-ventas',
+    component: VisualizacionesVentasComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'visualizaciones-compras',
+    component: VisualizacionesComprasComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'consultar-arqueo-caja',
+    component: ConsultarArqueoCajaComponent
+  },
+  {
+    path: 'consultar-cajas',
+    component: ConsultarCajaComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'detalle-arqueo/:id',
+    component: DetalleArqueoComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
+  },
+  {
+    path: 'recuperar-contrasena',
+    component: RecuperarContrasenaComponent
+  }
 ];
 
 @NgModule({
