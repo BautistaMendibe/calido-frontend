@@ -21,6 +21,7 @@ export class GenerarReportesComponent implements OnInit {
   public secciones: SeccionReporteComando[] = [];
   public form: FormGroup;
   public configuracion: Configuracion = new Configuracion();
+  public buscandoData: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -59,12 +60,14 @@ export class GenerarReportesComponent implements OnInit {
 
   public generarReporte(reporte: ReporteComando) {
     const validarFecha = this.validarFechas();
+    this.buscandoData = true;
     if (validarFecha) {
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
           reporte.data = data;
           reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
           reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
           this.reporteService.generarPDF(reporte, this.configuracion);
+          this.buscandoData = false
       });
     } else {
       this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
