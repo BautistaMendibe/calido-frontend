@@ -121,15 +121,16 @@ export class ReportesService {
                 })),
               ],
               // Cuerpo de la tabla (filas de datos)
-              ...reporte.data.map((dato) => {
-                return dato.datos.map((datosReporte) => ({
+              ...reporte.data.map((dato: any) => {
+                const fila = Array.isArray(dato) ? dato : Object.values(dato);
+                return fila.map((datosReporte: any) => ({
                   text: datosReporte || '',
                   style: 'itemNumber',
                 }));
               }),
             ],
           },
-        },
+        }
       ],
       footer: (currentPage, pageCount) => {
         return {

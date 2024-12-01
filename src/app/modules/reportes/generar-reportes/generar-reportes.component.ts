@@ -60,15 +60,12 @@ export class GenerarReportesComponent implements OnInit {
   public generarReporte(reporte: ReporteComando) {
     const validarFecha = this.validarFechas();
     if (validarFecha) {
-      //this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
-      //    reporte.data = data;
-      //    reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
-      //    reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
-      //    this.reporteService.generarPDF(reporte, this.configuracion);
-      //});
-      reporte.filtros.fechaDesde = this.txFechaDesde.value ? this.txFechaDesde.value : null;
-      reporte.filtros.fechaHasta = this.txFechaHasta.value ? this.txFechaHasta.value : null;
-      this.reporteService.generarPDF(reporte, this.configuracion);
+      this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
+          reporte.data = data;
+          reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
+          reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
+          this.reporteService.generarPDF(reporte, this.configuracion);
+      });
     } else {
       this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
     }
@@ -90,14 +87,10 @@ export class GenerarReportesComponent implements OnInit {
         [
           new ReporteComando(
             'Cantidad de ventas por tipo de producto',
-            '',
+            'reportes_ventas_por_tipo_producto',
             new FiltrosReportesComando(),
             ['Tipo de producto', 'Cantidad'],
-            [
-              new DataReporteComando(['Zapatillas', 123]),
-              new DataReporteComando(['Pantalon', 567]),
-              new DataReporteComando(['Medias', 67]),
-            ]
+            []
           ),
           new ReporteComando(
             'Cantidad de ventas por proveedor',

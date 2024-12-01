@@ -6,7 +6,7 @@ export class ReporteComando {
   funcionSP: string;
   filtros: FiltrosReportesComando;
   activo: boolean = false;
-  data: DataReporteComando[];
+  data: any[];
   columnas: string[];
 
 
@@ -15,7 +15,7 @@ export class ReporteComando {
     funcionSP: string,
     filtros?: FiltrosReportesComando,
     columnas?: string[],
-    data?: DataReporteComando[],
+    data?: any[],
   ) {
     this.nombre = nombre!;
     this.funcionSP = funcionSP!;
