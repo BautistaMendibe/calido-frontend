@@ -52,6 +52,7 @@ export class RegistrarVentaComponent implements OnInit{
   public totalVenta: number = 0;
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
+  public montoConsumidorFinal: number = 99999999;
 
   public form: FormGroup;
   public tarjetaSeleccionada: Tarjeta;
@@ -85,7 +86,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.crearFormulario();
     this.buscarDataCombos();
     this.filtrosSuscripciones();
-    this.buscarFacturacionAutomatica();
+    this.buscarConfiguracionesParaVenta();
   }
 
   public buscar() {
@@ -129,9 +130,10 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarCajas();
   }
 
-  private buscarFacturacionAutomatica() {
+  private buscarConfiguracionesParaVenta() {
     this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
       this.facturacionAutomatica = configuracion.facturacionAutomatica;
+      this.montoConsumidorFinal = configuracion.montoConsumidorFinal;
     });
   }
 
@@ -358,6 +360,12 @@ export class RegistrarVentaComponent implements OnInit{
 
   public confirmarVenta() {
     if (this.form.valid && this.productosSeleccionados.length > 0) {
+
+      if ((this.totalVenta >= this.montoConsumidorFinal) && this.txCliente.value == -1) {
+        this.notificacionService.openSnackBarError('El monto total de la venta supera el monto permitido para consumidor final. Seleccione o registre un cliente para esta venta.');
+        return;
+      }
+
       const venta: Venta = new Venta();
 
       // Seteamos valores de la venta
@@ -505,7 +513,6 @@ export class RegistrarVentaComponent implements OnInit{
         });
     });
   }
-
 
   public get clientesFiltrados() {
     if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_A) {

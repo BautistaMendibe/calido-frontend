@@ -195,7 +195,8 @@
                 <mat-option
                   *ngFor="let cliente of clientesFiltrados"
                   [value]="cliente.id"
-                  [disabled]="txTipoFacturacion.value === getTiposFacturacionEnum.FACTURA_A && cliente.id === -1">
+                  [disabled]="txTipoFacturacion.value === getTiposFacturacionEnum.FACTURA_A && cliente.id === -1
+                  || (this.totalVenta >= this.montoConsumidorFinal) && cliente.id === -1 ">
                   {{ cliente.nombre + ' ' + cliente.apellido }}
                 </mat-option>
               </mat-select>
