@@ -193,7 +193,7 @@
               <mat-label>Cliente</mat-label>
               <mat-select [formControl]="txCliente" (selectionChange)="cambioCliente($event.value)">
                 <mat-option
-                  *ngFor="let cliente of this.clientes"
+                  *ngFor="let cliente of clientesFiltrados"
                   [value]="cliente.id"
                   [disabled]="txTipoFacturacion.value === getTiposFacturacionEnum.FACTURA_A && cliente.id === -1">
                   {{ cliente.nombre + ' ' + cliente.apellido }}

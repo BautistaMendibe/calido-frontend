@@ -466,33 +466,54 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public filtrosSuscripciones() {
+    // Escuchar cambios en el tipo de facturación
     this.txTipoFacturacion.valueChanges.subscribe(() => {
-      if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_A && this.txCliente.value === -1) {
-        this.txCliente.setValue(null);
-      } else if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_B && this.txCliente.value === null) {
-        this.txCliente.setValue(-1);
+      if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_A) {
+        // Si el cliente es consumidor final, quitar selección
+        if (this.txCliente.value === -1) {
+          this.txCliente.setValue(null);
+        }
+      } else if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_B) {
+        // Si no hay cliente seleccionado, seleccionar el consumidor final
+        if (this.txCliente.value === null) {
+          this.txCliente.setValue(-1);
+        }
       }
-    })
+    });
 
+    // Escuchar cambios en el campo de búsqueda
     this.txBuscar.valueChanges.subscribe(() => {
       const textoBusqueda = this.normalizarTexto(this.txBuscar.value || '');
 
-      let productosFiltrados = this.productos.filter(producto => {
-        const codigoBarraNormalizado = this.normalizarTexto(producto.codigoBarra);
-        const nombreProductoNormalizado = this.normalizarTexto(producto.nombre);
+      // Filtrar productos basados en el texto de búsqueda
+      this.productosFiltrados = this.productos
+        .filter(producto => {
+          const codigoBarraNormalizado = this.normalizarTexto(producto.codigoBarra);
+          const nombreProductoNormalizado = this.normalizarTexto(producto.nombre);
 
-        // Filtrar productos que coincidan parcialmente con el código de barra o nombre
-        return codigoBarraNormalizado.includes(textoBusqueda) ||
-          nombreProductoNormalizado.includes(textoBusqueda);
-      });
+          return (
+            codigoBarraNormalizado.includes(textoBusqueda) ||
+            nombreProductoNormalizado.includes(textoBusqueda)
+          );
+        })
+        .sort((a, b) => {
+          // Ordenar productos: seleccionados primero
+          return (b.seleccionadoParaVenta ? 1 : 0) - (a.seleccionadoParaVenta ? 1 : 0);
+        });
+    });
+  }
 
-      // Ordenar productos: primero los seleccionados y luego los no seleccionados
-      productosFiltrados = productosFiltrados.sort((a, b) => {
-        return (b.seleccionadoParaVenta ? 1 : 0) - (a.seleccionadoParaVenta ? 1 : 0);
-      });
 
-      this.productosFiltrados = productosFiltrados;
-    })
+  public get clientesFiltrados() {
+    if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_A) {
+      // Retornar clientes con condición 'responsable inscripto'
+      return this.clientes.filter(cliente => cliente.idCondicionIva == this.getCondicionIvaEnum.RESPONSABLE_INSCRIPTO);
+    } else if (this.txTipoFacturacion.value == this.getTiposFacturacionEnum.FACTURA_B) {
+      // Retornar clientes distintos a 'responsable inscripto'
+      return this.clientes.filter(cliente => cliente.idCondicionIva != this.getCondicionIvaEnum.RESPONSABLE_INSCRIPTO);
+    }
+    // Si no hay filtros, retornar la lista completa
+    return this.clientes;
   }
 
   private normalizarTexto(texto: string): string {
