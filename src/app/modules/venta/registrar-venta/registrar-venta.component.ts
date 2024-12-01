@@ -39,23 +39,26 @@ export class RegistrarVentaComponent implements OnInit{
   public productos: Producto[] = [];
   public productosFiltrados: Producto[] = [];
   public productosSeleccionados: Producto[] = [];
+  public clientes: Usuario[] = [];
+  public formasDePago: FormaDePago[] = [];
+  public tiposDeFacturacion: TipoFactura[] = [];
+  public listaEmpleados: Usuario[] = [];
+  public listaCajas: Caja[] = [];
+  public tarjetasRegistradas: Tarjeta[] = [];
+
   public subTotal: number = 0;
   public impuestoIva: number = 0;
   public cargandoProductos: boolean = true;
   public totalVenta: number = 0;
-  public form: FormGroup;
-  public clientes: Usuario[] = [];
-  public formasDePago: FormaDePago[] = [];
-  public registrandoVenta: boolean = false;
-  public tiposDeFacturacion: TipoFactura[] = [];
-  public listaEmpleados: Usuario[] = [];
-  public listaCajas: Caja[] = [];
-  public mostrarTarjetasCuotas: boolean = false;
-  public tarjetasRegistradas: Tarjeta[] = [];
-  public tarjetaSeleccionada: Tarjeta;
-  public cantidadCuotaSeleccionada: CuotaPorTarjeta;
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
+
+  public form: FormGroup;
+  public tarjetaSeleccionada: Tarjeta;
+  public cantidadCuotaSeleccionada: CuotaPorTarjeta;
+
+  public mostrarTarjetasCuotas: boolean = false;
+  public registrandoVenta: boolean = false;
   private facturacionAutomatica: boolean = false;
 
   constructor(

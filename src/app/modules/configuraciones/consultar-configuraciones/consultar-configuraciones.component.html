@@ -1,12 +1,12 @@
-<div class="lds-spinner-wrapper" *ngIf="isSearchingConfiguration">
-  <div class="lds-spinner">
-    <div></div><div></div><div></div><div></div>
-    <div></div><div></div><div></div><div></div>
-    <div></div><div></div><div></div><div></div>
-  </div>
+<!-- loading -->
+<p *ngIf="isSearchingConfiguration">
+  <br>
+</p>
+<div class="spinner-wrapper" *ngIf="isSearchingConfiguration">
+  <mat-spinner></mat-spinner>
 </div>
 
-<div *ngIf="!isSearchingConfiguration" class="container py-3 col-xl-11">
+<div class="container py-3 col-xl-11" *ngIf="!isSearchingConfiguration">
   <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
