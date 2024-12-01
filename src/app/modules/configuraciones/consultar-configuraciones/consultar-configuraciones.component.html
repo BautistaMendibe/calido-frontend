@@ -134,14 +134,37 @@
         </div>
       </div>
 
-      <br><br>
+      <br>
 
-      <h4 style="color: grey">Facturación de ventas</h4>
-      <div class="row">
-        <mat-checkbox [formControl]="facturacionAutomatica">Facturación automática</mat-checkbox>
+      <h4 style="color: grey">Ventas</h4>
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Monto consumidor final</mat-label>
+            <input type="text" matInput [formControl]="txMontoConsumidorFinal" mask="separator.2" prefix="$ " thousandSeparator=","/>
+          </mat-form-field>
+          <app-error-messages [control]="txMontoConsumidorFinal"></app-error-messages>
+        </div>
+        <p class="leyenda">
+          Este es el monto a partir del cual no se permitirá registrar una venta sin seleccionar cliente (consumidor final).
+        </p>
       </div>
-      <div class="row">
-        <h5 style="margin-left: 10px">Esto significa que la facturación en AFIP de cada venta se realizará de manera automática después de realizarse.</h5>
+
+      <br>
+
+      <h4 style="color: grey">Facturación</h4>
+      <div class="row pt-4">
+        <div class="checkbox-container col-md-6">
+          <mat-checkbox [formControl]="facturacionAutomatica">Facturación automática</mat-checkbox>
+          <mat-icon
+            class="info-icon"
+            matTooltip="La facturación se realizará inmediatamente después de realizada la venta."
+            matTooltipPosition="right"
+            aria-label="Información sobre facturación automática"
+          >
+            help_outline
+          </mat-icon>
+        </div>
       </div>
 
       <br><br>
