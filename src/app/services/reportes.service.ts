@@ -130,7 +130,19 @@ export class ReportesService {
               }),
             ],
           },
-        }
+        },
+
+        '\n',
+
+        {
+          columns: [
+            {
+              image: `${reporte.imagenGrafico ? reporte.imagenGrafico : ''}`,
+              width: 400,
+              alignment: 'center',
+            },
+          ]
+        },
       ],
       footer: (currentPage, pageCount) => {
         return {

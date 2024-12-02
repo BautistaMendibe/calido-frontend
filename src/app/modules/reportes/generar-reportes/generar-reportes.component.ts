@@ -4,12 +4,12 @@ import {ReporteComando} from "../../../models/comandos/reportes/Reporte.comando"
 import {FiltrosReportesComando} from "../../../models/comandos/FiltrosReportes.comando";
 import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
 import {SnackBarService} from "../../../services/snack-bar.service";
-import {DataReporteComando} from "../../../models/comandos/reportes/DataReporte.comando";
 import {ReportesService} from "../../../services/reportes.service";
 import {Configuracion} from "../../../models/configuracion.model";
 import {ConfiguracionesService} from "../../../services/configuraciones.service";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import {Chart, ChartDataset, ChartOptions} from "chart.js";
 
 @Component({
   selector: 'app-generar-reportes',
@@ -22,6 +22,8 @@ export class GenerarReportesComponent implements OnInit {
   public form: FormGroup;
   public configuracion: Configuracion = new Configuracion();
   public buscandoData: boolean = false;
+  public barChartLabels: string[] = [];
+  private chart!: Chart;
 
   constructor(
     private fb: FormBuilder,
@@ -63,11 +65,18 @@ export class GenerarReportesComponent implements OnInit {
     this.buscandoData = true;
     if (validarFecha) {
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
-          reporte.data = data;
-          reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
-          reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
+        reporte.data = data;
+        reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
+        reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
+
+        if (reporte.tipoGrafico) {
+          if(reporte.tipoGrafico == 'bar') {
+            this.generarGraficoBarras(reporte);
+          }
+        } else {
           this.reporteService.generarPDF(reporte, this.configuracion);
-          this.buscandoData = false
+          this.buscandoData = false;
+        }
       });
     } else {
       this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
@@ -82,6 +91,55 @@ export class GenerarReportesComponent implements OnInit {
     }
   }
 
+  private generarGraficoBarras(reporte: ReporteComando) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    document.body.appendChild(canvas);
+
+    if (!reporte.data || reporte.data.length === 0) {
+      console.error('No hay datos para generar el gráfico.');
+      return;
+    }
+
+    if (!ctx) {
+      console.error('Error al crear el contexto del gráfico.');
+      return;
+    }
+
+    // Mapeamos los datos para las etiquetas (dato1) y los valores (dato2)
+    const labels = reporte.data.map((item) => item.dato1);
+    const data = reporte.data.map((item) => item.dato2);
+
+    this.chart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: labels, // Etiquetas dinámicas para el eje X
+        datasets: [
+          {
+            label: 'Cantidad', // Etiqueta para la leyenda
+            data: data, // Datos de la cantidad
+            backgroundColor: 'rgba(246,121,86,0.5)',
+            borderColor: 'rgba(225, 91, 53, 1)',
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: this.barChartOptions,
+    });
+
+    // Generar la imagen en base64 cuando el gráfico esté renderizado
+    setTimeout(() => {
+      reporte.imagenGrafico = this.chart.toBase64Image();
+      console.log(reporte.imagenGrafico);
+      document.body.removeChild(canvas);
+      this.reporteService.generarPDF(reporte, this.configuracion);
+      this.buscandoData = false;
+    }, 500);
+  }
+
+
+
+
   private obtenerSecciones() {
     this.secciones = [
       new SeccionReporteComando(
@@ -93,7 +151,8 @@ export class GenerarReportesComponent implements OnInit {
             'reportes_ventas_por_tipo_producto',
             new FiltrosReportesComando(),
             ['Tipo de producto', 'Cantidad'],
-            []
+            [],
+            'bar'
           ),
           new ReporteComando(
             'Cantidad de ventas por proveedor',
@@ -149,6 +208,62 @@ export class GenerarReportesComponent implements OnInit {
 
     ]
   }
+
+
+  public barChartOptions: ChartOptions<'bar'> = {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 10,
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.2)',
+          lineWidth: 0.1,
+        },
+      },
+      x: {
+        ticks: {
+          autoSkip: false,
+          maxRotation: 45,
+          minRotation: 0,
+          padding: 5,
+        },
+        grid: {
+          color: 'rgba(0, 0, 0, 0.2)',
+          lineWidth: 0.1,
+        },
+      },
+    },
+    plugins: {
+      legend: {
+        display: false,
+        position: 'top',
+      },
+    },
+    elements: {
+      bar: {
+
+      },
+    },
+  };
+
+  public barChartData: ChartDataset<'bar', number[]>[] = [
+    {
+      data: [],
+      label: '',
+      backgroundColor: 'rgba(246,121,86,0.5)',
+      borderColor: 'rgba(225, 91, 53, 1)',
+      borderWidth: {
+        top: 3,
+        right: 1,
+        bottom: 1,
+        left: 1
+      }
+    }
+  ];
 
 
   //getters
