@@ -57,7 +57,9 @@ export class GenerarReportesComponent implements OnInit {
   }
 
   public expandirReporte(reporte: ReporteComando) {
-    reporte.activo = !reporte.activo;
+    if (!reporte.noNecesitaFiltro) {
+      reporte.activo = !reporte.activo;
+    }
   }
 
   public generarReporte(reporte: ReporteComando) {
@@ -88,6 +90,8 @@ export class GenerarReportesComponent implements OnInit {
       reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
       return true;
     } else {
+      reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
+      reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
       return false;
     }
   }
@@ -203,6 +207,16 @@ export class GenerarReportesComponent implements OnInit {
         'Productos',
         'shopping_cart',
         [
+          new ReporteComando(
+            'Stock actual de productos',
+            'reportes_stock_actual',
+            new FiltrosReportesComando(),
+            ['Productos', 'Cantidad'],
+            [],
+            'bar',
+            '',
+            true
+          ),
           new ReporteComando(
             'Productos más vendidos',
             'reportes_productos_mas_vendidos',

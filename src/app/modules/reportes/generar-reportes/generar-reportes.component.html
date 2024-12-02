@@ -18,9 +18,10 @@
         <div class="reporte-container" *ngFor="let reporte of seccion.reportes">
             <div class="d-flex justify-content-between" (click)="expandirReporte(reporte)">
               <span class="titulo-reporte">{{reporte.nombre}}</span>
-              <button mat-icon-button>
+              <button mat-icon-button *ngIf="!reporte.noNecesitaFiltro">
                 <mat-icon>{{ reporte.activo ? 'expand_less' : 'expand_more' }}</mat-icon>
               </button>
+              <button *ngIf="reporte.noNecesitaFiltro" mat-raised-button color="accent" class="btn round btn-generar-reporte-sin-filtro mt-2 mb-2" style="margin-right: 28px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
             </div>
             <div *ngIf="reporte.activo" class="mt-2 row mb-2" style="margin-left: 15px; margin-right: 15px">
               <div class="col-md-3">
@@ -40,7 +41,7 @@
                 </mat-form-field>
               </div>
               <div class="col-md-6 mb-2">
-                <button *ngIf="!buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+                <button *ngIf="!buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte" style="float: right" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
                 <div class="spinner-wrapper" *ngIf="buscandoData">
                   <mat-spinner></mat-spinner>
                 </div>
