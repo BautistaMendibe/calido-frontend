@@ -174,10 +174,13 @@ export class GenerarReportesComponent implements OnInit {
             'bar'
           ),
           new ReporteComando(
-            'Ventas por clientes',
-            '',
-            new FiltrosReportesComando()
-          )
+            'Ventas por forma de pago',
+            'reportes_ventas_por_forma_de_pago',
+            new FiltrosReportesComando(),
+            ['Forma de pago', 'Cantidad'],
+            [],
+            'bar'
+          ),
         ]
       ),
 
