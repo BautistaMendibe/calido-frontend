@@ -21,7 +21,7 @@
               <button mat-icon-button *ngIf="!reporte.noNecesitaFiltro">
                 <mat-icon>{{ reporte.activo ? 'expand_less' : 'expand_more' }}</mat-icon>
               </button>
-              <button *ngIf="reporte.noNecesitaFiltro" mat-raised-button color="accent" class="btn round btn-generar-reporte-sin-filtro mt-2 mb-2" style="margin-right: 28px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+              <button *ngIf="reporte.noNecesitaFiltro" [disabled]="buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte-sin-filtro mt-2 mb-2" style="margin-right: 28px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
             </div>
             <div *ngIf="reporte.activo" class="mt-2 row mb-2" style="margin-left: 15px; margin-right: 15px">
               <span class="subtitulo-reporte">Si no se selecciona ninguna fecha, se mostrará el historial completo.</span>
