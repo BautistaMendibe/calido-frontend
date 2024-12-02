@@ -135,13 +135,15 @@ export class ReportesService {
         '\n',
 
         {
-          columns: [
-            {
-              image: `${reporte.imagenGrafico ? reporte.imagenGrafico : ''}`,
-              width: 500,
-              alignment: 'center',
-            },
-          ]
+          columns: reporte.imagenGrafico
+            ? [
+              {
+                image: reporte.imagenGrafico, // Solo se incluye si imagenGrafico tiene valor
+                width: 500,
+                alignment: 'center',
+              },
+            ]
+            : [], // Si no hay imagen, se devuelve un arreglo vacío
         },
       ],
       footer: (currentPage, pageCount) => {

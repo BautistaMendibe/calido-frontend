@@ -70,7 +70,7 @@ export class GenerarReportesComponent implements OnInit {
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
         reporte.data = data;
 
-        if (reporte.tipoGrafico) {
+        if (reporte.tipoGrafico && reporte.tipoGrafico != "") {
           if(reporte.tipoGrafico == 'bar') {
             this.generarGraficoBarras(reporte);
           }
@@ -159,7 +159,7 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Productos', 'Cantidad'],
             [],
-            'bar',
+            '',
             '',
             true
           ),
