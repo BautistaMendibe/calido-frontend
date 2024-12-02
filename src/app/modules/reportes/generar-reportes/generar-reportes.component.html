@@ -24,6 +24,7 @@
               <button *ngIf="reporte.noNecesitaFiltro" mat-raised-button color="accent" class="btn round btn-generar-reporte-sin-filtro mt-2 mb-2" style="margin-right: 28px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
             </div>
             <div *ngIf="reporte.activo" class="mt-2 row mb-2" style="margin-left: 15px; margin-right: 15px">
+              <span class="subtitulo-reporte">Si no se selecciona ninguna fecha, se mostrará el historial completo.</span>
               <div class="col-md-3">
                 <mat-form-field appearance="outline" class="w-100">
                   <mat-label>Fecha Desde</mat-label>
