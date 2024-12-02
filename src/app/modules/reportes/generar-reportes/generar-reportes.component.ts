@@ -107,7 +107,7 @@ export class GenerarReportesComponent implements OnInit {
     }
 
     // Mapeamos los datos para las etiquetas (dato1) y los valores (dato2)
-    const labels = reporte.data.map((item) => item.dato1);
+    const labels = reporte.data.map((item) => item.dato1.length > 10 ? item.dato1.substring(0, 10) + '...' : item.dato1);
     const data = reporte.data.map((item) => item.dato2);
 
     this.chart = new Chart(ctx, {
@@ -136,8 +136,6 @@ export class GenerarReportesComponent implements OnInit {
       this.buscandoData = false;
     }, 500);
   }
-
-
 
 
   private obtenerSecciones() {
@@ -212,17 +210,21 @@ export class GenerarReportesComponent implements OnInit {
 
   public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,
-    maintainAspectRatio: false,
+    maintainAspectRatio: true,
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
           stepSize: 10,
+          font: {
+            size: 14,
+          },
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.2)',
+          color: 'rgba(0, 0, 0, 1)',
           lineWidth: 0.1,
         },
+
       },
       x: {
         ticks: {
@@ -230,9 +232,12 @@ export class GenerarReportesComponent implements OnInit {
           maxRotation: 45,
           minRotation: 0,
           padding: 5,
+          font: {
+            size: 14,
+          },
         },
         grid: {
-          color: 'rgba(0, 0, 0, 0.2)',
+          color: 'rgba(0, 0, 0, 1)',
           lineWidth: 0.1,
         },
       },
@@ -244,26 +249,9 @@ export class GenerarReportesComponent implements OnInit {
       },
     },
     elements: {
-      bar: {
-
-      },
+      bar: {},
     },
   };
-
-  public barChartData: ChartDataset<'bar', number[]>[] = [
-    {
-      data: [],
-      label: '',
-      backgroundColor: 'rgba(246,121,86,0.5)',
-      borderColor: 'rgba(225, 91, 53, 1)',
-      borderWidth: {
-        top: 3,
-        right: 1,
-        bottom: 1,
-        left: 1
-      }
-    }
-  ];
 
 
   //getters

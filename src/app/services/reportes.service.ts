@@ -138,7 +138,7 @@ export class ReportesService {
           columns: [
             {
               image: `${reporte.imagenGrafico ? reporte.imagenGrafico : ''}`,
-              width: 400,
+              width: 500,
               alignment: 'center',
             },
           ]
