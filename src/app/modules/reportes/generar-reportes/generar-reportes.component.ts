@@ -150,7 +150,7 @@ export class GenerarReportesComponent implements OnInit {
         'sell',
         [
           new ReporteComando(
-            'Cantidad de ventas por tipo de producto',
+            'Ventas por tipo de producto',
             'reportes_ventas_por_tipo_producto',
             new FiltrosReportesComando(),
             ['Tipo de producto', 'Cantidad'],
@@ -158,14 +158,20 @@ export class GenerarReportesComponent implements OnInit {
             'bar'
           ),
           new ReporteComando(
-            'Cantidad de ventas por proveedor',
-            '',
-            new FiltrosReportesComando()
+            'Ventas por proveedor',
+            'reportes_ventas_por_proveedor',
+            new FiltrosReportesComando(),
+            ['Proveedor', 'Cantidad'],
+            [],
+            'bar'
           ),
           new ReporteComando(
-            'Ventas por temporada',
-            '',
-            new FiltrosReportesComando()
+            'Ventas por clientes',
+            'reportes_ventas_por_cliente',
+            new FiltrosReportesComando(),
+            ['Cliente', 'Cantidad'],
+            [],
+            'bar'
           ),
           new ReporteComando(
             'Ventas por clientes',
