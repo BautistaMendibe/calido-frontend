@@ -61,13 +61,12 @@ export class GenerarReportesComponent implements OnInit {
   }
 
   public generarReporte(reporte: ReporteComando) {
-    const validarFecha = this.validarFechas();
+    const validarFecha = this.validarFechas(reporte);
     this.buscandoData = true;
     if (validarFecha) {
+      this.limpiarDataReporte(reporte);
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
         reporte.data = data;
-        reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
-        reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
 
         if (reporte.tipoGrafico) {
           if(reporte.tipoGrafico == 'bar') {
@@ -83,12 +82,18 @@ export class GenerarReportesComponent implements OnInit {
     }
   }
 
-  private validarFechas(): boolean {
+  private validarFechas(reporte: ReporteComando): boolean {
     if (this.txFechaDesde.value <= this.txFechaHasta.value) {
+      reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
+      reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
       return true;
     } else {
       return false;
     }
+  }
+
+  private limpiarDataReporte(reporte: ReporteComando) {
+    reporte.data = [];
   }
 
   private generarGraficoBarras(reporte: ReporteComando) {
@@ -118,7 +123,7 @@ export class GenerarReportesComponent implements OnInit {
           {
             label: 'Cantidad', // Etiqueta para la leyenda
             data: data, // Datos de la cantidad
-            backgroundColor: 'rgba(246,121,86,0.5)',
+            backgroundColor: 'rgba(246,121,86,0.8)',
             borderColor: 'rgba(225, 91, 53, 1)',
             borderWidth: 1,
           },
