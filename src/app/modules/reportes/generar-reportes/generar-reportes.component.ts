@@ -150,6 +150,31 @@ export class GenerarReportesComponent implements OnInit {
   private obtenerSecciones() {
     this.secciones = [
       new SeccionReporteComando(
+        'Productos',
+        'shopping_cart',
+        [
+          new ReporteComando(
+            'Stock actual de productos',
+            'reportes_stock_actual',
+            new FiltrosReportesComando(),
+            ['Productos', 'Cantidad'],
+            [],
+            'bar',
+            '',
+            true
+          ),
+          new ReporteComando(
+            'Productos más vendidos',
+            'reportes_productos_mas_vendidos',
+            new FiltrosReportesComando(),
+            ['Productos', 'Cantidad de ventas'],
+            [],
+            'bar'
+          ),
+        ]
+      ),
+
+      new SeccionReporteComando(
         'Ventas',
         'sell',
         [
@@ -204,24 +229,14 @@ export class GenerarReportesComponent implements OnInit {
       ),
 
       new SeccionReporteComando(
-        'Productos',
-        'shopping_cart',
+        'Empleados',
+        'supervisor_account',
         [
           new ReporteComando(
-            'Stock actual de productos',
-            'reportes_stock_actual',
+            'Ventas por empleados',
+            'reportes_pedidos_por_proveedor',
             new FiltrosReportesComando(),
-            ['Productos', 'Cantidad'],
-            [],
-            'bar',
-            '',
-            true
-          ),
-          new ReporteComando(
-            'Productos más vendidos',
-            'reportes_productos_mas_vendidos',
-            new FiltrosReportesComando(),
-            ['Productos', 'Cantidad de ventas'],
+            ['Empleados', 'Cantidad de ventas'],
             [],
             'bar'
           ),
