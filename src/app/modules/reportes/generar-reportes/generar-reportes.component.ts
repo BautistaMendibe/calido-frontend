@@ -153,7 +153,7 @@ export class GenerarReportesComponent implements OnInit {
             'Ventas por tipo de producto',
             'reportes_ventas_por_tipo_producto',
             new FiltrosReportesComando(),
-            ['Tipo de producto', 'Cantidad'],
+            ['Tipo de producto', 'Cantidad de ventas'],
             [],
             'bar'
           ),
@@ -161,7 +161,7 @@ export class GenerarReportesComponent implements OnInit {
             'Ventas por proveedor',
             'reportes_ventas_por_proveedor',
             new FiltrosReportesComando(),
-            ['Proveedor', 'Cantidad'],
+            ['Proveedor', 'Cantidad de ventas'],
             [],
             'bar'
           ),
@@ -169,7 +169,7 @@ export class GenerarReportesComponent implements OnInit {
             'Ventas por clientes',
             'reportes_ventas_por_cliente',
             new FiltrosReportesComando(),
-            ['Cliente', 'Cantidad'],
+            ['Cliente', 'Cantidad de ventas'],
             [],
             'bar'
           ),
@@ -177,7 +177,7 @@ export class GenerarReportesComponent implements OnInit {
             'Ventas por forma de pago',
             'reportes_ventas_por_forma_de_pago',
             new FiltrosReportesComando(),
-            ['Forma de pago', 'Cantidad'],
+            ['Forma de pago', 'Cantidad de ventas'],
             [],
             'bar'
           ),
@@ -192,14 +192,9 @@ export class GenerarReportesComponent implements OnInit {
             'Compras por proveedor',
             'reportes_pedidos_por_proveedor',
             new FiltrosReportesComando(),
-            ['Proveedor', 'Cantidad'],
+            ['Proveedor', 'Cantidad de compras'],
             [],
             'bar'
-          ),
-          new ReporteComando(
-            'Cantidad de ventas por proveedor',
-            '',
-            new FiltrosReportesComando()
           ),
         ]
       ),
@@ -209,14 +204,12 @@ export class GenerarReportesComponent implements OnInit {
         'shopping_cart',
         [
           new ReporteComando(
-            'Cantidad de ventas por tipo de producto',
-            '',
-            new FiltrosReportesComando()
-          ),
-          new ReporteComando(
-            'Cantidad de ventas por proveedor',
-            '',
-            new FiltrosReportesComando()
+            'Productos más vendidos',
+            'reportes_productos_mas_vendidos',
+            new FiltrosReportesComando(),
+            ['Productos', 'Cantidad de ventas'],
+            [],
+            'bar'
           ),
         ]
       ),
