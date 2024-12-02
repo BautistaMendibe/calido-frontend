@@ -234,7 +234,7 @@ export class GenerarReportesComponent implements OnInit {
         [
           new ReporteComando(
             'Ventas por empleados',
-            'reportes_pedidos_por_proveedor',
+            'reportes_ventas_por_empleado',
             new FiltrosReportesComando(),
             ['Empleados', 'Cantidad de ventas'],
             [],
