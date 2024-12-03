@@ -16,7 +16,7 @@
           <mat-label>Cuenta Corriente</mat-label>
           <mat-select [formControl]="txCuenta">
             <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.usuario.id">
-              {{ cuenta.usuario.nombre + ' ' + cuenta.usuario.apellido + ' (' + cuenta.id + ')' }}
+              {{ + '(' + cuenta.id + ') ' + cuenta.usuario.nombre + ' ' + cuenta.usuario.apellido }}
             </mat-option>
           </mat-select>
         </mat-form-field>
