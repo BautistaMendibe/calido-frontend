@@ -36,10 +36,11 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public ventas: Venta[] = [];
-  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
+  public columnas: string[] = ['id', 'montoTotal', 'saldoDisponible', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
 
   public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
+  public tieneAccionesPendientes: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -98,6 +99,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       txCliente: [this.data.cuentaCorriente?.usuario?.id || '', [Validators.required]],
       txCreada: [this.data.cuentaCorriente?.fechaDesde || new Date(), [Validators.required]],
       txBalance: ['', [Validators.required]],
+      txDebe: [''],
+      txHaber: [''],
       txBuscar: ['']
     });
   }
@@ -111,8 +114,21 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public buscarVentas(idUsuario: number) {
     this.isLoading = true;
     this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
-      this.ventas = ventas;
-      this.tableDataSource.data = ventas;
+      // Filtrar las ventas para mostrar solo ventas de cuenta corriente o anuladas con saldo
+      const ventasFiltradas = ventas.filter((venta) =>
+        (venta.formaDePago?.id === 6 && venta.comprobanteAfip.comprobante_nro == null)
+        || (venta.saldoDisponible !== null && venta.saldoDisponible >= 0)
+      );
+
+      // Determinar si hay ventas no facturadas o no canceladas con saldo (lo que indica que hay cosas que hacer en esta cta cte)
+      this.tieneAccionesPendientes = ventasFiltradas.some((venta) =>
+        (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1) ||
+        (venta.canceladaConSaldo && venta.canceladaConSaldo !== 1)
+      );
+
+      // Asignar solo las ventas filtradas
+      this.ventas = ventasFiltradas;
+      this.tableDataSource.data = ventasFiltradas;
       this.tableDataSource.paginator = this.paginator;
       this.tableDataSource.sort = this.sort;
 
@@ -123,18 +139,24 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   private calcularBalance() {
     let total = 0;
+    let debe = 0;
+    let haber = 0;
 
     this.ventas.forEach(venta => {
-      // En caso de que no tenga comprobante (sin facturar), tenemos que sumarlo al balance negativo.
-      if (venta.comprobanteAfip.comprobante_nro == null) {
-        total += venta.montoTotal || 0;
+      if (venta.anulada && venta.saldoDisponible >= 0 && venta.comprobanteAfip.comprobante_nro !== null) {
+        // Si la venta está anulada, sumamos el saldo disponible al balance.
+        total += Number(venta.saldoDisponible) || 0;
+        haber += Number(venta.saldoDisponible) || 0;
+      } else if (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1 && !venta.anulada) {
+        // Si no tiene comprobante (no facturada), la restamos como saldo negativo, salvo que haya sido cancelada con saldo.
+        total -= Number(venta.montoTotal) || 0;
+        debe -= Number(venta.montoTotal) || 0;
       }
     });
 
-    // Convertimos el total a negativo
-    total = total * -1;
-
     this.txBalance.setValue(total);
+    this.txDebe.setValue(debe);
+    this.txHaber.setValue(haber);
   }
 
   public facturarVenta(venta: Venta) {
@@ -149,6 +171,24 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
               this.tableDataSource._updateChangeSubscription();
             } else {
               this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
+            }
+          });
+        }
+      });
+  }
+
+  public cancelarVenta(venta: Venta) {
+    this.notificationDialogService.confirmation('¿Desea cancelar esta venta con saldo?', 'Cancelar venta')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Venta cancelada con saldo de cuenta correctamente');
+              this.buscarVentas(this.txCliente.value);
+              this.tableDataSource._updateChangeSubscription();
+            } else {
+              this.notificacionService.openSnackBarError('Error al cancelar venta. Intentelo nuevamente.');
             }
           });
         }
@@ -260,6 +300,14 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   get txCreada() {
     return this.form.get('txCreada') as FormControl;
+  }
+
+  get txDebe() {
+    return this.form.get('txDebe') as FormControl;
+  }
+
+  get txHaber() {
+    return this.form.get('txHaber') as FormControl;
   }
 
   get txBalance() {

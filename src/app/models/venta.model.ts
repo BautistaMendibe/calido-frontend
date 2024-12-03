@@ -24,6 +24,10 @@ export class Venta {
   idCaja: number;
   fechaFacturacion: Date;
   fechaAnulacion: Date;
+  saldoDisponible: number;
+  canceladaConSaldo: number;
+  bonificacion: number;
+  saldoACancelarParcialmente: number;
 
   constructor(
       id?: number,
@@ -43,7 +47,11 @@ export class Venta {
       anulada?: boolean,
       idCaja?: number,
       fechaFacturacion?: Date,
-      fechaAnulacion?: Date
+      fechaAnulacion?: Date,
+      saldoDisponible?: number,
+      canceladaConSaldo?: number,
+      bonificacion?: number,
+      saldoACancelarParcialmente?: number
   ) {
 
     this.id = id!;
@@ -64,5 +72,9 @@ export class Venta {
     this.idCaja = idCaja!;
     this.fechaFacturacion = fechaFacturacion!;
     this.fechaAnulacion = fechaAnulacion!;
+    this.saldoDisponible = saldoDisponible!;
+    this.canceladaConSaldo = canceladaConSaldo!;
+    this.bonificacion = bonificacion!;
+    this.saldoACancelarParcialmente = saldoACancelarParcialmente!;
   }
 }

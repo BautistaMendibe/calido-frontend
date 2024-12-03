@@ -56,7 +56,7 @@
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Forma de Pago</mat-label>
                 <mat-select [formControl]="txFormaPago">
-                  <mat-option *ngFor="let formaPago of formasPago" [value]="formaPago.id">
+                  <mat-option *ngFor="let formaPago of formasPagoParaMovimientos" [value]="formaPago.id">
                     {{ formaPago.nombre }}
                   </mat-option>
                 </mat-select>
@@ -145,21 +145,6 @@
               <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="acciones">
-              <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
-              <mat-cell *matCellDef="let venta" data-label="Acciones">
-                <button
-                  mat-icon-button
-                  color="primary"
-                  matTooltip="Eliminar"
-                  *ngIf="venta.descripcion"
-                  (click)="eliminarMovimiento(venta.id)"
-                  [disabled]="formDesactivado">
-                  <mat-icon class="eliminar">delete</mat-icon>
-                </button>
-              </mat-cell>
-            </ng-container>
-
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
           </mat-table>
@@ -234,7 +219,7 @@
               <p *ngFor="let detalle of forma.detallesEgresos" class="detalle">
                 - {{ detalle.concepto }}: $ {{ detalle.monto | number:'1.2-2':'es-AR' }}
               </p>
-              <p class="leyenda-cta-cte" *ngIf="forma.id === 6">
+              <p class="leyenda" *ngIf="forma.id === 6">
                 Los egresos de Cuenta Corriente se muestran de forma informativa, no se suman al total de egresos.
               </p>
             </div>
@@ -273,21 +258,30 @@
             <div class="diferencia-body">
               <p class="total-item">
                 <span class="label">Total registrado en caja por sistema:</span>
-                <span class="value sistema">$ {{ this.totalCaja | number:'1.2-2':'es-AR' }}</span>
+                <span class="value sistema">
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.totalCaja | number:'1.2-2':'es-AR'))
+                  : '$' }}
+                </span>
               </p>
               <p class="total-item">
                 <span class="label">Diferencia según el usuario:</span>
                 <span
                   class="value"
                   [ngClass]="{
-                    'negativo': (Math.round(this.diferenciaCaja * 100) / 100) < 0,
-                    'cero': (Math.round(this.diferenciaCaja * 100) / 100) === 0,
-                    'positivo': (Math.round(this.diferenciaCaja * 100) / 100) > 0
+                    'negativo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaCaja * 100) / 100) < 0,
+                    'cero': this.arqueo.idEstadoArqueo !== 2 || (Math.round(this.diferenciaCaja * 100) / 100) === 0,
+                    'positivo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaCaja * 100) / 100) > 0
                   }">
-                  $ {{ this.diferenciaCaja | number:'1.2-2':'es-AR' }}
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.diferenciaCaja | number:'1.2-2':'es-AR'))
+                  : '$' }}
                 </span>
               </p>
             </div>
+            <p class="leyenda" *ngIf="this.arqueo.idEstadoArqueo !== 2">
+              Podrás ver los totales y diferencias al cerrar este arqueo.
+            </p>
           </div>
 
           <!-- Otros Medios -->
@@ -299,21 +293,30 @@
             <div class="diferencia-body">
               <p class="total-item">
                 <span class="label">Total registrado en otros medios por sistema:</span>
-                <span class="value sistema">$ {{ this.totalOtrosMedios | number:'1.2-2':'es-AR' }}</span>
+                <span class="value sistema">
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.totalOtrosMedios | number:'1.2-2':'es-AR'))
+                  : '$' }}
+                </span>
               </p>
               <p class="total-item">
                 <span class="label">Diferencia según el usuario:</span>
                 <span
                   class="value"
                   [ngClass]="{
-                    'negativo': (Math.round(this.diferenciaOtrosMedios * 100) / 100) < 0,
-                    'cero': (Math.round(this.diferenciaOtrosMedios * 100) / 100) === 0,
-                    'positivo': (Math.round(this.diferenciaOtrosMedios * 100) / 100) > 0
+                    'negativo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaOtrosMedios * 100) / 100) < 0,
+                    'cero': this.arqueo.idEstadoArqueo !== 2 || (Math.round(this.diferenciaOtrosMedios * 100) / 100) === 0,
+                    'positivo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaOtrosMedios * 100) / 100) > 0
                   }">
-                  $ {{ this.diferenciaOtrosMedios | number:'1.2-2':'es-AR' }}
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.diferenciaOtrosMedios | number:'1.2-2':'es-AR'))
+                  : '$' }}
                 </span>
               </p>
             </div>
+            <p class="leyenda" *ngIf="this.arqueo.idEstadoArqueo !== 2">
+              Podrás ver los totales y diferencias al cerrar este arqueo.
+            </p>
           </div>
         </div>
       </mat-card>
