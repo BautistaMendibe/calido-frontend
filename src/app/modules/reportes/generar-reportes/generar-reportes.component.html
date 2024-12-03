@@ -41,7 +41,17 @@
                   <mat-datepicker #pickerHasta></mat-datepicker>
                 </mat-form-field>
               </div>
-              <div class="col-md-6 mb-2">
+              <div class="col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Gráfico</mat-label>
+                  <mat-select [formControl]="txTipoGrafico">
+                    <mat-option *ngFor="let grafico of tiposGraficos" [value]="grafico">
+                      {{ grafico }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3 mb-2">
                 <button *ngIf="!buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte" style="float: right" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
                 <div class="spinner-wrapper" *ngIf="buscandoData">
                   <mat-spinner></mat-spinner>

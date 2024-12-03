@@ -8,7 +8,6 @@ export class ReporteComando {
   activo: boolean = false;
   data: any[];
   columnas: string[];
-  tipoGrafico: string;
   imagenGrafico: string;
   noNecesitaFiltro: boolean;
 
@@ -19,7 +18,6 @@ export class ReporteComando {
     filtros?: FiltrosReportesComando,
     columnas?: string[],
     data?: any[],
-    tipoGrafico?: string,
     imagenGrafico?: string,
     noNecesitaFiltro?: boolean,
   ) {
@@ -28,7 +26,6 @@ export class ReporteComando {
     this.filtros = filtros!;
     this.data = data!;
     this.columnas = columnas!;
-    this.tipoGrafico = tipoGrafico!;
     this.imagenGrafico = imagenGrafico!;
     this.noNecesitaFiltro = noNecesitaFiltro!;
   }

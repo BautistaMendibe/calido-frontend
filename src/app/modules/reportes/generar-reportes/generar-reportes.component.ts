@@ -54,6 +54,7 @@ export class GenerarReportesComponent implements OnInit {
       txFechaHasta: [''],
       txFiltroNumerico: [''],
       txFiltroString: [''],
+      txTipoGrafico: [this.tiposGraficos[0]],
     });
   }
 
@@ -77,14 +78,15 @@ export class GenerarReportesComponent implements OnInit {
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
         reporte.data = data;
 
-        if (reporte.tipoGrafico && reporte.tipoGrafico != "") {
-          if(reporte.tipoGrafico == 'bar') {
+        if (this.txTipoGrafico.value != 'Ninguno') {
+          if(this.txTipoGrafico.value == 'Barras') {
             this.generarGraficoBarras(reporte);
           }
-          if(reporte.tipoGrafico == 'pie') {
+          if(this.txTipoGrafico.value == 'Torta') {
             this.generarGraficoTorta(reporte);
           }
         } else {
+          reporte.imagenGrafico = '';
           this.reporteService.generarPDF(reporte, this.configuracion);
           this.buscandoData = false;
         }
@@ -242,7 +244,6 @@ export class GenerarReportesComponent implements OnInit {
             ['Productos', 'Cantidad'],
             [],
             '',
-            '',
             true
           ),
           new ReporteComando(
@@ -251,7 +252,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Productos', 'Cantidad de ventas'],
             [],
-            'bar'
           ),
         ]
       ),
@@ -266,7 +266,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Tipo de producto', 'Cantidad de ventas'],
             [],
-            'pie'
           ),
           new ReporteComando(
             'Ventas por proveedor',
@@ -274,7 +273,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Proveedor', 'Cantidad de ventas'],
             [],
-            'bar'
           ),
           new ReporteComando(
             'Ventas por clientes',
@@ -282,7 +280,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Cliente', 'Cantidad de ventas'],
             [],
-            'bar'
           ),
           new ReporteComando(
             'Ventas por forma de pago',
@@ -290,7 +287,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Forma de pago', 'Cantidad de ventas'],
             [],
-            'bar'
           ),
         ]
       ),
@@ -305,7 +301,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Proveedor', 'Cantidad de compras'],
             [],
-            'bar'
           ),
         ]
       ),
@@ -320,7 +315,6 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Empleados', 'Cantidad de ventas'],
             [],
-            'bar'
           ),
         ]
       ),
@@ -390,6 +384,10 @@ export class GenerarReportesComponent implements OnInit {
 
   get txFiltroString(): FormControl {
     return this.form.get('txFiltroString') as FormControl;
+  }
+
+  get txTipoGrafico(): FormControl {
+    return this.form.get('txTipoGrafico') as FormControl;
   }
 
 }
