@@ -35,6 +35,7 @@ import {ConsultarCajaComponent} from "./modules/gerencia/consultar-caja/consulta
 import {DetalleArqueoComponent} from "./modules/gerencia/detalle-arqueo/detalle-arqueo.component";
 import {RecuperarContrasenaComponent} from "./modules/auth/recuperar-contrasena/recuperar-contrasena.component";
 import {authGuard} from "./auth.guard";
+import {GenerarReportesComponent} from "./modules/reportes/generar-reportes/generar-reportes.component";
 
 /**
  * Rutas de la aplicación
@@ -179,6 +180,12 @@ const routes: Routes = [
   {
     path: 'recuperar-contrasena',
     component: RecuperarContrasenaComponent
+  },
+  {
+    path: 'generar-reportes',
+    component: GenerarReportesComponent,
+    canActivate: [authGuard],
+    data: { roles: ['Administrador', 'Encargado'] },
   }
 ];
 

@@ -1,0 +1,66 @@
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">Generar reportes</p>
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+  <br>
+    <div *ngFor="let seccion of secciones">
+      <div class="seccion-container">
+        <h5 class="seccion-nombre">
+          <mat-icon class="icono-seccion">{{seccion.icono}}</mat-icon>
+          <span>{{seccion.nombre}}</span>
+        </h5>
+        <br>
+
+        <div class="reporte-container" *ngFor="let reporte of seccion.reportes">
+            <div class="d-flex justify-content-between" (click)="expandirReporte(reporte)">
+              <span class="titulo-reporte">{{reporte.nombre}}</span>
+              <button mat-icon-button *ngIf="!reporte.noNecesitaFiltro">
+                <mat-icon>{{ reporte.activo ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+              <button *ngIf="reporte.noNecesitaFiltro" [disabled]="buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte-sin-filtro mt-2 mb-2" style="margin-right: 28px" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+            </div>
+            <div *ngIf="reporte.activo" class="mt-2 row mb-2" style="margin-left: 15px; margin-right: 15px">
+              <span class="subtitulo-reporte">Si no se selecciona ninguna fecha, se mostrará el historial completo.</span>
+              <div class="col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Fecha Desde</mat-label>
+                  <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaDesde" readonly/>
+                  <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerDesde></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Fecha Hasta</mat-label>
+                  <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaHasta" readonly/>
+                  <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+                  <mat-datepicker #pickerHasta></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3">
+                <mat-form-field appearance="outline" class="w-100">
+                  <mat-label>Gráfico</mat-label>
+                  <mat-select [formControl]="txTipoGrafico">
+                    <mat-option *ngFor="let grafico of tiposGraficos" [value]="grafico">
+                      {{ grafico }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div class="col-md-3 mb-2">
+                <button *ngIf="!buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte" style="float: right" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+                <div class="spinner-wrapper" *ngIf="buscandoData">
+                  <mat-spinner></mat-spinner>
+                </div>
+              </div>
+            </div>
+        </div>
+      </div>
+  </div>
+  </mat-card>
+</div>
+
