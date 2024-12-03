@@ -13,6 +13,13 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
 
   private estadoPagoInterval: any;
 
+  private mapaEstados: { [key: string]: { texto: string; icono: string } } = {
+    REGISTRADA: { texto: "REGISTRADA", icono: "hourglass_empty" },
+    CANCELADA: { texto: "CANCELADA", icono: "cancel" },
+    VENCIDA: { texto: "VENCIDA", icono: "timer_off" },
+    PROCESADA: { texto: "COMPLETADA", icono: "check_circle" },
+  };
+
   constructor(
     public dialogRef: MatDialogRef<QRVentanaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { imageUrl: string, idReferenciaOperacion: string },
@@ -26,7 +33,7 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
     // Realizamos la consulta periódica
     this.estadoPagoInterval = setInterval(() => {
       this.obtenerEstadoPago();
-    }, 3000);  // Cada 10 segundos (puedes cambiarlo según lo necesites)
+    }, 5000);  // Cada 10 segundos (puedes cambiarlo según lo necesites)
   }
 
   ngOnDestroy() {
@@ -41,7 +48,10 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
       next: (respuesta) => {
         if (Array.isArray(respuesta) && respuesta.length > 0) {
           const ultimoEstado = respuesta[respuesta.length - 1];
-          this.estadoPago = ultimoEstado.Estado;
+          const estadoRecibido = ultimoEstado.Estado;
+
+          // Mapeamos el estado recibido a un texto personalizado
+          this.estadoPago = this.obtenerTextoEstado(estadoRecibido);
         } else {
           this.estadoPago = "No se encontró información del pago.";
         }
@@ -51,6 +61,14 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
         this.estadoPago = "Error al consultar el estado del pago.";
       }
     });
+  }
+
+  obtenerTextoEstado(estado: string): string {
+    return this.mapaEstados[estado]?.texto || "DESCONOCIDO. Consulte con soporte.";
+  }
+
+  obtenerIconoEstado(estado: string): string {
+    return this.mapaEstados[estado]?.icono || "help"; // Ícono por defecto
   }
 
   closeDialog(): void {

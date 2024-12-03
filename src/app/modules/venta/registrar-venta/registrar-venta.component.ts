@@ -384,6 +384,7 @@ export class RegistrarVentaComponent implements OnInit{
 
       this.registrandoVenta = true;
 
+      // PAGO QR SIRO
       if (venta.formaDePago.id == this.formasDePagoEnum.QR) {
         console.log(venta);
         this.notificacionService.openSnackBarSuccess('Generando pago.');
@@ -409,7 +410,6 @@ export class RegistrarVentaComponent implements OnInit{
                       const resultado = respuestaConsulta[respuestaConsulta.length - 1];
 
                       // Extraemos los valores
-
                       const pagoExitoso = resultado.PagoExitoso;
                       const estado = resultado.Estado;
 
@@ -440,6 +440,7 @@ export class RegistrarVentaComponent implements OnInit{
           }
         });
       }
+      // FIN PAGO QR SIRO
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
