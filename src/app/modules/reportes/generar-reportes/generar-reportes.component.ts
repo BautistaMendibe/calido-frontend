@@ -9,7 +9,9 @@ import {Configuracion} from "../../../models/configuracion.model";
 import {ConfiguracionesService} from "../../../services/configuraciones.service";
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
-import {Chart, ChartDataset, ChartOptions} from "chart.js";
+import {Chart, ChartDataset, ChartOptions, ChartType, registerables} from "chart.js";
+
+Chart.register(...registerables);
 
 @Component({
   selector: 'app-generar-reportes',
@@ -23,6 +25,11 @@ export class GenerarReportesComponent implements OnInit {
   public configuracion: Configuracion = new Configuracion();
   public buscandoData: boolean = false;
   public barChartLabels: string[] = [];
+  public tiposGraficos = [
+    'Ninguno',
+    'Barras',
+    'Torta'
+  ];
   private chart!: Chart;
 
   constructor(
@@ -73,6 +80,9 @@ export class GenerarReportesComponent implements OnInit {
         if (reporte.tipoGrafico && reporte.tipoGrafico != "") {
           if(reporte.tipoGrafico == 'bar') {
             this.generarGraficoBarras(reporte);
+          }
+          if(reporte.tipoGrafico == 'pie') {
+            this.generarGraficoTorta(reporte);
           }
         } else {
           this.reporteService.generarPDF(reporte, this.configuracion);
@@ -146,6 +156,78 @@ export class GenerarReportesComponent implements OnInit {
     }, 500);
   }
 
+  private generarGraficoTorta(reporte: ReporteComando) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    document.body.appendChild(canvas);
+
+    if (!ctx || !reporte.data || reporte.data.length === 0) {
+      console.error('No hay datos o contexto para generar el gráfico.');
+      return;
+    }
+
+    const labels = reporte.data.map((item) => item.dato1);
+    const data = reporte.data.map((item) => item.dato2);
+
+    const colores = this.generarColoresDinamicos(data.length);
+
+    // Crear el gráfico de tipo 'pie'
+    this.chart = new Chart(ctx, {
+      type: 'pie' as ChartType,
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: 'Cantidad',
+            data: data,
+            backgroundColor: colores.backgroundColor,
+            borderColor: colores.borderColor,
+            borderWidth: 1,
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top',
+          },
+          tooltip: {
+            enabled: true,
+          },
+        },
+      },
+    });
+
+    // Generar imagen en base64 para el PDF
+    setTimeout(() => {
+      reporte.imagenGrafico = this.chart.toBase64Image();
+      console.log(reporte.imagenGrafico);
+      document.body.removeChild(canvas);
+      this.reporteService.generarPDF(reporte, this.configuracion);
+      this.buscandoData = false;
+    }, 500);
+  }
+
+  private generarColoresDinamicos(cantidad: number): { backgroundColor: string[], borderColor: string[] } {
+    const backgroundColor: string[] = [];
+    const borderColor: string[] = [];
+
+    for (let i = 0; i < cantidad; i++) {
+      // Generar colores aleatorios en formato RGBA
+      const r = Math.floor(Math.random() * 255);
+      const g = Math.floor(Math.random() * 255);
+      const b = Math.floor(Math.random() * 255);
+      const alpha = 0.8;
+
+      backgroundColor.push(`rgba(${r}, ${g}, ${b}, ${alpha})`);
+      borderColor.push(`rgba(${r}, ${g}, ${b}, 1)`);
+    }
+
+    return { backgroundColor, borderColor };
+  }
+
+
 
   private obtenerSecciones() {
     this.secciones = [
@@ -184,7 +266,7 @@ export class GenerarReportesComponent implements OnInit {
             new FiltrosReportesComando(),
             ['Tipo de producto', 'Cantidad de ventas'],
             [],
-            'bar'
+            'pie'
           ),
           new ReporteComando(
             'Ventas por proveedor',
