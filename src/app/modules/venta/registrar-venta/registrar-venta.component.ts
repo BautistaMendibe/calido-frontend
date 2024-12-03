@@ -403,34 +403,71 @@ export class RegistrarVentaComponent implements OnInit{
               this.mostrarQR(idReferencia);
 
               if (idReferencia) {
-                this.ventasService.consultaPagoSIROQR(idReferencia).subscribe({
-                  next: (respuestaConsulta) => {
-                    if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
-                      // Accedemos al último elemento del array
-                      const resultado = respuestaConsulta[respuestaConsulta.length - 1];
-
-                      // Extraemos los valores
-                      const pagoExitoso = resultado.PagoExitoso;
-                      const estado = resultado.Estado;
-
-                      console.log('Pago Exitoso:', pagoExitoso);
-                      console.log('Estado:', estado);
-
-                      // Lógica basada en los valores
-                      if (pagoExitoso && estado === 'PROCESADA') {
-                        this.notificacionService.openSnackBarSuccess('El pago fue exitoso.');
-                      } else {
-                        this.notificacionService.openSnackBarError(`El pago está en estado: ${estado}.`);
-                      }
-                    } else {
-                      this.notificacionService.openSnackBarError('No se encontró información del pago.');
-                    }
-                  },
-                  error: (err) => {
-                    console.error('Error al consultar el estado del pago:', err);
-                    this.notificacionService.openSnackBarError('Ocurrió un error al consultar el estado del pago.');
+                // Definimos la función de polling
+                const consultarEstadoPago = (reintentosRestantes: number, intervalo: number) => {
+                  if (reintentosRestantes <= 0) {
+                    this.notificacionService.openSnackBarError('Error. Reintente la venta.');
+                    return;
                   }
-                });
+
+                  this.ventasService.consultaPagoSIROQR(idReferencia).subscribe({
+                    next: (respuestaConsulta) => {
+                      if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
+                        // Obtenemos el último resultado
+                        const resultado = respuestaConsulta[respuestaConsulta.length - 1];
+                        const pagoExitoso = resultado.PagoExitoso;
+                        const estado = resultado.Estado;
+
+                        console.log('Pago Exitoso:', pagoExitoso);
+                        console.log('Estado:', estado);
+
+                        if (pagoExitoso && estado === 'PROCESADA') {
+                          // Lógica de registro y facturación automática
+                          console.log('Ejecutando lógica de registro y facturación...');
+                          this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
+
+                          // modularizar esta porcion de codigo
+                          this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
+                            if (respuesta.mensaje == 'OK') {
+                              this.notificacionService.openSnackBarSuccess('Venta registrada con éxito.');
+                              venta.id = respuesta.id;
+                              if (this.facturacionAutomatica) {
+                                this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
+                                  if (respuestaAfip.mensaje == 'OK') {
+                                    this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
+                                  } else {
+                                    this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente desde consultas.');
+                                  }
+                                })
+                              }
+                              this.registrandoVenta = false;
+                              this.limpiarVenta();
+                            } else {
+                              this.notificacionService.openSnackBarError('Error al registrar la venta, intentelo nuevamente');
+                              this.registrandoVenta = false;
+                            }
+                          });
+                          // fin modularizar esta porcion de codigo
+
+                        } else {
+                          console.log(`Estado actual: ${estado}. Reintentando en ${intervalo}ms...`);
+                          setTimeout(() => consultarEstadoPago(reintentosRestantes - 1, intervalo), intervalo);
+                        }
+                      } else {
+                        this.notificacionService.openSnackBarError('No se encontró información del pago, reintente.');
+                      }
+                    },
+                    error: (err) => {
+                      console.error('Error al consultar el estado del pago:', err);
+                      this.notificacionService.openSnackBarError('Ocurrió un error al consultar el estado del pago, reintente.');
+                    }
+                  });
+                };
+
+                // Iniciamos el polling con un máximo de 10 intentos y un intervalo de 5 segundos
+                const intentosMaximos = 65;
+                const intervaloMs = 5000; // 5 segundos
+                consultarEstadoPago(intentosMaximos, intervaloMs);
               }
             }
           },
@@ -439,6 +476,9 @@ export class RegistrarVentaComponent implements OnInit{
             this.notificacionService.openSnackBarError('Error en la solicitud.');
           }
         });
+        // Retorno para evitar registro y facturación de venta sin pagar
+        console.log("Retorno para evitar facturación de venta sin pagar")
+        return
       }
       // FIN PAGO QR SIRO
 
