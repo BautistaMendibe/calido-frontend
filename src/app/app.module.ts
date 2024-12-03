@@ -75,6 +75,7 @@ import { AsistenciasEmpleadosComponent } from './modules/home/asistencias-emplea
 import { UltimosClientesRegistradosComponent } from './modules/home/ultimos-clientes-registrados/ultimos-clientes-registrados.component';
 import { OrdenesDeCompraComponent } from './modules/home/ordenes-de-compra/ordenes-de-compra.component';
 import { RecuperarContrasenaComponent } from './modules/auth/recuperar-contrasena/recuperar-contrasena.component';
+import { AsignarCuentaCorrienteComponent } from './modules/clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -135,7 +136,8 @@ registerLocaleData(localeEs, 'es');
     UltimosClientesRegistradosComponent,
     OrdenesDeCompraComponent,
     ErrorMessagesComponent,
-    RecuperarContrasenaComponent
+    RecuperarContrasenaComponent,
+    AsignarCuentaCorrienteComponent
   ],
   imports: [
     BrowserModule,

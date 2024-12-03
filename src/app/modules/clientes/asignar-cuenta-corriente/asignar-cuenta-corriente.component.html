@@ -1,0 +1,45 @@
+<div class="container py-3 col-xl-11 form-emergente">
+  <br>
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">Asignar Cuenta Corriente</p>
+    </div>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <br>
+  <form [formGroup]="form">
+    <div class="row pt-4">
+      <div class="col-md-8">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cuenta Corriente</mat-label>
+          <mat-select [formControl]="txCuenta">
+            <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.usuario.id">
+              {{ cuenta.usuario.nombre + ' ' + cuenta.usuario.apellido + ' (' + cuenta.id + ')' }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <app-error-messages [control]="txCuenta"></app-error-messages>
+      </div>
+      <div class="col-md">
+        <button mat-stroked-button color="warn" class="btn round new-account-btn w-100" (click)="registrarNuevaCuenta()">
+          <mat-icon>add</mat-icon> Nueva cuenta
+        </button>
+      </div>
+    </div>
+  </form>
+
+  <mat-divider class="my-3"></mat-divider>
+  <br>
+
+  <!-- Btn de cancelar, registrar y modificar -->
+  <div class="row text-right">
+    <div class="col d-flex justify-content-end">
+      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">Cancelar</button>
+      <button mat-raised-button color="accent" class="btn round" (click)="asignar()" id="btnBuscar">Asignar</button>
+    </div>
+  </div>
+
+  <br>
+</div>

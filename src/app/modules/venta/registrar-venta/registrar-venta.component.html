@@ -107,181 +107,219 @@
     </div>
 
     <!-- Factura de venta -->
-    <div class="col">
-      <mat-card class="p-4 sale-invoice">
-        <h2 class="invoice-title">Detalle de venta</h2>
-        <mat-divider></mat-divider>
-        <br>
-        <div class="row">
-          <div class="col">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Forma de pago</mat-label>
-              <mat-select [formControl]="txFormaDePago" (valueChange)="cambiarFormaDePago($event)">
-                <mat-option *ngFor="let fdp of this.formasDePago" [value]="fdp.id">
-                  {{ fdp.nombre }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txFormaDePago"></app-error-messages>
-          </div>
-          <div class="col">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Tipo de Facturación</mat-label>
-              <mat-select [formControl]="txTipoFacturacion">
-                <mat-option *ngFor="let tp of this.tiposDeFacturacion" [value]="tp.id">
-                  {{ tp.nombre }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txTipoFacturacion"></app-error-messages>
-          </div>
-        </div>
-
-        <div class="row" *ngIf="mostrarTarjetasCuotas">
-          <div class="col-9">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Tarjeta</mat-label>
-              <mat-select [formControl]="txTarjeta" (valueChange)="seleccionarTarjeta($event)">
-                <mat-option *ngFor="let tarjeta of this.tarjetasRegistradas" [value]="tarjeta.id">
-                  {{ tarjeta.nombre }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txTarjeta"></app-error-messages>
-          </div>
-          <div class="col-3" *ngIf="this.txFormaDePago.value == this.formasDePagoEnum.TARJETA_CREDITO">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Cuotas</mat-label>
-              <mat-select [formControl]="txCuotas" (valueChange)="seleccionarCuota($event)">
-                <mat-option *ngFor="let cpt of tarjetaSeleccionada.cuotaPorTarjeta" [value]="cpt.id">
-                  {{ cpt.cantidadCuota }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txCuotas"></app-error-messages>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="col">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Caja</mat-label>
-              <mat-select [formControl]="txCaja">
-                <mat-option *ngFor="let caja of this.listaCajas" [value]="caja.id">
-                  {{ caja.nombre }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txCaja"></app-error-messages>
+      <div class="col" [formGroup]="form">
+        <mat-card class="p-4 sale-invoice">
+          <h2 class="invoice-title">Detalle de venta</h2>
+          <mat-divider></mat-divider>
+          <br>
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Forma de pago</mat-label>
+                <mat-select [formControl]="txFormaDePago" (valueChange)="cambiarFormaDePago($event)">
+                  <mat-option *ngFor="let fdp of this.formasDePago" [value]="fdp.id">
+                    {{ fdp.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txFormaDePago"></app-error-messages>
+            </div>
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Tipo de Facturación</mat-label>
+                <mat-select [formControl]="txTipoFacturacion">
+                  <mat-option *ngFor="let tp of this.tiposDeFacturacion" [value]="tp.id">
+                    {{ tp.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txTipoFacturacion"></app-error-messages>
+            </div>
           </div>
 
-          <div class="col">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Empleado</mat-label>
-              <mat-select [formControl]="txEmpleado">
-                <mat-option *ngFor="let empleado of this.listaEmpleados" [value]="empleado.id">
-                  {{ empleado.nombre + ' ' + empleado.apellido }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txEmpleado"></app-error-messages>
+          <div class="row" *ngIf="mostrarTarjetasCuotas">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Tarjeta</mat-label>
+                <mat-select [formControl]="txTarjeta" (valueChange)="seleccionarTarjeta($event)">
+                  <mat-option *ngFor="let tarjeta of this.tarjetasRegistradas" [value]="tarjeta.id">
+                    {{ tarjeta.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txTarjeta"></app-error-messages>
+            </div>
+            <div class="col-3" *ngIf="this.txFormaDePago.value == this.formasDePagoEnum.TARJETA_CREDITO">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Cuotas</mat-label>
+                <mat-select [formControl]="txCuotas" (valueChange)="seleccionarCuota($event)">
+                  <mat-option *ngFor="let cpt of tarjetaSeleccionada.cuotaPorTarjeta" [value]="cpt.id">
+                    {{ cpt.cantidadCuota }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txCuotas"></app-error-messages>
+            </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-9">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Cliente</mat-label>
-              <mat-select [formControl]="txCliente" (selectionChange)="cambioCliente($event.value)">
-                <mat-option
-                  *ngFor="let cliente of clientesFiltrados"
-                  [value]="cliente.id"
-                  [disabled]="txTipoFacturacion.value === getTiposFacturacionEnum.FACTURA_A && cliente.id === -1
-                  || (this.totalVenta >= this.montoConsumidorFinal) && cliente.id === -1 ">
-                  {{ cliente.nombre + ' ' + cliente.apellido }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txCliente"></app-error-messages>
+
+          <div class="row">
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Caja</mat-label>
+                <mat-select [formControl]="txCaja">
+                  <mat-option *ngFor="let caja of this.listaCajas" [value]="caja.id">
+                    {{ caja.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txCaja"></app-error-messages>
+            </div>
+
+            <div class="col">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Empleado</mat-label>
+                <mat-select [formControl]="txEmpleado">
+                  <mat-option *ngFor="let empleado of this.listaEmpleados" [value]="empleado.id">
+                    {{ empleado.nombre + ' ' + empleado.apellido }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txEmpleado"></app-error-messages>
+            </div>
           </div>
-          <div class="col-3">
-            <button mat-stroked-button color="warn" class="btn round new-client-btn" (click)="registrarCliente()">
-              <mat-icon>add</mat-icon> Nuevo
-            </button>
+          <div class="row">
+            <div class="col-9">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Cliente</mat-label>
+                <mat-select [formControl]="txCliente" (selectionChange)="cambioCliente($event.value)">
+                  <mat-option
+                    *ngFor="let cliente of clientesFiltrados"
+                    [value]="cliente.id"
+                    [disabled]="(txTipoFacturacion.value === getTiposFacturacionEnum.FACTURA_A && cliente.id === -1)
+                    || (this.totalVenta >= this.montoConsumidorFinal) && cliente.id === -1 ">
+                    {{ cliente.nombre + ' ' + cliente.apellido }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txCliente"></app-error-messages>
+            </div>
+            <div class="col-3">
+              <button mat-stroked-button color="warn" class="btn round new-client-btn" (click)="registrarCliente()">
+                <mat-icon>add</mat-icon> Nuevo
+              </button>
+            </div>
           </div>
-        </div>
-        <mat-divider></mat-divider>
-        <!-- Productos seleccionados -->
-        <div *ngIf="productosSeleccionados.length > 0">
-          <div *ngFor="let producto of productosSeleccionados">
-            <div class="d-flex justify-content-between align-items-center border-bottom p-3 producto-item">
-              <div class="col-4 d-flex flex-column">
-                <span class="m-0"><b>{{ producto.nombre }}</b></span>
-                <span class="text-muted">P/U: $ {{ (producto.precioConIVA) | number:'1.2-2':'es-AR' }}</span>
-                <span class="text-muted" *ngIf="(producto.promocion?.id) &&  producto.promocion?.id != -1" [matTooltip]="producto.promocion.nombre">Promoción: - {{ producto.promocion.porcentajeDescuento + '%' }}</span>
-              </div>
-              <div class="d-flex align-items-center col-4 justify-content-center">
-                <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
-                <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
-                <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)" [disabled]="producto.cantidadSeleccionada == producto.cantidadEnStock">+</button>
-              </div>
-              <div class="text-end col-4">
-                <span class="m-0 costo"><b>$ {{ (producto.precioConIVA * (1 - (this.producto.promocion ? this.producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadSeleccionada | number:'1.2-2':'es-AR' }}</b></span>
-                <div class="iconos-editar-eliminar ">
-                  <button mat-icon-button [matTooltip]="'Editar en esta venta'" (click)="editarProductoEnVenta(producto)">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  <button mat-icon-button [matTooltip]="'Quitar'" (click)="eliminarProductoDeVenta(producto)">
-                    <mat-icon>delete</mat-icon>
-                  </button>
+          <!-- Datos de cuenta corriente del cliente -->
+          <div class="summary-container summary-container-spacing"
+               *ngIf="this.tieneCuentaCorrienteRegistrada && this.txCliente.value && this.txCliente.value !== -1">
+            <div class="summary-row">
+              <span>Saldo de cuenta corriente:</span>
+              <span class="text-summary">$ {{ this.saldoCuentaCorrienteCliente | number:'1.2-2':'es-AR' }}</span>
+            </div>
+            <div class="summary-row"
+                 *ngIf="this.totalVenta
+                 && this.saldoCuentaCorrienteCliente > 0
+                 && this.tieneCuentaCorrienteRegistrada
+                 && (this.saldoCuentaCorrienteCliente >= this.totalVenta)">
+              <span>Usar saldo para cancelar totalmente esta venta:</span>
+              <mat-checkbox
+                [formControl]="txCancelarConSaldo"
+                matTooltip="Usar saldo de cuenta corriente para este venta">
+              </mat-checkbox>
+            </div>
+            <div class="summary-row"
+                 *ngIf="this.totalVenta
+                 && this.tieneCuentaCorrienteRegistrada
+                 && (this.saldoCuentaCorrienteCliente > 0
+                 && this.saldoCuentaCorrienteCliente < this.totalVenta)">
+              <span>Usar saldo parcial para cubrir esta venta:</span>
+              <mat-checkbox
+                [formControl]="txCancelarConSaldo"
+                matTooltip="Aplicar saldo a favor del cliente para esta venta de forma parcial">
+              </mat-checkbox>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+
+          <!-- Productos seleccionados -->
+          <div *ngIf="productosSeleccionados.length > 0">
+            <div *ngFor="let producto of productosSeleccionados">
+              <div class="d-flex justify-content-between align-items-center border-bottom p-3 producto-item">
+                <div class="col-4 d-flex flex-column">
+                  <span class="m-0"><b>{{ producto.nombre }}</b></span>
+                  <span class="text-muted">P/U: $ {{ (producto.precioConIVA) | number:'1.2-2':'es-AR' }}</span>
+                  <span class="text-muted" *ngIf="(producto.promocion?.id) &&  producto.promocion?.id != -1" [matTooltip]="producto.promocion.nombre">Promoción: - {{ producto.promocion.porcentajeDescuento + '%' }}</span>
+                </div>
+                <div class="d-flex align-items-center col-4 justify-content-center">
+                  <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)">-</button>
+                  <input type="text" disabled class="form-control form-control-sm mx-2 text-center quantity-input" value="{{producto.cantidadSeleccionada}}">
+                  <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)" [disabled]="producto.cantidadSeleccionada == producto.cantidadEnStock">+</button>
+                </div>
+                <div class="text-end col-4">
+                  <span class="m-0 costo"><b>$ {{ (producto.precioConIVA * (1 - (this.producto.promocion ? this.producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadSeleccionada | number:'1.2-2':'es-AR' }}</b></span>
+                  <div class="iconos-editar-eliminar ">
+                    <button mat-icon-button [matTooltip]="'Editar en esta venta'" (click)="editarProductoEnVenta(producto)">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-icon-button [matTooltip]="'Quitar'" (click)="eliminarProductoDeVenta(producto)">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Resumen si pagas con tarjeta-->
-        <div class="container mt-4" *ngIf="productosSeleccionados.length > 0 && cantidadCuotaSeleccionada.id">
+          <!-- Resumen si pagas con tarjeta o con saldo de cuenta corriente-->
+          <div class="container mt-4" *ngIf="productosSeleccionados.length > 0 && (cantidadCuotaSeleccionada.id || this.txCancelarConSaldo.value === true)">
 
-          <div class="summary-container">
-            <div>
-              <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.interes">
-                <span>Interés por tarjeta ({{this.cantidadCuotaSeleccionada.interes ? (this.cantidadCuotaSeleccionada.interes | number:'1.2-2':'es-AR') : 0}}%)</span>
-                <span class="text-summary">$ {{ this.interesPorTarjeta | number:'1.2-2':'es-AR' }}</span>
+            <div class="summary-container">
+              <div>
+                <div class="summary-row" *ngIf="cantidadCuotaSeleccionada.interes">
+                  <span>Interés por tarjeta ({{this.cantidadCuotaSeleccionada.interes ? (this.cantidadCuotaSeleccionada.interes | number:'1.2-2':'es-AR') : 0}}%)</span>
+                  <span class="text-summary">$ {{ this.interesPorTarjeta | number:'1.2-2':'es-AR' }}</span>
+                </div>
+              </div>
+              <div class="dotted-line" *ngIf="this.txCancelarConSaldo.value === true && cantidadCuotaSeleccionada.interes"></div>
+              <div *ngIf="this.txCancelarConSaldo.value === true">
+                <div class="summary-row">
+                  <span>Saldo de cuenta corriente</span>
+                  <span class="text-summary">-$ {{ this.saldoCuentaCorrienteCliente | number:'1.2-2':'es-AR' }}</span>
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- Carrito vacio -->
-        <div *ngIf="productosSeleccionados.length == 0" class="empty-cart">
-          <mat-icon>add_shopping_cart</mat-icon>
-          <p>Acá verás los productos que elijas para tu venta</p>
-        </div>
+          <!-- Carrito vacio -->
+          <div *ngIf="productosSeleccionados.length == 0" class="empty-cart">
+            <mat-icon>add_shopping_cart</mat-icon>
+            <p>Acá verás los productos que elijas para tu venta</p>
+          </div>
 
-        <!-- Botones -->
-        <div class="container mt-4">
-          <button class="btn btn-custom" [disabled]="totalVenta == 0 || registrandoVenta" (click)="confirmarVenta()">
-            <span>Confirmar venta</span>
-            <span class="text-right">$ {{ this.totalVenta | number:'1.2-2':'es-AR' }}</span>
-          </button>
-          <!-- loading -->
-          <div *ngIf="registrandoVenta">
-            <br>
-            <div class="spinner-wrapper">
-              <mat-spinner></mat-spinner>
+          <!-- Botones -->
+          <div class="container mt-4">
+            <button class="btn btn-custom" [disabled]="totalVenta == 0 || registrandoVenta" (click)="confirmarVenta()">
+              <span>Confirmar venta</span>
+              <span class="text-right">$ {{ this.totalVenta - (this.saldoCuentaCorrienteCliente && this.txCancelarConSaldo.value === true ? this.saldoCuentaCorrienteCliente : 0) | number:'1.2-2':'es-AR' }}</span>
+            </button>
+            <!-- loading -->
+            <div *ngIf="registrandoVenta">
+              <br>
+              <div class="spinner-wrapper">
+                <mat-spinner></mat-spinner>
+              </div>
+              <br>
             </div>
-            <br>
+            <div class="d-flex justify-content-between mt-3">
+              <span class="text-small">
+                {{ productosSeleccionados.length }}
+                {{ productosSeleccionados.length === 1 ? 'Producto' : 'Productos' }}
+              </span>
+              <a (click)="cancelarVenta()" class="text-small btn-cancelar">Cancelar</a>
+            </div>
           </div>
-          <div class="d-flex justify-content-between mt-3">
-            <span class="text-small">
-              {{ productosSeleccionados.length }}
-              {{ productosSeleccionados.length === 1 ? 'Producto' : 'Productos' }}
-            </span>
-            <a (click)="cancelarVenta()" class="text-small btn-cancelar">Cancelar</a>
-          </div>
-        </div>
 
-      </mat-card>
-    </div>
+        </mat-card>
+      </div>
   </div>
 </div>

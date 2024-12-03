@@ -66,4 +66,11 @@ export class VentasService {
     return this.http.get<VentasDiariaComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-dia-hora`);
   }
 
+  public cancelarVenta(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cancelar-venta`, venta);
+  }
+
+  public cancelarVentaParcialmente(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cancelar-venta-parcialmente`, venta);
+  }
 }
