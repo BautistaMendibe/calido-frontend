@@ -11,6 +11,7 @@
 /* Botón 'Nuevo producto' */
 .new-product-btn {
   height: 75%;
+  width: 100%;
 }
 
 /* Tarjeta de producto */
@@ -235,4 +236,16 @@
 .producto-sin-stock {
   opacity: 0.5;
   pointer-events: none; /* Desactiva la interacción del usuario */
+}
+
+.btn-buscar-producto {
+  margin-right: 15px;
+}
+
+
+@media (max-width: 1200px) {
+  .new-product-btn {
+    height: 50px;
+    width: 100%;
+  }
 }
