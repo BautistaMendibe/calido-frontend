@@ -284,7 +284,14 @@
               <div *ngIf="this.txCancelarConSaldo.value === true">
                 <div class="summary-row">
                   <span>Saldo de cuenta corriente</span>
-                  <span class="text-summary">-$ {{ this.saldoCuentaCorrienteCliente | number:'1.2-2':'es-AR' }}</span>
+                  <span class="text-summary">
+                    -$ {{
+                      (this.saldoCuentaCorrienteCliente >= this.totalVenta
+                        ? this.totalVenta
+                        : this.saldoCuentaCorrienteCliente)
+                        | number:'1.2-2':'es-AR'
+                    }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -300,7 +307,17 @@
           <div class="container mt-4">
             <button class="btn btn-custom" [disabled]="totalVenta == 0 || registrandoVenta" (click)="confirmarVenta()">
               <span>Confirmar venta</span>
-              <span class="text-right">$ {{ this.totalVenta - (this.saldoCuentaCorrienteCliente && this.txCancelarConSaldo.value === true ? this.saldoCuentaCorrienteCliente : 0) | number:'1.2-2':'es-AR' }}</span>
+              <span class="text-right">
+                $ {{
+                  Math.max(
+                    this.totalVenta -
+                    (this.saldoCuentaCorrienteCliente && this.txCancelarConSaldo.value === true
+                      ? this.saldoCuentaCorrienteCliente
+                      : 0),
+                    0
+                  ) | number:'1.2-2':'es-AR'
+                }}
+              </span>
             </button>
             <!-- loading -->
             <div *ngIf="registrandoVenta">

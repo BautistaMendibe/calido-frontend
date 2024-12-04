@@ -449,6 +449,12 @@ export class RegistrarVentaComponent implements OnInit{
 
       // Caso 2: Saldo suficiente para cubrir el total (flujo anterior)
       if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente >= this.totalVenta) {
+        // A cancelar será el total de la venta.
+        venta.saldoACancelarParcialmente = this.totalVenta;
+
+        // El total siempre va a ser cero, porque o su saldo es igual a la venta o es mayor (venta gratuita no se factura).
+        venta.montoTotal = 0;
+
         this.registrandoVenta = true;
 
         this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
@@ -761,4 +767,6 @@ export class RegistrarVentaComponent implements OnInit{
   get txCancelarConSaldo(): FormControl {
     return this.form.get('txCancelarConSaldo') as FormControl
   }
+
+  protected readonly Math = Math;
 }
