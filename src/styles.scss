@@ -23,6 +23,9 @@
     width: 100%;
     min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
   }
+  .custom-table th, .custom-table td {
+    padding: 6px; /* Reduce el espacio entre celdas */
+  }
 }
 
 .mat-column-acciones {
