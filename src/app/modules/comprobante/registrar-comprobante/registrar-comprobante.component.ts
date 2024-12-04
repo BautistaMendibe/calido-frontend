@@ -262,6 +262,11 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   public registrarNuevoComprobante() {
 
+    if (this.productosSeleccionados.length === 0) {
+      this.notificacionService.openSnackBarError('Debe seleccionar al menos un producto, intente nuevamente.');
+      return;
+    }
+
     if (this.form.valid && this.ordenSeleccionada && this.productosSeleccionados.length > 0) {
       const comprobante: Comprobante = new Comprobante();
 
