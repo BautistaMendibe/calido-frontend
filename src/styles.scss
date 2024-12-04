@@ -12,6 +12,10 @@
     overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
 
   }
+
+  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 768px) {
