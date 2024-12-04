@@ -1,11 +1,11 @@
 <div class="container py-3 col-xl-11">
   <br>
   <div class="row">
-    <div class="col-sm-6 mt-2">
+    <div class="col-8 mt-2">
       <p class="titulo">Consultar venta</p>
       <p *ngIf="venta.anulada">Venta anulada</p>
     </div>
-    <div class="col-sm-6">
+    <div class="col-4">
       <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
         <button *ngIf="!venta.anulada" mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta()">
           <mat-icon class="eliminar">settings_backup_restore</mat-icon>
