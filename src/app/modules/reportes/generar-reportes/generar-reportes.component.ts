@@ -78,7 +78,7 @@ export class GenerarReportesComponent implements OnInit {
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
         reporte.data = data;
 
-        if (this.txTipoGrafico.value != 'Ninguno') {
+        if (this.txTipoGrafico.value != 'Ninguno' && !reporte.noNecesitaFiltro) {
           if(this.txTipoGrafico.value == 'Barras') {
             this.generarGraficoBarras(reporte);
           }
