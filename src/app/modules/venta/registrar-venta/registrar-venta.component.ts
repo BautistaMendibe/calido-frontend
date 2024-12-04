@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
@@ -57,6 +57,7 @@ export class RegistrarVentaComponent implements OnInit{
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
   private facturacionAutomatica: boolean = false;
+  public limiteProductos: number = 30;
 
   constructor(
     private fb: FormBuilder,
@@ -83,6 +84,12 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarDataCombos();
     this.filtrosSuscripciones();
     this.buscarFacturacionAutomatica();
+    this.ajustarLimiteCantidadLimiteProducto();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.ajustarLimiteCantidadLimiteProducto();
   }
 
   public buscar() {
@@ -130,6 +137,10 @@ export class RegistrarVentaComponent implements OnInit{
     this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
       this.facturacionAutomatica = configuracion.facturacionAutomatica;
     });
+  }
+
+  private ajustarLimiteCantidadLimiteProducto() {
+    this.limiteProductos = window.innerWidth < 900 ? 6 : 30;
   }
 
   private buscarCajas() {

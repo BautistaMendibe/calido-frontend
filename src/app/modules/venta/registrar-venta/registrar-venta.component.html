@@ -38,7 +38,7 @@
 
         <!-- Lista de productos a seleccionar -->
         <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 p-4" *ngFor="let producto of productosFiltrados | slice:0:30"> <!-- Ajustar columnas para pantallas pequeñas -->
+          <div class="col-12 col-md-6 col-lg-4 p-4" *ngFor="let producto of productosFiltrados | slice:0:limiteProductos"> <!-- Ajustar columnas para pantallas pequeñas -->
             <div class="card product-card"
                  [ngClass]="{
                     'selected-card': producto.seleccionadoParaVenta,
