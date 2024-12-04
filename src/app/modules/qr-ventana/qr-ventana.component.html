@@ -14,14 +14,13 @@
   </div>
 
 <!--  <mat-card class="p-3">-->
-    <div class="estado-pago d-flex flex-column align-items-center mt-3">
-      <mat-icon
-        [fontIcon]="icono"
-        [ngClass]="estadoPago.toLowerCase()"
-        class="estado-icon">
-      </mat-icon>
-      <span class="estado-text">{{ estadoPago }}</span>
-    </div>
+  <div class="estado-pago d-flex flex-column align-items-center mt-3" [ngClass]="estadoPago.toLowerCase()">
+    <mat-icon
+      [fontIcon]="icono"
+      class="estado-icon">
+    </mat-icon>
+    <span class="estado-text">{{ estadoPago }}</span>
+  </div>
 <!--  </mat-card>-->
 
   <div class="row pt-4">

@@ -369,7 +369,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.calcularSubTotal();
   }
 
-  public confirmarVenta() {
+  public async confirmarVenta() {
     if (this.form.valid && this.productosSeleccionados.length > 0) {
       // Validación para consumidor final
       if ((this.totalVenta >= this.montoConsumidorFinal) && this.txCliente.value == -1) {
@@ -419,6 +419,17 @@ export class RegistrarVentaComponent implements OnInit{
 
         venta.bonificacion = -(venta.montoTotal / 1.21) + sumatoriaProductos;
 
+        // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
+        if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
+          const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
+          if (QRpagado) {
+            console.log('Pago confirmado. Registrando la venta');
+          } else {
+            this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
+            return; // Detenemos el flujo para no registrar la venta
+          }
+        }
+
         this.registrandoVenta = true;
 
         this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
@@ -449,7 +460,7 @@ export class RegistrarVentaComponent implements OnInit{
         return;
       }
 
-      // Caso 2: Saldo suficiente para cubrir el total (flujo anterior)
+      // Caso 2: Saldo suficiente para cubrir el total (flujo anterior) (MONTO $0)
       if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente >= this.totalVenta) {
         this.registrandoVenta = true;
 
@@ -471,6 +482,18 @@ export class RegistrarVentaComponent implements OnInit{
       }
 
       // Caso normal (venta no vinculada al saldo de cuenta corriente)
+
+      // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
+      if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
+        const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
+        if (QRpagado) {
+          console.log('Pago confirmado. Registrando la venta');
+        } else {
+          this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
+          return; // Detenemos el flujo para no registrar la venta
+        }
+      }
+
       this.registrandoVenta = true;
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
@@ -498,6 +521,85 @@ export class RegistrarVentaComponent implements OnInit{
       });
     }
   }
+
+  // INICIO SIRO QR
+  // Funciones separadas para evitar conflictos
+  private async pagarConQRSIRO(venta: Venta): Promise<boolean> {
+    let QRPagado = false;
+
+    if (venta.formaDePago.id !== this.formasDePagoEnum.QR) {
+      return QRPagado;
+    }
+
+    this.notificacionService.openSnackBarSuccess('Generando pago.');
+    try {
+      // Generar el pago
+      const respuestaPago = await this.ventasService.pagarConSIROQR(venta).toPromise();
+      console.log('Respuesta recibida:', respuestaPago);
+
+      if ((respuestaPago as { Hash: string }).Hash) {
+        this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
+        const idReferencia = (respuestaPago as { IdReferenciaOperacion: string }).IdReferenciaOperacion;
+        console.log('IdReferenciaOperacion:', idReferencia);
+
+        if (idReferencia) {
+          this.mostrarQR(idReferencia);
+
+          // Polling para consultar el estado del pago
+          const pagoExitoso = await this.pollingEstadoPago(idReferencia, 65, 5000);
+          if (pagoExitoso) {
+            this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
+            QRPagado = true;
+          } else {
+            this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error en la llamada:', err);
+      this.notificacionService.openSnackBarError('Error en la solicitud.');
+    }
+
+    return QRPagado;
+  }
+
+  // Función para hacer el polling del estado del pago
+  private async pollingEstadoPago(idReferencia: string, intentos: number, intervalo: number): Promise<boolean> {
+    for (let i = 0; i < intentos; i++) {
+      // si se cierra la ventana QR cancelar esto.
+      // codigo para cancelarlo
+      try {
+        const respuestaConsulta = await this.ventasService.consultaPagoSIROQR(idReferencia).toPromise();
+        if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
+          const resultado = respuestaConsulta[respuestaConsulta.length - 1];
+          const pagoExitoso = resultado.PagoExitoso;
+          const estado = resultado.Estado;
+
+          console.log('Pago Exitoso:', pagoExitoso);
+          console.log('Estado:', estado);
+
+          if (pagoExitoso && estado === 'PROCESADA') {
+            return true; // Pago exitoso
+          }
+        }
+      } catch (err) {
+        console.error('Error al consultar el estado del pago:', err);
+        this.notificacionService.openSnackBarError('Error al consultar el estado del pago, reintente.');
+      }
+
+      // Esperar antes de reintentar
+      await this.delay(intervalo);
+    }
+
+    return false; // Si se agotan los intentos
+  }
+
+  // Función para esperar un tiempo determinado
+  private delay(ms: number): Promise<void> {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  // FIN SIRO QR
 
   private cancelarVentaConSaldo(venta: Venta) {
     this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {

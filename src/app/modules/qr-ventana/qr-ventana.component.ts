@@ -16,10 +16,10 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
   private estadoPagoInterval: any;
 
   private mapaEstados: { [key: string]: { texto: string; icono: string } } = {
-    REGISTRADA: { texto: "REGISTRADA", icono: "hourglass_empty" },
-    CANCELADA: { texto: "CANCELADA", icono: "cancel" },
-    VENCIDA: { texto: "VENCIDA", icono: "timer_off" },
-    PROCESADA: { texto: "COMPLETADA", icono: "check_circle" },
+    REGISTRADA: { texto: "PENDIENTE", icono: "hourglass_empty" },
+    CANCELADA: { texto: "CANCELADO", icono: "cancel" },
+    VENCIDA: { texto: "VENCIDO", icono: "timer_off" },
+    PROCESADA: { texto: "PAGADO", icono: "check_circle" },
   };
 
   constructor(
@@ -80,6 +80,9 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
   }
 
   closeDialog(): void {
+    if (this.estadoPagoInterval) {
+      clearInterval(this.estadoPagoInterval);
+    }
     this.dialogRef.close();
   }
 }

@@ -18,18 +18,18 @@
   color: var(--estado-color, #000);
 }
 
-.estado-pago .registrada {
+.estado-pago.pendiente {
   --estado-color: #007bff; /* Azul */
 }
 
-.estado-pago .cancelada {
+.estado-pago.cancelado {
   --estado-color: #f44336; /* Rojo */
 }
 
-.estado-pago .vencida {
+.estado-pago.vencido {
   --estado-color: #ff9800; /* Naranja */
 }
 
-.estado-pago .completada {
+.estado-pago.pagado {
   --estado-color: #4caf50; /* Verde */
 }
