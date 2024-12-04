@@ -16,11 +16,11 @@
 <!--  <mat-card class="p-3">-->
     <div class="estado-pago d-flex flex-column align-items-center mt-3">
       <mat-icon
-        [fontIcon]="obtenerIconoEstado(estadoPago)"
+        [fontIcon]="icono"
         [ngClass]="estadoPago.toLowerCase()"
         class="estado-icon">
       </mat-icon>
-      <span class="estado-text">{{ obtenerTextoEstado(estadoPago) }}</span>
+      <span class="estado-text">{{ estadoPago }}</span>
     </div>
 <!--  </mat-card>-->
 

@@ -9,6 +9,8 @@ import {VentasService} from "../../services/ventas.services";
 })
 export class QRVentanaComponent implements OnInit, OnDestroy {
   estadoPago: string = 'Cargando...';
+  icono: string = 'hourglass_empty';
+
   idReferenciaOperacion: string = this.data.idReferenciaOperacion;  // Se asume que el ID de referencia se pasa en los datos del diálogo
 
   private estadoPagoInterval: any;
@@ -54,9 +56,12 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
           console.log("estadoPago", this.estadoPago);
           console.log("estadoRecibido", estadoRecibido);
           console.log("obtenerTextoEstado", this.obtenerTextoEstado(estadoRecibido));
+
           this.estadoPago = this.obtenerTextoEstado(estadoRecibido);
+          this.icono = this.obtenerIconoEstado(estadoRecibido);
         } else {
-          this.estadoPago = "No se encontró información del pago.";
+          this.estadoPago = "DESCONOCIDO. Consulte con soporte.";
+          this.icono = "help";
         }
       },
       error: (error) => {
