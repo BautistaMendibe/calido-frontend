@@ -38,5 +38,19 @@ export class ErrorMessagesComponent {
     { key: 'passwordMismatch', message: () => 'Las contraseñas no coinciden.' },
     { key: 'invalidPercentage', message: () => 'El porcentaje debe ser mayor a 0 y menor o igual a 100.' },
     { key: 'invalidEmail', message: () => 'El email ingresado no es válido.' },
+    {
+      key: 'matDatepickerMin',
+      message: (error: any) => {
+        const minDate = new Date(error?.min); // Convierte a Date
+        return `La fecha debe ser mayor al ${minDate.toLocaleDateString('es-AR')}.`;
+      }
+    },
+    {
+      key: 'matDatepickerMax',
+      message: (error: any) => {
+        const minDate = new Date(error?.min); // Convierte a Date
+        return `La fecha debe ser menor al ${minDate.toLocaleDateString('es-AR')}.`;
+      }
+    },
   ];
 }
