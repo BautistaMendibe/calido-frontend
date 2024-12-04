@@ -70,7 +70,7 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta">
+          <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta" [class.custom-table]="!esConsulta">
 
             <ng-container matColumnDef="seleccionar">
               <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
