@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MatDialog} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {CajasService} from "../../../services/cajas.service";
@@ -12,6 +12,8 @@ import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {FormaDePago} from "../../../models/formaDePago.model";
+import {MovimientoManual} from "../../../models/movimientoManual.model";
+import {NotificationService} from "../../../services/notificacion.service";
 
 @Component({
   selector: 'app-detalle-arqueo',
@@ -23,21 +25,25 @@ export class DetalleArqueoComponent implements OnInit {
   public idArqueo: string | null = null;
   public arqueo: Arqueo = new Arqueo();
   public formasPago: FormaDePago[] = [];
+  public formasPagoParaMovimientos: FormaDePago[] = [];
+  public filtradoPorFormasPago: FormaDePago[] = [];
   public ventas: Venta[] = [];
   public isLoading: boolean = false;
-  public totalPorFormaPago: [string, number][] = [];
+  public movimientosManuales: MovimientoManual[] = [];
+  public formaPagoDefecto!: number;
+  public formDesactivado: boolean = false;
+
+  // Totales y diferencias
+  public totalCaja: number = 0;
+  public totalOtrosMedios: number = 0;
+  public diferenciaCaja: number = 0;
+  public diferenciaOtrosMedios: number = 0;
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public columnas: string[] = ['fecha', 'formaPago', 'descripcion', 'tipoMovimiento', 'montoTotal'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
-
-  tipoMovimiento: string = '';
-  detalleEfectivo: boolean = false;
-  detalleTarjeta: boolean = false;
-  detalleMercadoPago: boolean = false;
-  detalleEgreso: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +52,7 @@ export class DetalleArqueoComponent implements OnInit {
     private cajasService: CajasService,
     private ventasService: VentasService,
     private route: ActivatedRoute,
+    private notificationDialogService: NotificationService
   ) {
     this.form = new FormGroup({});
   }
@@ -54,23 +61,65 @@ export class DetalleArqueoComponent implements OnInit {
     this.route.paramMap.subscribe(params => {
       this.idArqueo = params.get('id');
       this.crearFormulario();
-      this.buscarFormasPago();
       this.buscarArqueo();
+      this.buscarFormasPago();
+      this.filtroSuscripciones();
     });
   }
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txTipoMovimiento: ['', []],
-      txDescripcion: ['', []],
-      txMonto: ['', []],
-      txFormaPago: ['', []],
+      txTipoMovimiento: ['', [Validators.required]],
+      txDescripcion: ['', [Validators.required, Validators.maxLength(200)]],
+      txMonto: ['', [Validators.required]],
+      txFormaPago: ['', [Validators.required]],
+      txCantidadDineroCaja: ['', [Validators.required]],
+      txCantidadDineroOtrosMedios: ['', [Validators.required]],
     });
   }
 
   public buscarFormasPago() {
     this.ventasService.buscarFormasDePago().subscribe((formasPago) => {
-      this.formasPago = formasPago;
+      // Asignar las formas de pago para el combo de movimientos (solo efectivo y transferencia)
+      this.formasPagoParaMovimientos = formasPago.filter(fp => fp.id === 1 || fp.id === 5);
+      // Asignar las formas de pago recibidas del servicio
+      this.formasPago = formasPago.map((forma) => {
+        // Agregar el ícono representativo según el ID
+        switch (forma.id) {
+          case 1: // Efectivo
+            forma.icon = 'payments';
+            break;
+          case 2: // Tarjeta de débito
+            forma.icon = 'credit_card';
+            break;
+          case 3: // Tarjeta de crédito
+            forma.icon = 'credit_score';
+            break;
+          case 4: // Mercado Pago
+            forma.icon = 'account_balance_wallet';
+            break;
+          case 5: // Transferencia
+            forma.icon = 'account_balance';
+            break;
+          case 6: // Cuenta Corriente
+            forma.icon = 'receipt';
+            break;
+          case 7: // QR
+            forma.icon = 'qr_code';
+            break;
+          default:
+            forma.icon = 'help';
+            break;
+        }
+        return forma;
+      });
+
+      const todas = new FormaDePago();
+      todas.id = 0;
+      todas.nombre = 'Todas';
+
+      this.filtradoPorFormasPago = [todas, ...this.formasPago]
+      this.formaPagoDefecto = todas.id;
     });
   }
 
@@ -85,72 +134,335 @@ export class DetalleArqueoComponent implements OnInit {
     });
   }
 
+  private rellenarDatosFormulario() {
+    this.calcularFormasPago();
+    this.txCantidadDineroCaja.setValue(this.arqueo.cantidadDineroCajaUsuario);
+    this.txCantidadDineroOtrosMedios.setValue(this.arqueo.cantidadDineroOtrosUsuario);
+  }
+
+  public buscarMovimientos() {
+    const idArqueo: number = Number(this.idArqueo);
+    this.cajasService.consultarMovimientosManuales(idArqueo).subscribe((movimientos: MovimientoManual[]) => {
+      this.movimientosManuales = movimientos;
+
+      // Mapeamos los movimientos manuales al formato de la tabla
+      const movimientosParaTabla = movimientos.map((movimiento) => ({
+        id: movimiento.id,
+        fecha: movimiento.fechaMovimiento,
+        formaDePago: { id: movimiento.formaPago.id, nombre: movimiento.formaPago.nombre },
+        descripcion: movimiento.descripcion,
+        tipoMovimiento: movimiento.tipoMovimiento,
+        montoTotal: movimiento.tipoMovimiento.toLowerCase() === 'egreso' ? -Math.abs(movimiento.monto) : Math.abs(movimiento.monto) // Si es egreso debería ser negativo
+      }) as unknown as Venta);
+
+      // Filtrar datos que NO son movimientos manuales
+      const datosNoMovimientos = this.tableDataSource.data.filter((item: any) => !this.movimientosManuales.some(mov => mov.id === item.id));
+
+      // Combinar datos no relacionados con los nuevos movimientos
+      this.tableDataSource.data = [...datosNoMovimientos, ...movimientosParaTabla];
+
+      // Si el arqueo está cerrado, rellenamos los datos y deshabilitamos el formulario
+      if (this.arqueo.horaCierre) {
+        this.rellenarDatosFormulario();
+        this.deshabilitarFormulario();
+      } else {
+        this.calcularFormasPago();
+      }
+
+      this.isLoading = false;
+    });
+  }
+
+  public filtrarTabla(idFormaPago: number): void {
+    if (idFormaPago === 0) {
+      // Si se selecciona "Todas", muestra todos los datos
+      this.tableDataSource.filter = '';
+    } else {
+      // Filtra por la forma de pago seleccionada
+      this.tableDataSource.filterPredicate = (data: any) => data.formaDePago.id === idFormaPago;
+      this.tableDataSource.filter = idFormaPago.toString();
+    }
+  }
+
   public buscarVentas() {
     if (this.arqueo) {
       this.isLoading = true;
       const arqueo = this.arqueo;
+
+      // Crear `fechaHora` con la fecha de apertura
       const fechaHora = new Date(arqueo.fechaApertura);
 
-      // Genera un DATE a partir de la fecha y hora de apertura del arqueo
-      const [hours, minutes, seconds] = (arqueo.horaApertura as unknown as string).split(':').map(Number);
-      fechaHora.setHours(hours, minutes, seconds || 0);
+      // Ajustar la hora para `fechaHora` utilizando `horaApertura`
+      if (arqueo.horaApertura) {
+        const [hours, minutes, seconds] = (arqueo.horaApertura as unknown as string).split(':').map(Number);
+        fechaHora.setHours(hours, minutes, seconds || 0);
+      }
 
-      this.ventasService.buscarVentasFechaHora(fechaHora.toISOString()).subscribe((ventas: Venta[]) => {
-        this.ventas = ventas;
+      // Convertir `fechaHora` al formato de timestamp en zona horaria argentina
+      const fechaHoraLocal = fechaHora
+        .toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' })
+        .replace('T', ' ');
+
+      let fechaHoraCierreLocal = null;
+
+      // Manejar `fechaHoraCierre` si está disponible
+      if (arqueo.horaCierre) {
+        const fechaHoraCierre = new Date(arqueo.fechaApertura); // Usar la misma fecha base
+        const [hoursCierre, minutesCierre, secondsCierre] = (arqueo.horaCierre as unknown as string).split(':').map(Number);
+        fechaHoraCierre.setHours(hoursCierre, minutesCierre, secondsCierre || 0);
+
+        fechaHoraCierreLocal = fechaHoraCierre
+          .toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' })
+          .replace('T', ' ');
+      }
+
+      // Llamar al servicio con las fechas calculadas
+      this.ventasService.buscarVentasFechaHora(fechaHoraLocal, fechaHoraCierreLocal).subscribe((ventas: Venta[]) => {
+        this.ventas = ventas.map((venta) => ({
+          ...venta,
+          montoTotal: parseFloat(venta.montoTotal as unknown as string) || 0, // Convertir a número si es necesario
+        }));
+
         this.determinarAnulacion();
         this.tableDataSource.data = this.ventas;
         this.tableDataSource.paginator = this.paginator;
         this.tableDataSource.sort = this.sort;
-        this.isLoading = false;
-        this.calcularTotalesPorFormaPago();
+        this.buscarMovimientos();
       });
     }
   }
 
+
   private determinarAnulacion() {
     this.ventas.forEach(venta => {
-      if (venta.anulada) {
+      if (venta.anulada || venta.fechaAnulacion || !venta.fechaFacturacion) {
         venta.montoTotal = -Math.abs(venta.montoTotal);
       }
     });
   }
 
-  toggleDetalle(tipo: string): void {
-    switch (tipo) {
-      case 'efectivo':
-        this.detalleEfectivo = !this.detalleEfectivo;
-        break;
-      case 'tarjeta':
-        this.detalleTarjeta = !this.detalleTarjeta;
-        break;
-      case 'mercadopago':
-        this.detalleMercadoPago = !this.detalleMercadoPago;
-        break;
-      case 'egreso':
-        this.detalleEgreso = !this.detalleEgreso;
-        break;
+  public toggleDetalle(forma: any): void {
+    forma.detalleVisible = !forma.detalleVisible;
+  }
+
+  public calcularFormasPago(): void {
+    this.formasPago.forEach((forma) => {
+      // Asegurar números
+      const ingresosVentas = this.ventas
+        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaFacturacion && !v.fechaAnulacion)
+        .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
+
+      const ingresosMovimientos = this.movimientosManuales
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'ingreso')
+        .reduce((sum: number, mov: MovimientoManual) => sum + Number(mov.monto), 0);
+
+      forma.totalIngresos = ingresosVentas + ingresosMovimientos;
+      forma.detallesIngresos = [
+        { concepto: 'Ventas facturadas', monto: ingresosVentas },
+        { concepto: 'Movimientos manuales', monto: ingresosMovimientos },
+      ];
+
+      // Egresos
+      const egresosVentas = this.ventas
+        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && (v.fechaAnulacion || !v.fechaFacturacion))
+        .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
+
+      const egresosMovimientos = this.movimientosManuales
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'egreso')
+        .reduce((sum: number, mov: MovimientoManual) => sum + (Number(mov.monto) * -1), 0);
+
+      forma.totalEgresos = egresosVentas + egresosMovimientos;
+      forma.detallesEgresos = [
+        { concepto: forma.id === 6 ? 'Cuentas corrientes pendientes de pago' : 'Ventas anuladas', monto: egresosVentas },
+        { concepto: 'Movimientos manuales', monto: egresosMovimientos },
+      ];
+    });
+
+    this.calcularTotalesYDiferencias(this.formasPago);
+  }
+
+  private calcularTotalesYDiferencias(listaFormasPago: FormaDePago[]): void {
+    this.totalCaja = 0;
+    this.totalOtrosMedios = 0;
+    this.diferenciaCaja = 0;
+    this.diferenciaOtrosMedios = 0;
+
+    const formaEfectivo = listaFormasPago.find((forma) => forma.nombre.toLowerCase() === 'efectivo');
+
+    if (formaEfectivo) {
+      this.totalCaja =
+        (Number(this.arqueo?.montoInicial) || 0) +
+        (Number(formaEfectivo.totalIngresos) || 0) +
+        (Number(formaEfectivo.totalEgresos) || 0);
+
+      const montoUsuarioCaja = Number(this.txCantidadDineroCaja.value) || 0;
+      this.diferenciaCaja = this.totalCaja < 0
+        ? montoUsuarioCaja + this.totalCaja
+        : montoUsuarioCaja - this.totalCaja;
+    }
+
+    listaFormasPago.forEach((forma) => {
+      if (forma.nombre.toLowerCase() !== 'efectivo') {
+        const ingresos = Number(forma.totalIngresos) || 0;
+        let egresos = Number(forma.totalEgresos) || 0;
+
+        if (forma.id === 6) egresos = 0;
+
+        this.totalOtrosMedios += ingresos + egresos;
+      }
+    });
+
+    const montoUsuarioOtrosMedios = Number(this.txCantidadDineroOtrosMedios.value) || 0;
+    this.diferenciaOtrosMedios = this.totalOtrosMedios < 0
+      ? montoUsuarioOtrosMedios + this.totalOtrosMedios
+      : montoUsuarioOtrosMedios - this.totalOtrosMedios;
+  }
+
+  public registrarMovimiento() {
+    this.eliminarValidadoresCantidadDinero(); // temporalmente
+
+    if (this.form.valid) {
+      const movimiento: MovimientoManual = new MovimientoManual();
+
+      movimiento.idArqueo = Number(this.idArqueo);
+      movimiento.fechaMovimiento = new Date();
+      movimiento.formaPago = this.txFormaPago.value;
+      movimiento.descripcion = this.txDescripcion.value;
+      movimiento.tipoMovimiento = this.txTipoMovimiento.value;
+      movimiento.monto = this.txMonto.value;
+
+      this.cajasService.registrarMovimientoManual(movimiento).subscribe((respuesta) => {
+        if (respuesta.mensaje === 'OK') {
+          this.notificacionService.openSnackBarSuccess('El movimiento se registró con éxito');
+          this.buscarMovimientos();
+          this.form.reset();
+        } else {
+          this.notificacionService.openSnackBarError('Error al registrar un movimiento, inténtelo nuevamente');
+        }
+      });
+    }
+    this.restaurarValidadoresCantidadDinero(); // restaurar
+  }
+
+  private eliminarValidadoresCantidadDinero() {
+    this.txCantidadDineroCaja?.clearValidators();
+    this.txCantidadDineroCaja?.updateValueAndValidity();
+    this.txCantidadDineroOtrosMedios?.clearValidators();
+    this.txCantidadDineroOtrosMedios?.updateValueAndValidity();
+  }
+
+  private restaurarValidadoresCantidadDinero() {
+    this.txCantidadDineroCaja?.setValidators([Validators.required]);
+    this.txCantidadDineroCaja?.updateValueAndValidity();
+    this.txCantidadDineroOtrosMedios?.setValidators([Validators.required]);
+    this.txCantidadDineroOtrosMedios?.updateValueAndValidity();
+  }
+
+  public eliminarMovimiento(idMovimiento: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar el movimiento manual?', 'Eliminar Movimiento') //Está seguro?
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.cajasService.eliminarMovimientoManual(idMovimiento).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Movimiento eliminado con éxito');
+
+              // Eliminar de lista de movimientos temporal
+              this.movimientosManuales = this.movimientosManuales.filter((mov) => mov.id !== idMovimiento);
+
+              // Eliminar el movimiento de la tabla
+              this.tableDataSource.data = this.tableDataSource.data.filter(
+                (item: any) => item.id !== idMovimiento
+              );
+
+              // Actualiza el MatTableDataSource
+              this.tableDataSource._updateChangeSubscription();
+
+              // Recalcular totales
+              this.calcularFormasPago();
+
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar el movimiento, intenta nuevamente.');
+            }
+          });
+        }
+      });
+  }
+
+  public cerrarArqueo() {
+    if ((this.txCantidadDineroCaja?.value || this.txCantidadDineroCaja?.value == 0) &&
+      (this.txCantidadDineroOtrosMedios?.value || this.txCantidadDineroOtrosMedios?.value == 0)) {
+
+      const arqueo = new Arqueo();
+      arqueo.id = Number(this.idArqueo);
+      arqueo.horaCierre = new Date();
+      arqueo.diferencia = this.diferenciaCaja;
+      arqueo.diferenciaOtros = this.diferenciaOtrosMedios;
+      arqueo.montoSistemaCaja = this.totalCaja;
+      arqueo.montoSistemaOtros = this.totalOtrosMedios;
+      arqueo.cantidadDineroCajaUsuario = this.txCantidadDineroCaja.value;
+      arqueo.cantidadDineroOtrosUsuario = this.txCantidadDineroOtrosMedios.value;
+
+      const diferenciaCajaAbs = Math.abs(this.diferenciaCaja || 0);
+      const diferenciaOtrosAbs = Math.abs(this.diferenciaOtrosMedios || 0);
+      // Si alguna diferencia es >= 1000, muestra el primer diálogo
+      if (diferenciaCajaAbs >= 1000 || diferenciaOtrosAbs >= 1000) {
+        this.notificationDialogService.confirmation(
+          `Existen diferencias entre lo indicado
+          y lo registrado por el sistema.
+          ¿Está seguro que desea continuar?`,
+          '¡Existen Diferencias!'
+        )
+          .afterClosed()
+          .subscribe((firstDialogResult) => {
+            if (firstDialogResult) {
+              this.confirmarCierreArqueo(arqueo); // Procede al segundo diálogo
+            }
+          });
+      } else {
+        // Si las diferencias son menores a 1000, salta al segundo diálogo directamente
+        this.confirmarCierreArqueo(arqueo);
+      }
     }
   }
 
-  public calcularTotalesPorFormaPago() {
-    const totales: { [key: string]: number } = {};
+  // Método auxiliar para confirmar el cierre del arqueo
+  private confirmarCierreArqueo(arqueo: Arqueo) {
+    this.notificationDialogService.confirmation(
+      `¿Desea cerrar el arqueo?
+    Esta acción no es reversible.`,
+      'Cerrar Arqueo'
+    )
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.cajasService.cerrarArqueo(arqueo).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Arqueo cerrado con éxito');
+              this.deshabilitarFormulario();
+            } else {
+              this.notificacionService.openSnackBarError('Error al cerrar arqueo, intenta nuevamente.');
+            }
+          });
+        }
+      });
+  }
 
-    for (let venta of this.ventas) {
-      const formaPago = venta.formaDePago.nombre;
-      const monto = parseFloat(String(venta.montoTotal));
+  private filtroSuscripciones() {
+    // Suscripción a cambios en txCantidadDineroCaja
+    this.txCantidadDineroCaja.valueChanges.subscribe(() => {
+      this.calcularTotalesYDiferencias(this.formasPago);
+    });
 
-      if (totales[formaPago]) {
-        totales[formaPago] += monto;
-      } else {
-        totales[formaPago] = monto;
-      }
-    }
+    // Suscripción a cambios en txCantidadDineroOtrosMedios
+    this.txCantidadDineroOtrosMedios.valueChanges.subscribe(() => {
+      this.calcularTotalesYDiferencias(this.formasPago);
+    });
+  }
 
-    this.totalPorFormaPago = this.formasPago
-      .filter(forma => totales[forma.nombre] !== undefined)
-      .map(forma => [forma.nombre, totales[forma.nombre]] as [string, number]);
-
-    console.log(this.totalPorFormaPago);
+  private deshabilitarFormulario() {
+    this.form.disable();
+    this.formDesactivado = true;
   }
 
   get txTipoMovimiento(): FormControl {
@@ -168,4 +480,14 @@ export class DetalleArqueoComponent implements OnInit {
   get txFormaPago(): FormControl {
     return this.form.get('txFormaPago') as FormControl;
   }
+
+  get txCantidadDineroCaja(): FormControl {
+    return this.form.get('txCantidadDineroCaja') as FormControl;
+  }
+
+  get txCantidadDineroOtrosMedios(): FormControl {
+    return this.form.get('txCantidadDineroOtrosMedios') as FormControl;
+  }
+
+  protected readonly Math = Math;
 }

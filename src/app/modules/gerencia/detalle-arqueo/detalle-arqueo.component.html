@@ -9,12 +9,23 @@
   <div class="row row-equal-height">
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4 style="color: grey">Información del Arqueo de Caja</h4>
+        <h4 style="color: grey">Información del arqueo de caja</h4>
         <mat-divider></mat-divider>
         <br>
-        <p><strong>Caja:</strong> {{ arqueo.caja ? arqueo.caja.nombre : 'No disponible' }}</p>
-        <p><strong>Fecha de apertura:</strong> {{ arqueo.fechaApertura | date: 'dd/MM/yyyy hh:ss' }}</p>
-        <p><strong>Estado:</strong> {{ arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible' }}</p>
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Caja</mat-label>
+          <input matInput type="text" [value]="arqueo.caja ? arqueo.caja.nombre : 'No disponible'" readonly [disabled]="formDesactivado">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha</mat-label>
+          <input matInput type="text" [value]="(arqueo.fechaApertura | date: 'dd/MM/yyyy') + ' ' + arqueo.horaApertura"  readonly [disabled]="formDesactivado">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Estado</mat-label>
+          <input matInput type="text" [value]="arqueo.estadoArqueo ? arqueo.estadoArqueo.nombre : 'No disponible'" readonly [disabled]="formDesactivado">
+        </mat-form-field>
       </mat-card>
     </div>
 
@@ -45,7 +56,7 @@
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Forma de Pago</mat-label>
                 <mat-select [formControl]="txFormaPago">
-                  <mat-option *ngFor="let formaPago of formasPago" [value]="formaPago.id">
+                  <mat-option *ngFor="let formaPago of formasPagoParaMovimientos" [value]="formaPago.id">
                     {{ formaPago.nombre }}
                   </mat-option>
                 </mat-select>
@@ -68,7 +79,9 @@
           </mat-form-field>
           <app-error-messages [control]="txMonto"></app-error-messages>
 
-          <button mat-raised-button color="accent" class="btn round" id="btnBuscar">Añadir movimiento</button>
+          <div class="btnBuscarCointainer">
+            <button mat-raised-button color="accent" class="btn round" id="btnBuscar" (click)="registrarMovimiento()" [disabled]="formDesactivado">Añadir movimiento</button>
+          </div>
         </form>
       </mat-card>
     </div>
@@ -76,16 +89,21 @@
 
   <br><br>
 
+  <!-- loading -->
+  <div class="spinner-wrapper" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+
   <!-- Filtro y Tabla de Ventas -->
   <div class="row mt-4">
-    <div class="col-md-4">
+    <div class="col-md-4" *ngIf="!(ventas.length === 0 && movimientosManuales.length === 0)">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Forma de Pago</mat-label>
         <button mat-icon-button matPrefix>
           <mat-icon>filter_list</mat-icon>
         </button>
-        <mat-select>
-          <mat-option *ngFor="let formaPago of formasPago" [value]="formaPago.id">
+        <mat-select [(value)]="formaPagoDefecto" (selectionChange)="filtrarTabla($event.value)">
+          <mat-option *ngFor="let formaPago of filtradoPorFormasPago" [value]="formaPago.id">
             {{ formaPago.nombre }}
           </mat-option>
         </mat-select>
@@ -93,13 +111,13 @@
     </div>
 
     <div class="col-md-12 mt-3">
-      <mat-card class="mat-card" [hidden]="ventas.length === 0">
+      <mat-card class="mat-card" [hidden]="ventas.length === 0 && movimientosManuales.length === 0">
         <mat-card-content>
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
 
             <ng-container matColumnDef="fecha">
               <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy hh:mm:ss' }}</mat-cell>
+              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy HH:mm:ss' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="formaPago">
@@ -109,7 +127,12 @@
 
             <ng-container matColumnDef="descripcion">
               <mat-header-cell *matHeaderCellDef>DESCRIPCION</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ (venta.anulada === true) ? 'Anulación de venta' : 'Venta' }} {{ venta.id }}</mat-cell>
+              <mat-cell *matCellDef="let venta">
+                <!-- Mostrar descripción personalizada si está disponible -->
+                {{ venta.descripcion ? venta.descripcion : ((venta.anulada === true) ? 'Anulación de venta' : 'Venta') }}
+                <!-- Mostrar el ID si es una venta -->
+                {{ (venta.id && !venta.descripcion) ? '(ID: ' + venta.id + ')' : '' }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="tipoMovimiento">
@@ -135,70 +158,167 @@
     </div>
   </div>
 
+  <h5 *ngIf="!isLoading && this.ventas.length === 0 && this.movimientosManuales.length === 0" class="alert alert-secondary text-center">
+    Aún no hay movimientos registrados en la jornada laboral. Aparecerán aquí cuando los haya.
+  </h5>
+
   <br>
 
   <!-- Detalle de Ventas -->
   <div class="row mt-4 row-equal-height">
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4>Detalle de Ventas</h4>
-        <p><strong>Monto inicial:</strong> $ {{ arqueo.montoInicial | number:'1.2-2':'es-AR' }}</p>
+        <h4 style="color: grey">Detalle de Ventas</h4>
+        <mat-divider></mat-divider>
+        <br>
 
-        <h5>Ingresos</h5>
-        <p>
-          <strong>Efectivo:</strong> $1,500.00
-          <button mat-icon-button (click)="toggleDetalle('efectivo')">
-            <mat-icon>{{ detalleEfectivo ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleEfectivo">
-          <p> - Ventas: $1,200.00</p>
-          <p> - Movimiento Manual: $300.00</p>
+        <!-- Monto inicial -->
+        <div>
+          <mat-form-field appearance="outline" class="w-100 monto-inicial">
+            <mat-label>Monto Inicial (Efectivo en caja)</mat-label>
+            <input
+              matInput
+              type="text"
+              [value]="'$ ' + arqueo.montoInicial"
+              readonly
+              [disabled]="formDesactivado"
+            />
+          </mat-form-field>
         </div>
 
-        <p>
-          <strong>Tarjeta Crédito/Débito:</strong> $800.00
-          <button mat-icon-button (click)="toggleDetalle('tarjeta')">
-            <mat-icon>{{ detalleTarjeta ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleTarjeta">
-          <p> - Ventas: $800.00</p>
-        </div>
+        <!-- Formas de pago -->
+        <div *ngFor="let forma of formasPago" class="forma-pago-container">
+          <div class="forma-pago-header">
+            <h5 class="forma-pago-nombre">
+              <mat-icon class="forma-pago-icon">{{ forma.icon }}</mat-icon>
+              <span>{{ forma.nombre }}</span>
+              <button mat-icon-button (click)="toggleDetalle(forma)">
+                <mat-icon>{{ forma.detalleVisible ? 'expand_less' : 'expand_more' }}</mat-icon>
+              </button>
+            </h5>
+          </div>
 
-        <p>
-          <strong>MercadoPago:</strong> $400.00
-          <button mat-icon-button (click)="toggleDetalle('mercadopago')">
-            <mat-icon>{{ detalleMercadoPago ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleMercadoPago">
-          <p> - Ventas: $400.00</p>
-        </div>
+          <div *ngIf="forma.detalleVisible" class="forma-pago-detalles">
+            <!-- Ingresos -->
+            <div class="ingresos-container">
+              <h6 class="ingresos-titulo">Ingresos</h6>
+              <p class="ingresos-total">
+                <strong>Total:</strong> $ {{ forma.totalIngresos | number:'1.2-2':'es-AR' }}
+              </p>
+              <p *ngFor="let detalle of forma.detallesIngresos" class="detalle">
+                - {{ detalle.concepto }}: $  {{ detalle.monto | number:'1.2-2':'es-AR' }}
+              </p>
+            </div>
 
-        <h5>Egresos</h5>
-        <p>
-          <strong>Efectivo:</strong> $200.00
-          <button mat-icon-button (click)="toggleDetalle('egreso')">
-            <mat-icon>{{ detalleEgreso ? 'expand_less' : 'expand_more' }}</mat-icon>
-          </button>
-        </p>
-        <div *ngIf="detalleEgreso">
-          <p> - Pago a proveedor: $200.00</p>
+            <!-- Egresos -->
+            <div class="egresos-container">
+              <h6 class="egresos-titulo">Egresos</h6>
+              <p class="egresos-total">
+                <strong>Total:</strong> $ {{ forma.totalEgresos | number:'1.2-2':'es-AR' }}
+              </p>
+              <p *ngFor="let detalle of forma.detallesEgresos" class="detalle">
+                - {{ detalle.concepto }}: $ {{ detalle.monto | number:'1.2-2':'es-AR' }}
+              </p>
+              <p class="leyenda" *ngIf="forma.id === 6">
+                Los egresos de Cuenta Corriente se muestran de forma informativa, no se suman al total de egresos.
+              </p>
+            </div>
+          </div>
         </div>
       </mat-card>
     </div>
 
+
     <!-- Dinero en Caja -->
     <div class="col-md-6">
       <mat-card class="mat-elevation-z12 p-4 mat-card-tamano-uniforme">
-        <h4>Dinero en Caja</h4>
+        <h4 style="color: grey">Resumen del arqueo</h4>
+        <mat-divider></mat-divider>
+        <br>
+
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Cantidad de dinero en caja</mat-label>
-          <input matInput type="text" mask="separator.2" prefix="$" thousandSeparator=",">
+          <mat-label>Cantidad de dinero en efectivo caja</mat-label>
+          <input matInput [formControl]="txCantidadDineroCaja" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
         </mat-form-field>
-        <p><strong>Total registrado en sistema:</strong> $1,500.00</p>
-        <p><strong>Diferencia:</strong> $-100.00</p>
+        <app-error-messages [control]="txCantidadDineroCaja"></app-error-messages>
+
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Cantidad de dinero de otros medios</mat-label>
+          <input matInput [formControl]="txCantidadDineroOtrosMedios" type="text" mask="separator.2" prefix="$" thousandSeparator=",">
+        </mat-form-field>
+        <app-error-messages [control]="txCantidadDineroOtrosMedios"></app-error-messages>
+
+        <div class="totales-container">
+          <!-- Caja -->
+          <div class="diferencia-container">
+            <div class="diferencia-header">
+              <mat-icon class="diferencia-icon">payments</mat-icon>
+              <h4 class="diferencia-title">Resumen de caja</h4>
+            </div>
+            <div class="diferencia-body">
+              <p class="total-item">
+                <span class="label">Total registrado en caja por sistema:</span>
+                <span class="value sistema">
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.totalCaja | number:'1.2-2':'es-AR'))
+                  : '$' }}
+                </span>
+              </p>
+              <p class="total-item">
+                <span class="label">Diferencia según el usuario:</span>
+                <span
+                  class="value"
+                  [ngClass]="{
+                    'negativo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaCaja * 100) / 100) < 0,
+                    'cero': this.arqueo.idEstadoArqueo !== 2 || (Math.round(this.diferenciaCaja * 100) / 100) === 0,
+                    'positivo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaCaja * 100) / 100) > 0
+                  }">
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.diferenciaCaja | number:'1.2-2':'es-AR'))
+                  : '$' }}
+                </span>
+              </p>
+            </div>
+            <p class="leyenda" *ngIf="this.arqueo.idEstadoArqueo !== 2">
+              Podrás ver los totales y diferencias al cerrar este arqueo.
+            </p>
+          </div>
+
+          <!-- Otros Medios -->
+          <div class="diferencia-container">
+            <div class="diferencia-header">
+              <mat-icon class="diferencia-icon">credit_card</mat-icon>
+              <h4 class="diferencia-title">Resumen de otros medios</h4>
+            </div>
+            <div class="diferencia-body">
+              <p class="total-item">
+                <span class="label">Total registrado en otros medios por sistema:</span>
+                <span class="value sistema">
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.totalOtrosMedios | number:'1.2-2':'es-AR'))
+                  : '$' }}
+                </span>
+              </p>
+              <p class="total-item">
+                <span class="label">Diferencia según el usuario:</span>
+                <span
+                  class="value"
+                  [ngClass]="{
+                    'negativo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaOtrosMedios * 100) / 100) < 0,
+                    'cero': this.arqueo.idEstadoArqueo !== 2 || (Math.round(this.diferenciaOtrosMedios * 100) / 100) === 0,
+                    'positivo': this.arqueo.idEstadoArqueo === 2 && (Math.round(this.diferenciaOtrosMedios * 100) / 100) > 0
+                  }">
+                  {{ this.arqueo.idEstadoArqueo === 2
+                  ? ('$ ' + (this.diferenciaOtrosMedios | number:'1.2-2':'es-AR'))
+                  : '$' }}
+                </span>
+              </p>
+            </div>
+            <p class="leyenda" *ngIf="this.arqueo.idEstadoArqueo !== 2">
+              Podrás ver los totales y diferencias al cerrar este arqueo.
+            </p>
+          </div>
+        </div>
       </mat-card>
     </div>
   </div>
@@ -206,7 +326,7 @@
   <!-- Botón Finalizar Arqueo -->
   <div class="row mt-4">
     <div class="col d-flex justify-content-end">
-      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2">Finalizar Arqueo</button>
+      <button mat-raised-button color="accent" class="btn round" id="btnBuscar2" (click)="cerrarArqueo()" [disabled]="formDesactivado">Finalizar Arqueo</button>
     </div>
   </div>
 

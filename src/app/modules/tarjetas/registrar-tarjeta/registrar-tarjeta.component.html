@@ -86,27 +86,6 @@
                   </mat-cell>
                 </ng-container>
 
-                <!-- Columna de descuento -->
-                <ng-container matColumnDef="descuento">
-                  <mat-header-cell *matHeaderCellDef>% DESCUENTO</mat-header-cell>
-                  <mat-cell *matCellDef="let cuota">
-                    <div (click)="toggleEdit(cuota, 'descuento')" class="editable-cell">
-                      <span *ngIf="!cuota.isEditingDescuento">{{ cuota.descuento }}%</span>
-                      <input *ngIf="cuota.isEditingDescuento"
-                             type="number"
-                             [(ngModel)]="cuota.descuento"
-                             [disabled]="!isSelected(cuota)"
-                             [ngModelOptions]="{standalone: true}"
-                             (blur)="disableEdit(cuota, 'descuento')"
-                             (keydown.enter)="disableEdit(cuota, 'descuento')"
-                             (input)="cuota.descuento = Math.min(100, Math.max(0, +cuota.descuento || 0))"
-                             min="0" max="100" maxlength="3"
-                             class="full-width-input" />
-                    </div>
-                  </mat-cell>
-                </ng-container>
-
-
               <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
               <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
               </mat-table>

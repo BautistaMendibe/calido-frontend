@@ -1,0 +1,40 @@
+.mat-card {
+  min-width: 300px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%;
+  max-width: 500px;
+  overflow-x: auto;
+  margin: 0 auto;
+  box-sizing: border-box;
+  position: relative;
+  padding-top: 10px;
+}
+
+.titulo-container {
+  text-align: center;
+  padding: 10px;
+}
+
+#btnLoguearse {
+  background-color: #ef7c5e;
+  color: white;
+}
+
+#btnLoguearse:hover {
+  background-color: #e15b35;
+}
+
+#btnRegistrarse {
+  color: #e15b35;
+}
+
+.volver-text {
+  cursor: pointer;
+  text-align: center;
+  font-size: 12px;
+  color: grey;
+  margin-top: -10px;
+}
+
+.volver-text:hover {
+  text-decoration: underline; /* Subraya solo cuando el mouse está encima */
+}

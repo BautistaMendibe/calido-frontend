@@ -34,13 +34,12 @@
 
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de nacimiento</mat-label>
-          <input matInput [matDatepicker]="pickerFechaNacimiento" [formControl]="txFechaNacimiento" />
-          <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+          <mat-label>Email</mat-label>
+          <input type="email" matInput [formControl]="txMail"/>
         </mat-form-field>
-        <app-error-messages [control]="txFechaNacimiento"></app-error-messages>
       </div>
+      <app-error-messages [control]="txMail"></app-error-messages>
+
     </div>
 
     <div class="row pt-4">
@@ -61,6 +60,18 @@
         <app-error-messages [control]="txDNI"></app-error-messages>
       </div>
 
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Fecha de nacimiento</mat-label>
+          <input matInput [matDatepicker]="pickerFechaNacimiento" [formControl]="txFechaNacimiento" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
+        </mat-form-field>
+        <app-error-messages [control]="txFechaNacimiento"></app-error-messages>
+      </div>
+    </div>
+
+    <div class="row pt-4">
       <div class="col-md-4">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Género</mat-label>

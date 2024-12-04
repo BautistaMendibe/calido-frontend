@@ -8,12 +8,12 @@ import {
   ValidatorFn,
   Validators
 } from "@angular/forms";
-import {UsuariosService} from "../../services/usuarios.service";
+import {UsuariosService} from "../../../services/usuarios.service";
 import {Router} from "@angular/router";
-import {AuthService} from "../../services/auth.service";
-import {SnackBarService} from "../../services/snack-bar.service";
-import {ConfiguracionesService} from "../../services/configuraciones.service";
-import {Usuario} from "../../models/usuario.model";
+import {AuthService} from "../../../services/auth.service";
+import {SnackBarService} from "../../../services/snack-bar.service";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Usuario} from "../../../models/usuario.model";
 
 @Component({
   selector: 'app-login',
@@ -73,12 +73,11 @@ export class LoginComponent implements OnInit{
         [
           Validators.required,
           Validators.minLength(8),
-          Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)
-        ]
-      ],
+          Validators.pattern(/(?=.*[A-Z])(?=.*[0-9])/)]],
       txNombre: ['', [Validators.required]],
       txApellido: ['', [Validators.required]],
-      txConfirmarContrasena: ['', [Validators.required]]
+      txConfirmarContrasena: ['', [Validators.required]],
+      txMail: ['', [Validators.required, this.emailValidator()]]
     }, { validators: this.passwordMatchValidator.bind(this) });
   }
 
@@ -97,6 +96,18 @@ export class LoginComponent implements OnInit{
       confirmPassword.setErrors(null);
       return null;
     }
+  }
+
+  private emailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+      const valid = emailPattern.test(control.value);
+      return valid ? null : { invalidEmail: { value: control.value } };
+    };
   }
 
   public iniciarSesion(){
@@ -132,6 +143,7 @@ export class LoginComponent implements OnInit{
       superusuario.nombre = this.txNombre.value;
       superusuario.apellido = this.txApellido.value;
       superusuario.contrasena = this.txContrasena.value;
+      superusuario.mail = this.txMail.value;
 
       this.usuariosService.registrarSuperusuario(superusuario).subscribe({
         next: (resultadoUsuario) => {
@@ -167,6 +179,10 @@ export class LoginComponent implements OnInit{
     }
   }
 
+  public cambiarContrasena() {
+    this.router.navigate(['/recuperar-contrasena'])
+  }
+
   // Region getters
   get txNombreUsuario(): FormControl {
     return this.formLogin.get('txNombreUsuario') as FormControl;
@@ -186,6 +202,10 @@ export class LoginComponent implements OnInit{
 
   get txConfirmarContrasena(): FormControl {
     return this.formLogin.get('txConfirmarContrasena') as FormControl
+  }
+
+  get txMail(): FormControl {
+    return this.formLogin.get('txMail') as FormControl;
   }
   // endregion
 }

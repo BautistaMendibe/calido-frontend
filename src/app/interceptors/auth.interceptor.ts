@@ -22,6 +22,11 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const token = this.authService.getToken();
 
+    // Excluir la ruta de recuperación de contraseña de la lógica de autenticación
+    if (req.url.includes('recuperar-contrasena')) {
+      return next.handle(req);
+    }
+
     if (token) {
       if (this.authService.isAuthenticated()) {
         req = req.clone({

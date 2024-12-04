@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import {HealthService} from "./services/health.service";
-import { LoginComponent } from './modules/login/login.component';
+import { LoginComponent } from './modules/auth/login/login.component';
 import { LayoutComponent } from './core/layout/layout.component';
 import { HeaderComponent } from './core/header/header.component';
 import {MaterialModule} from "./shared/material-module";
@@ -66,6 +66,17 @@ import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arque
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
 import {MatPaginatorModule} from "@angular/material/paginator";
+import { VentasDiaComponent } from './modules/home/ventas-dia/ventas-dia.component';
+import { VentasMensualesComponent } from './modules/home/ventas-mensuales/ventas-mensuales.component';
+import { BaseChartDirective } from 'ng2-charts';
+import { UltimosMovimientosComponent } from './modules/home/ultimos-movimientos/ultimos-movimientos.component';
+import { ProductosStockLimitadoComponent } from './modules/home/productos-stock-limitado/productos-stock-limitado.component';
+import { AsistenciasEmpleadosComponent } from './modules/home/asistencias-empleados/asistencias-empleados.component';
+import { UltimosClientesRegistradosComponent } from './modules/home/ultimos-clientes-registrados/ultimos-clientes-registrados.component';
+import { OrdenesDeCompraComponent } from './modules/home/ordenes-de-compra/ordenes-de-compra.component';
+import { RecuperarContrasenaComponent } from './modules/auth/recuperar-contrasena/recuperar-contrasena.component';
+import { AsignarCuentaCorrienteComponent } from './modules/clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component';
+import { GenerarReportesComponent } from './modules/reportes/generar-reportes/generar-reportes.component';
 import { QRVentanaComponent } from './modules/qr-ventana/qr-ventana.component';
 registerLocaleData(localeEs, 'es');
 
@@ -119,6 +130,18 @@ registerLocaleData(localeEs, 'es');
     RegistrarArqueoCajaComponent,
     DetalleArqueoComponent,
     ErrorMessagesComponent,
+    VentasDiaComponent,
+    VentasMensualesComponent,
+    UltimosMovimientosComponent,
+    ProductosStockLimitadoComponent,
+    AsistenciasEmpleadosComponent,
+    UltimosClientesRegistradosComponent,
+    OrdenesDeCompraComponent,
+    ErrorMessagesComponent,
+    RecuperarContrasenaComponent,
+    RecuperarContrasenaComponent,
+    GenerarReportesComponent,
+    AsignarCuentaCorrienteComponent,
     QRVentanaComponent
   ],
   imports: [
@@ -136,6 +159,8 @@ registerLocaleData(localeEs, 'es');
     NgxMaskDirective,
     NgxMaskPipe,
     FormsModule,
+    MatPaginatorModule,
+    BaseChartDirective,
     MatPaginatorModule,
     MatDialogContent,
     MatDialogActions

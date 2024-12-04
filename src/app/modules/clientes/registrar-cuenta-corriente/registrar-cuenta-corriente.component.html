@@ -28,20 +28,62 @@
 
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Saldo</mat-label>
-          <input matInput formControlName="txBalance" type="text" mask="separator.2" prefix="$ " thousandSeparator=",">
-        </mat-form-field>
-        <app-error-messages [control]="txBalance"></app-error-messages>
-      </div>
-
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
           <mat-label>Fecha de creación</mat-label>
           <input matInput [matDatepicker]="picker" formControlName="txCreada" placeholder="Creada" [min]="fechaHoy" [max]="fechaHoy">
           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
         </mat-form-field>
         <app-error-messages [control]="txCreada"></app-error-messages>
+      </div>
+    </div>
+
+    <div class="row pt-4">
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Debe</mat-label>
+          <input
+            matInput
+            formControlName="txDebe"
+            type="text"
+            mask="separator.2"
+            prefix="$ "
+            thousandSeparator=","
+            [allowNegativeNumbers]="true"
+          />
+        </mat-form-field>
+        <app-error-messages [control]="txDebe"></app-error-messages>
+      </div>
+
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Haber</mat-label>
+          <input
+            matInput
+            formControlName="txHaber"
+            type="text"
+            mask="separator.2"
+            prefix="$ "
+            thousandSeparator=","
+            [allowNegativeNumbers]="true"
+          />
+        </mat-form-field>
+        <app-error-messages [control]="txHaber"></app-error-messages>
+      </div>
+
+      <div class="col-md">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Saldo general</mat-label>
+          <input
+            matInput
+            formControlName="txBalance"
+            type="text"
+            mask="separator.2"
+            prefix="$ "
+            thousandSeparator=","
+            [allowNegativeNumbers]="true"
+          />
+        </mat-form-field>
+        <app-error-messages [control]="txBalance"></app-error-messages>
       </div>
     </div>
 
@@ -64,22 +106,33 @@
       </div>
     </div>
 
-    <br>
+    <br *ngIf="ventas.length > 0">
 
-    <mat-card [hidden]="!(ventas.length > 0 && !esRegistro)">
+    <mat-card [hidden]="!(ventas.length > 0)">
       <mat-card-content>
         <div class="row">
           <div class="col-md-12">
             <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="formDesactivado || listaVentasDeshabilitada">
 
               <ng-container matColumnDef="id">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>NÚMERO DE VENTA</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>VENTA</mat-header-cell>
                 <mat-cell *matCellDef="let venta">{{ venta.id }}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="montoTotal">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
-                <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
+                <mat-cell *matCellDef="let venta">
+                  $ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="saldoDisponible">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>SALDO DISP</mat-header-cell>
+                <mat-cell *matCellDef="let venta">
+                  {{ venta.saldoDisponible != null && true
+                  ? ('$ ' + (venta.saldoDisponible | number:'1.2-2':'es-AR'))
+                  : 'No aplica' }}
+                </mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="fecha">
@@ -91,6 +144,13 @@
                 <mat-header-cell *matHeaderCellDef>FORMA DE PAGO</mat-header-cell>
                 <mat-cell *matCellDef="let venta">
                   {{ venta.formaDePago?.nombre }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="estado">
+                <mat-header-cell *matHeaderCellDef>ESTADO</mat-header-cell>
+                <mat-cell *matCellDef="let venta">
+                  {{ venta.canceladaConSaldo === 1 ? 'Cancelada con saldo' : (venta.fechaAnulacion ? 'Anulada' : 'No facturada') }}
                 </mat-cell>
               </ng-container>
 
@@ -116,6 +176,27 @@
                   <button class="btn" mat-icon-button matTooltip="Ver" (click)="verVenta(venta)">
                     <mat-icon class="ver">visibility</mat-icon>
                   </button>
+                  <button
+                    *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null && venta.anulada == 0 && venta.canceladaConSaldo === 0"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Facturar venta"
+                    (click)="facturarVenta(venta)">
+                    <mat-icon class="facturar">attach_money</mat-icon>
+                  </button>
+                  <div
+                    matTooltip="{{ this.txHaber.value < venta.montoTotal ? 'Haber insuficiente para cancelar esta venta' : 'Cancelar total de venta con saldo' }}"
+                    matTooltipShowDelay="100">
+                    <button
+                      *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null && venta.anulada == 0 && venta.canceladaConSaldo === 0"
+                      mat-icon-button
+                      color="primary"
+                      (click)="cancelarVenta(venta)"
+                      [disabled]="this.txHaber.value < venta.montoTotal">
+                      <mat-icon>check_circle_outline</mat-icon>
+                    </button>
+                  </div>
+
                 </mat-cell>
               </ng-container>
 
@@ -131,10 +212,15 @@
       </mat-card-content>
     </mat-card>
 
-    <h5 *ngIf="!isLoading && this.ventas.length === 0 && !esRegistro" class="alert alert-secondary text-center">
-      No se encuentran ventas para esta cuenta para mostrar, por favor realice una nueva búsqueda.
+    <h5 *ngIf="!isLoading && this.ventas.length === 0" class="alert alert-secondary text-center">
+      No se encuentran ventas de cuenta corriente de este cliente para mostrar.
     </h5>
   </form>
+
+  <p class="leyenda" *ngIf="tieneAccionesPendientes">
+    <br>
+    ⚠ Esta cuenta posee ventas en estado pendiente (no facturadas o no canceladas con saldo de cuenta corriente) que deben atenderse.
+  </p>
 
   <mat-divider class="my-3"></mat-divider>
 

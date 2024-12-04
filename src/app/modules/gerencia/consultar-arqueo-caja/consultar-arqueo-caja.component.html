@@ -84,14 +84,8 @@
             <ng-container matColumnDef="horaCierre">
               <mat-header-cell *matHeaderCellDef mat-sort-header>HORA CIERRE</mat-header-cell>
               <mat-cell *matCellDef="let arqueo">
-                {{ arqueo.horaCierre }}
+                {{ arqueo.horaCierre ? arqueo.horaCierre : 'No cerrado'}}
               </mat-cell>
-            </ng-container>
-
-            <!-- Diferencia entre sistema y usuario en $ al cierre del arqueo -->
-            <ng-container matColumnDef="diferencia">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>DIFERENCIA</mat-header-cell>
-              <mat-cell *matCellDef="let arqueo" >$ {{ arqueo.diferencia | number:'1.2-2':'es-AR'}}</mat-cell>
             </ng-container>
 
             <!-- Estado del arqueo -->
@@ -106,12 +100,6 @@
                 <div class="actions-container">
                   <button class="btn" mat-icon-button matTooltip="Ver" (click)="verArqueo(arqueo, false)">
                     <mat-icon class="ver">visibility</mat-icon>
-                  </button>
-                  <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verArqueo(arqueo, true)">
-                    <mat-icon class="editar">edit</mat-icon>
-                  </button>
-                  <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarArqueo(arqueo.id)">
-                    <mat-icon class="eliminar">delete</mat-icon>
                   </button>
                   <button mat-icon-button color="primary" matTooltip="Ver Detalle Arqueo" (click)="verDetalleArqueo(arqueo.id)">
                     <mat-icon class="detalle">description</mat-icon>

@@ -6,7 +6,7 @@ import {
   Validators,
   AbstractControl,
   ValidatorFn,
-  ValidationErrors
+  ValidationErrors, Form
 } from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
@@ -114,7 +114,8 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txRoles: [[], [Validators.required]]
+      txRoles: [[], [Validators.required]],
+      txMail: ['', [Validators.required, this.emailValidator()]]
     });
   }
 
@@ -126,6 +127,18 @@ export class RegistrarEmpleadosComponent implements OnInit{
       passwordControl.updateValueAndValidity();
       passwordControl.setValue('');
     }
+  }
+
+  private emailValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) {
+        return null;
+      }
+
+      const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
+      const valid = emailPattern.test(control.value);
+      return valid ? null : { invalidEmail: { value: control.value } };
+    };
   }
 
   private rellenarFormularioDataUsuario() {
@@ -144,6 +157,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
     this.txCalle.setValue(this.usuario.domicilio?.calle);
     this.txNumero.setValue(this.usuario.domicilio?.numero);
     this.txRoles.setValue(this.usuario.roles.map(rol => rol.id));
+    this.txMail.setValue(this.usuario.mail);
 
     if (this.usuario.domicilio?.localidad?.provincia?.id) {
       this.obtenerLocalidadesPorProvincia(this.usuario.domicilio.localidad.provincia.id)
@@ -268,7 +282,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       empleado.roles = this.txRoles.value;
       empleado.tipoUsuario = tipoUsuario;
       empleado.tipoUsuario.id = 1;
-
+      empleado.mail = this.txMail.value;
 
       this.usuariosService.registrarUsuario(empleado).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
@@ -279,9 +293,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
           this.notificacionService.openSnackBarError('Error al registrar un empleado, inténtelo nuevamente');
         }
       })
-
     }
-
   }
 
   public modificarEmpleado() {
@@ -305,6 +317,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
       this.usuario.domicilio.calle = this.txCalle.value;
       this.usuario.domicilio.numero = this.txNumero.value;
       this.usuario.roles = this.txRoles.value;
+      this.usuario.mail = this.txMail.value;
 
       this.usuariosService.modificarUsuario(this.usuario).subscribe((res) => {
         if (res.mensaje == 'OK') {
@@ -317,7 +330,6 @@ export class RegistrarEmpleadosComponent implements OnInit{
       })
     }
   }
-
 
   public cancelar() {
     this.dialogRef.close();
@@ -378,6 +390,10 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   get txRoles(): FormControl {
     return this.form.get('txRoles') as FormControl;
+  }
+
+  get txMail(): FormControl {
+    return this.form.get('txMail') as FormControl;
   }
 
 }

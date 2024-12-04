@@ -80,6 +80,11 @@
               </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="fechaHasta">
+              <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA HASTA</mat-header-cell>
+              <mat-cell *matCellDef="let promocion" data-label="Fecha Hasta">{{ promocion.fechaHasta ? (promocion.fechaHasta | date: 'dd/MM/yyyy') : 'Permanente' }}</mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="acciones">
               <mat-header-cell *matHeaderCellDef>ACCIONES</mat-header-cell>
               <mat-cell *matCellDef="let promocion" data-label="Acciones">

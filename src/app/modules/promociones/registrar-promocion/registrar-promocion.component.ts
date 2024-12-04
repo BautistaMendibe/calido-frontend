@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {AbstractControl, Form, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
 import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
@@ -26,6 +26,7 @@ export class RegistrarPromocionComponent implements OnInit{
   public isLoading: boolean = false;
   public promocion: Promocion;
   public esConsulta: boolean;
+  public fechaHoy: Date = new Date();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -77,6 +78,7 @@ export class RegistrarPromocionComponent implements OnInit{
         Validators.pattern("^[0-9]*$")
         ]],
       txBuscar: ['', []],
+      txFechaHasta: ['', []],
     });
   }
 
@@ -102,6 +104,7 @@ export class RegistrarPromocionComponent implements OnInit{
   private setearDatos() {
     this.txNombre.setValue(this.promocion.nombre);
     this.txPorcentajeDescuento.setValue(this.promocion.porcentajeDescuento);
+    this.txFechaHasta.setValue(this.promocion.fechaHasta);
     this.productosSelecionados = this.promocion.productos;
     this.productosSeleccionadosOriginales = [...this.productosSelecionados];
     if (this.esConsulta) {
@@ -197,6 +200,13 @@ export class RegistrarPromocionComponent implements OnInit{
       promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
       promocion.productos = this.productosSelecionados;
 
+      if (this.txFechaHasta.value) {
+        const fechaBase = new Date(this.txFechaHasta.value); // Fecha seleccionada
+        promocion.fechaHasta = new Date(Date.UTC(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate(), 23, 59, 59, 999));
+      } else {
+        promocion.fechaHasta = null; // Si no hay fecha seleccionada
+      }
+
       this.promocionesService.registrarPromocion(promocion).subscribe((respuesta) => {
         if (respuesta.mensaje == 'OK') {
           this.notificacionService.openSnackBarSuccess('La promoción se registró con éxito');
@@ -221,6 +231,13 @@ export class RegistrarPromocionComponent implements OnInit{
       promocion.id = this.promocion.id;
       promocion.nombre = this.txNombre.value;
       promocion.porcentajeDescuento = this.txPorcentajeDescuento.value;
+
+      if (this.txFechaHasta.value) {
+        const fechaBase = new Date(this.txFechaHasta.value); // Fecha seleccionada
+        promocion.fechaHasta = new Date(Date.UTC(fechaBase.getFullYear(), fechaBase.getMonth(), fechaBase.getDate(), 23, 59, 59, 999));
+      } else {
+        promocion.fechaHasta = null; // Si no hay fecha seleccionada
+      }
 
       const productosAgregados = this.productosSelecionados;
       promocion.productos = productosAgregados;
@@ -260,6 +277,10 @@ export class RegistrarPromocionComponent implements OnInit{
 
   get txBuscar(): FormControl {
     return this.form.get('txBuscar') as FormControl;
+  }
+
+  get txFechaHasta(): FormControl {
+    return this.form.get('txFechaHasta') as FormControl;
   }
 
 }

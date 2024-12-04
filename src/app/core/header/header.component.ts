@@ -1,7 +1,8 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {Router} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {ConfiguracionesService} from "../../services/configuraciones.service";
+import {HttpRequest} from "@angular/common/http";
 
 @Component({
   selector: 'app-header',
@@ -17,7 +18,8 @@ export class HeaderComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private router: Router,
-    private configuracionesService: ConfiguracionesService) {
+    private configuracionesService: ConfiguracionesService,
+    private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
@@ -35,9 +37,12 @@ export class HeaderComponent implements OnInit {
         this.nombreApellido = `${nombre} ${apellido}`;
 
       } else {
-        this.toggleSideBarForMe.emit(false);
-        this.estaLogeado = false;
-        this.router.navigate(['/login']);
+        const currentUrl = window.location.href;
+        if (!currentUrl.includes('recuperar-contrasena')) {
+          this.router.navigate(['/login']);
+          this.toggleSideBarForMe.emit(false);
+          this.estaLogeado = false;
+        }
       }
     });
   }

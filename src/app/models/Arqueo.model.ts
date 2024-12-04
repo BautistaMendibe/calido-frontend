@@ -1,5 +1,6 @@
 import {EstadoArqueo} from "./estadoArqueo.model";
 import {Caja} from "./Caja.model";
+import {Usuario} from "./usuario.model";
 
 export class Arqueo {
   id: number;
@@ -16,6 +17,14 @@ export class Arqueo {
   estadoArqueo: EstadoArqueo;
   caja: Caja;
 
+  montoSistemaCaja: number;
+  montoSistemaOtros: number;
+  diferenciaOtros: number;
+  cantidadDineroCajaUsuario: number;
+  cantidadDineroOtrosUsuario: number;
+
+  responsable: Usuario;
+
   constructor(
     id?: number,
     fechaApertura?: Date,
@@ -28,7 +37,13 @@ export class Arqueo {
     idEstadoArqueo?: number,
     idCaja?: number,
     estadoArqueo?: EstadoArqueo,
-    caja?: Caja
+    caja?: Caja,
+    montoSistemaCaja?: number,
+    montoSistemaOtros?: number,
+    diferenciaOtros?: number,
+    cantidadDineroCajaUsuario?: number,
+    cantidadDineroOtrosUsuario?: number,
+    responsable?: Usuario
   ) {
     this.id = id!;
     this.fechaApertura = fechaApertura!;
@@ -42,5 +57,11 @@ export class Arqueo {
     this.idCaja = idCaja!;
     this.estadoArqueo = estadoArqueo!;
     this.caja = caja!;
+    this.montoSistemaCaja = montoSistemaCaja!;
+    this.montoSistemaOtros = montoSistemaOtros!;
+    this.diferenciaOtros = diferenciaOtros!;
+    this.cantidadDineroCajaUsuario = cantidadDineroCajaUsuario!;
+    this.cantidadDineroOtrosUsuario = cantidadDineroOtrosUsuario!;
+    this.responsable = responsable!;
   }
 }

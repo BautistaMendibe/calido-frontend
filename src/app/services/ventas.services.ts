@@ -3,14 +3,13 @@ import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {environmentDEV} from "../../environments/environment-dev";
 import {SpResult} from "../models/resultadoSp.model";
-import {Usuario} from "../models/usuario.model";
 import {FormaDePago} from "../models/formaDePago.model";
 import {Venta} from "../models/venta.model";
-
-import { FiltrosCuentasCorrientes } from "../models/comandos/FiltrosCuentasCorrientes";
 import {CondicionIva} from "../models/CondicionIva.model";
 import {TipoFactura} from "../models/tipoFactura.model";
 import {FiltrosVentas} from "../models/comandos/FiltrosVentas.comando";
+import {VentasMensuales} from "../models/comandos/dashboard/VentasMensuales.comando";
+import {VentasDiariaComando} from "../models/comandos/dashboard/VentasDiaria.comando";
 
 
 @Injectable({
@@ -54,9 +53,25 @@ export class VentasService {
     return this.http.get<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc/${idUsuario}`);
   }
 
-  public buscarVentasFechaHora(fechaHora: string): Observable<Venta[]> {
-    const body = { fechaHora };
+  public buscarVentasFechaHora(fechaHora: string | null, fechaHoraCierre: string | null): Observable<Venta[]> {
+    const body = { fechaHora, fechaHoraCierre };
     return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-fecha-hora`, body);
+  }
+
+  public buscarCantidadVentasMensuales(): Observable<VentasMensuales[]>{
+    return this.http.get<VentasMensuales[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-mensuales`);
+  }
+
+  public buscarVentasPorDiaYHoraDashboard(): Observable<VentasDiariaComando[]>{
+    return this.http.get<VentasDiariaComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-dia-hora`);
+  }
+
+  public cancelarVenta(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cancelar-venta`, venta);
+  }
+
+  public cancelarVentaParcialmente(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cancelar-venta-parcialmente`, venta);
   }
 
   public pagarConSIROQR(venta: Venta): Observable<SpResult>{
@@ -67,5 +82,4 @@ export class VentasService {
     const body = { IdReferenciaOperacion: IdReferenciaOperacion };
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/consultar-pago`, body);
   }
-
 }

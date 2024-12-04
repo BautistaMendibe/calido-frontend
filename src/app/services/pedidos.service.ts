@@ -6,6 +6,7 @@ import {SpResult} from "../models/resultadoSp.model";
 import {Pedido} from "../models/pedido.model";
 import {FiltrosPedidos} from "../models/comandos/FiltrosPedidos.comando";
 import {EstadoPedido} from "../models/estadoPedido";
+import {OrdenDeCompraComando} from "../models/comandos/dashboard/OrdenDeCompra.comando";
 
 
 @Injectable({
@@ -35,5 +36,9 @@ export class PedidosService {
 
   public modificarPedido(pedido: Pedido): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/modificar-pedido`, pedido);
+  }
+
+  public buscarOrdenesDeCompraHome(): Observable<OrdenDeCompraComando[]>{
+    return this.http.get<OrdenDeCompraComando[]>(`${this.urlBackend}/${this.controllerName}/buscar-ordenes-de-compra-home`);
   }
 }

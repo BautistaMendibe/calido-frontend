@@ -26,7 +26,7 @@ export class ConsultarArqueoCajaComponent implements OnInit {
   public form: FormGroup;
   public arqueos: Arqueo[] = [];
   public listaEstadosArqueo: EstadoArqueo[] = [];
-  public columnas: string[] = ['caja', 'fechaApertura', 'horaApertura', 'horaCierre', 'diferencia', 'estado', 'acciones'];
+  public columnas: string[] = ['caja', 'fechaApertura', 'horaApertura', 'horaCierre', 'estado', 'acciones'];
   private filtros: FiltrosArqueos;
   private unsubscribe$: Subject<void> = new Subject<void>();
   public isLoading: boolean = false;
