@@ -31,6 +31,8 @@ export class GenerarReportesComponent implements OnInit {
     'Torta'
   ];
   private chart!: Chart;
+  public maxDate: Date;
+
 
   constructor(
     private fb: FormBuilder,
@@ -40,6 +42,7 @@ export class GenerarReportesComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    this.maxDate = new Date();
   }
 
   ngOnInit() {
@@ -92,7 +95,8 @@ export class GenerarReportesComponent implements OnInit {
         }
       });
     } else {
-      this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
+      this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.');
+      this.buscandoData = false;
     }
   }
 
@@ -118,12 +122,15 @@ export class GenerarReportesComponent implements OnInit {
     document.body.appendChild(canvas);
 
     if (!reporte.data || reporte.data.length === 0) {
-      console.error('No hay datos para generar el gráfico.');
+      this.notificacionService.openSnackBarError('No hay datos para generar el gráfico.');
+      this.buscandoData = false;
       return;
     }
 
     if (!ctx) {
       console.error('Error al crear el contexto del gráfico.');
+      this.notificacionService.openSnackBarError('Error. Inténtelo nuevamente.');
+      this.buscandoData = false;
       return;
     }
 
