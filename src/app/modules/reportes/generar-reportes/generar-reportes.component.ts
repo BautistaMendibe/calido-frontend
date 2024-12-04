@@ -101,6 +101,11 @@ export class GenerarReportesComponent implements OnInit {
   }
 
   private validarFechas(reporte: ReporteComando): boolean {
+    if (this.txFechaDesde.value && !(this.txFechaHasta.value)) {
+      reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
+      reporte.filtros.fechaHasta = new Date();
+      return true;
+    }
     if (this.txFechaDesde.value <= this.txFechaHasta.value) {
       reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
       reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
@@ -227,7 +232,7 @@ export class GenerarReportesComponent implements OnInit {
       const r = Math.floor(Math.random() * 255);
       const g = Math.floor(Math.random() * 255);
       const b = Math.floor(Math.random() * 255);
-      const alpha = 0.8;
+      const alpha = 0.9;
 
       backgroundColor.push(`rgba(${r}, ${g}, ${b}, ${alpha})`);
       borderColor.push(`rgba(${r}, ${g}, ${b}, 1)`);
@@ -339,7 +344,7 @@ export class GenerarReportesComponent implements OnInit {
         ticks: {
           stepSize: 10,
           font: {
-            size: 14,
+            size: 12,
           },
         },
         grid: {
@@ -355,7 +360,7 @@ export class GenerarReportesComponent implements OnInit {
           minRotation: 0,
           padding: 5,
           font: {
-            size: 14,
+            size: 12,
           },
         },
         grid: {
