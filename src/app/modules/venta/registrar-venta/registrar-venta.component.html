@@ -1,7 +1,7 @@
 <div class="container py-3">
-  <div class="row">
+  <div class="row g-3">
     <!-- Lista de productos -->
-    <div class="col-7">
+    <div class="col-xl-7">
       <mat-card class="p-4 product-list">
         <h2 class="invoice-title">Venta</h2>
         <mat-divider></mat-divider>
@@ -10,14 +10,14 @@
         <div class="row">
 
           <!-- Botón del código de barras -->
-          <div class="col-1">
+          <div class="col-1 btn-buscar-producto">
             <button mat-icon-button (click)="enfocar()">
               <mat-icon>qr_code_scanner</mat-icon>
             </button>
           </div>
 
           <!-- Input de búsqueda -->
-          <div class="col-8">
+          <div class="col-10 col-xl-7">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Producto</mat-label>
               <input type="text" [formControl]="txBuscar" id="txBuscar" matInput/>
@@ -27,7 +27,7 @@
           </div>
 
           <!-- Botón de 'Nuevo producto' -->
-          <div class="col-3">
+          <div class="col-sm-12 col-xl-3">
             <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarProducto()">
               <mat-icon>add</mat-icon>Nuevo producto
             </button>
@@ -38,7 +38,7 @@
 
         <!-- Lista de productos a seleccionar -->
         <div class="row">
-          <div class="col-12 col-md-6 col-lg-4 p-4" *ngFor="let producto of productosFiltrados | slice:0:30"> <!-- Ajustar columnas para pantallas pequeñas -->
+          <div class="col-12 col-md-6 col-lg-4 p-4" *ngFor="let producto of productosFiltrados | slice:0:limiteProductos"> <!-- Ajustar columnas para pantallas pequeñas -->
             <div class="card product-card"
                  [ngClass]="{
                     'selected-card': producto.seleccionadoParaVenta,
@@ -107,7 +107,7 @@
     </div>
 
     <!-- Factura de venta -->
-      <div class="col" [formGroup]="form">
+      <div class="col mt-md-2" [formGroup]="form">
         <mat-card class="p-4 sale-invoice">
           <h2 class="invoice-title">Detalle de venta</h2>
           <mat-divider></mat-divider>
@@ -188,7 +188,7 @@
             </div>
           </div>
           <div class="row">
-            <div class="col-9">
+            <div class="col-7 col-sm-9">
               <mat-form-field appearance="outline" class="w-100">
                 <mat-label>Cliente</mat-label>
                 <mat-select [formControl]="txCliente" (selectionChange)="cambioCliente($event.value)">

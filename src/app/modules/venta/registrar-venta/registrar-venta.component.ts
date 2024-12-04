@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
@@ -63,6 +63,7 @@ export class RegistrarVentaComponent implements OnInit{
   public mostrarTarjetasCuotas: boolean = false;
   public registrandoVenta: boolean = false;
   private facturacionAutomatica: boolean = false;
+  public limiteProductos: number = 30;
   public tieneCuentaCorrienteRegistrada: boolean = false;
 
   constructor(
@@ -89,6 +90,12 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarDataCombos();
     this.filtrosSuscripciones();
     this.buscarConfiguracionesParaVenta();
+    this.ajustarLimiteCantidadLimiteProducto();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.ajustarLimiteCantidadLimiteProducto();
   }
 
   public buscar() {
@@ -138,6 +145,10 @@ export class RegistrarVentaComponent implements OnInit{
       this.facturacionAutomatica = configuracion.facturacionAutomatica;
       this.montoConsumidorFinal = configuracion.montoConsumidorFinal;
     });
+  }
+
+  private ajustarLimiteCantidadLimiteProducto() {
+    this.limiteProductos = window.innerWidth < 900 ? 6 : 30;
   }
 
   private buscarCajas() {
