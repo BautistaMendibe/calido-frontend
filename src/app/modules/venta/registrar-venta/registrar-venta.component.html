@@ -188,7 +188,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-9">
+          <div class="col-7 col-sm-9">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Cliente</mat-label>
               <mat-select [formControl]="txCliente" (selectionChange)="cambioCliente($event.value)">
@@ -202,7 +202,7 @@
             </mat-form-field>
             <app-error-messages [control]="txCliente"></app-error-messages>
           </div>
-          <div class="col-3">
+          <div class="col-sm-3 col-4">
             <button mat-stroked-button color="warn" class="btn round new-client-btn" (click)="registrarCliente()">
               <mat-icon>add</mat-icon> Nuevo
             </button>
