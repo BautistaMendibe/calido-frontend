@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
 import {Menu} from "../../models/menu.model";
 import {
   animateSubText,
@@ -62,6 +62,7 @@ export class SidebarComponent implements OnInit {
   public sideNavState = false;
   public linkText = false;
   private lastSelectedItem: Menu | null = null;
+  public sizeScreen: number = 0;
 
   constructor(
     private router: Router,
@@ -72,12 +73,26 @@ export class SidebarComponent implements OnInit {
     this.setActiveItemBasedOnUrl();
 
     this.mapearRoles();
+    this.calcularSizeScreen();
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.setActiveItemBasedOnUrl();
     });
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.calcularSizeScreen();
+  }
+
+  private calcularSizeScreen() {
+    this.sizeScreen = window.innerWidth;
+
+    if (this.sizeScreen < 700) {
+      this.onSinenavToggle();
+    }
   }
 
   private mapearRoles() {
@@ -158,7 +173,21 @@ export class SidebarComponent implements OnInit {
 
     setTimeout(() => {
       this.linkText = this.sideNavState;
-    }, 300);
+    }, 500);
+  }
+
+  onSinenavToggleMouse() {
+    if (this.sizeScreen >= 700) {
+      this.sideNavState = !this.sideNavState;
+
+      if (!this.sideNavState) {
+        this.colapsarSubmenus();
+      }
+
+      setTimeout(() => {
+        this.linkText = this.sideNavState;
+      }, 300);
+    }
   }
 
   navigate(item: Menu) {
