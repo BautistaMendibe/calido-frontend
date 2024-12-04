@@ -25,6 +25,7 @@ export class DetalleArqueoComponent implements OnInit {
   public idArqueo: string | null = null;
   public arqueo: Arqueo = new Arqueo();
   public formasPago: FormaDePago[] = [];
+  public formasPagoParaMovimientos: FormaDePago[] = [];
   public filtradoPorFormasPago: FormaDePago[] = [];
   public ventas: Venta[] = [];
   public isLoading: boolean = false;
@@ -39,7 +40,7 @@ export class DetalleArqueoComponent implements OnInit {
   public diferenciaOtrosMedios: number = 0;
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
-  public columnas: string[] = ['fecha', 'formaPago', 'descripcion', 'tipoMovimiento', 'montoTotal', 'acciones'];
+  public columnas: string[] = ['fecha', 'formaPago', 'descripcion', 'tipoMovimiento', 'montoTotal'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -79,6 +80,8 @@ export class DetalleArqueoComponent implements OnInit {
 
   public buscarFormasPago() {
     this.ventasService.buscarFormasDePago().subscribe((formasPago) => {
+      // Asignar las formas de pago para el combo de movimientos (solo efectivo y transferencia)
+      this.formasPagoParaMovimientos = formasPago.filter(fp => fp.id === 1 || fp.id === 5);
       // Asignar las formas de pago recibidas del servicio
       this.formasPago = formasPago.map((forma) => {
         // Agregar el ícono representativo según el ID
@@ -400,25 +403,49 @@ export class DetalleArqueoComponent implements OnInit {
       arqueo.cantidadDineroCajaUsuario = this.txCantidadDineroCaja.value;
       arqueo.cantidadDineroOtrosUsuario = this.txCantidadDineroOtrosMedios.value;
 
-      this.notificationDialogService.confirmation(
-        `¿Desea cerrar el arqueo?
-        Esta acción no es reversible.`,
-        'Cerrar Arqueo'
-      ) //Está seguro?
-        .afterClosed()
-        .subscribe((value) => {
-          if (value) {
-            this.cajasService.cerrarArqueo(arqueo).subscribe((respuesta) => {
-              if (respuesta.mensaje == 'OK') {
-                this.notificacionService.openSnackBarSuccess('Arqueo cerrado con éxito');
-                this.deshabilitarFormulario();
-              } else {
-                this.notificacionService.openSnackBarError('Error al cerrar arqueo, intenta nuevamente.');
-              }
-            });
-          }
-        });
+      const diferenciaCajaAbs = Math.abs(this.diferenciaCaja || 0);
+      const diferenciaOtrosAbs = Math.abs(this.diferenciaOtrosMedios || 0);
+      // Si alguna diferencia es >= 1000, muestra el primer diálogo
+      if (diferenciaCajaAbs >= 1000 || diferenciaOtrosAbs >= 1000) {
+        this.notificationDialogService.confirmation(
+          `Existen diferencias entre lo indicado
+          y lo registrado por el sistema.
+          ¿Está seguro que desea continuar?`,
+          '¡Existen Diferencias!'
+        )
+          .afterClosed()
+          .subscribe((firstDialogResult) => {
+            if (firstDialogResult) {
+              this.confirmarCierreArqueo(arqueo); // Procede al segundo diálogo
+            }
+          });
+      } else {
+        // Si las diferencias son menores a 1000, salta al segundo diálogo directamente
+        this.confirmarCierreArqueo(arqueo);
+      }
     }
+  }
+
+  // Método auxiliar para confirmar el cierre del arqueo
+  private confirmarCierreArqueo(arqueo: Arqueo) {
+    this.notificationDialogService.confirmation(
+      `¿Desea cerrar el arqueo?
+    Esta acción no es reversible.`,
+      'Cerrar Arqueo'
+    )
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.cajasService.cerrarArqueo(arqueo).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Arqueo cerrado con éxito');
+              this.deshabilitarFormulario();
+            } else {
+              this.notificacionService.openSnackBarError('Error al cerrar arqueo, intenta nuevamente.');
+            }
+          });
+        }
+      });
   }
 
   private filtroSuscripciones() {

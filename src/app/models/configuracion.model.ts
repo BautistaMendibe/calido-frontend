@@ -17,6 +17,7 @@ export class Configuracion {
   usuarioInstagram: string;
   usuario: Usuario;
   facturacionAutomatica: boolean;
+  montoConsumidorFinal: number;
 
   constructor(
     id?: number,
@@ -34,7 +35,8 @@ export class Configuracion {
     ciudad?: string,
     provincia?: string,
     codigoPostal?: number,
-    facturacionAutomatica?: boolean
+    facturacionAutomatica?: boolean,
+    montoConsumidorFinal?: number
 ) {
     this.id = id!;
     this.idUsuario = idUsuario!;
@@ -52,5 +54,6 @@ export class Configuracion {
     this.provincia = provincia!;
     this.codigoPostal = codigoPostal!;
     this.facturacionAutomatica = facturacionAutomatica!;
+    this.montoConsumidorFinal = montoConsumidorFinal!;
   }
 }

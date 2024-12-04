@@ -56,7 +56,7 @@ export class VentasMensualesComponent implements OnInit {
       y: {
         beginAtZero: true,
         ticks: {
-          stepSize: 10,
+          maxTicksLimit: 10,
           font: {
             size: 10,
           },

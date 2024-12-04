@@ -135,13 +135,25 @@
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verVenta(venta)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button *ngIf="venta.anulada == 0" mat-icon-button color="primary" matTooltip="Anular venta" (click)="anularVenta(venta)">
+                <button
+                  *ngIf="venta.anulada == 0"
+                  mat-icon-button
+                  color="primary"
+                  matTooltip="Anular venta"
+                  (click)="anularVenta(venta)"
+                  [disabled]="venta.canceladaConSaldo === 1 && venta.comprobanteAfip.comprobante_pdf_url !== null">
                   <mat-icon class="eliminar">settings_backup_restore</mat-icon>
                 </button>
                 <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante(venta)">
                   <mat-icon class="imprimir">print</mat-icon>
                 </button>
-                <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null && venta.anulada == 0" mat-icon-button color="primary"  matTooltip="Facturar venta" (click)="facturarVenta(venta)">
+                <button
+                  *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null && venta.anulada == 0"
+                  mat-icon-button
+                  color="primary"
+                  matTooltip="Facturar venta"
+                  (click)="facturarVenta(venta)"
+                  [disabled]="venta.canceladaConSaldo === 1">
                   <mat-icon class="facturar">attach_money</mat-icon>
                 </button>
               </mat-cell>

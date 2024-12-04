@@ -4,7 +4,7 @@ export class Menu {
   path: string | undefined;
   icon: string | undefined;
   subMenu: Menu[] | undefined;
-  requiresAdmin?: boolean;
+  requiresRoles?: string[];
   activo: boolean | undefined;
 
   constructor(id?: number,
@@ -13,13 +13,13 @@ export class Menu {
               icon?: string,
               subMenu?: Menu[],
               activo?: boolean,
-              requiresAdmin?: boolean) {
+              requiresRoles?: string[]) {
     this.id = id;
     this.nombre = nombre;
     this.path = path;
     this.icon = icon;
     this.subMenu = subMenu;
     this.activo = activo;
-    this.requiresAdmin = requiresAdmin;
+    this.requiresRoles = requiresRoles;
   }
 }

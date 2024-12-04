@@ -22,39 +22,39 @@ export class SidebarComponent implements OnInit {
   menuItems: Menu[] = [
     {id: 1, nombre: 'Inicio', path:'', icon: 'home', activo: false, subMenu: []},
     {id: 2, nombre: 'Ventas', path:'registrar-venta', icon: 'sell', activo: false, subMenu: [
-        {id: 1, nombre: 'Registrar venta', path:'/registrar-venta', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Consultar ventas', path:'/consultar-ventas', icon: '', activo: false, subMenu: []}
+        {id: 1, nombre: 'Registrar venta', path:'registrar-venta', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar ventas', path:'consultar-ventas', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 3, nombre: 'Ordenes de Compra', path:'consultar-pedidos', icon: 'receipt', activo: false, requiresAdmin: true, subMenu: []},
-    {id: 4, nombre: 'Inventario', path:'consultar-comprobante', icon: 'add_box', activo: false, requiresAdmin: true, subMenu: [
-        {id: 1, nombre: 'Consultar comprobantes', path:'/consultar-comprobante', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Consultar inventario', path:'/consultar-inventario', icon: '', activo: false, subMenu: []}
+    {id: 3, nombre: 'Ordenes de Compra', path:'consultar-pedidos', icon: 'receipt', activo: false, subMenu: []},
+    {id: 4, nombre: 'Inventario', path:'consultar-comprobante', icon: 'add_box', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar comprobantes', path:'consultar-comprobante', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar inventario', path:'consultar-inventario', icon: '', activo: false, subMenu: []}
       ]},
     {id: 5, nombre: 'Caja', path:'consultar-arqueo-caja', icon: 'store', activo: false, subMenu: [
-        {id: 1, nombre: 'Consultar Arqueos de Caja', path:'/consultar-arqueo-caja', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Consultar cajas', path:'/consultar-cajas', icon: '', activo: false, subMenu: []}
+        {id: 1, nombre: 'Consultar Arqueos de Caja', path:'consultar-arqueo-caja', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Consultar cajas', path:'consultar-cajas', icon: '', activo: false, subMenu: []}
       ]},
     {id: 6, nombre: 'Productos', path:'consultar-productos', icon: 'shopping_cart', activo: false, subMenu: []},
     {id: 7, nombre: 'Proveedores', path:'consultar-proveedores', icon: 'local_shipping', activo: false, subMenu: []},
-    {id: 8, nombre: 'Estadisticas', path:'/generar-reportes', icon: 'data_usage', activo: false, subMenu: [
+    {id: 8, nombre: 'Estadisticas', path:'generar-reportes', icon: 'data_usage', activo: false, subMenu: [
       {id: 1, nombre: 'visualizaciones', path:'visualizaciones', icon: '', activo: false, subMenu: []},
-      {id: 2, nombre: 'reportes', path:'/generar-reportes', icon: '', activo: false, requiresAdmin: true, subMenu: []}
+      {id: 2, nombre: 'reportes', path:'generar-reportes', icon: '', activo: false, subMenu: []}
     ]},
-    {id: 9, nombre: 'Empleados', path:'/consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
-        {id: 1, nombre: 'Consultar empleados', path:'/consultar-empleados', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Control de empleado', path:'/control-empleados', icon: '', activo: false, requiresAdmin: true, subMenu: []}
+    {id: 9, nombre: 'Empleados', path:'consultar-empleados', icon: 'supervisor_account', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar empleados', path:'consultar-empleados', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Control de empleado', path:'control-empleados', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 10, nombre: 'Clientes', path:'/consultar-clientes', icon: 'person_add', activo: false, subMenu: [
-        {id: 1, nombre: 'Consultar clientes', path:'/consultar-clientes', icon: '', activo: false, subMenu: []},
+    {id: 10, nombre: 'Clientes', path:'consultar-clientes', icon: 'person_add', activo: false, subMenu: [
+        {id: 1, nombre: 'Consultar clientes', path:'consultar-clientes', icon: '', activo: false, subMenu: []},
       ]},
     {id: 11, nombre: 'Promociones', path:'consultar-promociones', icon: 'card_giftcard', activo: false, subMenu: [
-        {id: 1, nombre: 'Consultar promociones', path:'/consultar-promociones', icon: '', activo: false, subMenu: []},
-        {id: 2, nombre: 'Notificar promocion', path:'/notificar-promocion', icon: '', activo: false, subMenu: []}
+        {id: 1, nombre: 'Consultar promociones', path:'consultar-promociones', icon: '', activo: false, subMenu: []},
+        {id: 2, nombre: 'Notificar promocion', path:'notificar-promocion', icon: '', activo: false, subMenu: []}
       ]},
     {id: 12, nombre: 'Cuentas Corrientes', path:'consultar-cuentas-corrientes', icon: 'account_balance', activo: false, subMenu: []},
     {id: 13, nombre: 'Tarjetas', path:'consultar-tarjetas', icon: 'credit_card', activo: false, subMenu: []},
-    {id: 14, nombre: 'Panel de Empleado', path:'/panel-empleado', icon: 'event_available', activo: false, requiresAdmin: true, subMenu: []},
-    {id: 15, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, requiresAdmin: true, subMenu: []}
+    {id: 14, nombre: 'Panel de Empleado', path:'panel-empleado', icon: 'event_available', activo: false, subMenu: []},
+    {id: 15, nombre: 'Configuración', path:'consultar-configuraciones', icon: 'settings', activo: false, subMenu: []}
   ];
   isExpanded = true;
   isShowing = false;
@@ -71,11 +71,64 @@ export class SidebarComponent implements OnInit {
   ngOnInit(): void {
     this.setActiveItemBasedOnUrl();
 
+    this.mapearRoles();
+
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       this.setActiveItemBasedOnUrl();
     });
+  }
+
+  private mapearRoles() {
+    const routeConfig = this.router.config;
+
+    // Mapear roles desde las rutas hacia el menú
+    this.menuItems.forEach((menuItem) => {
+      // Buscar la ruta que coincide con el path del menú
+      const matchingRoute = routeConfig.find((route) => route.path === menuItem.path);
+
+      // Si la ruta tiene roles definidos, asignarlos al menú
+      if (matchingRoute && matchingRoute.data?.['roles']) {
+        menuItem.requiresRoles = matchingRoute.data['roles'];
+      }
+
+      // Hacer lo mismo para los submenús
+      if (menuItem.subMenu) {
+        menuItem.subMenu.forEach((subItem) => {
+          const matchingSubRoute = routeConfig.find((route) => route.path === subItem.path);
+          if (matchingSubRoute && matchingSubRoute.data?.['roles']) {
+            subItem.requiresRoles = matchingSubRoute.data['roles'];
+          }
+        });
+      }
+    });
+  }
+
+  puedeMostrar(item: Menu): boolean {
+    // Si no se especifican roles, el menú está accesible para todos
+    if (!item.requiresRoles || item.requiresRoles.length === 0) {
+      return true;
+    }
+
+    // Verificar si el usuario tiene al menos uno de los roles necesarios
+    return this.tieneRol(item.requiresRoles);
+  }
+
+  /**
+   * Verifica si el usuario tiene alguno de los roles pasados por parámetro.
+   * Compara si el rol del usuario está incluido en la lista.
+   * @param nombresRol lista con roles. Ejemplo: ['Administrador', 'Vendedor']
+   */
+  tieneRol(nombresRol: string[]): boolean {
+    const token = this.authService.getToken();
+    const infoToken: any = this.authService.getDecodedAccessToken(token);
+
+    if (!infoToken || !infoToken.roles) {
+      return false;
+    }
+
+    return nombresRol.some(nombreRol => infoToken.roles.includes(nombreRol));
   }
 
   setActiveItemBasedOnUrl(): void {
@@ -124,22 +177,6 @@ export class SidebarComponent implements OnInit {
       item.activo = true;
       this.lastSelectedItem = null;
     }
-  }
-
-  /**
-   * Verifica si el usuario tiene alguno de los roles pasados por parámetro.
-   * Compara si el rol del usuario está incluido en la lista.
-   * @param nombresRol lista con roles. Ejemplo: ['Administrador', 'Vendedor']
-   */
-  tieneRol(nombresRol: string[]): boolean {
-    const token = this.authService.getToken();
-    const infoToken: any = this.authService.getDecodedAccessToken(token);
-
-    if (!infoToken || !infoToken.roles) {
-      return false;
-    }
-
-    return nombresRol.some(nombreRol => infoToken.roles.includes(nombreRol));
   }
 
   capitalize(word?: string): string {

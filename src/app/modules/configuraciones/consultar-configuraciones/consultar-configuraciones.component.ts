@@ -32,7 +32,6 @@ export class ConsultarConfiguracionesComponent implements OnInit {
 
   ngOnInit() {
     this.crearFormulario();
-    this.isSearchingConfiguration = true;
     this.buscarConfiguracion();
   }
 
@@ -40,27 +39,28 @@ export class ConsultarConfiguracionesComponent implements OnInit {
     this.form = this.fb.group({
       idUsuario: [{ value: '', disabled: true }],
       nombreUsuario: [{ value: '', disabled: true }],
-      razonSocial: [''],
-      calle: [''],
-      numero: [''],
-      ciudad: [''],
-      provincia: [''],
-      codigoPostal: [''],
+      razonSocial: ['', [Validators.required]],
+      calle: ['', [Validators.required]],
+      numero: ['', [Validators.required]],
+      ciudad: ['', [Validators.required]],
+      provincia: ['', [Validators.required]],
+      codigoPostal: ['', [Validators.required]],
       cuit: [''],
       fechaInicioActividades: [''],
       condicionIva: [''],
       logo: [null],
       contrasenaInstagram: [''],
       usuarioInstagram: [''],
-      facturacionAutomatica: ['']
+      facturacionAutomatica: [''],
+      txMontoConsumidorFinal: ['', [Validators.required]]
     });
   }
 
   private buscarConfiguracion() {
+    this.isSearchingConfiguration = true;
     this.configuracionesService.consultarConfiguraciones().subscribe({
       next: (configuracion) => {
         this.configuracion = configuracion;
-        this.isSearchingConfiguration = false;
         this.logoUrl = configuracion.logo;
 
         this.form.patchValue({
@@ -78,8 +78,10 @@ export class ConsultarConfiguracionesComponent implements OnInit {
           contrasenaInstagram: configuracion.contrasenaInstagram,
           logo: configuracion.logo,
           usuarioInstagram: configuracion.usuarioInstagram,
-          facturacionAutomatica: configuracion.facturacionAutomatica
+          facturacionAutomatica: configuracion.facturacionAutomatica,
+          txMontoConsumidorFinal: configuracion.montoConsumidorFinal
         });
+        this.isSearchingConfiguration = false;
       },
       error: (err) => {
         console.error('Error al consultar la configuración:', err);
@@ -167,7 +169,8 @@ export class ConsultarConfiguracionesComponent implements OnInit {
       this.ciudad.value,
       this.provincia.value,
       this.codigoPostal.value,
-      this.facturacionAutomatica.value
+      this.facturacionAutomatica.value,
+      this.txMontoConsumidorFinal.value
     );
   }
 
@@ -190,7 +193,6 @@ export class ConsultarConfiguracionesComponent implements OnInit {
             },
             error: (error) => {
               this.isLoading = false;
-              console.error('Error al modificar la configuración:', error);
               this.notificacionService.openSnackBarError('Error al modificar la configuración, inténtelo nuevamente');
             }
           });
@@ -281,6 +283,10 @@ export class ConsultarConfiguracionesComponent implements OnInit {
 
   get facturacionAutomatica(): FormControl {
     return this.form.get('facturacionAutomatica') as FormControl;
+  }
+
+  get txMontoConsumidorFinal(): FormControl {
+    return this.form.get('txMontoConsumidorFinal') as FormControl;
   }
 
 }

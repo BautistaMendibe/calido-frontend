@@ -29,3 +29,11 @@
 .anulada-row {
   background-color: #f2f2f2;
 }
+
+button[disabled] .facturar {
+  opacity: 0.5;
+}
+
+button[disabled] .eliminar {
+  opacity: 0.5;
+}
