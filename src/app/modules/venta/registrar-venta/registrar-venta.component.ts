@@ -781,12 +781,7 @@ export class RegistrarVentaComponent implements OnInit{
           // Si hay cliente y este no es consumidor final
           if (cliente && cliente !== -1) {
             this.ventasService.buscarVentasPorCC(cliente).subscribe((ventas) => {
-              // Filtrar las ventas para mostrar solo ventas de cuenta corriente o anuladas con saldo
-              const ventasFiltradas = ventas.filter((venta) =>
-                (venta.formaDePago?.id === 6 && venta.comprobanteAfip.comprobante_nro == null) ||
-                (venta.saldoDisponible !== null && venta.saldoDisponible >= 0)
-              );
-              this.ventasCtaCteCliente = ventasFiltradas;
+              this.ventasCtaCteCliente = ventas;
               if (this.ventasCtaCteCliente.length > 0) {
                 this.calcularBalanceCuentaCorriente();
               }
