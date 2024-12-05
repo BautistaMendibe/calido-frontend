@@ -1,0 +1,35 @@
+.estado-pago {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.estado-icon {
+  font-size: 40px;
+  margin-bottom: 5px;
+  color: var(--estado-color, #000);
+  display: inline-block; /* Asegura que ocupe su propio espacio */
+  height: 40px; /* Define el tamaño del contenedor */
+  width: 40px; /* Define el tamaño del contenedor */
+}
+
+.estado-text {
+  font-size: 25px;
+  font-weight: bold;
+  color: var(--estado-color, #000);
+}
+
+.estado-pago.pendiente {
+  --estado-color: #007bff; /* Azul */
+}
+
+.estado-pago.cancelado {
+  --estado-color: #f44336; /* Rojo */
+}
+
+.estado-pago.vencido {
+  --estado-color: #ff9800; /* Naranja */
+}
+
+.estado-pago.pagado {
+  --estado-color: #4caf50; /* Verde */
+}
