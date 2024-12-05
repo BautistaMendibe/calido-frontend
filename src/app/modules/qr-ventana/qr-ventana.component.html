@@ -1,0 +1,33 @@
+<div class="container py-3 col-xl-11 form-emergente">
+  <div class="row">
+    <div class="col d-flex justify-content-between align-items-center">
+      <p class="titulo">Pago con QR</p>
+    </div>
+  </div>
+  <mat-divider></mat-divider>
+
+  <div class="row pt-4">
+    <div class="col-md-12 d-flex justify-content-center">
+      <img [src]="data.imageUrl" alt="Código QR" style="max-width: 100%; height: auto;" />
+    </div>
+  </div>
+
+  <!--  <mat-card class="p-3">-->
+  <div class="estado-pago d-flex flex-column align-items-center mt-3" [ngClass]="estadoPago.toLowerCase()">
+    <mat-icon
+      [fontIcon]="icono"
+      class="estado-icon">
+    </mat-icon>
+    <span class="estado-text">{{ estadoPago }}</span>
+  </div>
+  <!--  </mat-card>-->
+
+  <br>
+  <mat-divider></mat-divider>
+
+  <div class="row pt-4">
+    <div class="col d-flex justify-content-end">
+      <button mat-raised-button color="accent" class="btn round" (click)="closeDialog()" id="btnBuscar">Cerrar</button>
+    </div>
+  </div>
+</div>

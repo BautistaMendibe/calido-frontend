@@ -10,7 +10,7 @@ import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef, MatDialogState} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
@@ -28,7 +28,9 @@ import {CajasService} from "../../../services/cajas.service";
 import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
 import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
-import {combineLatest} from "rxjs";
+import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
+import {combineLatest, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -65,6 +67,10 @@ export class RegistrarVentaComponent implements OnInit{
   private facturacionAutomatica: boolean = false;
   public limiteProductos: number = 30;
   public tieneCuentaCorrienteRegistrada: boolean = false;
+  public PagoRealizado: boolean = false;
+
+  private stopPolling$ = new Subject<void>();
+  private isDialogClosed = false;
 
   constructor(
     private fb: FormBuilder,
@@ -378,7 +384,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.calcularSubTotal();
   }
 
-  public confirmarVenta() {
+  public async confirmarVenta() {
     if (this.form.valid && this.productosSeleccionados.length > 0) {
       // Validación para consumidor final
       if ((this.totalVenta >= this.montoConsumidorFinal) && this.txCliente.value == -1) {
@@ -427,6 +433,18 @@ export class RegistrarVentaComponent implements OnInit{
         }, 0);
 
         venta.bonificacion = -(venta.montoTotal / 1.21) + sumatoriaProductos;
+
+        // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
+        if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
+          const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
+          if (QRpagado) {
+            // console.log('Pago confirmado. Registrando la venta');
+          } else {
+            this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
+            return; // Detenemos el flujo para no registrar la venta
+          }
+        }
+        // FIN QR SIRO
 
         this.registrandoVenta = true;
 
@@ -486,6 +504,19 @@ export class RegistrarVentaComponent implements OnInit{
       }
 
       // Caso normal (venta no vinculada al saldo de cuenta corriente)
+
+      // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
+      if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
+        const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
+        if (QRpagado) {
+          //console.log('Pago confirmado. Registrando la venta');
+        } else {
+          this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
+          return; // Detenemos el flujo para no registrar la venta
+        }
+      }
+      // FIN QR SIRO
+
       this.registrandoVenta = true;
 
       this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
@@ -512,6 +543,128 @@ export class RegistrarVentaComponent implements OnInit{
         }
       });
     }
+  }
+
+  /**
+   * Función para pagar con QR SIRO
+   * Realiza 65 intentos de polling cada 5 segundos para verificar el estado del pago
+   * @param venta
+   * @private
+   */
+  private async pagarConQRSIRO(venta: Venta): Promise<boolean> {
+    let QRPagado = false;
+
+    if (venta.formaDePago.id !== this.formasDePagoEnum.QR) {
+      return QRPagado;
+    }
+
+    this.notificacionService.openSnackBarSuccess('Generando pago.');
+    try {
+      // Generar el pago
+      const respuestaPago = await this.ventasService.pagarConSIROQR(venta).toPromise();
+      //console.log('Respuesta recibida:', respuestaPago);
+
+      if ((respuestaPago as { Hash: string }).Hash) {
+        this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
+        const idReferencia = (respuestaPago as { IdReferenciaOperacion: string }).IdReferenciaOperacion;
+        //console.log('IdReferenciaOperacion:', idReferencia);
+
+        if (idReferencia) {
+          const dialogRef = this.mostrarQR(idReferencia);
+
+          // Polling para consultar el estado del pago
+          const pagoExitoso = await this.pollingEstadoPago(idReferencia, 65, 5000, dialogRef);
+          if (pagoExitoso) {
+            this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
+            QRPagado = true;
+            setTimeout(() => {
+              dialogRef.close();
+            }, 2000);
+          } else {
+            this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error en la llamada:', err);
+      this.notificacionService.openSnackBarError('Error en la solicitud.');
+    }
+
+    return QRPagado;
+  }
+
+  /**
+   * Función para realizar el polling del estado de un pago QR en una ventana modal.
+   * Se consulta el estado de pago cada cierto intervalo de tiempo.
+   * @param idReferencia
+   * @param intentos
+   * @param intervalo
+   * @param dialogRef
+   * @private
+   */
+  private async pollingEstadoPago(idReferencia: string, intentos: number, intervalo: number, dialogRef: MatDialogRef<QRVentanaComponent>): Promise<boolean> {
+    this.stopPolling$ = new Subject<void>(); // Resetear el Subject
+    this.isDialogClosed = false; // Reiniciar la bandera
+
+    // Escuchar el cierre del diálogo
+    const dialogCloseSubscription = dialogRef.afterClosed().subscribe(() => {
+      if (!this.isDialogClosed) {
+        this.isDialogClosed = true; // Evitar múltiples impresiones
+        this.stopPolling$.next(); // Emitir señal para detener el polling
+        this.stopPolling$.complete();
+      }
+    });
+
+    try {
+      for (let i = 0; i < intentos; i++) {
+        // Verificar si el polling debe detenerse
+        if (this.stopPolling$.isStopped || this.isDialogClosed) {
+          break; // Salir del bucle si el polling fue cancelado
+        }
+
+        try {
+          const respuestaConsulta = await this.ventasService.consultaPagoSIROQR(idReferencia).toPromise();
+          if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
+            const resultado = respuestaConsulta[respuestaConsulta.length - 1];
+            const pagoExitoso = resultado.PagoExitoso;
+            const estado = resultado.Estado;
+
+            if (pagoExitoso && estado === 'PROCESADA') {
+              dialogCloseSubscription.unsubscribe(); // Limpiar la suscripción
+              return true; // Pago exitoso
+            }
+          }
+        } catch (err) {
+          console.error('Error al consultar el estado del pago:', err);
+        }
+
+        // Esperar antes de reintentar, con verificación para detener
+        await this.delayWithCancel(intervalo, this.stopPolling$);
+      }
+    } finally {
+      dialogCloseSubscription.unsubscribe(); // Asegurar la limpieza
+    }
+
+    return false; // Si se agotan los intentos
+  }
+
+  /**
+   * Retrasa la ejecución por un tiempo determinado o la cancela si se emite un evento en `cancel$`.
+   * @param ms - Tiempo en milisegundos para esperar.
+   * @param cancel$ - Subject que permite cancelar el retraso.
+   * @private
+   */
+  private async delayWithCancel(ms: number, cancel$: Subject<void>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        resolve();
+      }, ms);
+
+      cancel$.subscribe(() => {
+        clearTimeout(timeout);
+        reject('Polling cancelado.');
+      });
+    });
   }
 
   private cancelarVentaConSaldo(venta: Venta) {
@@ -724,6 +877,14 @@ export class RegistrarVentaComponent implements OnInit{
 
     this.saldoCuentaCorrienteCliente = total;
     if (this.saldoCuentaCorrienteCliente > 0) { this.tieneCuentaCorrienteRegistrada = true; }
+  }
+
+  public mostrarQR(idReferenciaOperacion: string): MatDialogRef<QRVentanaComponent> {
+    const qrImageUrl = 'assets/imgs/QR_SIRO.png'; // Ruta de tu imagen QR en el frontend
+    return this.dialog.open(QRVentanaComponent, {
+      data: { imageUrl: qrImageUrl, idReferenciaOperacion: idReferenciaOperacion },
+      width: '400px',
+    });
   }
 
   // Region getters

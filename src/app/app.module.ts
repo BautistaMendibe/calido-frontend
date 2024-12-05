@@ -28,7 +28,7 @@ import { ConsultarConfiguracionesComponent } from './modules/configuraciones/con
 import { ConsultarProductosComponent } from './modules/productos/consultar-productos/consultar-productos.component';
 import { RegistrarProductoComponent } from './modules/productos/registrar-producto/registrar-producto.component';
 import { MessagesComponent } from './shared/messages/messages.component';
-import {MatDialogClose} from "@angular/material/dialog";
+import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
 import {NgxMaskDirective, NgxMaskPipe, provideNgxMask} from "ngx-mask";
 import {AuthInterceptor} from "./interceptors/auth.interceptor";
 import { RegistrarVentaComponent } from './modules/venta/registrar-venta/registrar-venta.component';
@@ -77,6 +77,7 @@ import { OrdenesDeCompraComponent } from './modules/home/ordenes-de-compra/orden
 import { RecuperarContrasenaComponent } from './modules/auth/recuperar-contrasena/recuperar-contrasena.component';
 import { AsignarCuentaCorrienteComponent } from './modules/clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component';
 import { GenerarReportesComponent } from './modules/reportes/generar-reportes/generar-reportes.component';
+import { QRVentanaComponent } from './modules/qr-ventana/qr-ventana.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -140,7 +141,8 @@ registerLocaleData(localeEs, 'es');
     RecuperarContrasenaComponent,
     RecuperarContrasenaComponent,
     GenerarReportesComponent,
-    AsignarCuentaCorrienteComponent
+    AsignarCuentaCorrienteComponent,
+    QRVentanaComponent
   ],
   imports: [
     BrowserModule,
@@ -158,7 +160,10 @@ registerLocaleData(localeEs, 'es');
     NgxMaskPipe,
     FormsModule,
     MatPaginatorModule,
-    BaseChartDirective
+    BaseChartDirective,
+    MatPaginatorModule,
+    MatDialogContent,
+    MatDialogActions
   ],
   providers: [
     HealthService,
