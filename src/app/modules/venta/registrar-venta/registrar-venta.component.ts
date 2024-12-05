@@ -472,7 +472,7 @@ export class RegistrarVentaComponent implements OnInit{
         return;
       }
 
-      // Caso 2: Saldo suficiente para cubrir el total (flujo anterior) (MONTO $0)
+      // Caso 2: Saldo suficiente para cubrir el total (flujo anterior)
       if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente >= this.totalVenta) {
         // A cancelar será el total de la venta.
         venta.saldoACancelarParcialmente = this.totalVenta;
