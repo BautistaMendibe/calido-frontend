@@ -29,7 +29,7 @@
         </div>
       </div>
 
-      <div class="col">
+      <div class="col" *ngIf="ventas.length > 0 && !buscando">
         <canvas style="display: block; height: calc(100% - 30px); margin-top: 22px"
                 baseChart
                 [type]="'line'"
