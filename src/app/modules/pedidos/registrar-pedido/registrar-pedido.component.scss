@@ -48,13 +48,47 @@
   overflow-x: auto;
 }
 
-@media (max-width: 992px) {
-  .custom-table {
-    width: 100%;
-    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
-    min-width: 900px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
 
+@media (max-width: 960px) {
+
+  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row {
+    height: unset;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    background: #fff;
+    padding: 10px;
   }
+
+  .mat-mdc-table mat-header-row.mat-mdc-header-row {
+    display: none; /* Oculta la cabecera */
+  }
+
+  .mat-mdc-row mdc-data-table__row cdk-row queue-row ng-star-inserted {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #ddd;
+    padding: 5px 0;
+  }
+
+  .mat-mdc-table .mat-mdc-cell:before {
+    content: attr(data-label); /* Usa el atributo data-label como etiqueta */
+    flex: 0 0 40%; /* Etiqueta a la izquierda */
+    font-weight: bold;
+    color: #333;
+    text-transform: uppercase;
+  }
+
+  .mat-mdc-cell:first-of-type, mat-header-cell:first-of-type {
+    padding: 0 16px 0 16px !important;
+  }
+
+  .mat-mdc-table .mat-mdc-cell {
+    border-bottom: 1px solid #ddd;
+  }
+
 }
 
 @media (max-width: 768px) {
