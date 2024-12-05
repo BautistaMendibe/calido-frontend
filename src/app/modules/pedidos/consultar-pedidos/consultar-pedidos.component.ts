@@ -134,7 +134,7 @@ export class ConsultarPedidosComponent implements OnInit {
     this.dialog.open(
       RegistrarPedidoComponent,
       {
-        width: '75%',
+        width: '95%',
         maxHeight: '80vh',
         panelClass: 'dialog-container',
         autoFocus: false,
@@ -152,7 +152,7 @@ export class ConsultarPedidosComponent implements OnInit {
     this.dialog.open(
       RegistrarPedidoComponent,
       {
-        width: '75%',
+        width: '95%',
         maxHeight: '80vh',
         panelClass: 'dialog-container',
         autoFocus: false,
