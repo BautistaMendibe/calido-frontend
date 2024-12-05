@@ -29,7 +29,8 @@ import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
 import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
-import {combineLatest} from "rxjs";
+import {combineLatest, Subject} from "rxjs";
+import {takeUntil} from "rxjs/operators";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -67,6 +68,9 @@ export class RegistrarVentaComponent implements OnInit{
   public limiteProductos: number = 30;
   public tieneCuentaCorrienteRegistrada: boolean = false;
   public PagoRealizado: boolean = false;
+
+  private stopPolling$ = new Subject<void>();
+  private isDialogClosed = false;
 
   constructor(
     private fb: FormBuilder,
@@ -569,6 +573,9 @@ export class RegistrarVentaComponent implements OnInit{
           if (pagoExitoso) {
             this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
             QRPagado = true;
+            setTimeout(() => {
+              dialogRef.close();
+            }, 2000);
           } else {
             this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
           }
@@ -589,46 +596,64 @@ export class RegistrarVentaComponent implements OnInit{
     intervalo: number,
     dialogRef: MatDialogRef<QRVentanaComponent>
   ): Promise<boolean> {
-    for (let i = 0; i < intentos; i++) {
+    this.stopPolling$ = new Subject<void>(); // Resetear el Subject
+    this.isDialogClosed = false; // Reiniciar la bandera
 
-      // Verificar si el diálogo (ventana QR) se cerró
-      //console.log(dialogRef.getState());
-      dialogRef.afterClosed().subscribe(() => {
-        //console.log('El diálogo se cerró, deteniendo el proceso.');
-        return false; // Cancelar el polling
-      });
-
-      try {
-        const respuestaConsulta = await this.ventasService.consultaPagoSIROQR(idReferencia).toPromise();
-        if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
-          const resultado = respuestaConsulta[respuestaConsulta.length - 1];
-          const pagoExitoso = resultado.PagoExitoso;
-          const estado = resultado.Estado;
-
-          //console.log('Pago Exitoso:', pagoExitoso);
-          //console.log('Estado:', estado);
-
-          if (pagoExitoso && estado === 'PROCESADA') {
-            return true; // Pago exitoso
-          }
-        }
-      } catch (err) {
-        console.error('Error al consultar el estado del pago:', err);
-        this.notificacionService.openSnackBarError('Error al consultar el estado del pago, reintente.');
+    // Escuchar el cierre del diálogo
+    const dialogCloseSubscription = dialogRef.afterClosed().subscribe(() => {
+      if (!this.isDialogClosed) {
+        this.isDialogClosed = true; // Evitar múltiples impresiones
+        this.stopPolling$.next(); // Emitir señal para detener el polling
+        this.stopPolling$.complete();
       }
+    });
 
-      // Esperar antes de reintentar
-      await this.delay(intervalo);
+    try {
+      for (let i = 0; i < intentos; i++) {
+        // Verificar si el polling debe detenerse
+        if (this.stopPolling$.isStopped || this.isDialogClosed) {
+          break; // Salir del bucle si el polling fue cancelado
+        }
+
+        try {
+          const respuestaConsulta = await this.ventasService.consultaPagoSIROQR(idReferencia).toPromise();
+          if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
+            const resultado = respuestaConsulta[respuestaConsulta.length - 1];
+            const pagoExitoso = resultado.PagoExitoso;
+            const estado = resultado.Estado;
+
+            if (pagoExitoso && estado === 'PROCESADA') {
+              dialogCloseSubscription.unsubscribe(); // Limpiar la suscripción
+              return true; // Pago exitoso
+            }
+          }
+        } catch (err) {
+          console.error('Error al consultar el estado del pago:', err);
+        }
+
+        // Esperar antes de reintentar, con verificación para detener
+        await this.delayWithCancel(intervalo, this.stopPolling$);
+      }
+    } finally {
+      dialogCloseSubscription.unsubscribe(); // Asegurar la limpieza
     }
 
     return false; // Si se agotan los intentos
   }
 
-  // Función para esperar un tiempo determinado
-  private delay(ms: number): Promise<void> {
-    return new Promise((resolve) => setTimeout(resolve, ms));
-  }
+  // Función para esperar un tiempo determinado con posibilidad de cancelar
+  private async delayWithCancel(ms: number, cancel$: Subject<void>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        resolve();
+      }, ms);
 
+      cancel$.subscribe(() => {
+        clearTimeout(timeout);
+        reject('Polling cancelado.');
+      });
+    });
+  }
   // FIN SIRO QR
 
   private cancelarVentaConSaldo(venta: Venta) {
