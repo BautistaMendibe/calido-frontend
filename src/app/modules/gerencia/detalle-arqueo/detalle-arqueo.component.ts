@@ -390,8 +390,13 @@ export class DetalleArqueoComponent implements OnInit {
   }
 
   public cerrarArqueo() {
-    if ((this.txCantidadDineroCaja?.value || this.txCantidadDineroCaja?.value == 0) &&
-      (this.txCantidadDineroOtrosMedios?.value || this.txCantidadDineroOtrosMedios?.value == 0)) {
+    const cajaValue = this.txCantidadDineroCaja?.value;
+    const otrosMediosValue = this.txCantidadDineroOtrosMedios?.value;
+
+    if (
+      cajaValue != null && String(cajaValue).trim() !== '' && !isNaN(Number(cajaValue)) && Number(cajaValue) >= 0 &&
+      otrosMediosValue != null && String(otrosMediosValue).trim() !== '' && !isNaN(Number(otrosMediosValue)) && Number(otrosMediosValue) >= 0
+    ) {
 
       const arqueo = new Arqueo();
       arqueo.id = Number(this.idArqueo);

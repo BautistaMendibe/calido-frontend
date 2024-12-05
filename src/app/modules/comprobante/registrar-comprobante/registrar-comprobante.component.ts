@@ -262,6 +262,11 @@ export class RegistrarComprobanteComponent implements OnInit {
 
   public registrarNuevoComprobante() {
 
+    if (this.productosSeleccionados.length === 0) {
+      this.notificacionService.openSnackBarError('Debe seleccionar al menos un producto, intente nuevamente.');
+      return;
+    }
+
     if (this.form.valid && this.ordenSeleccionada && this.productosSeleccionados.length > 0) {
       const comprobante: Comprobante = new Comprobante();
 
@@ -402,16 +407,16 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.cantidadProductos = 0;
     this.productosSeleccionados.forEach((producto) => {
       this.cantidadProductos += producto.cantidadSeleccionada;
-      this.txCantidadProductos.setValue(this.cantidadProductos);
     });
+    this.txCantidadProductos.setValue(this.cantidadProductos);
   }
 
   private calcularTotalProductos() {
     this.subtotalProductos = 0;
     this.productosSeleccionados.forEach((producto) => {
       this.subtotalProductos += producto.cantidadSeleccionada * producto.costo;
-      this.txTotal.setValue(this.subtotalProductos);
     });
+    this.txTotal.setValue(this.subtotalProductos);
   }
 
   private filtrosSuscripciones() {

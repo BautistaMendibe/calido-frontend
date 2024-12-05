@@ -47,6 +47,8 @@ export class RegistrarPedidoComponent implements OnInit {
   public formDesactivado: boolean;
   public listaProductosDeshabilitada: boolean = false;
 
+  public fechaHoy: Date = new Date();
+
   public isLoading: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productos);
