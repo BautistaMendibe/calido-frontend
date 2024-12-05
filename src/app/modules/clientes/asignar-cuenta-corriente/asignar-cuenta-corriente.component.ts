@@ -59,20 +59,21 @@ export class AsignarCuentaCorrienteComponent implements OnInit{
   }
 
   public asignar() {
-    const venta = this.data.venta;
-    venta.cliente.id = this.txCuenta.value;
-
     this.notificationDialogService.confirmation(`¿Desea generar una nota de crédito?
       Se añadirá balance positivo a la cuenta.`, 'Generar nota de crédito')
       .afterClosed()
       .subscribe((value) => {
         if (value) {
+          const venta = this.data.venta;
+          venta.cliente.id = this.txCuenta.value;
+
           this.ventasService.anularVenta(venta).subscribe((respuesta) => {
             if (respuesta.mensaje === 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-              this.cancelar();
+              this.dialogRef.close(true);
             } else {
               this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
+              this.dialogRef.close(false);
             }
           });
         }

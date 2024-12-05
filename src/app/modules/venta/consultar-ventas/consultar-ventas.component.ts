@@ -148,7 +148,9 @@ export class ConsultarVentasComponent implements OnInit {
             onSuccess(); // Llama al callback solo si es exitoso
           }
         } else {
-          this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
+          if (resultado === false) {
+            this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
+          }
         }
       });
       return;
