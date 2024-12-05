@@ -545,8 +545,12 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
-  // INICIO SIRO QR
-  // Funciones separadas para evitar conflictos
+  /**
+   * Función para pagar con QR SIRO
+   * Realiza 65 intentos de polling cada 5 segundos para verificar el estado del pago
+   * @param venta
+   * @private
+   */
   private async pagarConQRSIRO(venta: Venta): Promise<boolean> {
     let QRPagado = false;
 
@@ -589,13 +593,16 @@ export class RegistrarVentaComponent implements OnInit{
     return QRPagado;
   }
 
-  // Función para hacer el polling del estado del pago
-  private async pollingEstadoPago(
-    idReferencia: string,
-    intentos: number,
-    intervalo: number,
-    dialogRef: MatDialogRef<QRVentanaComponent>
-  ): Promise<boolean> {
+  /**
+   * Función para realizar el polling del estado de un pago QR en una ventana modal.
+   * Se consulta el estado de pago cada cierto intervalo de tiempo.
+   * @param idReferencia
+   * @param intentos
+   * @param intervalo
+   * @param dialogRef
+   * @private
+   */
+  private async pollingEstadoPago(idReferencia: string, intentos: number, intervalo: number, dialogRef: MatDialogRef<QRVentanaComponent>): Promise<boolean> {
     this.stopPolling$ = new Subject<void>(); // Resetear el Subject
     this.isDialogClosed = false; // Reiniciar la bandera
 
@@ -641,7 +648,12 @@ export class RegistrarVentaComponent implements OnInit{
     return false; // Si se agotan los intentos
   }
 
-  // Función para esperar un tiempo determinado con posibilidad de cancelar
+  /**
+   * Retrasa la ejecución por un tiempo determinado o la cancela si se emite un evento en `cancel$`.
+   * @param ms - Tiempo en milisegundos para esperar.
+   * @param cancel$ - Subject que permite cancelar el retraso.
+   * @private
+   */
   private async delayWithCancel(ms: number, cancel$: Subject<void>): Promise<void> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
@@ -654,7 +666,6 @@ export class RegistrarVentaComponent implements OnInit{
       });
     });
   }
-  // FIN SIRO QR
 
   private cancelarVentaConSaldo(venta: Venta) {
     this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {
