@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {Producto} from "../../../models/producto.model";
 import {ProductosService} from "../../../services/productos.service";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
@@ -64,6 +64,7 @@ export class RegistrarVentaComponent implements OnInit{
   public mostrarTarjetasCuotas: boolean = false;
   public registrandoVenta: boolean = false;
   private facturacionAutomatica: boolean = false;
+  public limiteProductos: number = 30;
   public tieneCuentaCorrienteRegistrada: boolean = false;
   public PagoRealizado: boolean = false;
 
@@ -91,6 +92,12 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarDataCombos();
     this.filtrosSuscripciones();
     this.buscarConfiguracionesParaVenta();
+    this.ajustarLimiteCantidadLimiteProducto();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize() {
+    this.ajustarLimiteCantidadLimiteProducto();
   }
 
   public buscar() {
@@ -140,6 +147,10 @@ export class RegistrarVentaComponent implements OnInit{
       this.facturacionAutomatica = configuracion.facturacionAutomatica;
       this.montoConsumidorFinal = configuracion.montoConsumidorFinal;
     });
+  }
+
+  private ajustarLimiteCantidadLimiteProducto() {
+    this.limiteProductos = window.innerWidth < 900 ? 6 : 30;
   }
 
   private buscarCajas() {
@@ -463,6 +474,12 @@ export class RegistrarVentaComponent implements OnInit{
 
       // Caso 2: Saldo suficiente para cubrir el total (flujo anterior) (MONTO $0)
       if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente >= this.totalVenta) {
+        // A cancelar será el total de la venta.
+        venta.saldoACancelarParcialmente = this.totalVenta;
+
+        // El total siempre va a ser cero, porque o su saldo es igual a la venta o es mayor (venta gratuita no se factura).
+        venta.montoTotal = 0;
+
         this.registrandoVenta = true;
 
         this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
@@ -886,4 +903,6 @@ export class RegistrarVentaComponent implements OnInit{
   get txCancelarConSaldo(): FormControl {
     return this.form.get('txCancelarConSaldo') as FormControl
   }
+
+  protected readonly Math = Math;
 }

@@ -31,6 +31,8 @@ export class GenerarReportesComponent implements OnInit {
     'Torta'
   ];
   private chart!: Chart;
+  public maxDate: Date;
+
 
   constructor(
     private fb: FormBuilder,
@@ -40,6 +42,7 @@ export class GenerarReportesComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    this.maxDate = new Date();
   }
 
   ngOnInit() {
@@ -78,7 +81,7 @@ export class GenerarReportesComponent implements OnInit {
       this.reporteService.obtenerDataReporte(reporte).subscribe((data) => {
         reporte.data = data;
 
-        if (this.txTipoGrafico.value != 'Ninguno') {
+        if (this.txTipoGrafico.value != 'Ninguno' && !reporte.noNecesitaFiltro) {
           if(this.txTipoGrafico.value == 'Barras') {
             this.generarGraficoBarras(reporte);
           }
@@ -92,11 +95,17 @@ export class GenerarReportesComponent implements OnInit {
         }
       });
     } else {
-      this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.')
+      this.notificacionService.openSnackBarError('La fecha desde tiene que ser menor o igual a la fecha hasta.');
+      this.buscandoData = false;
     }
   }
 
   private validarFechas(reporte: ReporteComando): boolean {
+    if (this.txFechaDesde.value && !(this.txFechaHasta.value)) {
+      reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
+      reporte.filtros.fechaHasta = new Date();
+      return true;
+    }
     if (this.txFechaDesde.value <= this.txFechaHasta.value) {
       reporte.filtros.fechaDesde = this.txFechaDesde.value ?  this.txFechaDesde.value : null;
       reporte.filtros.fechaHasta = this.txFechaHasta.value ?  this.txFechaHasta.value : null;
@@ -118,12 +127,15 @@ export class GenerarReportesComponent implements OnInit {
     document.body.appendChild(canvas);
 
     if (!reporte.data || reporte.data.length === 0) {
-      console.error('No hay datos para generar el gráfico.');
+      this.notificacionService.openSnackBarError('No hay datos para generar el gráfico.');
+      this.buscandoData = false;
       return;
     }
 
     if (!ctx) {
       console.error('Error al crear el contexto del gráfico.');
+      this.notificacionService.openSnackBarError('Error. Inténtelo nuevamente.');
+      this.buscandoData = false;
       return;
     }
 
@@ -220,7 +232,7 @@ export class GenerarReportesComponent implements OnInit {
       const r = Math.floor(Math.random() * 255);
       const g = Math.floor(Math.random() * 255);
       const b = Math.floor(Math.random() * 255);
-      const alpha = 0.8;
+      const alpha = 0.9;
 
       backgroundColor.push(`rgba(${r}, ${g}, ${b}, ${alpha})`);
       borderColor.push(`rgba(${r}, ${g}, ${b}, 1)`);
@@ -332,7 +344,7 @@ export class GenerarReportesComponent implements OnInit {
         ticks: {
           stepSize: 10,
           font: {
-            size: 14,
+            size: 12,
           },
         },
         grid: {
@@ -348,7 +360,7 @@ export class GenerarReportesComponent implements OnInit {
           minRotation: 0,
           padding: 5,
           font: {
-            size: 14,
+            size: 12,
           },
         },
         grid: {
