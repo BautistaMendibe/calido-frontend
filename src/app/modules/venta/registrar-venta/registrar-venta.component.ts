@@ -10,7 +10,7 @@ import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
-import {MatDialog} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef, MatDialogState} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
@@ -543,10 +543,10 @@ export class RegistrarVentaComponent implements OnInit{
         console.log('IdReferenciaOperacion:', idReferencia);
 
         if (idReferencia) {
-          this.mostrarQR(idReferencia);
+          const dialogRef = this.mostrarQR(idReferencia);
 
           // Polling para consultar el estado del pago
-          const pagoExitoso = await this.pollingEstadoPago(idReferencia, 65, 5000);
+          const pagoExitoso = await this.pollingEstadoPago(idReferencia, 65, 5000, dialogRef);
           if (pagoExitoso) {
             this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
             QRPagado = true;
@@ -564,10 +564,21 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   // Función para hacer el polling del estado del pago
-  private async pollingEstadoPago(idReferencia: string, intentos: number, intervalo: number): Promise<boolean> {
+  private async pollingEstadoPago(
+    idReferencia: string,
+    intentos: number,
+    intervalo: number,
+    dialogRef: MatDialogRef<QRVentanaComponent>
+  ): Promise<boolean> {
     for (let i = 0; i < intentos; i++) {
-      // si se cierra la ventana QR cancelar esto.
-      // codigo para cancelarlo
+
+      // Verificar si el diálogo (ventana QR) se cerró
+      console.log(dialogRef.getState());
+      dialogRef.afterClosed().subscribe(() => {
+        console.log('El diálogo se cerró, deteniendo el proceso.');
+        return false; // Cancelar el polling
+      });
+
       try {
         const respuestaConsulta = await this.ventasService.consultaPagoSIROQR(idReferencia).toPromise();
         if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
@@ -813,12 +824,11 @@ export class RegistrarVentaComponent implements OnInit{
     if (this.saldoCuentaCorrienteCliente > 0) { this.tieneCuentaCorrienteRegistrada = true; }
   }
 
-  public mostrarQR(idReferenciaOperacion: string): void {
+  public mostrarQR(idReferenciaOperacion: string): MatDialogRef<QRVentanaComponent> {
     const qrImageUrl = 'assets/imgs/QR_SIRO.png'; // Ruta de tu imagen QR en el frontend
-    this.dialog.open(QRVentanaComponent, {
-      data: { imageUrl: qrImageUrl,
-        idReferenciaOperacion: idReferenciaOperacion},
-      width: '400px'
+    return this.dialog.open(QRVentanaComponent, {
+      data: { imageUrl: qrImageUrl, idReferenciaOperacion: idReferenciaOperacion },
+      width: '400px',
     });
   }
 
