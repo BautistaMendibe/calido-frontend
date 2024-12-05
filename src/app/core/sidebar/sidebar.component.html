@@ -1,7 +1,7 @@
 <div class="sidenavContainer"
      [ngClass]="{'expanded': sideNavState}"
-     (mouseenter)="onSinenavToggle()"
-     (mouseleave)="onSinenavToggle()"
+     (mouseenter)="onSinenavToggleMouse()"
+     (mouseleave)="onSinenavToggleMouse()"
      [@onSideNavChange]="sideNavState ? 'open' : 'close'">
 
   <mat-nav-list *ngIf="!showFiller">
