@@ -116,7 +116,7 @@
         <div class="row">
 
           <div class="col-md-12">
-            <mat-table [dataSource]="dataSourceProductos" matSort [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
+            <mat-table [dataSource]="dataSourceProductos" matSort class="custom-table" [class.disabled-table]="formDesactivado || listaProductosDeshabilitada">
               <ng-container matColumnDef="imgProducto">
                 <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                 <mat-cell *matCellDef="let producto" data-label="Imagen">
