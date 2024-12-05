@@ -71,9 +71,8 @@ export class SidebarComponent implements OnInit {
 
   ngOnInit(): void {
     this.setActiveItemBasedOnUrl();
-
+    this.sizeScreen = window.innerWidth;
     this.mapearRoles();
-    this.calcularSizeScreen();
 
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
@@ -90,7 +89,7 @@ export class SidebarComponent implements OnInit {
   private calcularSizeScreen() {
     this.sizeScreen = window.innerWidth;
 
-    if (this.sizeScreen < 700) {
+    if (this.sizeScreen <= 700) {
       this.onSinenavToggle();
     }
   }
