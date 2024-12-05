@@ -423,12 +423,13 @@ export class RegistrarVentaComponent implements OnInit{
         if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
           const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
           if (QRpagado) {
-            console.log('Pago confirmado. Registrando la venta');
+            // console.log('Pago confirmado. Registrando la venta');
           } else {
             this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
             return; // Detenemos el flujo para no registrar la venta
           }
         }
+        // FIN QR SIRO
 
         this.registrandoVenta = true;
 
@@ -487,12 +488,13 @@ export class RegistrarVentaComponent implements OnInit{
       if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
         const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
         if (QRpagado) {
-          console.log('Pago confirmado. Registrando la venta');
+          //console.log('Pago confirmado. Registrando la venta');
         } else {
           this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
           return; // Detenemos el flujo para no registrar la venta
         }
       }
+      // FIN QR SIRO
 
       this.registrandoVenta = true;
 
@@ -535,12 +537,12 @@ export class RegistrarVentaComponent implements OnInit{
     try {
       // Generar el pago
       const respuestaPago = await this.ventasService.pagarConSIROQR(venta).toPromise();
-      console.log('Respuesta recibida:', respuestaPago);
+      //console.log('Respuesta recibida:', respuestaPago);
 
       if ((respuestaPago as { Hash: string }).Hash) {
         this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
         const idReferencia = (respuestaPago as { IdReferenciaOperacion: string }).IdReferenciaOperacion;
-        console.log('IdReferenciaOperacion:', idReferencia);
+        //console.log('IdReferenciaOperacion:', idReferencia);
 
         if (idReferencia) {
           const dialogRef = this.mostrarQR(idReferencia);
@@ -573,9 +575,9 @@ export class RegistrarVentaComponent implements OnInit{
     for (let i = 0; i < intentos; i++) {
 
       // Verificar si el diálogo (ventana QR) se cerró
-      console.log(dialogRef.getState());
+      //console.log(dialogRef.getState());
       dialogRef.afterClosed().subscribe(() => {
-        console.log('El diálogo se cerró, deteniendo el proceso.');
+        //console.log('El diálogo se cerró, deteniendo el proceso.');
         return false; // Cancelar el polling
       });
 
@@ -586,8 +588,8 @@ export class RegistrarVentaComponent implements OnInit{
           const pagoExitoso = resultado.PagoExitoso;
           const estado = resultado.Estado;
 
-          console.log('Pago Exitoso:', pagoExitoso);
-          console.log('Estado:', estado);
+          //console.log('Pago Exitoso:', pagoExitoso);
+          //console.log('Estado:', estado);
 
           if (pagoExitoso && estado === 'PROCESADA') {
             return true; // Pago exitoso

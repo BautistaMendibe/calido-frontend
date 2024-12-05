@@ -53,9 +53,9 @@ export class QRVentanaComponent implements OnInit, OnDestroy {
           const estadoRecibido = ultimoEstado.Estado;
 
           // Mapeamos el estado recibido a un texto personalizado
-          console.log("estadoPago", this.estadoPago);
-          console.log("estadoRecibido", estadoRecibido);
-          console.log("obtenerTextoEstado", this.obtenerTextoEstado(estadoRecibido));
+          //console.log("estadoPago", this.estadoPago);
+          //console.log("estadoRecibido", estadoRecibido);
+          //console.log("obtenerTextoEstado", this.obtenerTextoEstado(estadoRecibido));
 
           this.estadoPago = this.obtenerTextoEstado(estadoRecibido);
           this.icono = this.obtenerIconoEstado(estadoRecibido);
