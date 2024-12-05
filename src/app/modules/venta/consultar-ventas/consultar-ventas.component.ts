@@ -15,6 +15,9 @@ import {RegistrarProductoComponent} from "../../productos/registrar-producto/reg
 import {NotificationService} from "../../../services/notificacion.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {
+  AsignarCuentaCorrienteComponent
+} from "../../clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component";
 
 @Component({
   selector: 'app-consultar-ventas',
@@ -123,11 +126,47 @@ export class ConsultarVentasComponent implements OnInit {
   }
 
   public anularVenta(venta: Venta, onSuccess?: () => void) {
+    // Condición para abrir el matDialog
+    if (venta.comprobanteAfip.comprobante_nro && venta.cliente.id === -1) {
+      // Abre el diálogo con el componente AsignarCuentaCorrienteComponent
+      const dialogRef = this.dialog.open(AsignarCuentaCorrienteComponent, {
+        width: '55%',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
+        data: {
+          venta: venta,
+          referencia: this,
+        }
+      });
+
+      dialogRef.afterClosed().subscribe((resultado) => {
+        if (resultado) {
+          this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+          this.buscarVentas();
+          if (onSuccess) {
+            onSuccess(); // Llama al callback solo si es exitoso
+          }
+        } else {
+          this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
+        }
+      });
+      return;
+    }
+
+    // Lógica normal si no se cumple la condición
     let mensajeTitulo: string = '';
 
-    venta.comprobanteAfip.comprobante_nro ? mensajeTitulo = 'Generar nota de crédito' : mensajeTitulo = 'Anular venta';
+    mensajeTitulo = venta.comprobanteAfip.comprobante_nro
+      ? 'Generar nota de crédito'
+      : 'Anular venta';
 
-    this.notificationDialogService.confirmation('¿Desea anular esta venta?', mensajeTitulo)
+    const mensajeDescripcion: string = venta.comprobanteAfip.comprobante_nro
+      ? `¿Desea generar una nota de crédito?
+      Se añadirá balance positivo a la cuenta.`
+      : `¿Desea anular esta venta?`;
+
+    this.notificationDialogService.confirmation(mensajeDescripcion, mensajeTitulo)
       .afterClosed()
       .subscribe((value) => {
         if (value) {

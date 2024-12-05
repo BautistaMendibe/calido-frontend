@@ -12,12 +12,19 @@
     overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
 
   }
+
+  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+    font-size: 12px;
+  }
 }
 
 @media (max-width: 768px) {
   .custom-table {
     width: 100%;
     min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+  .custom-table th, .custom-table td {
+    padding: 6px; /* Reduce el espacio entre celdas */
   }
 }
 

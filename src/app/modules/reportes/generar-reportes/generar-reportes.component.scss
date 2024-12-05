@@ -1,0 +1,64 @@
+.seccion-nombre {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333;
+  margin: 0;
+}
+
+.icono-seccion {
+  color: #333;
+  margin-right: 20px;
+  font-size: 1.7rem;
+}
+
+.seccion-container{
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #fefefe;
+}
+
+.reporte-container {
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fefefe;
+}
+
+.titulo-reporte {
+  margin-top: 14px;
+  font-size: 15px;
+  margin-left: 15px;
+  font-weight: 500;
+}
+
+.subtitulo-reporte {
+  font-size: 12px;
+  margin-bottom: 10px;
+  font-weight: 400;
+  color: #888;
+}
+
+.reporte-container:hover {
+  background-color: #f1f0f0;
+  cursor: pointer;
+}
+
+.btn-generar-reporte {
+  margin-left: 30px;
+  margin-top: 10px;
+}
+
+.btn-generar-reporte-sin-filtro {
+  margin-left: 30px;
+  margin-top: 10px;
+}
+
+
+@media(max-width: 1004px) {
+  .btn-generar-reporte {
+    width: 100%;
+    margin-left: 0px;
+    margin-top: 0px;
+  }
+}

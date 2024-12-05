@@ -27,6 +27,55 @@
 }
 
 .disabled-table {
-  pointer-events: none;
-  opacity: 0.6;
+  pointer-events: none; /* Evita la interacción */
+  opacity: 0.6; /* Apariencia deshabilitada */
+  background-color: #f9f9f9; /* Fondo más claro */
+  border: 1px solid #ddd; /* Añade un borde claro */
+  border-radius: 5px; /* Redondea los bordes */
+  min-width: 400px; /* Ancho mínimo para la tabla */
+  overflow-x: auto; /* Permitir desplazamiento horizontal */
+}
+
+.leyenda {
+  font-size: 0.7rem;
+  color: #555;
+  opacity: 0.7;
+  vertical-align: middle;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse; /* Quita espacios entre celdas */
+}
+
+.custom-table th, .custom-table td {
+  padding: 8px;
+  text-align: left;
+  border: 1px solid #ddd; /* Borde para celdas */
+}
+
+.custom-table th {
+  background-color: #f4f4f4; /* Fondo de encabezados */
+  font-weight: bold;
+}
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+  }
+  .btn-registrar {
+    padding: 25px;
+  }
+}
+
+@media (max-width: 768px) {
+  .disabled-table {
+    min-width: 100%; /* Asegura que ocupe todo el ancho en móviles */
+    font-size: 12px; /* Reduce el tamaño de fuente */
+  }
+
+  .custom-table th, .custom-table td {
+    padding: 6px; /* Reduce el espacio entre celdas */
+  }
 }

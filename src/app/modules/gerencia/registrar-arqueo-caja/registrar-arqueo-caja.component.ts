@@ -10,6 +10,7 @@ import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {Usuario} from "../../../models/usuario.model";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-registrar-arqueo-caja',
@@ -35,6 +36,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     private dialog: MatDialog,
     private cajasService: CajasService,
     private usuariosService: UsuariosService,
+    private authService: AuthService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarArqueoCajaComponent;
       esConsulta: boolean;
@@ -56,6 +58,10 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     this.crearFormulario();
     this.buscarCajas();
     this.buscarEmpleados();
+    this.obtenerEmpleadoLogueado();
+
+    this.txHoraApertura.disable();
+    this.txFechaApertura.disable();
 
     if (this.formDesactivado) {
       this.form.disable();
@@ -66,10 +72,27 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     this.form = this.fb.group({
       txCaja: [this.data.arqueo?.caja.id || '', [Validators.required]],
       txFechaApertura: [this.data.arqueo?.fechaApertura || new Date(), [Validators.required]],
-      txHoraApertura: [this.data.arqueo?.horaApertura || '', [Validators.required]],
+      txHoraApertura: [this.data.arqueo?.horaApertura || this.getHoraActual(), [Validators.required]],
       txMontoInicial: [this.data.arqueo?.montoInicial || '', [Validators.required]],
       txResponsable: [this.data.arqueo?.responsable?.id || '', [Validators.required]]
     });
+  }
+
+  private getHoraActual(): string {
+    const ahora = new Date();
+    const horas = String(ahora.getHours()).padStart(2, '0'); // Asegura formato 2 dígitos
+    const minutos = String(ahora.getMinutes()).padStart(2, '0'); // Asegura formato 2 dígitos
+    const segundos = String(ahora.getSeconds()).padStart(2, '0'); // Incluye segundos
+    return `${horas}:${minutos}:${segundos}`;
+  }
+
+  private obtenerEmpleadoLogueado() {
+    const token = this.authService.getToken();
+    const infoToken: any = this.authService.getDecodedAccessToken(token);
+
+    if (infoToken) {
+      this.txResponsable.setValue(infoToken.idusuario);
+    }
   }
 
   private buscarCajas(){
@@ -127,21 +150,6 @@ export class RegistrarArqueoCajaComponent implements OnInit {
 
   public cancelar() {
     this.dialogRef.close();
-  }
-
-  public habilitarEdicion(){
-    this.form.enable();
-    this.txCaja.disable();
-    this.txFechaApertura.disable();
-    this.txHoraApertura.disable();
-
-    if (this.data.arqueo?.idEstadoArqueo == 2) {
-      this.txMontoInicial.disable();
-      this.txResponsable.disable();
-    }
-
-    this.formDesactivado = false;
-    this.data.editar = true;
   }
 
   // Región getters
