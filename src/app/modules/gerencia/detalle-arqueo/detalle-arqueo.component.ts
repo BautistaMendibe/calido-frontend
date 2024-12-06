@@ -223,7 +223,6 @@ export class DetalleArqueoComponent implements OnInit {
           montoTotal: parseFloat(venta.montoTotal as unknown as string) || 0, // Convertir a número si es necesario
         }));
 
-        this.determinarAnulacion();
         this.tableDataSource.data = this.ventas;
         this.tableDataSource.paginator = this.paginator;
         this.tableDataSource.sort = this.sort;
@@ -246,10 +245,13 @@ export class DetalleArqueoComponent implements OnInit {
   }
 
   public calcularFormasPago(): void {
+    // Inicializamos el total de anulaciones para cuenta corriente
+    let totalEgresosVentasAnuladasCuentaCorriente = 0;
+
     this.formasPago.forEach((forma) => {
-      // Asegurar números
+      // Ingresos: Ventas facturadas (excluyendo las anuladas) y movimientos manuales
       const ingresosVentas = this.ventas
-        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaFacturacion && !v.fechaAnulacion)
+        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaFacturacion) // Solo facturadas
         .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
 
       const ingresosMovimientos = this.movimientosManuales
@@ -257,25 +259,49 @@ export class DetalleArqueoComponent implements OnInit {
         .reduce((sum: number, mov: MovimientoManual) => sum + Number(mov.monto), 0);
 
       forma.totalIngresos = ingresosVentas + ingresosMovimientos;
+
       forma.detallesIngresos = [
         { concepto: 'Ventas facturadas', monto: ingresosVentas },
         { concepto: 'Movimientos manuales', monto: ingresosMovimientos },
       ];
 
       // Egresos
-      const egresosVentas = this.ventas
-        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && (v.fechaAnulacion || !v.fechaFacturacion))
-        .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
-
-      const egresosMovimientos = this.movimientosManuales
+      let egresosMovimientos = this.movimientosManuales
         .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'egreso')
         .reduce((sum: number, mov: MovimientoManual) => sum + (Number(mov.monto) * -1), 0);
 
-      forma.totalEgresos = egresosVentas + egresosMovimientos;
-      forma.detallesEgresos = [
-        { concepto: forma.id === 6 ? 'Cuentas corrientes pendientes de pago' : 'Ventas anuladas', monto: egresosVentas },
-        { concepto: 'Movimientos manuales', monto: egresosMovimientos },
-      ];
+      let egresosVentas = 0;
+
+      // Para cuenta corriente (forma.id === 6)
+      if (forma.id === 6) {
+        // Suma todas las ventas anuladas independientemente del método de pago porque al fin y al cabo todas
+        // van a cuenta corriente como crédito (lo que representa un egreso para el negocio)
+        egresosVentas = this.ventas
+          .filter((v: Venta) => v.fechaAnulacion)
+          .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
+
+        totalEgresosVentasAnuladasCuentaCorriente = egresosVentas;
+
+        // Calculamos el saldo pendiente (ventas sin fecha de facturación)
+        const saldoCuentaCorrientePendiente = this.ventas
+          .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && !v.fechaFacturacion)
+          .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
+
+        forma.totalEgresos = egresosVentas + saldoCuentaCorrientePendiente + egresosMovimientos;
+
+        forma.detallesEgresos = [
+          { concepto: 'Ventas anuladas', monto: egresosVentas },
+          { concepto: 'Saldo cuenta corriente pendiente de pago', monto: saldoCuentaCorrientePendiente },
+          { concepto: 'Movimientos manuales', monto: egresosMovimientos },
+        ];
+      } else {
+        // Para los demás medios de pago, solo egresos manuales
+        forma.totalEgresos = egresosMovimientos;
+
+        forma.detallesEgresos = [
+          { concepto: 'Movimientos manuales', monto: egresosMovimientos },
+        ];
+      }
     });
 
     this.calcularTotalesYDiferencias(this.formasPago);
@@ -325,7 +351,7 @@ export class DetalleArqueoComponent implements OnInit {
       const movimiento: MovimientoManual = new MovimientoManual();
 
       movimiento.idArqueo = Number(this.idArqueo);
-      movimiento.fechaMovimiento = new Date();
+      movimiento.fechaMovimiento = new Date(); // Se registra de BD de todas formas (para evitar problemas de zonas horarias)
       movimiento.formaPago = this.txFormaPago.value;
       movimiento.descripcion = this.txDescripcion.value;
       movimiento.tipoMovimiento = this.txTipoMovimiento.value;

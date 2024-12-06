@@ -129,15 +129,22 @@
               <mat-header-cell *matHeaderCellDef>DESCRIPCION</mat-header-cell>
               <mat-cell *matCellDef="let venta">
                 <!-- Mostrar descripción personalizada si está disponible -->
-                {{ venta.descripcion ? venta.descripcion : ((venta.anulada === true) ? 'Anulación de venta' : 'Venta') }}
+                {{ venta.descripcion ? venta.descripcion : ((venta.anulada === true) ? 'Venta anulada' : 'Venta') }}
                 <!-- Mostrar el ID si es una venta -->
-                {{ (venta.id && !venta.descripcion) ? '(ID: ' + venta.id + ')' : '' }}
+                {{ (venta.id && !venta.descripcion) ? + '' + venta.id : '' }}
               </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="tipoMovimiento">
               <mat-header-cell *matHeaderCellDef>TIPO MOVIMIENTO</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ (venta.montoTotal > 0) ? 'Ingreso' : 'Egreso' }}</mat-cell>
+              <mat-cell *matCellDef="let venta">
+                <!-- Cuenta corriente sin facturar es egreso, sino es ingreso, cualquier otro método es dependiente del monto -->
+                {{
+                  (venta.formaDePago?.id === 6)
+                    ? ((!venta.fechaFacturacion) ? 'Egreso' : 'Ingreso')
+                    : ((venta.montoTotal > 0) ? 'Ingreso' : 'Egreso')
+                }}
+              </mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="montoTotal">
