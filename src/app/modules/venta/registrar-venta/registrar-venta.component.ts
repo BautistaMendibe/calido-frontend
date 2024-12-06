@@ -429,7 +429,8 @@ export class RegistrarVentaComponent implements OnInit{
         const sumatoriaProductos = venta.productos.reduce((sumatoria, producto) => {
           const porcentajeDescuento = producto.promocion?.porcentajeDescuento || 0; // Si no tiene promoción, el descuento es 0
           const descuento = (producto.precioSinIVA * porcentajeDescuento) / 100;
-          return sumatoria + (producto.precioSinIVA - descuento);
+          const precioConDescuento = producto.precioSinIVA - descuento;
+          return sumatoria + (precioConDescuento * producto.cantidadSeleccionada);
         }, 0);
 
         venta.bonificacion = -(venta.montoTotal / 1.21) + sumatoriaProductos;
