@@ -445,6 +445,7 @@ export class DetalleArqueoComponent implements OnInit {
             if (respuesta.mensaje == 'OK') {
               this.notificacionService.openSnackBarSuccess('Arqueo cerrado con éxito');
               this.deshabilitarFormulario();
+              window.location.reload();
             } else {
               this.notificacionService.openSnackBarError('Error al cerrar arqueo, intenta nuevamente.');
             }

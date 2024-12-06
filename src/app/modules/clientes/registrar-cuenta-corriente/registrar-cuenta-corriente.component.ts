@@ -114,21 +114,15 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public buscarVentas(idUsuario: number) {
     this.isLoading = true;
     this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
-      // Filtrar las ventas para mostrar solo ventas de cuenta corriente o anuladas con saldo
-      const ventasFiltradas = ventas.filter((venta) =>
-        (venta.formaDePago?.id === 6 && venta.comprobanteAfip.comprobante_nro == null)
-        || (venta.saldoDisponible !== null && venta.saldoDisponible >= 0)
-      );
-
       // Determinar si hay ventas no facturadas o no canceladas con saldo (lo que indica que hay cosas que hacer en esta cta cte)
-      this.tieneAccionesPendientes = ventasFiltradas.some((venta) =>
+      this.tieneAccionesPendientes = ventas.some((venta) =>
         (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1) ||
         (venta.canceladaConSaldo && venta.canceladaConSaldo !== 1)
       );
 
       // Asignar solo las ventas filtradas
-      this.ventas = ventasFiltradas;
-      this.tableDataSource.data = ventasFiltradas;
+      this.ventas = ventas;
+      this.tableDataSource.data = ventas;
       this.tableDataSource.paginator = this.paginator;
       this.tableDataSource.sort = this.sort;
 

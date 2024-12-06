@@ -429,7 +429,8 @@ export class RegistrarVentaComponent implements OnInit{
         const sumatoriaProductos = venta.productos.reduce((sumatoria, producto) => {
           const porcentajeDescuento = producto.promocion?.porcentajeDescuento || 0; // Si no tiene promoción, el descuento es 0
           const descuento = (producto.precioSinIVA * porcentajeDescuento) / 100;
-          return sumatoria + (producto.precioSinIVA - descuento);
+          const precioConDescuento = producto.precioSinIVA - descuento;
+          return sumatoria + (precioConDescuento * producto.cantidadSeleccionada);
         }, 0);
 
         venta.bonificacion = -(venta.montoTotal / 1.21) + sumatoriaProductos;
@@ -781,12 +782,7 @@ export class RegistrarVentaComponent implements OnInit{
           // Si hay cliente y este no es consumidor final
           if (cliente && cliente !== -1) {
             this.ventasService.buscarVentasPorCC(cliente).subscribe((ventas) => {
-              // Filtrar las ventas para mostrar solo ventas de cuenta corriente o anuladas con saldo
-              const ventasFiltradas = ventas.filter((venta) =>
-                (venta.formaDePago?.id === 6 && venta.comprobanteAfip.comprobante_nro == null) ||
-                (venta.saldoDisponible !== null && venta.saldoDisponible >= 0)
-              );
-              this.ventasCtaCteCliente = ventasFiltradas;
+              this.ventasCtaCteCliente = ventas;
               if (this.ventasCtaCteCliente.length > 0) {
                 this.calcularBalanceCuentaCorriente();
               }

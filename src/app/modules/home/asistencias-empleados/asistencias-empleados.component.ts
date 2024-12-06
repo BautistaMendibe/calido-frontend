@@ -23,7 +23,9 @@ export class AsistenciasEmpleadosComponent implements OnInit {
   }
 
   private buscarAsistenciasHoy() {
-    this.filtrosAsistencias.fecha = new Date();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    this.filtrosAsistencias.fecha = hoy;
     this.buscando = true;
 
     this.usuariosService.consultarAsistencias(this.filtrosAsistencias).subscribe((asistencias) => {

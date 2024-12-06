@@ -16,7 +16,7 @@
         </div>
         <div class="d-flex align-items-baseline">
           <p class="currency-symbol">$</p>
-          <h1 class="value ms-1">{{ventas[0].totalDelDiaHoy}}</h1>
+          <h1 class="value ms-1">{{ventas[0].totalDelDiaHoy | number:'1.2-2':'es-AR' }}</h1>
         </div>
 
         <div class="d-flex align-items-center mt-2">
@@ -25,7 +25,7 @@
         </div>
         <div class="d-flex align-items-baseline">
           <p class="currency-symbol">$</p>
-          <h1 class="value ms-1">{{ventas[0].totalDelDiaAyer}}</h1>
+          <h1 class="value ms-1">{{ventas[0].totalDelDiaAyer | number:'1.2-2':'es-AR' }}</h1>
         </div>
       </div>
 
