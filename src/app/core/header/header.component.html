@@ -18,6 +18,10 @@
             </span>
           </button>
           <mat-menu #menu="matMenu">
+            <button mat-menu-item class="btn" (click)="exit()">
+              <mat-icon>wb_sunny</mat-icon>
+              Modo oscuro
+            </button>
             <button mat-menu-item class="btn" id="btnSalir" (click)="exit()">
               <mat-icon>exit_to_app</mat-icon>
               Salir
