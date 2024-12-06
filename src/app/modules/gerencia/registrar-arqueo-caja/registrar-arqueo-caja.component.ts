@@ -71,7 +71,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   private crearFormulario() {
     this.form = this.fb.group({
       txCaja: [this.data.arqueo?.caja.id || '', [Validators.required]],
-      txFechaApertura: [this.data.arqueo?.fechaApertura || new Date(), [Validators.required]],
+      txFechaApertura: [this.data.arqueo?.fechaApertura || new Date(new Date().setHours(0, 0, 0, 0)), [Validators.required]],
       txHoraApertura: [this.data.arqueo?.horaApertura || this.getHoraActual(), [Validators.required]],
       txMontoInicial: [this.data.arqueo?.montoInicial || '', [Validators.required]],
       txResponsable: [this.data.arqueo?.responsable?.id || '', [Validators.required]]
