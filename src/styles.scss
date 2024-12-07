@@ -37,8 +37,6 @@
   --mdc-outlined-button-outline-color: blue
 }
 
-
-
 html, body {
   height: 100%;
   margin: 0;
@@ -64,8 +62,12 @@ h2 {
   color: var(--color-text-title) !important;
 }
 
-.mat-divider {
-  color: red;
+/* Change the border color */
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+  border-color: var(--border-color) !important;
+  color: var(--color-text-title) !important;
 }
 
 
