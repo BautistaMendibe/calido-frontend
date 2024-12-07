@@ -28,7 +28,6 @@ export class VentasDiaComponent implements OnInit{
   private buscarInfoTema() {
     this.themeService.darkMode$.subscribe((isDarkMode) => {
       this.isDarkMode = isDarkMode;
-      this.buscarTotalVentas();
     });
   }
 
