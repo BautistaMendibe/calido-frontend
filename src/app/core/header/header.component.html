@@ -12,8 +12,8 @@
       <ul style="margin-top: 15px" *ngIf="estaLogeado">
         <li>
           <button mat-button [matMenuTriggerFor]="menu" class="white" id="btnUsuario">
-            <mat-icon>person_outline</mat-icon>
-            <span id="txtNombreUsuario">
+            <mat-icon [class.dark-mode]="darkMode">person_outline</mat-icon>
+            <span id="txtNombreUsuario" [class.dark-mode]="darkMode">
               {{nombreApellido}}
             </span>
           </button>
