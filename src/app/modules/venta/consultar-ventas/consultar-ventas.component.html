@@ -3,7 +3,13 @@
     <div class="row">
       <div class="d-flex justify-content-between align-items-center w-100">
         <p class="titulo">Ventas</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevaVenta()">Registrar nueva venta</button>
+        <button
+          mat-stroked-button
+          color="warn"
+          class="btn round mb-3"
+          (click)="registrarNuevaVenta()"
+          [appRole]="['Administrador', 'Encargado', 'Cajero']"
+        >Registrar nueva venta</button>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -141,10 +147,16 @@
                   color="primary"
                   matTooltip="Anular venta"
                   (click)="anularVenta(venta)"
-                  [disabled]="venta.canceladaConSaldo === 1 && venta.comprobanteAfip.comprobante_pdf_url !== null">
+                  [disabled]="venta.canceladaConSaldo === 1 && venta.comprobanteAfip.comprobante_pdf_url !== null"
+                  [appRole]="['Cajero', 'Encargado']">
                   <mat-icon class="eliminar">settings_backup_restore</mat-icon>
                 </button>
-                <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante(venta)">
+                <button
+                  *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null"
+                  mat-icon-button color="primary"
+                  matTooltip="Imprimir comprobante"
+                  (click)="imprimirComprobante(venta)"
+                  [appRole]="['Administrador', 'Encargado', 'Cajero']">
                   <mat-icon class="imprimir">print</mat-icon>
                 </button>
                 <button
@@ -153,7 +165,8 @@
                   color="primary"
                   matTooltip="Facturar venta"
                   (click)="facturarVenta(venta)"
-                  [disabled]="venta.canceladaConSaldo === 1">
+                  [disabled]="venta.canceladaConSaldo === 1"
+                  [appRole]="['Cajero', 'Encargado']">
                   <mat-icon class="facturar">attach_money</mat-icon>
                 </button>
               </mat-cell>

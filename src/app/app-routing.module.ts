@@ -141,7 +141,7 @@ const routes: Routes = [
     path: 'consultar-ventas',
     component: ConsultarVentasComponent,
     canActivate: [authGuard],
-    data: { roles: ['Cajero', 'Administrador', 'Encargado'] },
+    data: { roles: ['Vendedor', 'Cajero', 'Administrador', 'Encargado'] },
   },
   {
     path: 'visualizaciones',
