@@ -8,7 +8,7 @@
           color="warn"
           class="btn round mb-3 botonR"
           (click)="registrarNuevaCuenta()"
-          *appRole="['Administrador']"
+          [appRole]="['Administrador', 'Cajero', 'Encargado']"
         >Registrar cuenta corriente</button>
       </div>
     </div>
@@ -73,10 +73,10 @@
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verCuentaCorriente(cuentaCorriente, false)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verCuentaCorriente(cuentaCorriente, true)">
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verCuentaCorriente(cuentaCorriente, true)" [appRole]="['Administrador', 'Cajero', 'Encargado']">
                   <mat-icon class="editar">edit</mat-icon>
                 </button>
-                <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarCuentaCorriente(cuentaCorriente.id)">
+                <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarCuentaCorriente(cuentaCorriente.id)" [appRole]="['Administrador', 'Cajero', 'Encargado']">
                   <mat-icon class="eliminar">delete</mat-icon>
                 </button>
               </mat-cell>
