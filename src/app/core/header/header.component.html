@@ -11,7 +11,7 @@
     <div class="float-right mt-15" fxFlex fxLayout="row" fxLayoutAlign="flex-end">
       <ul style="margin-top: 15px" *ngIf="estaLogeado">
         <li>
-          <button mat-button [matMenuTriggerFor]="menu" class="white" id="btnUsuario">
+          <button mat-button [matMenuTriggerFor]="menu" id="btnUsuario">
             <mat-icon [class.dark-mode]="darkMode">person_outline</mat-icon>
             <span id="txtNombreUsuario" [class.dark-mode]="darkMode">
               {{nombreApellido}}
