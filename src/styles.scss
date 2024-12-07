@@ -9,6 +9,8 @@
   --menu-item-color: #000000; /* Color del texto del menú (claro) */
   --border-color-nav: #ddd;
   --bg-drawer: #fdfdfd;
+  --bg-card: #fffff;
+  --color-border-card: #fffff;
 }
 
 .dark-mode {
@@ -17,8 +19,10 @@
   --menu-bg: #3E3E4E; /* Fondo del menú para el tema oscuro */
   --menu-item-hover-bg: #5A5A6E; /* Fondo de los ítems al hover (oscuro) */
   --menu-item-color: #EDEDED; /* Color del texto del menú (oscuro) */
-  --border-color-nav: #1d1d23;
+  --border-color-nav: #414141;
   --bg-drawer: #161621;
+  --bg-card: #2A2A3B;
+  --color-border-card: #3E3E4E;
 }
 
 
@@ -175,7 +179,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: #b3b3b3;
   border-radius: 10px;
-  border: 2px solid transparent;
+  border: 2px solid var(--color-border);
   background-clip: padding-box;
 }
 
