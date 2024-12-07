@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {VentasService} from "../../../services/ventas.services";
 import {Chart, ChartDataset, ChartOptions, registerables} from 'chart.js';
 import {VentasDiariaComando} from "../../../models/comandos/dashboard/VentasDiaria.comando";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 Chart.register(...registerables);
 
@@ -13,13 +14,22 @@ Chart.register(...registerables);
 export class VentasDiaComponent implements OnInit{
   public ventas: VentasDiariaComando[] = [];
   public buscando: boolean = false;
+  private isDarkMode: boolean = false;
 
 
-  constructor(private ventasService: VentasService) {
+  constructor(private ventasService: VentasService, private themeService: ThemeCalidoService) {
   }
 
   ngOnInit() {
+    this.buscarInfoTema();
     this.buscarTotalVentas();
+  }
+
+  private buscarInfoTema() {
+    this.themeService.darkMode$.subscribe((isDarkMode) => {
+      this.isDarkMode = isDarkMode;
+      this.buscarTotalVentas();
+    });
   }
 
   private buscarTotalVentas() {
@@ -44,6 +54,7 @@ export class VentasDiaComponent implements OnInit{
           font: {
             size: 10,
           },
+          color: this.isDarkMode ? 'rgb(255,255,255)' : 'rgb(74,74,74)',
           maxRotation: 0,
           minRotation: 0,
         },
@@ -56,6 +67,7 @@ export class VentasDiaComponent implements OnInit{
           font: {
             size: 10,
           },
+          color: this.isDarkMode ? 'rgb(255,255,255)' : 'rgb(74,74,74)',
           padding: 10,
         },
         grid: {

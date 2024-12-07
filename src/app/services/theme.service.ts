@@ -1,36 +1,43 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
+import { Injectable } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ThemeCalidoService {
-  //private urlBackend = environmentDEV.backendUrl;
-  //private controllerName = 'cajas';
+  // BehaviorSubject inicializado con el valor guardado en localStorage o false por defecto
+  private darkModeSubject = new BehaviorSubject<boolean>(
+      localStorage.getItem('darkMode') === 'true'
+  );
+  darkMode$ = this.darkModeSubject.asObservable();
 
-  private darkMode: boolean = false;
+  constructor() {
+    // Aplicar el estado inicial del tema al cargar el servicio
+    const initialDarkMode = this.darkModeSubject.getValue();
+    this.updateBodyClass(initialDarkMode);
+  }
 
-  public toggleDarkMode() {
-    this.darkMode = !this.darkMode;
+  // Alternar entre modo oscuro y modo claro
+  toggleDarkMode(): void {
+    const currentMode = this.darkModeSubject.getValue();
+    const newMode = !currentMode;
+    this.darkModeSubject.next(newMode); // Emitir nuevo valor
+    this.updateBodyClass(newMode); // Actualizar la clase del body
+    localStorage.setItem('darkMode', newMode.toString()); // Guardar el estado en localStorage
+  }
+
+  // Obtener el estado actual del modo oscuro
+  isDarkMode(): boolean {
+    return this.darkModeSubject.getValue();
+  }
+
+  // Actualizar la clase del body según el estado del tema
+  private updateBodyClass(isDarkMode: boolean): void {
     const classList = document.body.classList;
-    if (this.darkMode) {
+    if (isDarkMode) {
       classList.add('dark-theme');
-      localStorage.setItem('darkMode', 'true');
     } else {
       classList.remove('dark-theme');
-      localStorage.setItem('darkMode', 'false');
     }
   }
-
-  isDarkMode(): boolean {
-    const savedTheme = localStorage.getItem('darkMode');
-    if (savedTheme === 'true') {
-      this.darkMode = true;
-      return this.darkMode;
-    } else {
-      this.darkMode = false;
-      return this.darkMode;
-    }
-  }
-
 }
