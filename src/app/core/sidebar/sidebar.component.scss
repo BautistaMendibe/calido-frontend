@@ -2,6 +2,7 @@
   .mat-icon {
     vertical-align: middle;
     margin-right: 20px;
+    color: var(--header-color)
   }
 
   .profile-card {
@@ -15,6 +16,10 @@
       border-radius: 50%;
     }
   }
+}
+
+span {
+  color: var(--header-color);
 }
 
 a {
@@ -131,6 +136,7 @@ a {
   background-color: var(--header-bg);
   overflow-y: hidden;
   overflow-x: hidden;
+  color: var(--header-color);
 
   &.expanded {
     overflow-y: auto;
