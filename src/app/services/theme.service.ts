@@ -22,17 +22,15 @@ export class ThemeCalidoService {
     }
   }
 
-  initializeTheme() {
+  isDarkMode(): boolean {
     const savedTheme = localStorage.getItem('darkMode');
     if (savedTheme === 'true') {
       this.darkMode = true;
-      document.body.classList.add('dark-theme');
+      return this.darkMode;
+    } else {
+      this.darkMode = false;
+      return this.darkMode;
     }
   }
-
-  isDarkMode(): boolean {
-    return this.darkMode;
-  }
-
 
 }

@@ -1,4 +1,4 @@
-<mat-toolbar>
+<mat-toolbar class="header" [class.dark-mode]="darkMode">
   <mat-toolbar-row>
     <div>
       <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" [disabled]="!estaLogeado" (click)="toggleSideBar()">
