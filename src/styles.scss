@@ -1,5 +1,25 @@
 @import '@ctrl/ngx-emoji-mart/picker';
 
+
+:root {
+  --header-bg: #f5f5f5; /* Fondo del header para el tema claro */
+  --header-color: #000000; /* Color del texto para el tema claro */
+  --menu-bg: #ffffff; /* Fondo del menú para el tema claro */
+  --menu-item-hover-bg: #dddddd; /* Fondo de los ítems al hover (claro) */
+  --menu-item-color: #000000; /* Color del texto del menú (claro) */
+  --border-color-nav: #ddd;
+}
+
+.dark-mode {
+  --header-bg: #2A2A3B; /* Fondo del header para el tema oscuro */
+  --header-color: #EDEDED; /* Color del texto para el tema oscuro */
+  --menu-bg: #3E3E4E; /* Fondo del menú para el tema oscuro */
+  --menu-item-hover-bg: #5A5A6E; /* Fondo de los ítems al hover (oscuro) */
+  --menu-item-color: #EDEDED; /* Color del texto del menú (oscuro) */
+  --border-color-nav: #1d1d23;
+}
+
+
 html, body {
   height: 100%;
   margin: 0;

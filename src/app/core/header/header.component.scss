@@ -1,23 +1,25 @@
 .header {
-  border-bottom: solid 1px #dddd;
-}
-
-.dark-mode {
-  background: #2A2A3B;
-  color: #EDEDED;
+  background-color: var(--header-bg);
+  color: var(--header-color);
+  border-bottom: solid 1px var(--border-color-nav);
 
   button {
-    color: #EDEDED;
+    color: var(--header-color);
   }
 
   button:hover {
-    background-color: #333349;
-    color: #FFFFFF;
+    background-color: var(--menu-item-hover-bg);
   }
+}
 
-  mat-icon {
-    color: #EDEDED;
-  }
+.mat-mdc-menu-content {
+  background-color: var(--menu-bg) !important;
+  color: var(--menu-item-color) !important;
+}
+
+.mat-mdc-menu-item:hover {
+  background-color: var(--menu-item-hover-bg) !important;
+  color: #ffffff !important; /* Texto blanco al hover */
 }
 
 button:focus {
