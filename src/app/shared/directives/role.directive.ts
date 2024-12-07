@@ -1,30 +1,37 @@
 import {
   Directive,
   Input,
-  TemplateRef,
-  ViewContainerRef,
+  Renderer2,
+  ElementRef,
   OnChanges,
-  Optional,
 } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 
 @Directive({
-  selector: '[appRole]', // Directiva estructural (*appRole)
+  selector: '[appRole]',
 })
 export class RoleDirective implements OnChanges {
   @Input('appRole') allowedRoles: string[] = []; // Roles permitidos
 
-  private userRoles: string[] = [];
+  private static cachedUserRoles: string[] | null = null;
+
+  private userRoles: string[] = []; // Inicializado como un array vacío
 
   constructor(
     private authService: AuthService,
-    @Optional() private templateRef: TemplateRef<any>, // Para manipular contenido
-    @Optional() private viewContainer: ViewContainerRef // Para mostrar u ocultar
+    private renderer: Renderer2,
+    private element: ElementRef
   ) {
-    const token = this.authService.getToken();
-    const decodedToken: any = this.authService.getDecodedAccessToken(token);
-    this.userRoles = decodedToken?.roles || []; // Obtiene los roles del usuario
-    console.log(this.userRoles);
+    // Solamente decodificar el jwt la primera vez, luego cachearlo
+    if (!RoleDirective.cachedUserRoles) {
+      const decodedToken: any = this.authService.getDecodedAccessToken(
+        this.authService.getToken()
+      );
+      RoleDirective.cachedUserRoles = decodedToken?.roles || [];
+    }
+
+    this.userRoles = RoleDirective.cachedUserRoles || [];
+    console.log('User Roles (cached):', this.userRoles);
   }
 
   ngOnChanges(): void {
@@ -32,15 +39,15 @@ export class RoleDirective implements OnChanges {
   }
 
   private applyShowHideLogic() {
-    if (this.viewContainer && this.templateRef) {
-      this.viewContainer.clear(); // Limpia el contenido existente
-      if (this.hasRequiredRole()) {
-        this.viewContainer.createEmbeddedView(this.templateRef); // Muestra el contenido
-      }
+    if (this.hasRequiredRole()) {
+      this.renderer.setStyle(this.element.nativeElement, 'display', 'block');
+    } else {
+      this.renderer.setStyle(this.element.nativeElement, 'display', 'none');
     }
   }
 
   private hasRequiredRole(): boolean {
-    return this.allowedRoles.some((role) => this.userRoles.includes(role)); // Verifica roles
+    return this.allowedRoles.some((role) => this.userRoles.includes(role));
   }
 }
+
