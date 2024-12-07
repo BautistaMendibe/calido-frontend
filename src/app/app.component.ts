@@ -13,8 +13,18 @@ export class AppComponent implements OnInit{
   constructor() {}
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.calcularSizeScreen();
     this.updateSideBarState();
+  }
+
+  obtenerInformacionTema() {
+    const temaGuardado = localStorage.getItem('darkMode');
+    if (temaGuardado === 'true') {
+      document.body.classList.add('dark-theme');
+    } else {
+      document.body.classList.remove('dark-theme');
+    }
   }
 
   calcularSizeScreen() {

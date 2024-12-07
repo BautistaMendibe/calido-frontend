@@ -4,21 +4,35 @@ import {HttpClient} from "@angular/common/http";
 @Injectable({
   providedIn: 'root'
 })
-export class CajasService {
+export class ThemeCalidoService {
   //private urlBackend = environmentDEV.backendUrl;
   //private controllerName = 'cajas';
 
-  public modo: string = '';
+  private darkMode: boolean = false;
 
-  constructor() {}
-
-
-  obtenerModo() {
-    return this.modo
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    const classList = document.body.classList;
+    if (this.darkMode) {
+      classList.add('dark-theme');
+      localStorage.setItem('darkMode', 'true');
+    } else {
+      classList.remove('dark-theme');
+      localStorage.setItem('darkMode', 'false');
+    }
   }
 
-  cambiarModo(modo: string) {
-    this.modo = modo;
+  initializeTheme() {
+    const savedTheme = localStorage.getItem('darkMode');
+    if (savedTheme === 'true') {
+      this.darkMode = true;
+      document.body.classList.add('dark-theme');
+    }
   }
+
+  isDarkMode(): boolean {
+    return this.darkMode;
+  }
+
 
 }

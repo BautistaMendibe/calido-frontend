@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {ConfiguracionesService} from "../../services/configuraciones.service";
-import {HttpRequest} from "@angular/common/http";
+import {ThemeCalidoService} from "../../services/theme.service";
 
 @Component({
   selector: 'app-header',
@@ -19,6 +19,7 @@ export class HeaderComponent implements OnInit {
     private authService: AuthService,
     private router: Router,
     private configuracionesService: ConfiguracionesService,
+    private themeService: ThemeCalidoService,
     private activatedRoute: ActivatedRoute) {
   }
 
@@ -45,6 +46,10 @@ export class HeaderComponent implements OnInit {
         }
       }
     });
+  }
+
+  public toggleTheme() {
+    this.themeService.toggleDarkMode();
   }
 
   // Metodo que obtiene el logo para utilizar en el header desde la configuración

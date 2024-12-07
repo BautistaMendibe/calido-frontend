@@ -1,61 +1,17 @@
 @import '@ctrl/ngx-emoji-mart/picker';
 
-/* Responsive */
-.custom-table {
-  min-width: 400px;  /* Ancho mínimo para la tabla */
-  overflow-x: auto;  /* Permitir scroll horizontal */
+/* Variables para el tema claro */
+:root {
+  --background-color: #ffffff;
+  --text-color: #000000;
 }
 
-@media (max-width: 992px) {
-  .custom-table {
-    width: 100%;
-    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
-
-  }
-
-  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
-    font-size: 12px;
-  }
+/* Variables para el tema oscuro */
+:root.dark-theme {
+  --background-color: #121212;
+  --text-color: #ffffff;
 }
 
-@media (max-width: 768px) {
-  .custom-table {
-    width: 100%;
-    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
-  }
-  .custom-table th, .custom-table td {
-    padding: 6px; /* Reduce el espacio entre celdas */
-  }
-}
-
-.mat-column-acciones {
-  min-width: 168px; /* Ajusta el tamaño para que no se corte el icono de borrar */
-}
-
-.botonR {
-  margin-left: 1rem; /* Margen entre el título y el botón */
-  padding: 0.5rem 1rem; /* Espacio dentro del botón */
-}
-
-.mat-card {
-  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
-  width: 100%; /* Ancho completo hasta que alcance el mínimo */
-  overflow-x: auto;
-}
-
-.container {
-  overflow-x: auto;
-}
-
-.form-emergente {
-  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
-  width: 100%; /* Ancho completo hasta que alcance el mínimo */
-  overflow-x: auto;
-  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
-
-}
-
-/* Fin Responsive */
 
 html, body {
   height: 100%;
@@ -68,6 +24,8 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overflow-y: hidden;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 .titulo {
@@ -220,3 +178,60 @@ body {
   background-color: #f0f0f0;
   border-radius: 10px;
 }
+
+/* Responsive */
+.custom-table {
+  min-width: 400px;  /* Ancho mínimo para la tabla */
+  overflow-x: auto;  /* Permitir scroll horizontal */
+}
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+
+  }
+
+  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+  .custom-table th, .custom-table td {
+    padding: 6px; /* Reduce el espacio entre celdas */
+  }
+}
+
+.mat-column-acciones {
+  min-width: 168px; /* Ajusta el tamaño para que no se corte el icono de borrar */
+}
+
+.botonR {
+  margin-left: 1rem; /* Margen entre el título y el botón */
+  padding: 0.5rem 1rem; /* Espacio dentro del botón */
+}
+
+.mat-card {
+  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
+
+.container {
+  overflow-x: auto;
+}
+
+.form-emergente {
+  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
+
+}
+
+/* Fin Responsive */
