@@ -3,7 +3,13 @@
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Tarjetas</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaTarjeta()">Registrar nueva tarjeta</button>
+        <button
+          mat-stroked-button
+          color="warn"
+          class="btn round mb-3 botonR"
+          (click)="registrarNuevaTarjeta()"
+          [appRole]="['Encargado']"
+        >Registrar nueva tarjeta</button>
       </div>
     </div>
 
@@ -92,10 +98,10 @@
                 <button class="btn" mat-icon-button matTooltip="Ver" (click)="verTarjeta(tarjeta, false)">
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
-                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verTarjeta(tarjeta, true)">
+                <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verTarjeta(tarjeta, true)" [appRole]="['Encargado']">
                   <mat-icon class="editar">edit</mat-icon>
                 </button>
-                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarTarjeta(tarjeta.id)">
+                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarTarjeta(tarjeta.id)" [appRole]="['Encargado']">
                   <mat-icon class="eliminar">delete</mat-icon>
                 </button>
               </mat-cell>
