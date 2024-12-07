@@ -3,7 +3,13 @@
     <div class="row">
       <div class="d-flex justify-content-between align-items-center w-100">
         <p class="titulo">Cuentas Corrientes</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaCuenta()">Registrar cuenta corriente</button>
+        <button
+          mat-stroked-button
+          color="warn"
+          class="btn round mb-3 botonR"
+          (click)="registrarNuevaCuenta()"
+          *appRole="['Administrador']"
+        >Registrar cuenta corriente</button>
       </div>
     </div>
     <mat-divider></mat-divider>
