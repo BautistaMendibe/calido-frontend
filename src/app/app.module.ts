@@ -78,6 +78,7 @@ import { RecuperarContrasenaComponent } from './modules/auth/recuperar-contrasen
 import { AsignarCuentaCorrienteComponent } from './modules/clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component';
 import { GenerarReportesComponent } from './modules/reportes/generar-reportes/generar-reportes.component';
 import { QRVentanaComponent } from './modules/qr-ventana/qr-ventana.component';
+import { RoleDirective } from './directives/role.directive';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -142,7 +143,8 @@ registerLocaleData(localeEs, 'es');
     RecuperarContrasenaComponent,
     GenerarReportesComponent,
     AsignarCuentaCorrienteComponent,
-    QRVentanaComponent
+    QRVentanaComponent,
+    RoleDirective
   ],
   imports: [
     BrowserModule,
