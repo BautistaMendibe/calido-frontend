@@ -12,6 +12,8 @@
   --bg-card: #fffff;
   --color-border-card: #fffff;
   --color-text-title: #575757;
+  --color-title-item-card: #494949;
+  --bg-hover-items-home: #f8f8f8;
 }
 
 .dark-mode {
@@ -25,8 +27,9 @@
   --bg-card: #2A2A3B;
   --color-border-card: #3E3E4E;
   --color-text-title: #EDEDED;
+  --color-title-item-card: #aeaeae;
+  --bg-hover-items-home: #2e2e3c;
 }
-
 
 html, body {
   height: 100%;
@@ -46,10 +49,11 @@ body {
 mat-card {
   background-color: var(--bg-card) !important;
   border: 1px solid var(--border-color-nav);
+  color: var(--color-title-item-card) !important;
 }
 
 h2 {
-  color: var(--color-text-title);
+  color: var(--color-text-title) !important;
 }
 
 
