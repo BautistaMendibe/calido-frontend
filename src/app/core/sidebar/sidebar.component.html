@@ -2,7 +2,8 @@
      [ngClass]="{'expanded': sideNavState}"
      (mouseenter)="onSinenavToggleMouse()"
      (mouseleave)="onSinenavToggleMouse()"
-     [@onSideNavChange]="sideNavState ? 'open' : 'close'">
+     [@onSideNavChange]="sideNavState ? 'open' : 'close'"
+     [class.dark-mode]="darkMode">
 
   <mat-nav-list *ngIf="!showFiller">
 

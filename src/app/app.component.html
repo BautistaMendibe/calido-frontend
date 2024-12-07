@@ -1,7 +1,7 @@
-<app-header (toggleSideBarForMe)="sideBarToggler($event)"></app-header>
+<app-header (toggleSideBarForMe)="sideBarToggler($event)" (toggleThemeEmmiter)="toggleTheme($event)"></app-header>
 <mat-drawer-container>
   <mat-drawer mode="side" class="mat-elevation-z9 onSidebar" [opened]="sideBarOpen" position="start">
-    <app-sidebar (toggleSideBarForMe)="sideBarToggler($event)"></app-sidebar>
+    <app-sidebar (toggleSideBarForMe)="sideBarToggler($event)" [darkMode]="darkMode"></app-sidebar>
   </mat-drawer>
   <mat-drawer-content class="drawer">
     <router-outlet></router-outlet>

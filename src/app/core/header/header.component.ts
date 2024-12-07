@@ -11,6 +11,7 @@ import {ThemeCalidoService} from "../../services/theme.service";
 })
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
+  @Output() toggleThemeEmmiter: EventEmitter<boolean> = new EventEmitter();
   public estaLogeado: boolean = false;
   public nombreApellido: string = '';
   public logoUrl: string = '';
@@ -54,9 +55,11 @@ export class HeaderComponent implements OnInit {
     this.darkMode = this.themeService.isDarkMode();
   }
 
+  // Metodo para cambiar el tema de oscuro a claro y viceversa
   public toggleTheme() {
     this.themeService.toggleDarkMode();
     this.obtenerInformacionTema();
+    this.toggleThemeEmmiter.emit(this.darkMode);
   }
 
   // Metodo que obtiene el logo para utilizar en el header desde la configuración

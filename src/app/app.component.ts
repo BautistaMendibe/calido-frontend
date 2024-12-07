@@ -44,4 +44,8 @@ export class AppComponent implements OnInit{
       this.sideBarOpen = event;
     }
   }
+
+  toggleTheme(event: any) {
+    this.darkMode = event;
+  }
 }

@@ -1,4 +1,4 @@
-import {Component, EventEmitter, HostListener, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, HostListener, Input, OnInit, Output} from '@angular/core';
 import {Menu} from "../../models/menu.model";
 import {
   animateSubText,
@@ -19,6 +19,7 @@ import {filter} from "rxjs";
 export class SidebarComponent implements OnInit {
 
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
+  @Input() darkMode: boolean = false;
   menuItems: Menu[] = [
     {id: 1, nombre: 'Inicio', path:'', icon: 'home', activo: false, subMenu: []},
     {id: 2, nombre: 'Ventas', path:'registrar-venta', icon: 'sell', activo: false, subMenu: [

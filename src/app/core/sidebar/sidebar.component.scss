@@ -128,7 +128,7 @@ a {
 .sidenavContainer {
   min-width: 60px;
   height: calc(100vh - 64px);
-  background-color: #f5f5f5;
+  background-color: var(--header-bg);
   overflow-y: hidden;
   overflow-x: hidden;
 
