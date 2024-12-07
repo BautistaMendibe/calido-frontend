@@ -14,6 +14,7 @@ export class HeaderComponent implements OnInit {
   public estaLogeado: boolean = false;
   public nombreApellido: string = '';
   public logoUrl: string = '';
+  public darkMode: boolean = false;
 
   constructor(
     private authService: AuthService,
@@ -24,6 +25,7 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.authService.authenticationStatus$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
         this.obtenerLogo();
@@ -48,8 +50,13 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
+  }
+
   public toggleTheme() {
     this.themeService.toggleDarkMode();
+    this.obtenerInformacionTema();
   }
 
   // Metodo que obtiene el logo para utilizar en el header desde la configuración

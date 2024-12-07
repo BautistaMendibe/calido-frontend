@@ -10,7 +10,7 @@ export class ThemeCalidoService {
 
   private darkMode: boolean = false;
 
-  toggleDarkMode() {
+  public toggleDarkMode() {
     this.darkMode = !this.darkMode;
     const classList = document.body.classList;
     if (this.darkMode) {

@@ -1,4 +1,5 @@
 import {Component, HostListener, OnInit} from '@angular/core';
+import {ThemeCalidoService} from "./services/theme.service";
 
 @Component({
   selector: 'app-root',
@@ -9,8 +10,9 @@ export class AppComponent implements OnInit{
   title = 'front';
   sideBarOpen = false;
   screenWidth: number = 0;
+  darkMode: boolean = false;
 
-  constructor() {}
+  constructor(private themeService: ThemeCalidoService) {}
 
   ngOnInit() {
     this.obtenerInformacionTema();
@@ -19,12 +21,7 @@ export class AppComponent implements OnInit{
   }
 
   obtenerInformacionTema() {
-    const temaGuardado = localStorage.getItem('darkMode');
-    if (temaGuardado === 'true') {
-      document.body.classList.add('dark-theme');
-    } else {
-      document.body.classList.remove('dark-theme');
-    }
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   calcularSizeScreen() {

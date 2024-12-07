@@ -18,9 +18,13 @@
             </span>
           </button>
           <mat-menu #menu="matMenu">
-            <button mat-menu-item class="btn" (click)="toggleTheme()">
+            <button mat-menu-item class="btn" (click)="toggleTheme()" *ngIf="!darkMode">
+              <mat-icon>brightness_3</mat-icon>
+               Modo oscuro
+            </button>
+            <button mat-menu-item class="btn" (click)="toggleTheme()" *ngIf="darkMode">
               <mat-icon>wb_sunny</mat-icon>
-              Modo oscuro
+              Modo claro
             </button>
             <button mat-menu-item class="btn" id="btnSalir" (click)="exit()">
               <mat-icon>exit_to_app</mat-icon>
