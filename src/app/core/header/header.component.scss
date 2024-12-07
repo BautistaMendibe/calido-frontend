@@ -5,6 +5,19 @@
 .dark-mode {
   background: #2A2A3B;
   color: #EDEDED;
+
+  button {
+    color: #EDEDED;
+  }
+
+  button:hover {
+    background-color: #333349;
+    color: #FFFFFF;
+  }
+
+  mat-icon {
+    color: #EDEDED;
+  }
 }
 
 button:focus {

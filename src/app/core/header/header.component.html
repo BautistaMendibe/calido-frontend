@@ -17,16 +17,12 @@
               {{nombreApellido}}
             </span>
           </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item class="btn" (click)="toggleTheme()" *ngIf="!darkMode">
-              <mat-icon>brightness_3</mat-icon>
-               Modo oscuro
+          <mat-menu #menu="matMenu" [class.dark-mode]="darkMode">
+            <button mat-menu-item (click)="toggleTheme()">
+              <mat-icon>{{ darkMode ? 'wb_sunny' : 'brightness_3' }}</mat-icon>
+              {{ darkMode ? 'Modo claro' : 'Modo oscuro' }}
             </button>
-            <button mat-menu-item class="btn" (click)="toggleTheme()" *ngIf="darkMode">
-              <mat-icon>wb_sunny</mat-icon>
-              Modo claro
-            </button>
-            <button mat-menu-item class="btn" id="btnSalir" (click)="exit()">
+            <button mat-menu-item (click)="exit()">
               <mat-icon>exit_to_app</mat-icon>
               Salir
             </button>
