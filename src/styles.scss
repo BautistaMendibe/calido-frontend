@@ -19,7 +19,6 @@
   --mdc-outlined-button-outline-color: red;
   --button-hover: #e15b35;
   --boder-mat-card-calido: 0px;
-  --h2-title-color: #e15b35;
 }
 
 .dark-mode {
@@ -40,7 +39,6 @@
   --mdc-outlined-button-outline-color: blue;
   --button-hover: #e15b35;
   --boder-mat-card-calido: 1px solid #414141;
-  --h2-title-color: #EDEDED;
 }
 
 html, body {
@@ -65,7 +63,7 @@ mat-card {
 }
 
 h2 {
-  color: var(--h2-title-color) !important;
+  color: var(--color-text-title) !important;
 }
 
 h4 {
