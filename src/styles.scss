@@ -19,6 +19,7 @@
   --mdc-outlined-button-outline-color: red;
   --button-hover: #e15b35;
   --boder-mat-card-calido: 0px;
+  --color-input-text-box: #131313;
 }
 
 .dark-mode {
@@ -39,6 +40,7 @@
   --mdc-outlined-button-outline-color: blue;
   --button-hover: #e15b35;
   --boder-mat-card-calido: 1px solid #414141;
+  --color-input-text-box: #EDEDED;
 }
 
 html, body {
@@ -81,6 +83,10 @@ h4 {
 
 mat-label {
   color: var(--color-text-title) !important;
+}
+
+input {
+  color: var(--color-input-text-box) !important;
 }
 
 .custom-input {
