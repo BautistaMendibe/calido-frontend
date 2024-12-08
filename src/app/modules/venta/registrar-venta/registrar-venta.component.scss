@@ -165,8 +165,9 @@
 }
 
 .producto-item {
-  background-color: white;
+  background-color: var(--bg-card);
   position: relative;
+  color: var(--color-text-title);
 }
 
 .producto-item:hover {
@@ -211,6 +212,10 @@
 .codigoBarra {
   font-size: 12px;
   color: #9c9898;
+}
+
+.text-muted-custom {
+  color: grey
 }
 
 .stock-disponible {
