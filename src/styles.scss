@@ -89,6 +89,10 @@ input {
   color: var(--color-input-text-box) !important;
 }
 
+mat-select {
+  color: var(--color-input-text-box) !important;
+}
+
 .custom-input {
   .mat-mdc-form-field-flex {
     border-color: #e15b35 !important; /* Cambiar el color del borde */
