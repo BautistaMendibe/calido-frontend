@@ -13,6 +13,7 @@ import { ProveedoresService } from "../../../services/proveedores.service";
 import {Promocion} from "../../../models/promociones.model";
 import {PromocionesService} from "../../../services/promociones.service";
 import {FiltrosPromociones} from "../../../models/comandos/FiltrosPromociones.comando";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-producto',
@@ -33,6 +34,7 @@ export class RegistrarProductoComponent implements OnInit {
   public esConsulta: boolean;
   public editarPrecioDeVenta: boolean = false;
   public promociones: Promocion[] = [];
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -42,6 +44,7 @@ export class RegistrarProductoComponent implements OnInit {
     private proveedoresService: ProveedoresService,
     private dialogRef: MatDialogRef<RegistrarProductoComponent>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarProductosComponent;
       producto: Producto;
@@ -59,6 +62,7 @@ export class RegistrarProductoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
 
     if (this.data.formDesactivado) {
@@ -90,6 +94,10 @@ export class RegistrarProductoComponent implements OnInit {
     });
 
     this.form.get('txPromocion')?.valueChanges.subscribe(() => this.calcularPrecioFinalDeVenta());
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {
