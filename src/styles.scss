@@ -122,33 +122,6 @@ mat-paginator {
   color: var(--header-color) !important;
 }
 
-.custom-input {
-  .mat-mdc-form-field-flex {
-    border-color: #e15b35 !important; /* Cambiar el color del borde */
-  }
-
-  .mat-mdc-form-field-label {
-    color: #e15b35 !important; /* Cambiar el color del texto del label */
-  }
-
-  .mat-mdc-form-field-outline {
-    border-color: #e15b35 !important; /* Cambiar el color del borde (outline) */
-  }
-
-  .mat-mdc-form-field-infix input {
-    color: #e15b35 !important; /* Cambiar el color del texto ingresado */
-  }
-
-  &:hover .mat-mdc-form-field-outline {
-    border-color: #ff7043 !important; /* Cambiar el color del borde al hover */
-  }
-
-  &.mat-focused .mat-mdc-form-field-outline {
-    border-color: #ff5722 !important; /* Cambiar el color del borde al focus */
-  }
-}
-
-
 
 .titulo {
   font-weight: 500;
