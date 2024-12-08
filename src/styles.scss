@@ -16,7 +16,10 @@
   --color-title-item-card: #494949;
   --bg-hover-items-home: #f8f8f8;
   --mat-divider-color: #ddd;
-  --mdc-outlined-button-outline-color: red
+  --mdc-outlined-button-outline-color: red;
+  --button-hover: #e15b35;
+  --boder-mat-card-calido: 0px;
+  --h2-title-color: #e15b35;
 }
 
 .dark-mode {
@@ -34,7 +37,10 @@
   --color-title-item-card: #aeaeae;
   --bg-hover-items-home: #2e2e3c;
   --mat-divider-color: #414141;
-  --mdc-outlined-button-outline-color: blue
+  --mdc-outlined-button-outline-color: blue;
+  --button-hover: #e15b35;
+  --boder-mat-card-calido: 1px solid #414141;
+  --h2-title-color: #EDEDED;
 }
 
 html, body {
@@ -54,21 +60,57 @@ body {
 
 mat-card {
   background-color: var(--bg-card) !important;
-  border: 1px solid var(--border-color-nav);
+  border: var(--boder-mat-card-calido) !important;
   color: var(--color-title-item-card) !important;
 }
 
 h2 {
+  color: var(--h2-title-color) !important;
+}
+
+h4 {
   color: var(--color-text-title) !important;
 }
 
-/* Change the border color */
+/* Change the border color
 .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
 .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
 .mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
-  border-color: var(--border-color) !important;
+  border: 1px solid var(--color-text-title);
+  border-radius: 5px;
+}
+*/
+
+mat-label {
   color: var(--color-text-title) !important;
 }
+
+.custom-input {
+  .mat-mdc-form-field-flex {
+    border-color: #e15b35 !important; /* Cambiar el color del borde */
+  }
+
+  .mat-mdc-form-field-label {
+    color: #e15b35 !important; /* Cambiar el color del texto del label */
+  }
+
+  .mat-mdc-form-field-outline {
+    border-color: #e15b35 !important; /* Cambiar el color del borde (outline) */
+  }
+
+  .mat-mdc-form-field-infix input {
+    color: #e15b35 !important; /* Cambiar el color del texto ingresado */
+  }
+
+  &:hover .mat-mdc-form-field-outline {
+    border-color: #ff7043 !important; /* Cambiar el color del borde al hover */
+  }
+
+  &.mat-focused .mat-mdc-form-field-outline {
+    border-color: #ff5722 !important; /* Cambiar el color del borde al focus */
+  }
+}
+
 
 
 .titulo {
