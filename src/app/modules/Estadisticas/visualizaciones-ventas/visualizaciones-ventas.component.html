@@ -1,35 +1,96 @@
-
-  <div class="container">
-      <div class="row mt-4">
-            <div class="col-md-6 mb-4">
-            <div class="chart-box">
-                <h3>Ventas totales por forma de pago</h3>
-                <iframe src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/home?from=1730466386616&to=1730487986616&timezone=browser&var-start_date=2024-10-29&var-end_date=2024-10-30&orgId=1&theme=light&panelId=11&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
-            </div>
-            </div>
-            <div class="col-md-6 mb-4">
-            <div class="chart-box">
-                <h3>Ventas por fecha y hora</h3>
-                <iframe src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/home?from=1728259200000&to=1730246400000&timezone=browser&var-start_date=2024-10-29&var-end_date=2024-10-30&tab=queries&orgId=1&theme=light&panelId=12&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
-            </div>
-            </div>
-        </div> 
-        <div class="row mt-4">
-            <div class="col-md-6 mb-4">
-            <div class="chart-box">
-                <h5>Ranking de Ventas por Producto</h5>
-                <iframe  src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/new-dashboard?from=1730225126709&to=1730246726709&timezone=browser&orgId=1&theme=light&panelId=2&__feature.dashboardSceneSolo" width= "100%" height="300" frameborder="0"></iframe>
-            </div>
-            </div>
-            <div class="col-md-6 mb-4">
-            <div class="chart-box">
-                <h5>Ranking de Ventas por Categoria</h5>
-                <iframe  src="https://grafanae-production.up.railway.app/d-solo/fe1otfwvr7if4b/new-dashboard?from=1730225126709&to=1730246726709&timezone=browser&orgId=1&theme=light&panelId=7&__feature.dashboardSceneSolo" width="100%" height="300" frameborder="0"></iframe>
-            </div>
-            </div>
-        </div>
+<div class="container">
+  <!-- Filtros -->
+  <div class="filters-container">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">{{'Estadisticas de Ventas'}}</p>
+      </div>
     </div>
 
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <mat-divider></mat-divider>
+    <br>
+    <form [formGroup]="filtersForm" class="filters-row mt-3">
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Inicio</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Fin</mat-label>
+          <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Método de Pago</mat-label>
+          <mat-select formControlName="payment_method">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Categoría</mat-label>
+          <mat-select formControlName="var_category">
+            <mat-option value="">Todas</mat-option>
+            <mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Empleado</mat-label>
+          <mat-select formControlName="employee_name">
+            <mat-option value="">Todos</mat-option>
+            <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee }}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>  
+    </form>
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+          <mat-icon>autorenew</mat-icon>
+          Limpiar
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Gráficos -->
+  <div class="row mt-4">
+    <div class="col-md-12 mb-4">
+      <div class="chart-card chart-full">
+        <h3 class="chart-title"><span class="icon">📊</span> Ventas totales por forma de pago</h3>
+        <iframe [src]="grafanaUrls.formaPago" class="chart-frame"></iframe>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-6 mb-4">
+      <div class="chart-card">
+        <h3 class="chart-title"><span class="icon">📈</span> Ranking de Ventas por Categoría</h3>
+        <iframe [src]="grafanaUrls.categoria" class="chart-frame"></iframe>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="chart-card">
+        <h3 class="chart-title"><span class="icon">⏰</span> Ventas por fecha y hora</h3>
+        <iframe [src]="grafanaUrls.fechaHora" class="chart-frame"></iframe>
+      </div>
+    </div>
+    <div class="col-md-12 mb-4">
+      <div class="chart-card chart-full">
+        <h3 class="chart-title"><span class="icon">👤</span> Ventas por Empleados</h3>
+        <iframe [src]="grafanaUrls.empleados" class="chart-frame"></iframe>
+      </div>
+    </div>
+  </div>
+</div>
