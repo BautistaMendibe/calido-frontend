@@ -7,10 +7,22 @@
     </div>
     <div class="col-4">
       <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
-        <button *ngIf="!venta.anulada" mat-icon-button color="primary" matTooltip="Anular venta" (click)="desHacerVenta()">
+        <button
+          *ngIf="!venta.anulada"
+          mat-icon-button
+          color="primary"
+          matTooltip="Anular venta"
+          (click)="desHacerVenta()"
+          [disabled]="venta.canceladaConSaldo === 1 && venta.comprobanteAfip.comprobante_pdf_url !== null"
+          [appRole]="['Cajero', 'Encargado']">
           <mat-icon class="eliminar">settings_backup_restore</mat-icon>
         </button>
-        <button *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null" mat-icon-button color="primary"  matTooltip="Imprimir comprobante" (click)="imprimirComprobante()">
+        <button
+          *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null"
+          mat-icon-button color="primary"
+          matTooltip="Imprimir comprobante"
+          (click)="imprimirComprobante()"
+          [appRole]="['Administrador', 'Encargado', 'Cajero']">
           <mat-icon class="imprimir">print</mat-icon>
         </button>
       </div>

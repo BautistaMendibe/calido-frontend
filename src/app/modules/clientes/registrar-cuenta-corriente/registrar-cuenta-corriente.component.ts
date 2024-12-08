@@ -77,6 +77,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     }
 
     this.txBalance.disable();
+    this.txDebe.disable();
+    this.txHaber.disable();
 
     if (this.data.editar) {
       this.listaVentasDeshabilitada = false;
