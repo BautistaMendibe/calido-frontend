@@ -16,7 +16,6 @@
   --color-title-item-card: #494949;
   --bg-hover-items-home: #f8f8f8;
   --mat-divider-color: #ddd;
-  --mdc-outlined-button-outline-color: red;
   --button-hover: #e15b35;
   --boder-mat-card-calido: 0px;
   --color-input-text-box: #131313;
@@ -26,6 +25,8 @@
   --mat-table-row-item-outline-color: #ddd;
   --mdc-outlined-text-field-outline-color: #575757;
   --mdc-outlined-text-field-hover-outline-color: #353535;
+  --btn-border-registrar: 1px solid #e15b35;
+  --btn-radius-registrar: 5px;
 }
 
 .dark-mode {
@@ -43,7 +44,6 @@
   --color-title-item-card: #aeaeae;
   --bg-hover-items-home: #2e2e3c;
   --mat-divider-color: #414141;
-  --mdc-outlined-button-outline-color: blue;
   --button-hover: #e15b35;
   --boder-mat-card-calido: 1px solid #414141;
   --color-input-text-box: #EDEDED;
@@ -53,6 +53,8 @@
   --mat-table-row-item-outline-color: #3E3E4E;
   --mdc-outlined-text-field-outline-color: #EDEDED;
   --mdc-outlined-text-field-hover-outline-color: #fafafa;
+  --btn-border-registrar: 1px solid #e15b35;
+  --btn-radius-registrar: 5px;
 }
 
 html, body {
@@ -124,6 +126,11 @@ mat-paginator {
 
 svg {
   fill: var(--color-text-title) !important;
+}
+
+.mat-mdc-outlined-button .mat-mdc-button-touch-target {
+  border: var(--btn-border-registrar) !important;
+  border-radius: var(--btn-radius-registrar) !important;
 }
 
 .titulo {
