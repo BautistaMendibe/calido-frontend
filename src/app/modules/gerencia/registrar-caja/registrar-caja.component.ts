@@ -5,6 +5,7 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {ConsultarCajaComponent} from "../consultar-caja/consultar-caja.component";
 import {Caja} from "../../../models/Caja.model";
 import {CajasService} from "../../../services/cajas.service";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-caja',
@@ -18,6 +19,7 @@ export class RegistrarCajaComponent implements OnInit {
   public esRegistro: boolean;
   public formDesactivado: boolean;
   private referencia: ConsultarCajaComponent;
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -25,6 +27,7 @@ export class RegistrarCajaComponent implements OnInit {
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
     private cajasService: CajasService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarCajaComponent;
       esConsulta: boolean;
@@ -42,11 +45,16 @@ export class RegistrarCajaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
 
     if (this.formDesactivado) {
       this.form.disable();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

@@ -11,6 +11,7 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {Usuario} from "../../../models/usuario.model";
 import {AuthService} from "../../../services/auth.service";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-arqueo-caja',
@@ -28,6 +29,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   public fechaHoy: Date;
   public listaCajas: Caja[] = [];
   public listaEmpleados: Usuario[] = [];
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -37,6 +39,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
     private cajasService: CajasService,
     private usuariosService: UsuariosService,
     private authService: AuthService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarArqueoCajaComponent;
       esConsulta: boolean;
@@ -55,6 +58,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarCajas();
     this.buscarEmpleados();
@@ -67,6 +71,11 @@ export class RegistrarArqueoCajaComponent implements OnInit {
       this.form.disable();
     }
   }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
+  }
+
 
   private crearFormulario() {
     this.form = this.fb.group({
