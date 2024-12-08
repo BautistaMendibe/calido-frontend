@@ -47,10 +47,14 @@
   font-size: 25px;
 }
 
+.nombre-producto {
+  color: var(--color-text-title);
+}
+
 /* Precio del producto */
 .product-price {
   font-size: 18px;
-  color: grey;
+  color: var(--color-text-title);
 }
 
 .product-price-seleccionado {
