@@ -203,6 +203,9 @@ svg {
   align-items: center;
   height: 10vh;
   zoom: 0.6;
+  svg {
+    fill: var(--bg-drawer) !important;
+  }
 }
 
 .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-floating-label {
