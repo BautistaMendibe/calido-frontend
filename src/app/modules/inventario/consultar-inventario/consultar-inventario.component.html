@@ -3,7 +3,13 @@
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Inventario</p>
-        <button mat-stroked-button color="warn" class="btn round mb-3" (click)="registrarNuevoDetalleProducto()">Registrar nuevo producto en inventario</button>
+        <button
+          mat-stroked-button
+          color="warn"
+          class="btn round mb-3"
+          (click)="registrarNuevoDetalleProducto()"
+          [appRole]="['Administrador', 'Encargado']"
+        >Registrar nuevo producto en inventario</button>
       </div>
     </div>
 
@@ -102,7 +108,7 @@
                 <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verDetalleProducto(detalleProducto, true)">
                   <mat-icon class="editar">edit</mat-icon>
                 </button>
-                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarDetalleProducto(detalleProducto.id)">
+                <button mat-icon-button color="primary"  matTooltip="Eliminar" (click)="eliminarDetalleProducto(detalleProducto.id)" [appRole]="['Administrador', 'Encargado']">
                   <mat-icon class="eliminar">delete</mat-icon>
                 </button>
               </mat-cell>

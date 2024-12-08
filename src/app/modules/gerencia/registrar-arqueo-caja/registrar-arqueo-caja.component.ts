@@ -71,7 +71,7 @@ export class RegistrarArqueoCajaComponent implements OnInit {
   private crearFormulario() {
     this.form = this.fb.group({
       txCaja: [this.data.arqueo?.caja.id || '', [Validators.required]],
-      txFechaApertura: [this.data.arqueo?.fechaApertura || new Date(), [Validators.required]],
+      txFechaApertura: [this.data.arqueo?.fechaApertura || new Date(new Date().setHours(0, 0, 0, 0)), [Validators.required]],
       txHoraApertura: [this.data.arqueo?.horaApertura || this.getHoraActual(), [Validators.required]],
       txMontoInicial: [this.data.arqueo?.montoInicial || '', [Validators.required]],
       txResponsable: [this.data.arqueo?.responsable?.id || '', [Validators.required]]
@@ -80,10 +80,14 @@ export class RegistrarArqueoCajaComponent implements OnInit {
 
   private getHoraActual(): string {
     const ahora = new Date();
-    const horas = String(ahora.getHours()).padStart(2, '0'); // Asegura formato 2 dígitos
-    const minutos = String(ahora.getMinutes()).padStart(2, '0'); // Asegura formato 2 dígitos
-    const segundos = String(ahora.getSeconds()).padStart(2, '0'); // Incluye segundos
-    return `${horas}:${minutos}:${segundos}`;
+    const opciones: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      second: '2-digit',
+      hour12: false,
+      timeZone: 'America/Argentina/Buenos_Aires',
+    };
+    return new Intl.DateTimeFormat('es-AR', opciones).format(ahora);
   }
 
   private obtenerEmpleadoLogueado() {

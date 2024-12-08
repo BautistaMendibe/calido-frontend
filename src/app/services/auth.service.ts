@@ -3,6 +3,7 @@ import {BehaviorSubject, Observable} from "rxjs";
 import {environmentDEV} from "../../environments/environment-dev";
 import { jwtDecode } from 'jwt-decode';
 import {SnackBarService} from "./snack-bar.service";
+import {RoleDirective} from "../shared/directives/role.directive";
 
 
 @Injectable({
@@ -25,6 +26,7 @@ export class AuthService {
     public logOut() {
         localStorage.removeItem('auth_token');
         this.updateAuthenticationStatus(false);
+        RoleDirective.clearRoleCache();
     }
 
     public getToken(): string {
