@@ -31,7 +31,6 @@ export class RoleDirective implements OnChanges {
     }
 
     this.userRoles = RoleDirective.cachedUserRoles || [];
-    console.log('User Roles (cached):', this.userRoles);
   }
 
   ngOnChanges(): void {
@@ -48,6 +47,10 @@ export class RoleDirective implements OnChanges {
 
   private hasRequiredRole(): boolean {
     return this.allowedRoles.some((role) => this.userRoles.includes(role));
+  }
+
+  static clearRoleCache(): void {
+    RoleDirective.cachedUserRoles = null;
   }
 }
 
