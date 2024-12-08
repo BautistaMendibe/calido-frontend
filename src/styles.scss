@@ -24,7 +24,12 @@
   --bg-hover-generar-reporte: #f1f0f0;
   --mat-table-row-item-outline-color: #ddd;
   --mdc-outlined-text-field-outline-color: #575757;
+  --mdc-outlined-text-field-disabled-outline-color: #bdb2b2;
+  --mdc-outlined-text-field-disabled-label-text-color: #bdb2b2;
   --mdc-outlined-text-field-hover-outline-color: #353535;
+  --mdc-outlined-text-field-focus-outline-color: #e15b35;
+  --mdc-outlined-text-field-focus-label-text-color: #e15b35;
+  --mdc-outlined-text-field-label-text-color: #131313;
   --btn-border-registrar: 1px solid #e15b35;
   --btn-radius-registrar: 5px;
   --mdc-outlined-button-outline-color: #ffffff;
@@ -57,7 +62,12 @@
   --bg-hover-generar-reporte: #2e2e42;
   --mat-table-row-item-outline-color: #3E3E4E;
   --mdc-outlined-text-field-outline-color: #EDEDED;
+  --mdc-outlined-text-field-disabled-outline-color: #1b1b23;
+  --mdc-outlined-text-field-disabled-label-text-color: rgba(21, 21, 24, 0.98);
   --mdc-outlined-text-field-hover-outline-color: #fafafa;
+  --mdc-outlined-text-field-focus-outline-color: #e15b35;
+  --mdc-outlined-text-field-focus-label-text-color: #e15b35;
+  --mdc-outlined-text-field-label-text-color: #EDEDED;
   --btn-border-registrar: 1px solid #e15b35;
   --btn-radius-registrar: 5px;
   --mdc-outlined-button-outline-color: #2A2A3B;
@@ -105,9 +115,10 @@ h4 {
 }
 */
 
+/*
 mat-label {
   color: var(--color-text-title) !important;
-}
+}*/
 
 input {
   color: var(--color-input-text-box) !important;
@@ -147,6 +158,10 @@ svg {
   font-weight: 500;
   color: #e15b35;
   font-size: 26px;
+}
+
+.container {
+  background-color: var(--bg-card);
 }
 
 .notify-success {
@@ -349,7 +364,6 @@ svg {
   width: 100%; /* Ancho completo hasta que alcance el mínimo */
   overflow-x: auto;
   overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
-
 }
 
 /* Fin Responsive */
