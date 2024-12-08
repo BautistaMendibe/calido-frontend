@@ -122,6 +122,9 @@ mat-paginator {
   color: var(--header-color) !important;
 }
 
+svg {
+  fill: var(--color-text-title) !important;
+}
 
 .titulo {
   font-weight: 500;
