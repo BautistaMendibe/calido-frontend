@@ -310,7 +310,7 @@ svg {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f0f0f0;
+  background-color: var(--bg-drawer);
   border-radius: 10px;
 }
 
