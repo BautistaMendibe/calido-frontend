@@ -93,6 +93,23 @@ mat-select {
   color: var(--color-input-text-box) !important;
 }
 
+mat-table {
+  background-color: var(--bg-card) !important;
+}
+
+mat-header-row {
+  color: var(--header-color) !important;
+}
+
+mat-row {
+  color: var(--header-color) !important;
+}
+
+mat-paginator {
+  background-color: var(--bg-card) !important;
+  color: var(--header-color) !important;
+}
+
 .custom-input {
   .mat-mdc-form-field-flex {
     border-color: #e15b35 !important; /* Cambiar el color del borde */
