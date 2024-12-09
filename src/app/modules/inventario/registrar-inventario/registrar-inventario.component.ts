@@ -19,6 +19,7 @@ import {MovimientoProducto} from "../../../models/movimientoProducto";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-inventario',
@@ -41,6 +42,7 @@ export class RegistrarInventarioComponent implements OnInit {
   public dataSourceMovimientosProducto = new MatTableDataSource(this.movimientosProducto);
   public tablaMovimientosDesactivada: boolean = false;
   public isLoading: boolean = false;
+  public darkMode: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -50,6 +52,7 @@ export class RegistrarInventarioComponent implements OnInit {
     private productoService: ProductosService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarInventarioComponent;
       detalle: DetalleProducto;
@@ -68,6 +71,7 @@ export class RegistrarInventarioComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProductos();
 
@@ -85,6 +89,10 @@ export class RegistrarInventarioComponent implements OnInit {
     if (this.data.editar) {
       this.txProducto.disable();
     }
+  }
+
+  obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

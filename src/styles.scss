@@ -38,6 +38,7 @@
   --border-productos-venta: 1px solid #ddd;
   --bs-secondary-bg: #fdfdfd;
   --detalle-arqueo: #555;
+  --mdc-dialog-container-color: #fdfdfd;
 }
 
 .dark-mode {
@@ -77,6 +78,7 @@
   --border-productos-venta: 1px solid #3E3E4E;
   --bs-secondary-bg: #2A2A3B;
   --detalle-arqueo: #bebebe;
+  --mdc-dialog-container-color: #2A2A3B;
 }
 
 html, body {
@@ -164,6 +166,10 @@ svg {
 
 .container {
   background-color: var(--bg-drawer);
+}
+
+.mat-dialog-container {
+  background-color: var(--bg-drawer) !important;
 }
 
 .notify-success {
