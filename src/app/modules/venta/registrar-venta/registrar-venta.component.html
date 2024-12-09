@@ -246,7 +246,7 @@
             <div *ngFor="let producto of productosSeleccionados">
               <div class="d-flex justify-content-between align-items-center border-bottom p-3 producto-item">
                 <div class="col-4 d-flex flex-column">
-                  <span class="m-0"><b>{{ producto.nombre }}</b></span>
+                  <span class="m-0 product-name"><b>{{ producto.nombre }}</b></span>
                   <span class="text-muted-custom">P/U: $ {{ (producto.precioConIVA) | number:'1.2-2':'es-AR' }}</span>
                   <span class="text-muted-custom" *ngIf="(producto.promocion?.id) &&  producto.promocion?.id != -1" [matTooltip]="producto.promocion.nombre">Promoción: - {{ producto.promocion.porcentajeDescuento + '%' }}</span>
                 </div>
@@ -256,7 +256,7 @@
                   <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)" [disabled]="producto.cantidadSeleccionada == producto.cantidadEnStock">+</button>
                 </div>
                 <div class="text-end col-4">
-                  <span class="m-0 costo"><b>$ {{ (producto.precioConIVA * (1 - (this.producto.promocion ? this.producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadSeleccionada | number:'1.2-2':'es-AR' }}</b></span>
+                  <span class="m-0 costo product-name"><b>$ {{ (producto.precioConIVA * (1 - (this.producto.promocion ? this.producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadSeleccionada | number:'1.2-2':'es-AR' }}</b></span>
                   <div class="iconos-editar-eliminar ">
                     <button mat-icon-button [matTooltip]="'Editar en esta venta'" (click)="editarProductoEnVenta(producto)">
                       <mat-icon>edit</mat-icon>
@@ -271,7 +271,7 @@
           </div>
 
           <!-- Resumen si pagas con tarjeta o con saldo de cuenta corriente-->
-          <div class="container mt-4" *ngIf="productosSeleccionados.length > 0 && (cantidadCuotaSeleccionada.id || this.txCancelarConSaldo.value === true)">
+          <div class="mt-4" *ngIf="productosSeleccionados.length > 0 && (cantidadCuotaSeleccionada.id || this.txCancelarConSaldo.value === true)">
 
             <div class="summary-container">
               <div>
@@ -304,7 +304,7 @@
           </div>
 
           <!-- Botones -->
-          <div class="container mt-4">
+          <div class="mt-4">
             <button class="btn btn-custom" [disabled]="totalVenta == 0 || registrandoVenta" (click)="confirmarVenta()">
               <span>Confirmar venta</span>
               <span class="text-right">
