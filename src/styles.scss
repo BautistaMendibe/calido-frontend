@@ -12,7 +12,7 @@
   --bg-drawer: #fdfdfd;
   --bg-card: #fffff;
   --color-border-card: #fffff;
-  --color-text-title: #575757;
+  --color-text-title: grey;
   --color-title-item-card: #494949;
   --bg-hover-items-home: #f8f8f8;
   --mat-divider-color: #ddd;
@@ -25,7 +25,8 @@
   --mat-table-row-item-outline-color: #ddd;
   --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, .38);
   --mdc-outlined-text-field-disabled-outline-color: rgba(0, 0, 0, .06);
-  --mdc-outlined-text-field-disabled-label-text-color: rgba(0, 0, 0, 0.26);
+  --mdc-outlined-text-field-disabled-label-text-color: rgba(0, 0, 0, 0.38);
+  --mdc-outlined-text-field-disabled-input-text-color: rgba(0, 0, 0, 0.38);
   --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, .6);
   --mdc-outlined-text-field-focus-outline-color: #e15b35;
   --mdc-outlined-text-field-focus-label-text-color: #e15b35;
@@ -41,6 +42,7 @@
   --text-muted-custom: rgba(33, 37, 41, .75);
   --product-name-detalle-venta: #000000;
   --bg-venta-anulada: #f2f2f2;
+  --mat-select-disabled-text-color: rgba(0, 0, 0, 0.38);
 }
 
 .dark-mode {
@@ -68,6 +70,7 @@
   --mdc-outlined-text-field-outline-color: #EDEDED;
   --mdc-outlined-text-field-disabled-outline-color: #363642;
   --mdc-outlined-text-field-disabled-label-text-color: rgba(53, 53, 63, 0.98);
+  --mdc-outlined-text-field-disabled-input-text-color: rgba(255, 255, 255, 0.38);
   --mdc-outlined-text-field-hover-outline-color: #fafafa;
   --mdc-outlined-text-field-focus-outline-color: #e15b35;
   --mdc-outlined-text-field-focus-label-text-color: #e15b35;
@@ -83,6 +86,16 @@
   --text-muted-custom: grey;
   --product-name-detalle-venta: #EDEDED;
   --bg-venta-anulada: #2e2e42;
+  --mat-select-disabled-text-color: rgba(255, 255, 255, 0.38);
+}
+
+.mdc-text-field--outlined.mdc-text-field--disabled .mdc-text-field__input {
+  color: var(--mdc-outlined-text-field-disabled-input-text-color) !important;
+}
+
+select:disabled,
+.mat-mdc-select.mat-mdc-select-disabled .mat-mdc-select-value {
+  color: var(--mat-select-disabled-text-color) !important;
 }
 
 html, body {
@@ -114,20 +127,6 @@ h4 {
   color: var(--color-text-title) !important;
 }
 
-/* Change the border color
-.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
-.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
-.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
-  border: 1px solid var(--color-text-title);
-  border-radius: 5px;
-}
-*/
-
-/*
-mat-label {
-  color: var(--color-text-title) !important;
-}*/
-
 input {
   color: var(--color-input-text-box) !important;
 }
@@ -157,7 +156,7 @@ svg {
   fill: var(--color-text-title) !important;
 }
 
-.mat-mdc-outlined-button .mat-mdc-button-touch-target {
+.mat-mdc-outlined-button {
   border: var(--btn-border-registrar) !important;
   border-radius: var(--btn-radius-registrar) !important;
 }
