@@ -1,96 +1,120 @@
-<div class="container">
-  <!-- Filtros -->
-  <div class="filters-container">
+<div class="container py-3 col-xl-11">
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">{{'Estadisticas de Ventas'}}</p>
+        <p class="titulo">Estadisticas de Ventas</p>
       </div>
     </div>
-
     <mat-divider></mat-divider>
     <br>
-    <form [formGroup]="filtersForm" class="filters-row mt-3">
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha Inicio</mat-label>
-          <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
-          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-          <mat-datepicker #pickerInicio></mat-datepicker>
-        </mat-form-field>
+    <h4 style="color: grey">Filtros de búsqueda</h4>
+
+    <form [formGroup]="filtersForm">
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha Inicio</mat-label>
+            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date"/>
+            <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInicio></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha Fin</mat-label>
+            <input matInput [matDatepicker]="pickerFin" formControlName="end_date"/>
+            <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFin></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Método de Pago</mat-label>
+            <mat-select formControlName="payment_method">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let method of paymentMethods"
+                          [value]="method">{{ method }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha Fin</mat-label>
-          <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
-          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFin></mat-datepicker>
-        </mat-form-field>
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Categoría</mat-label>
+            <mat-select formControlName="var_category">
+              <mat-option value="">Todas</mat-option>
+              <mat-option *ngFor="let category of categories"
+                          [value]="category">{{ category }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Empleado</mat-label>
+            <mat-select formControlName="employee_name">
+              <mat-option value="">Todos</mat-option>
+              <mat-option *ngFor="let employee of employees"
+                          [value]="employee">{{ employee }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Método de Pago</mat-label>
-          <mat-select formControlName="payment_method">
-            <mat-option value="">Todos</mat-option>
-            <mat-option *ngFor="let method of paymentMethods" [value]="method">{{ method }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Categoría</mat-label>
-          <mat-select formControlName="var_category">
-            <mat-option value="">Todas</mat-option>
-            <mat-option *ngFor="let category of categories" [value]="category">{{ category }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Empleado</mat-label>
-          <mat-select formControlName="employee_name">
-            <mat-option value="">Todos</mat-option>
-            <mat-option *ngFor="let employee of employees" [value]="employee">{{ employee }}</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>  
     </form>
+
+
+    <!-- Btn de buscar y limpiar -->
     <div class="row text-right">
       <div class="col d-flex justify-content-end">
-        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()"
+                id="btnLimpiarFiltro">
           <mat-icon>autorenew</mat-icon>
           Limpiar
         </button>
       </div>
     </div>
-  </div>
 
-  <!-- Gráficos -->
-  <div class="row mt-4">
-    <div class="col-md-12 mb-4">
-      <div class="chart-card chart-full">
-        <h3 class="chart-title"><span class="icon">📊</span> Ventas totales por forma de pago</h3>
-        <iframe [src]="grafanaUrls.formaPago" class="chart-frame"></iframe>
+
+  </mat-card>
+  <br>
+
+
+  <mat-card class="mat-card">
+    <mat-card-content>
+      <div class="col-md-12">
+        <!-- Gráficos -->
+        <div class="row mt-4">
+          <div class="col-md-12 mb-4">
+            <div class="chart-card chart-full">
+              <h3 class="chart-title"><span class="icon">📊</span> Ventas totales por forma de pago
+              </h3>
+              <iframe [src]="grafanaUrls.formaPago" class="chart-frame"></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="row mt-4">
+          <div class="col-md-6 mb-4">
+            <div class="chart-card">
+              <h3 class="chart-title"><span class="icon">📈</span> Ranking de Ventas por Categoría</h3>
+              <iframe [src]="grafanaUrls.categoria" class="chart-frame"></iframe>
+            </div>
+          </div>
+          <div class="col-md-6 mb-4">
+            <div class="chart-card">
+              <h3 class="chart-title"><span class="icon">⏰</span> Ventas por fecha y hora</h3>
+              <iframe [src]="grafanaUrls.fechaHora" class="chart-frame"></iframe>
+            </div>
+          </div>
+          <div class="col-md-12 mb-4">
+            <div class="chart-card chart-full">
+              <h3 class="chart-title"><span class="icon">👤</span> Ventas por Empleados</h3>
+              <iframe [src]="grafanaUrls.empleados" class="chart-frame"></iframe>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="row mt-4">
-    <div class="col-md-6 mb-4">
-      <div class="chart-card">
-        <h3 class="chart-title"><span class="icon">📈</span> Ranking de Ventas por Categoría</h3>
-        <iframe [src]="grafanaUrls.categoria" class="chart-frame"></iframe>
-      </div>
-    </div>
-    <div class="col-md-6 mb-4">
-      <div class="chart-card">
-        <h3 class="chart-title"><span class="icon">⏰</span> Ventas por fecha y hora</h3>
-        <iframe [src]="grafanaUrls.fechaHora" class="chart-frame"></iframe>
-      </div>
-    </div>
-    <div class="col-md-12 mb-4">
-      <div class="chart-card chart-full">
-        <h3 class="chart-title"><span class="icon">👤</span> Ventas por Empleados</h3>
-        <iframe [src]="grafanaUrls.empleados" class="chart-frame"></iframe>
-      </div>
-    </div>
-  </div>
+    </mat-card-content>
+  </mat-card>
 </div>
+
+
