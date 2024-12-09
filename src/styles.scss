@@ -39,6 +39,8 @@
   --bs-secondary-bg: #fdfdfd;
   --detalle-arqueo: #555;
   --bg-mat-dialog: red;
+  --text-muted-custom: rgba(33, 37, 41, .75);
+  --product-name-detalle-venta: #000000;
 }
 
 .dark-mode {
@@ -79,6 +81,8 @@
   --bs-secondary-bg: #2A2A3B;
   --detalle-arqueo: #bebebe;
   --bg-mat-dialog: blue;
+  --text-muted-custom: grey;
+  --product-name-detalle-venta: #EDEDED;
 }
 
 html, body {

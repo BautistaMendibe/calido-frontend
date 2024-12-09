@@ -3,6 +3,10 @@
   border: 2px solid #e15b35 !important;
 }
 
+.invoice-title {
+  color: #e15b35 !important;;
+}
+
 /* Estilo general del card de productos */
 .product-list {
   min-height: 85vh;
@@ -215,8 +219,12 @@
   color: #9c9898;
 }
 
+.product-name {
+  color: var(--product-name-detalle-venta);
+}
+
 .text-muted-custom {
-  color: grey
+  color: var(--text-muted-custom);
 }
 
 .stock-disponible {
