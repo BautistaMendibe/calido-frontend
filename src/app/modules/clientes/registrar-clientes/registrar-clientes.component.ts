@@ -14,6 +14,7 @@ import {SpResult} from "../../../models/resultadoSp.model";
 import {CondicionIva} from "../../../models/CondicionIva.model";
 import {VentasService} from "../../../services/ventas.services";
 import {ConsultarClientesComponent} from "../consultar-clientes/consultar-clientes.component";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-clientes',
@@ -38,6 +39,7 @@ export class RegistrarClientesComponent implements OnInit {
   public formDesactivado: boolean;
   public isLoading: boolean = false;
   public pedirCUIT: boolean = false;
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -46,6 +48,7 @@ export class RegistrarClientesComponent implements OnInit {
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     private ventaServive: VentasService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       esConsulta: boolean;
       formDesactivado: boolean;
@@ -64,6 +67,7 @@ export class RegistrarClientesComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProvincias();
     this.buscarCategorias();
@@ -73,6 +77,10 @@ export class RegistrarClientesComponent implements OnInit {
     }
 
     this.tieneProvincia();
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {
