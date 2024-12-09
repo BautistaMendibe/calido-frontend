@@ -9,6 +9,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -27,6 +28,7 @@ export class RegistrarPromocionComponent implements OnInit{
   public promocion: Promocion;
   public esConsulta: boolean;
   public fechaHoy: Date = new Date();
+  public darkMode: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +39,7 @@ export class RegistrarPromocionComponent implements OnInit{
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     private dialog: MatDialog,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       promocion: Promocion,
       esConsulta: boolean,
@@ -48,6 +51,7 @@ export class RegistrarPromocionComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProductos();
 
@@ -66,6 +70,10 @@ export class RegistrarPromocionComponent implements OnInit{
     if (this.promocion) {
       this.setearDatos();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {
