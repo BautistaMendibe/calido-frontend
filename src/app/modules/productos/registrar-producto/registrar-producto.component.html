@@ -1,185 +1,186 @@
-<!-- Formulario HTML -->
-<div class="container py-3 px-4 col-xl-12" [class.dark-mode]="darkMode">
-  <br>
-  <div class="row">
-    <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar producto' : 'Registrar producto'}}</p>
-      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Administrador', 'Cajero', 'Encargado']">
-        <mat-icon class="editar mb-3">edit</mat-icon>
-      </button>
+<div class="custom-dialo-calido" [class.dark-mode]="darkMode">
+  <div class="container py-3 px-4 col-xl-12">
+    <br>
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">{{esConsulta ? 'Consultar producto' : 'Registrar producto'}}</p>
+        <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Administrador', 'Cajero', 'Encargado']">
+          <mat-icon class="editar mb-3">edit</mat-icon>
+        </button>
+      </div>
     </div>
-  </div>
 
 
-  <div class="row">
-    <!-- Columna de Inputs -->
-    <div class="col-md-8 p-2">
-      <form [formGroup]="form">
-        <mat-divider></mat-divider>
-        <br>
-        <!-- Nombre del producto y Código de Barras -->
-        <div class="row pt-4">
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Producto</mat-label>
-              <input type="text" matInput [formControl]="txNombre"/>
-            </mat-form-field>
-            <app-error-messages [control]="txNombre"></app-error-messages>
+    <div class="row">
+      <!-- Columna de Inputs -->
+      <div class="col-md-8 p-2">
+        <form [formGroup]="form">
+          <mat-divider></mat-divider>
+          <br>
+          <!-- Nombre del producto y Código de Barras -->
+          <div class="row pt-4">
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Producto</mat-label>
+                <input type="text" matInput [formControl]="txNombre"/>
+              </mat-form-field>
+              <app-error-messages [control]="txNombre"></app-error-messages>
+            </div>
+            <div class="col-md-6">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Código de Barras</mat-label>
+                <input type="text" matInput [formControl]="txCodigoBarras" maxlength="13"/>
+              </mat-form-field>
+              <app-error-messages [control]="txCodigoBarras"></app-error-messages>
+            </div>
           </div>
-          <div class="col-md-6">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Código de Barras</mat-label>
-              <input type="text" matInput [formControl]="txCodigoBarras" maxlength="13"/>
-            </mat-form-field>
-            <app-error-messages [control]="txCodigoBarras"></app-error-messages>
-          </div>
-        </div>
 
-        <!-- Tipo Producto, Marca, Proveedor -->
-        <div class="row pt-4">
-          <div class="col-md-4">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Tipo Producto</mat-label>
-              <input type="text" matInput [formControl]="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto"/>
-            </mat-form-field>
-            <app-error-messages [control]="txTipoProducto"></app-error-messages>
-            <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
-              <mat-option *ngFor="let tipoProducto of tiposProductoFiltrados" [value]="tipoProducto.nombre">
-                {{tipoProducto.nombre}}
-              </mat-option>
-            </mat-autocomplete>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Marca</mat-label>
-              <input type="text" matInput [formControl]="txMarca" [matAutocomplete]="autoCompleteMarca"/>
-            </mat-form-field>
-            <app-error-messages [control]="txMarca"></app-error-messages>
-            <mat-autocomplete #autoCompleteMarca="matAutocomplete">
-              <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.nombre">
-                {{marca.nombre}}
-              </mat-option>
-            </mat-autocomplete>
-          </div>
-          <div class="col-md-4">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Proveedor</mat-label>
-              <mat-select [formControl]="txProveedor">
-                <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
-                  {{proveedor.nombre}}
+          <!-- Tipo Producto, Marca, Proveedor -->
+          <div class="row pt-4">
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Tipo Producto</mat-label>
+                <input type="text" matInput [formControl]="txTipoProducto" [matAutocomplete]="autoCompleteTipoProducto"/>
+              </mat-form-field>
+              <app-error-messages [control]="txTipoProducto"></app-error-messages>
+              <mat-autocomplete #autoCompleteTipoProducto="matAutocomplete">
+                <mat-option *ngFor="let tipoProducto of tiposProductoFiltrados" [value]="tipoProducto.nombre">
+                  {{tipoProducto.nombre}}
                 </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <app-error-messages [control]="txProveedor"></app-error-messages>
+              </mat-autocomplete>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Marca</mat-label>
+                <input type="text" matInput [formControl]="txMarca" [matAutocomplete]="autoCompleteMarca"/>
+              </mat-form-field>
+              <app-error-messages [control]="txMarca"></app-error-messages>
+              <mat-autocomplete #autoCompleteMarca="matAutocomplete">
+                <mat-option *ngFor="let marca of marcasFiltradas" [value]="marca.nombre">
+                  {{marca.nombre}}
+                </mat-option>
+              </mat-autocomplete>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Proveedor</mat-label>
+                <mat-select [formControl]="txProveedor">
+                  <mat-option *ngFor="let proveedor of listaProveedores" [value]="proveedor.id">
+                    {{proveedor.nombre}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <app-error-messages [control]="txProveedor"></app-error-messages>
+            </div>
+          </div>
+
+          <!-- Descripción -->
+          <div class="row pt-4">
+            <div class="col-md-12">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Descripción</mat-label>
+                <textarea matInput [formControl]="txDescripcion" rows="3"></textarea>
+              </mat-form-field>
+              <app-error-messages [control]="txDescripcion"></app-error-messages>
+            </div>
+          </div>
+
+          <mat-divider></mat-divider>
+          <br>
+        </form>
+      </div>
+
+      <!-- Columna de Subir Imagen -->
+      <div class="col-md-4 p-4">
+        <div class="upload-container d-flex align-items-center mb-2 mt-2"
+             (dragover)="onDragOver($event)"
+             (drop)="onDrop($event)"
+             [ngClass]="{'disabled-container': data.formDesactivado}">
+          <img *ngIf="productoImg" [src]="productoImg" class="preview-img">
+          <span *ngIf="!productoImg" class="upload-text"></span>
+          <input type="file" class="file-input" [attr.disabled]="data.formDesactivado ? true : null" (change)="onFileSelected($event)">
+        </div>
+      </div>
+
+      <!-- Costo Base, Impuestos, Costo Final -->
+      <div class="row pt-4">
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Costo de Compra</mat-label>
+            <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$ " thousandSeparator="," />
+          </mat-form-field>
+          <app-error-messages [control]="txCosto"></app-error-messages>
+        </div>
+        <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+          <span>+</span>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Margen de Ganancia</mat-label>
+            <input
+              type="text"
+              matInput
+              mask="percent.2"
+              suffix="%"
+              [formControl]="txMargenGanancia"/>
+          </mat-form-field>
+          <app-error-messages [control]="txMargenGanancia"></app-error-messages>
+        </div>
+        <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+          <span>=</span>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Precio con IVA (+21%)</mat-label>
+            <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$ " thousandSeparator="," />
+          </mat-form-field>
+          <app-error-messages [control]="txPrecioConIva"></app-error-messages>
+        </div>
+      </div>
+
+      <div class="row pt-4">
+        <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+          <span>-</span>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Descuento por promoción</mat-label>
+            <mat-select [formControl]="txPromocion">
+              <mat-option *ngFor="let promocion of promociones" [value]="promocion.id">
+                {{ promocion.nombre + ' (' + promocion.porcentajeDescuento + '%)' }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <app-error-messages [control]="txPromocion"></app-error-messages>
+        </div>
+        <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
+          <span>=</span>
+        </div>
+        <div class="col-md-2">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Precio Final de Venta</mat-label>
+            <input type="text" matInput [formControl]="txPrecioFinalVenta" mask="separator.2" prefix="$ " thousandSeparator="," />
+          </mat-form-field>
+          <app-error-messages [control]="txPrecioFinalVenta"></app-error-messages>
+        </div>
+      </div>
+
+      <br>
+      <mat-divider class="my-3"></mat-divider>
+
+      <div class="row text-right mt-3 mb-3">
+        <!-- Btn de cancelar, registrar y modificar -->
+        <div class="row text-right">
+          <div class="col d-flex justify-content-end">
+            <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+              {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+            </button>
+            <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProducto()" id="btnBuscar">Registrar</button>
+            <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">Modificar</button>
           </div>
         </div>
-
-        <!-- Descripción -->
-        <div class="row pt-4">
-          <div class="col-md-12">
-            <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Descripción</mat-label>
-              <textarea matInput [formControl]="txDescripcion" rows="3"></textarea>
-            </mat-form-field>
-            <app-error-messages [control]="txDescripcion"></app-error-messages>
-          </div>
-        </div>
-
-        <mat-divider></mat-divider>
-        <br>
-      </form>
+      </div>
+      <br>
     </div>
-
-    <!-- Columna de Subir Imagen -->
-    <div class="col-md-4 p-4">
-      <div class="upload-container d-flex align-items-center mb-2 mt-2"
-           (dragover)="onDragOver($event)"
-           (drop)="onDrop($event)"
-           [ngClass]="{'disabled-container': data.formDesactivado}">
-        <img *ngIf="productoImg" [src]="productoImg" class="preview-img">
-        <span *ngIf="!productoImg" class="upload-text"></span>
-        <input type="file" class="file-input" [attr.disabled]="data.formDesactivado ? true : null" (change)="onFileSelected($event)">
-      </div>
-    </div>
-
-    <!-- Costo Base, Impuestos, Costo Final -->
-    <div class="row pt-4">
-      <div class="col-md-2">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Costo de Compra</mat-label>
-          <input type="text" matInput [formControl]="txCosto" mask="separator.2" prefix="$ " thousandSeparator="," />
-        </mat-form-field>
-        <app-error-messages [control]="txCosto"></app-error-messages>
-      </div>
-      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
-        <span>+</span>
-      </div>
-      <div class="col-md-2">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Margen de Ganancia</mat-label>
-          <input
-            type="text"
-            matInput
-            mask="percent.2"
-            suffix="%"
-            [formControl]="txMargenGanancia"/>
-        </mat-form-field>
-        <app-error-messages [control]="txMargenGanancia"></app-error-messages>
-      </div>
-      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
-        <span>=</span>
-      </div>
-      <div class="col-md-2">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Precio con IVA (+21%)</mat-label>
-          <input type="text" matInput [formControl]="txPrecioConIva" mask="separator.2" prefix="$ " thousandSeparator="," />
-        </mat-form-field>
-        <app-error-messages [control]="txPrecioConIva"></app-error-messages>
-      </div>
-    </div>
-
-    <div class="row pt-4">
-      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
-        <span>-</span>
-      </div>
-      <div class="col-md-2">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Descuento por promoción</mat-label>
-          <mat-select [formControl]="txPromocion">
-            <mat-option *ngFor="let promocion of promociones" [value]="promocion.id">
-              {{ promocion.nombre + ' (' + promocion.porcentajeDescuento + '%)' }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <app-error-messages [control]="txPromocion"></app-error-messages>
-      </div>
-      <div class="col-md-1 d-flex align-items-center justify-content-center symbol-cost" style="margin-top: -10px">
-        <span>=</span>
-      </div>
-      <div class="col-md-2">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Precio Final de Venta</mat-label>
-          <input type="text" matInput [formControl]="txPrecioFinalVenta" mask="separator.2" prefix="$ " thousandSeparator="," />
-        </mat-form-field>
-        <app-error-messages [control]="txPrecioFinalVenta"></app-error-messages>
-      </div>
-    </div>
-
-    <br>
-    <mat-divider class="my-3"></mat-divider>
-
-    <div class="row text-right mt-3 mb-3">
-      <!-- Btn de cancelar, registrar y modificar -->
-      <div class="row text-right">
-        <div class="col d-flex justify-content-end">
-          <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-            {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
-          </button>
-          <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarProducto()" id="btnBuscar">Registrar</button>
-          <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarProducto()" id="btnBuscar2">Modificar</button>
-        </div>
-      </div>
-    </div>
-    <br>
   </div>
 </div>

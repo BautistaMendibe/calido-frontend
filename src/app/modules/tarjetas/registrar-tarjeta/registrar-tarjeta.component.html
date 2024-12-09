@@ -1,126 +1,128 @@
-<div class="container py-3 px-4 col-xl-12" [class.dark-mode]="darkMode">
-  <br>
-  <div class="row">
-    <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar Tarjetas' : 'Registrar Tarjeta'}}</p>
-      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Encargado']">
-        <mat-icon class="editar">edit</mat-icon>
-      </button>
-    </div>
-  </div>
-
-  <mat-divider></mat-divider>
-
-  <br>
-  <form [formGroup]="form">
-    <div class="row pt-4">
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Tarjeta</mat-label>
-          <input type="text" matInput [formControl]="txTarjeta"/>
-        </mat-form-field>
-        <app-error-messages [control]="txTarjeta"></app-error-messages>
-      </div>
-
-      <div class="col-md-3">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Tipo de Tarjeta</mat-label>
-          <mat-select [formControl]="txTipoTarjeta">
-            <mat-option *ngFor="let tipoTarjeta of listaTiposTarjetas" [value]="tipoTarjeta.id">
-              {{ tipoTarjeta.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <app-error-messages [control]="txTipoTarjeta"></app-error-messages>
-      </div>
-
-    <mat-divider class="my-3"></mat-divider>
+<div class="custom-dialo-calido" [class.dark-mode]="darkMode">
+  <div class="container py-3 px-4 col-xl-12">
     <br>
-
-    <!-- loading -->
-    <div class="spinner-wrapper" *ngIf="isLoading">
-      <mat-spinner></mat-spinner>
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">{{esConsulta ? 'Consultar Tarjetas' : 'Registrar Tarjeta'}}</p>
+        <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Encargado']">
+          <mat-icon class="editar">edit</mat-icon>
+        </button>
+      </div>
     </div>
 
+    <mat-divider></mat-divider>
+
     <br>
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tarjeta</mat-label>
+            <input type="text" matInput [formControl]="txTarjeta"/>
+          </mat-form-field>
+          <app-error-messages [control]="txTarjeta"></app-error-messages>
+        </div>
 
-      <mat-card class="mat-card" [hidden]="listaCuotas.length === 0">
-        <mat-card-content>
-          <div class="row">
-            <div class="col-md-12">
-              <mat-table [dataSource]="dataSourceCuotas" matSort [class.disabled-table]="formDesactivado || listaCuotasDeshabilitada">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tipo de Tarjeta</mat-label>
+            <mat-select [formControl]="txTipoTarjeta">
+              <mat-option *ngFor="let tipoTarjeta of listaTiposTarjetas" [value]="tipoTarjeta.id">
+                {{ tipoTarjeta.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <app-error-messages [control]="txTipoTarjeta"></app-error-messages>
+        </div>
 
-                <!-- Columna de selección -->
-                <ng-container matColumnDef="seleccionar">
-                  <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
-                  <mat-cell *matCellDef="let cuota">
-                    <mat-checkbox (change)="toggleSelection($event, cuota)"
-                                  [checked]="isSelected(cuota)">
-                    </mat-checkbox>
-                  </mat-cell>
-                </ng-container>
+        <mat-divider class="my-3"></mat-divider>
+        <br>
 
-                <!-- Columna de cuotas -->
-                <ng-container matColumnDef="cuota">
-                  <mat-header-cell *matHeaderCellDef>CUOTA</mat-header-cell>
-                  <mat-cell *matCellDef="let cuota">{{ cuota.cantidadCuotas }}</mat-cell>
-                </ng-container>
+        <!-- loading -->
+        <div class="spinner-wrapper" *ngIf="isLoading">
+          <mat-spinner></mat-spinner>
+        </div>
 
-                <!-- Columna de interés -->
-                <ng-container matColumnDef="interes">
-                  <mat-header-cell *matHeaderCellDef>% INTERÉS</mat-header-cell>
-                  <mat-cell *matCellDef="let cuota">
-                    <div (click)="toggleEdit(cuota, 'interes')" class="editable-cell">
-                      <span *ngIf="!cuota.isEditingInteres">{{ cuota.interes }}%</span>
-                      <input *ngIf="cuota.isEditingInteres"
-                             type="number"
-                             [(ngModel)]="cuota.interes"
-                             [disabled]="!isSelected(cuota)"
-                             [ngModelOptions]="{standalone: true}"
-                             (blur)="disableEdit(cuota, 'interes')"
-                             (keydown.enter)="disableEdit(cuota, 'interes')"
-                             (input)="cuota.interes = Math.min(100, Math.max(0, +cuota.interes || 0))"
-                             min="0" max="100" maxlength="3"
-                             class="full-width-input" />
-                    </div>
-                  </mat-cell>
-                </ng-container>
+        <br>
 
-              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-              <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
-              </mat-table>
+        <mat-card class="mat-card" [hidden]="listaCuotas.length === 0">
+          <mat-card-content>
+            <div class="row">
+              <div class="col-md-12">
+                <mat-table [dataSource]="dataSourceCuotas" matSort [class.disabled-table]="formDesactivado || listaCuotasDeshabilitada">
 
-              <!-- Paginador -->
-              <mat-paginator
-                             [length]="listaCuotas.length"
-                             [disabled]="formDesactivado"
-                             [pageSize]="10"
-                             [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+                  <!-- Columna de selección -->
+                  <ng-container matColumnDef="seleccionar">
+                    <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
+                    <mat-cell *matCellDef="let cuota">
+                      <mat-checkbox (change)="toggleSelection($event, cuota)"
+                                    [checked]="isSelected(cuota)">
+                      </mat-checkbox>
+                    </mat-cell>
+                  </ng-container>
+
+                  <!-- Columna de cuotas -->
+                  <ng-container matColumnDef="cuota">
+                    <mat-header-cell *matHeaderCellDef>CUOTA</mat-header-cell>
+                    <mat-cell *matCellDef="let cuota">{{ cuota.cantidadCuotas }}</mat-cell>
+                  </ng-container>
+
+                  <!-- Columna de interés -->
+                  <ng-container matColumnDef="interes">
+                    <mat-header-cell *matHeaderCellDef>% INTERÉS</mat-header-cell>
+                    <mat-cell *matCellDef="let cuota">
+                      <div (click)="toggleEdit(cuota, 'interes')" class="editable-cell">
+                        <span *ngIf="!cuota.isEditingInteres">{{ cuota.interes }}%</span>
+                        <input *ngIf="cuota.isEditingInteres"
+                               type="number"
+                               [(ngModel)]="cuota.interes"
+                               [disabled]="!isSelected(cuota)"
+                               [ngModelOptions]="{standalone: true}"
+                               (blur)="disableEdit(cuota, 'interes')"
+                               (keydown.enter)="disableEdit(cuota, 'interes')"
+                               (input)="cuota.interes = Math.min(100, Math.max(0, +cuota.interes || 0))"
+                               min="0" max="100" maxlength="3"
+                               class="full-width-input" />
+                      </div>
+                    </mat-cell>
+                  </ng-container>
+
+                  <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: columnas;"></mat-row>
+                </mat-table>
+
+                <!-- Paginador -->
+                <mat-paginator
+                  [length]="listaCuotas.length"
+                  [disabled]="formDesactivado"
+                  [pageSize]="10"
+                  [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+              </div>
             </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+          </mat-card-content>
+        </mat-card>
 
-      <h5 *ngIf="!isLoading && !(this.listaCuotas.length > 0)" class="alert alert-secondary text-center">
-        No se encuentran cuotas disponibles, por favor realice una nueva búsqueda.
-      </h5>
+        <h5 *ngIf="!isLoading && !(this.listaCuotas.length > 0)" class="alert alert-secondary text-center">
+          No se encuentran cuotas disponibles, por favor realice una nueva búsqueda.
+        </h5>
+      </div>
+    </form>
+
+
+    <br>
+    <mat-divider class="my-3"></mat-divider>
+
+    <!-- Btn de cancelar, registrar y modificar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+          {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+        </button>
+        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaTarjeta()" id="btnBuscar">Registrar</button>
+        <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarTarjeta()" id="btnBuscar2">Modificar</button>
+      </div>
     </div>
-  </form>
 
-
-  <br>
-  <mat-divider class="my-3"></mat-divider>
-
-  <!-- Btn de cancelar, registrar y modificar -->
-  <div class="row text-right">
-    <div class="col d-flex justify-content-end">
-      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
-      </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaTarjeta()" id="btnBuscar">Registrar</button>
-      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarTarjeta()" id="btnBuscar2">Modificar</button>
-    </div>
+    <br>
   </div>
-
-  <br>
 </div>

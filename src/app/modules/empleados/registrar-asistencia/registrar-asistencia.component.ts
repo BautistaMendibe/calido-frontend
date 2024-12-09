@@ -16,6 +16,7 @@ import {Asistencia} from "../../../models/asistencia";
 import {ConsultarAsistenciaComponent} from "../consultar-asistencia/consultar-asistencia.component";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {Licencia} from "../../../models/licencia.model";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-asistencia',
@@ -33,6 +34,7 @@ export class RegistrarAsistenciaComponent implements OnInit {
   public asistencia: Asistencia;
   public esConsulta: boolean;
   public formDesactivado: boolean;
+  public darkMode: boolean = false;
 
   public fechaHoy: Date = new Date();
 
@@ -41,6 +43,7 @@ export class RegistrarAsistenciaComponent implements OnInit {
     private usuariosService: UsuariosService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarAsistenciaComponent;
       asistencia: Asistencia;
@@ -57,12 +60,17 @@ export class RegistrarAsistenciaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarEmpleados();
 
     if (this.esConsulta && this.asistencia) {
       this.rellenarFormularioDataAsistencia();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private buscarEmpleados(){

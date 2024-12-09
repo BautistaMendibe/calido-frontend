@@ -10,6 +10,7 @@ import {MatSort} from "@angular/material/sort";
 import {ConsultarVentasComponent} from "../consultar-ventas/consultar-ventas.component";
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -23,6 +24,7 @@ export class DetalleVentaComponent implements OnInit{
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
   public referencia: ConsultarVentasComponent;
   public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
+  public darkMode: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -34,6 +36,7 @@ export class DetalleVentaComponent implements OnInit{
     private datePipe: DatePipe,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta,
       referencia: ConsultarVentasComponent
@@ -45,12 +48,17 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.setearDatos();
     this.form.disable();
     this.tableDataSource.data = this.venta.productos;
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort;
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

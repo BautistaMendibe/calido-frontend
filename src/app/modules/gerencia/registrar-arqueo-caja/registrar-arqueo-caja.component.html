@@ -1,80 +1,82 @@
-<div class="container py-3 px-4 col-xl-12" [class.dark-mode]="darkMode">
-  <br>
-  <div class="row">
-    <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar Arqueo de Caja' : 'Registrar Arqueo de Caja'}}</p>
+<div class="custom-dialo-calido" [class.dark-mode]="darkMode">
+  <div class="container py-3 px-4 col-xl-12">
+    <br>
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">{{esConsulta ? 'Consultar Arqueo de Caja' : 'Registrar Arqueo de Caja'}}</p>
+      </div>
     </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Caja</mat-label>
+            <mat-select [formControl]="txCaja">
+              <mat-option *ngFor="let caja of listaCajas" [value]="caja.id">
+                {{ caja.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha de Apertura</mat-label>
+            <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" [min]="fechaHoy" [max]="fechaHoy" />
+            <mat-datepicker-toggle matSuffix [for]="pickerApertura"></mat-datepicker-toggle>
+            <mat-datepicker #pickerApertura></mat-datepicker>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Hora de Apertura</mat-label>
+            <input type="time" step="1" matInput [formControl]="txHoraApertura"/>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row pt-4">
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Monto Inicial</mat-label>
+            <input type="text" matInput [formControl]="txMontoInicial" mask="separator.2" prefix="$ " thousandSeparator="," />
+          </mat-form-field>
+        </div>
+
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Responsable</mat-label>
+            <mat-select [formControl]="txResponsable">
+              <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id" [disabled]="empleado.id !== txResponsable.value">
+                {{ empleado.nombre + " " + empleado.apellido }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <app-error-messages [control]="txResponsable"></app-error-messages>
+        </div>
+      </div>
+    </form>
+
+    <br>
+
+    <mat-divider class="my-3"></mat-divider>
+
+    <!-- Btn de cancelar, registrar y modificar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+          {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+        </button>
+        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarArqueo()" id="btnBuscar">Registrar</button>
+        <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarArqueo()" id="btnBuscar2">Modificar</button>
+      </div>
+    </div>
+
+    <br>
   </div>
-
-  <mat-divider></mat-divider>
-
-  <br>
-  <form [formGroup]="form">
-    <div class="row pt-4">
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Caja</mat-label>
-          <mat-select [formControl]="txCaja">
-            <mat-option *ngFor="let caja of listaCajas" [value]="caja.id">
-              {{ caja.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha de Apertura</mat-label>
-          <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" [min]="fechaHoy" [max]="fechaHoy" />
-          <mat-datepicker-toggle matSuffix [for]="pickerApertura"></mat-datepicker-toggle>
-          <mat-datepicker #pickerApertura></mat-datepicker>
-        </mat-form-field>
-      </div>
-
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Hora de Apertura</mat-label>
-          <input type="time" step="1" matInput [formControl]="txHoraApertura"/>
-        </mat-form-field>
-      </div>
-    </div>
-
-    <div class="row pt-4">
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Monto Inicial</mat-label>
-          <input type="text" matInput [formControl]="txMontoInicial" mask="separator.2" prefix="$ " thousandSeparator="," />
-        </mat-form-field>
-      </div>
-
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Responsable</mat-label>
-          <mat-select [formControl]="txResponsable">
-            <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id" [disabled]="empleado.id !== txResponsable.value">
-              {{ empleado.nombre + " " + empleado.apellido }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <app-error-messages [control]="txResponsable"></app-error-messages>
-      </div>
-    </div>
-  </form>
-
-  <br>
-
-  <mat-divider class="my-3"></mat-divider>
-
-  <!-- Btn de cancelar, registrar y modificar -->
-  <div class="row text-right">
-    <div class="col d-flex justify-content-end">
-      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
-      </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarArqueo()" id="btnBuscar">Registrar</button>
-      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarArqueo()" id="btnBuscar2">Modificar</button>
-    </div>
-  </div>
-
-  <br>
 </div>
