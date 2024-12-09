@@ -2,12 +2,13 @@
      [ngClass]="{'expanded': sideNavState}"
      (mouseenter)="onSinenavToggleMouse()"
      (mouseleave)="onSinenavToggleMouse()"
-     [@onSideNavChange]="sideNavState ? 'open' : 'close'">
+     [@onSideNavChange]="sideNavState ? 'open' : 'close'"
+     [class.dark-mode]="darkMode">
 
   <mat-nav-list *ngIf="!showFiller">
 
     <!-- Recorre los elementos del menú -->
-    <div class="parent" *ngFor="let item of menuItems">
+    <div *ngFor="let item of menuItems">
 
       <!-- Verifica si el usuario tiene acceso al ítem -->
       <ng-container *ngIf="!item.requiresRoles || puedeMostrar(item)">
@@ -15,7 +16,6 @@
         <!-- Ítem principal del menú -->
         <mat-list-item
           (click)="navigate(item); activarItem(item)"
-          class="parent"
           [class.activo]="item.activo">
 
           <mat-icon>{{ item.icon ? item.icon : 'gavel' }}</mat-icon>

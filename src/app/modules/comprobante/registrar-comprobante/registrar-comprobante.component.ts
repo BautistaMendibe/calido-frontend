@@ -23,6 +23,7 @@ import {FiltrosPedidos} from "../../../models/comandos/FiltrosPedidos.comando";
 import {FiltrosComprobantes} from "../../../models/comandos/FiltrosComprobantes.comando";
 import {NotificationService} from "../../../services/notificacion.service";
 import {BuscarProductosComponent} from "../../productos/buscar-productos/buscar-productos.component";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-comprobante',
@@ -52,6 +53,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   public tablaProductosDesactivada: boolean = false;
   public isLoading: boolean = false;
   public fechaHoy: Date = new Date();
+  public darkMode: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productosSeleccionados);
 
@@ -66,6 +68,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarComprobanteComponent
       comprobante: Comprobante;
@@ -83,6 +86,7 @@ export class RegistrarComprobanteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProductos();
     this.buscarProveedores();
@@ -97,6 +101,10 @@ export class RegistrarComprobanteComponent implements OnInit {
       this.txProveedor.disable();
       this.txBuscar.disable();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

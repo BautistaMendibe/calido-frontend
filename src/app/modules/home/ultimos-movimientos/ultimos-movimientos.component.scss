@@ -1,6 +1,5 @@
 mat-card {
   background-color: #ffffff;
-  border-radius: 8px;
   padding: 10px 15px;
   color: #494949;
   max-height: 500px;
@@ -104,6 +103,6 @@ h3 {
 }
 
 .transaction-item:hover {
-  background: #f8f8f8;
+  background: var(--bg-hover-items-home);
 }
 

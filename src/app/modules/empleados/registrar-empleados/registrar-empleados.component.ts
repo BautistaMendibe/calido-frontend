@@ -20,6 +20,7 @@ import {Domicilio} from "../../../models/domicilio.model";
 import {Rol} from "../../../models/Rol";
 import {firstValueFrom} from "rxjs";
 import {TipoUsuario} from "../../../models/tipoUsuario.model";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 
 @Component({
@@ -45,6 +46,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
   public esConsulta: boolean;
   public hidePassword: boolean = true;
   public formDesactivado: boolean;
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -52,6 +54,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
     private domicilioService: DomicilioService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarEmpleadosComponent
       usuario: Usuario;
@@ -70,6 +73,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProvincias();
     this.buscarRoles();
@@ -77,6 +81,10 @@ export class RegistrarEmpleadosComponent implements OnInit{
     if (this.esConsulta && this.usuario) {
       this.rellenarFormularioDataUsuario();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   // Validar que la fecha de nacimiento sea menor a la de hoy

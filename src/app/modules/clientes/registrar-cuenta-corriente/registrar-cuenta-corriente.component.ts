@@ -18,6 +18,7 @@ import {DetalleVentaComponent} from "../../venta/detalle-venta/detalle-venta.com
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {NotificationService} from "../../../services/notificacion.service";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -41,6 +42,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
   public tieneAccionesPendientes: boolean = false;
+  public darkMode: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -53,6 +55,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     private ventasService: VentasService,
     private dialog: MatDialog,
     private notificationDialogService: NotificationService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarCuentasCorrientesComponent;
       esConsulta: boolean;
@@ -70,6 +73,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
 
     if (this.data.formDesactivado) {
@@ -94,6 +98,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     }
 
     this.txCliente.valueChanges.subscribe(() => { this.buscarVentas(this.txCliente.value); this.calcularBalance(); });
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

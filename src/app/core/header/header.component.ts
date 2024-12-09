@@ -2,7 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {AuthService} from "../../services/auth.service";
 import {ConfiguracionesService} from "../../services/configuraciones.service";
-import {HttpRequest} from "@angular/common/http";
+import {ThemeCalidoService} from "../../services/theme.service";
 
 @Component({
   selector: 'app-header',
@@ -11,18 +11,22 @@ import {HttpRequest} from "@angular/common/http";
 })
 export class HeaderComponent implements OnInit {
   @Output() toggleSideBarForMe: EventEmitter<boolean> = new EventEmitter();
+  @Output() toggleThemeEmmiter: EventEmitter<boolean> = new EventEmitter();
   public estaLogeado: boolean = false;
   public nombreApellido: string = '';
   public logoUrl: string = '';
+  public darkMode: boolean = false;
 
   constructor(
     private authService: AuthService,
     private router: Router,
     private configuracionesService: ConfiguracionesService,
+    private themeService: ThemeCalidoService,
     private activatedRoute: ActivatedRoute) {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.authService.authenticationStatus$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
         this.obtenerLogo();
@@ -45,6 +49,17 @@ export class HeaderComponent implements OnInit {
         }
       }
     });
+  }
+
+  obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
+  }
+
+  // Metodo para cambiar el tema de oscuro a claro y viceversa
+  public toggleTheme() {
+    this.themeService.toggleDarkMode();
+    this.obtenerInformacionTema();
+    this.toggleThemeEmmiter.emit(this.darkMode);
   }
 
   // Metodo que obtiene el logo para utilizar en el header desde la configuración

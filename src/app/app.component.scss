@@ -6,7 +6,7 @@
 
 mat-drawer-container {
   min-height: calc(100vh - 64px) !important;
-  background-color: #fdfdfd;
+  background-color: var(--bg-drawer);
 }
 
 .offSidebar {
@@ -17,9 +17,9 @@ mat-drawer-container {
   min-height: calc(100vh - 64px) !important;
   overflow-x: hidden !important;
   overflow-y: auto !important;
-  background-color: #fdfdfd;
+  background-color: var(--bg-drawer);
 }
 
-app-header {
-  border-bottom: solid 1px #dddd;
+.drawer .mat-card {
+  background-color: var(--bg-card) !important;
 }

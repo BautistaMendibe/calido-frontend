@@ -10,6 +10,7 @@ import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 import {Venta} from "../../../models/venta.model";
 import {ConsultarVentasComponent} from "../../venta/consultar-ventas/consultar-ventas.component";
 import {RegistrarCuentaCorrienteComponent} from "../registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 
 @Component({
@@ -22,6 +23,7 @@ export class AsignarCuentaCorrienteComponent implements OnInit{
   public form: FormGroup;
   public cuentas: CuentaCorriente[] = [];
   private referencia: ConsultarVentasComponent;
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -31,6 +33,7 @@ export class AsignarCuentaCorrienteComponent implements OnInit{
     private ventasService: VentasService,
     private dialog: MatDialog,
     private notificationDialogService: NotificationService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarVentasComponent;
       venta: Venta;
@@ -41,6 +44,7 @@ export class AsignarCuentaCorrienteComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
   }
 
@@ -50,6 +54,10 @@ export class AsignarCuentaCorrienteComponent implements OnInit{
     });
 
     this.consultarCuentasCorrientes();
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   public consultarCuentasCorrientes() {

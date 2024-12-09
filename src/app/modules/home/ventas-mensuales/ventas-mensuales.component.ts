@@ -11,6 +11,7 @@ import {
 } from 'chart.js';
 import {VentasMensuales} from "../../../models/comandos/dashboard/VentasMensuales.comando";
 import {VentasService} from "../../../services/ventas.services";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 // Registra los componentes necesarios de Chart.js
 ChartJS.register(
@@ -32,11 +33,19 @@ export class VentasMensualesComponent implements OnInit {
 
   public ventasMesuales: VentasMensuales[] = [];
   public buscando: boolean = false;
+  private isDarkMode: boolean = false;
 
-  constructor(private ventasService: VentasService) {}
+  constructor(private ventasService: VentasService, private themeService: ThemeCalidoService) {}
 
   ngOnInit() {
+    this.buscarInfoTema();
     this.buscarCantidadVentasMensuales();
+  }
+
+  private buscarInfoTema() {
+    this.themeService.darkMode$.subscribe((isDarkMode) => {
+      this.isDarkMode = isDarkMode;
+    });
   }
 
   private buscarCantidadVentasMensuales() {
@@ -57,6 +66,7 @@ export class VentasMensualesComponent implements OnInit {
         beginAtZero: true,
         ticks: {
           maxTicksLimit: 10,
+          color: this.isDarkMode ? 'rgb(255,255,255)' : 'rgb(74,74,74)',
           font: {
             size: 10,
           },
@@ -71,6 +81,7 @@ export class VentasMensualesComponent implements OnInit {
           autoSkip: false,
           maxRotation: 0,
           minRotation: 0,
+          color: this.isDarkMode ? 'rgb(255,255,255)' : 'rgb(74,74,74)',
           padding: 5,
           font: {
             size: 10,

@@ -1,7 +1,7 @@
-<mat-toolbar>
+<mat-toolbar class="header" [class.dark-mode]="darkMode">
   <mat-toolbar-row>
     <div>
-      <button id="btnHeader" mat-icon-button class="btn btn-menu" color="white" matTooltip="Menu" [disabled]="!estaLogeado" (click)="toggleSideBar()">
+      <button id="btnHeader" mat-icon-button class="btn btn-menu" matTooltip="Menu" [disabled]="!estaLogeado" (click)="toggleSideBar()">
         <mat-icon>menu</mat-icon>
       </button>
       <a class="ml-2" href="/">
@@ -11,14 +11,18 @@
     <div class="float-right mt-15" fxFlex fxLayout="row" fxLayoutAlign="flex-end">
       <ul style="margin-top: 15px" *ngIf="estaLogeado">
         <li>
-          <button mat-button [matMenuTriggerFor]="menu" class="white" id="btnUsuario">
-            <mat-icon>person_outline</mat-icon>
-            <span id="txtNombreUsuario">
+          <button mat-button [matMenuTriggerFor]="menu" id="btnUsuario">
+            <mat-icon [class.dark-mode]="darkMode">person_outline</mat-icon>
+            <span id="txtNombreUsuario" [class.dark-mode]="darkMode">
               {{nombreApellido}}
             </span>
           </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item class="btn" id="btnSalir" (click)="exit()">
+          <mat-menu #menu="matMenu" [class.dark-mode]="darkMode" >
+            <button mat-menu-item (click)="toggleTheme()">
+              <mat-icon>{{ darkMode ? 'wb_sunny' : 'brightness_3' }}</mat-icon>
+              {{ darkMode ? 'Modo claro' : 'Modo oscuro' }}
+            </button>
+            <button mat-menu-item (click)="exit()">
               <mat-icon>exit_to_app</mat-icon>
               Salir
             </button>

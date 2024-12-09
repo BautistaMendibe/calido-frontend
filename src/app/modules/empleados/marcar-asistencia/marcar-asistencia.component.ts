@@ -14,6 +14,7 @@ import {Licencia} from "../../../models/licencia.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-marcar-asistencia',
@@ -44,6 +45,7 @@ export class MarcarAsistenciaComponent implements OnInit {
   public asistencia = new Asistencia();
   public form: FormGroup;
   public comentario: string = '';
+  public darkMode: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -57,7 +59,8 @@ export class MarcarAsistenciaComponent implements OnInit {
     private notificationDialogService: NotificationService,
     private dialog: MatDialog,
     private fb: FormBuilder,
-    private usuariosService: UsuariosService
+    private usuariosService: UsuariosService,
+    private themeService: ThemeCalidoService,
   ) {
     this.form = this.fb.group({
       txComentario: ['', [Validators.maxLength(200)]]
@@ -65,6 +68,7 @@ export class MarcarAsistenciaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.authService.authenticationStatus$.subscribe(isAuthenticated => {
       if (isAuthenticated) {
         const token = this.authService.getToken();
@@ -81,6 +85,11 @@ export class MarcarAsistenciaComponent implements OnInit {
     this.consultarAsistencias();
     this.consultarLicencias();
   }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
+  }
+
 
   consultarAsistencias(): void {
     this.usuariosService.consultarAsistencias(new FiltrosAsistencias()).subscribe({

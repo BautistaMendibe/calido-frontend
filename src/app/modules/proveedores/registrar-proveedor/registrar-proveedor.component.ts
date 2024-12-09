@@ -11,6 +11,7 @@ import {DomicilioService} from "../../../services/domicilio.service";
 import {Localidad} from "../../../models/localidad.model";
 import {Domicilio} from "../../../models/domicilio.model";
 import {firstValueFrom} from "rxjs";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-proveedor',
@@ -31,6 +32,7 @@ export class RegistrarProveedorComponent implements OnInit{
   public proveedor: Proveedor;
   public esConsulta: boolean;
   public formDesactivado: boolean;
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -38,6 +40,7 @@ export class RegistrarProveedorComponent implements OnInit{
     private domicilioService: DomicilioService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarProveedoresComponent;
       proveedor: Proveedor;
@@ -56,6 +59,7 @@ export class RegistrarProveedorComponent implements OnInit{
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProvincias();
     this.buscarTiposProveedores();
@@ -63,6 +67,10 @@ export class RegistrarProveedorComponent implements OnInit{
     if (this.esConsulta && this.proveedor) {
       this.rellenarFormularioDataProveedor();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

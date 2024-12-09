@@ -12,6 +12,7 @@ import {FiltrosTarjetas} from "../../../models/comandos/FiltrosTarjetas.comando"
 import {Cuota} from "../../../models/Cuota.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-tarjeta',
@@ -36,6 +37,7 @@ export class RegistrarTarjetaComponent implements OnInit {
   public formDesactivado: boolean;
   public listaCuotasDeshabilitada: boolean = false;
   protected readonly Math = Math;
+  public darkMode: boolean = false;
 
   public dataSourceCuotas = new MatTableDataSource(this.listaCuotas);
 
@@ -47,6 +49,7 @@ export class RegistrarTarjetaComponent implements OnInit {
     private tarjetasService: TarjetasService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarTarjetasComponent
       tarjeta: Tarjeta;
@@ -65,6 +68,7 @@ export class RegistrarTarjetaComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarTarjetas();
     this.buscarTiposTarjetas();
@@ -73,6 +77,10 @@ export class RegistrarTarjetaComponent implements OnInit {
     if (this.data.editar) {
       this.listaCuotasDeshabilitada = false;
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario() {

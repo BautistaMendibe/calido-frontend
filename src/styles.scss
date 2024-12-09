@@ -1,61 +1,83 @@
 @import '@ctrl/ngx-emoji-mart/picker';
 
-/* Responsive */
-.custom-table {
-  min-width: 400px;  /* Ancho mínimo para la tabla */
-  overflow-x: auto;  /* Permitir scroll horizontal */
+
+:root {
+  --naranja-primario: #e15b35;
+  --header-bg: #f5f5f5;
+  --header-color: #000000;
+  --menu-bg: #ffffff;
+  --menu-item-hover-bg: #efefef;
+  --menu-item-color: #000000;
+  --border-color-nav: #ddd;
+  --bg-drawer: #fdfdfd;
+  --bg-card: #fffff;
+  --color-border-card: #fffff;
+  --color-text-title: #575757;
+  --color-title-item-card: #494949;
+  --bg-hover-items-home: #f8f8f8;
+  --mat-divider-color: #ddd;
+  --button-hover: #e15b35;
+  --boder-mat-card-calido: 0px;
+  --color-input-text-box: #131313;
+  --bg-seccion-generar-reporte: #fefefe;
+  --title-generar-reporte: #333;
+  --bg-hover-generar-reporte: #f1f0f0;
+  --mat-table-row-item-outline-color: #ddd;
+  --mdc-outlined-text-field-outline-color: #575757;
+  --mdc-outlined-text-field-disabled-outline-color: #bdb2b2;
+  --mdc-outlined-text-field-disabled-label-text-color: #bdb2b2;
+  --mdc-outlined-text-field-hover-outline-color: #353535;
+  --mdc-outlined-text-field-focus-outline-color: #e15b35;
+  --mdc-outlined-text-field-focus-label-text-color: #e15b35;
+  --mdc-outlined-text-field-label-text-color: #131313;
+  --mdc-outlined-text-field-hover-label-text-color: #606060;
+  --btn-border-registrar: 1px solid #e15b35;
+  --btn-radius-registrar: 5px;
+  --mdc-outlined-button-outline-color: #ffffff;
+  --mdc-outlined-button-outline-width: 0px;
+  --border-productos-venta: 1px solid #ddd;
+  --bs-secondary-bg: #fdfdfd;
+  --detalle-arqueo: #555;
 }
 
-@media (max-width: 992px) {
-  .custom-table {
-    width: 100%;
-    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
-
-  }
-
-  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
-    font-size: 12px;
-  }
+.dark-mode {
+  --naranja-primario: #e15b35;
+  --header-bg: #2A2A3B;
+  --header-color: #EDEDED;
+  --menu-bg: #3E3E4E;
+  --menu-item-hover-bg: #5A5A6E;
+  --menu-item-color: #EDEDED;
+  --border-color-nav: #414141;
+  --bg-drawer: #161621;
+  --bg-card: #2A2A3B;
+  --color-border-card: #3E3E4E;
+  --color-text-title: #EDEDED;
+  --color-title-item-card: #aeaeae;
+  --bg-hover-items-home: #2e2e3c;
+  --mat-divider-color: #414141;
+  --button-hover: #e15b35;
+  --boder-mat-card-calido: 1px solid #414141;
+  --color-input-text-box: #EDEDED;
+  --bg-seccion-generar-reporte: #2a2a3b;
+  --title-generar-reporte: #EDEDED;
+  --bg-hover-generar-reporte: #2e2e42;
+  --mat-table-row-item-outline-color: #3E3E4E;
+  --mdc-outlined-text-field-outline-color: #EDEDED;
+  --mdc-outlined-text-field-disabled-outline-color: #363642;
+  --mdc-outlined-text-field-disabled-label-text-color: rgba(53, 53, 63, 0.98);
+  --mdc-outlined-text-field-hover-outline-color: #fafafa;
+  --mdc-outlined-text-field-focus-outline-color: #e15b35;
+  --mdc-outlined-text-field-focus-label-text-color: #e15b35;
+  --mdc-outlined-text-field-label-text-color: #EDEDED;
+  --mdc-outlined-text-field-hover-label-text-color: #8c8c8c;
+  --btn-border-registrar: 1px solid #e15b35;
+  --btn-radius-registrar: 5px;
+  --mdc-outlined-button-outline-color: #2A2A3B;
+  --mdc-outlined-button-outline-width: 0px;
+  --border-productos-venta: 1px solid #3E3E4E;
+  --bs-secondary-bg: #2A2A3B;
+  --detalle-arqueo: #bebebe;
 }
-
-@media (max-width: 768px) {
-  .custom-table {
-    width: 100%;
-    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
-  }
-  .custom-table th, .custom-table td {
-    padding: 6px; /* Reduce el espacio entre celdas */
-  }
-}
-
-.mat-column-acciones {
-  min-width: 168px; /* Ajusta el tamaño para que no se corte el icono de borrar */
-}
-
-.botonR {
-  margin-left: 1rem; /* Margen entre el título y el botón */
-  padding: 0.5rem 1rem; /* Espacio dentro del botón */
-}
-
-.mat-card {
-  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
-  width: 100%; /* Ancho completo hasta que alcance el mínimo */
-  overflow-x: auto;
-}
-
-.container {
-  overflow-x: auto;
-}
-
-.form-emergente {
-  min-width: 250px; /* Establece el ancho mínimo de la tarjeta */
-  width: 100%; /* Ancho completo hasta que alcance el mínimo */
-  overflow-x: auto;
-  overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
-
-}
-
-/* Fin Responsive */
 
 html, body {
   height: 100%;
@@ -68,12 +90,80 @@ body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
   overflow-y: hidden;
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+mat-card {
+  background-color: var(--bg-card) !important;
+  border: var(--boder-mat-card-calido) !important;
+  color: var(--color-title-item-card) !important;
+}
+
+h2 {
+  color: var(--color-text-title) !important;
+}
+
+h4 {
+  color: var(--color-text-title) !important;
+}
+
+/* Change the border color
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__leading,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__notch,
+.mdc-text-field--outlined:not(.mdc-text-field--disabled) .mdc-notched-outline__trailing {
+  border: 1px solid var(--color-text-title);
+  border-radius: 5px;
+}
+*/
+
+/*
+mat-label {
+  color: var(--color-text-title) !important;
+}*/
+
+input {
+  color: var(--color-input-text-box) !important;
+}
+
+mat-select {
+  color: var(--color-input-text-box) !important;
+}
+
+mat-table {
+  background-color: var(--bg-card) !important;
+}
+
+mat-header-row {
+  color: var(--header-color) !important;
+}
+
+mat-row {
+  color: var(--header-color) !important;
+}
+
+mat-paginator {
+  background-color: var(--bg-card) !important;
+  color: var(--header-color) !important;
+}
+
+svg {
+  fill: var(--color-text-title) !important;
+}
+
+.mat-mdc-outlined-button .mat-mdc-button-touch-target {
+  border: var(--btn-border-registrar) !important;
+  border-radius: var(--btn-radius-registrar) !important;
 }
 
 .titulo {
   font-weight: 500;
   color: #e15b35;
   font-size: 26px;
+}
+
+.container {
+  background-color: var(--bg-drawer);
 }
 
 .notify-success {
@@ -147,6 +237,9 @@ body {
   align-items: center;
   height: 10vh;
   zoom: 0.6;
+  svg {
+    fill: var(--bg-drawer) !important;
+  }
 }
 
 .mdc-text-field--outlined:not(.mdc-text-field--disabled).mdc-floating-label {
@@ -208,7 +301,7 @@ body {
 ::-webkit-scrollbar-thumb {
   background-color: #b3b3b3;
   border-radius: 10px;
-  border: 2px solid transparent;
+  border: 2px solid var(--color-border);
   background-clip: padding-box;
 }
 
@@ -217,6 +310,56 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background-color: #f0f0f0;
+  background-color: var(--bg-drawer);
   border-radius: 10px;
 }
+
+/* Responsive */
+.custom-table {
+  min-width: 400px;  /* Ancho mínimo para la tabla */
+  overflow-x: auto;  /* Permitir scroll horizontal */
+}
+
+@media (max-width: 992px) {
+  .custom-table {
+    width: 100%;
+    overflow-x: auto;  /* Habilitar el desplazamiento en pantallas medianas */
+
+  }
+
+  .mat-mdc-table mat-header-row.mat-mdc-header-row, .mat-mdc-table mat-row.mat-mdc-row, .mat-mdc-table mat-footer-row.mat-mdc-footer-cell {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .custom-table {
+    width: 100%;
+    min-width: 700px;  /* Reducimos el ancho mínimo en pantallas más pequeñas */
+  }
+  .custom-table th, .custom-table td {
+    padding: 6px; /* Reduce el espacio entre celdas */
+  }
+}
+
+.mat-column-acciones {
+  min-width: 168px; /* Ajusta el tamaño para que no se corte el icono de borrar */
+}
+
+.botonR {
+  margin-left: 1rem; /* Margen entre el título y el botón */
+  padding: 0.5rem 1rem; /* Espacio dentro del botón */
+}
+
+.mat-card {
+  min-width: 400px; /* Establece el ancho mínimo de la tarjeta */
+  width: 100%; /* Ancho completo hasta que alcance el mínimo */
+  overflow-x: auto;
+}
+
+.container {
+  overflow-x: auto;
+}
+
+
+/* Fin Responsive */

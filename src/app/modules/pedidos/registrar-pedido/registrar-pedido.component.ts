@@ -18,6 +18,7 @@ import {PedidosService} from "../../../services/pedidos.service";
 import {EstadoPedido} from "../../../models/estadoPedido";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-pedido',
@@ -50,6 +51,7 @@ export class RegistrarPedidoComponent implements OnInit {
   public fechaHoy: Date = new Date();
 
   public isLoading: boolean = false;
+  public darkMode: boolean = false;
 
   public dataSourceProductos = new MatTableDataSource(this.productos);
 
@@ -65,6 +67,7 @@ export class RegistrarPedidoComponent implements OnInit {
     private pedidosService: PedidosService,
     private dialogRef: MatDialogRef<any>,
     private notificacionService: SnackBarService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarPedidosComponent
       pedido: Pedido;
@@ -83,6 +86,7 @@ export class RegistrarPedidoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.generarDescuentos();
     this.buscarProductos();
@@ -95,6 +99,10 @@ export class RegistrarPedidoComponent implements OnInit {
       this.listaProductosDeshabilitada = true;
       this.txBuscar.disable();
     }
+  }
+
+  obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   public generarDescuentos() {
