@@ -137,9 +137,10 @@
 
 
 .summary-container {
-  background-color: #f8fafc; /* Color de fondo similar al de la imagen */
+  background-color: var(--bg-card); /* Color de fondo similar al de la imagen */
   padding: 15px; /* Espaciado interno */
   border-radius: 5px; /* Bordes redondeados */
+  border: 1px solid grey;
 }
 .dotted-line {
   border-top: 1px dotted #ccc; /* Línea punteada */

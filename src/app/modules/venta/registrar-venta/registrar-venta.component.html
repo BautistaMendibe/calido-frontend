@@ -271,7 +271,7 @@
           </div>
 
           <!-- Resumen si pagas con tarjeta o con saldo de cuenta corriente-->
-          <div class="container mt-4" *ngIf="productosSeleccionados.length > 0 && (cantidadCuotaSeleccionada.id || this.txCancelarConSaldo.value === true)">
+          <div class="mt-4" *ngIf="productosSeleccionados.length > 0 && (cantidadCuotaSeleccionada.id || this.txCancelarConSaldo.value === true)">
 
             <div class="summary-container">
               <div>
@@ -304,7 +304,7 @@
           </div>
 
           <!-- Botones -->
-          <div class="container mt-4">
+          <div class="mt-4">
             <button class="btn btn-custom" [disabled]="totalVenta == 0 || registrandoVenta" (click)="confirmarVenta()">
               <span>Confirmar venta</span>
               <span class="text-right">
