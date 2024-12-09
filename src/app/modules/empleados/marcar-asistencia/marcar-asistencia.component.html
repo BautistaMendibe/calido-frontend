@@ -18,7 +18,7 @@
     <!-- Mat-card asistencia del día -->
     <div class="d-flex justify-content-center">
       <mat-card class="asistencia-card p-4">
-        <h2>{{ fechaHoy | date: 'dd/MM/yyyy' }}</h2>
+        <span class="custom-date-color">{{ fechaHoy | date: 'dd/MM/yyyy' }}</span>
 
         <p *ngIf="presente">
           Indicaste tu entrada a las {{ horaEntrada }}
