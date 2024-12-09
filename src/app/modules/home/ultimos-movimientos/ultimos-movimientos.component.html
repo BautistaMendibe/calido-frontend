@@ -29,7 +29,7 @@
             <div class="subtitle">N°: {{ ultimoMovimiento.codigo }}</div>
           </div>
           <div class="amount-time">
-            <div class="amount">{{ ultimoMovimiento.costo ? '$' + ultimoMovimiento.costo : '-' }}</div>
+            <div class="amount">{{ ultimoMovimiento.costo ? ('$ ' + (ultimoMovimiento.costo | number:'1.2-2':'es-AR')) : '-' }}</div>
             <div class="time">{{ ultimoMovimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</div>
           </div>
         </div>

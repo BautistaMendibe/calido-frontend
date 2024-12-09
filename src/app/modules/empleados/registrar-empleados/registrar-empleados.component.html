@@ -3,7 +3,7 @@
   <div class="row">
     <div class="col d-flex justify-content-between align-items-center">
       <p class="titulo">{{esConsulta ? 'Consultar Empleado' : 'Registrar Empleado'}}</p>
-      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()">
+      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Encargado']">
         <mat-icon class="editar">edit</mat-icon>
       </button>
     </div>

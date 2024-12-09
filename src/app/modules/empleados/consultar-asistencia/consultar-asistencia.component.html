@@ -4,8 +4,19 @@
       <div class="col d-flex justify-content-between align-items-center">
         <p class="titulo">Control de Empleado</p>
         <div class="d-flex justify-content-end">
-          <button mat-stroked-button color="warn" class="btn round mb-3 botonR" (click)="registrarNuevaAsistencia()">Registrar nueva asistencia</button>
-          <button mat-stroked-button color="warn" class="btn round mb-3 ms-2 botonR" (click)="registrarNuevaLicencia()">Registrar nueva licencia</button>
+          <button
+            mat-stroked-button
+            color="warn"
+            class="btn round mb-3 botonR"
+            (click)="registrarNuevaAsistencia()"
+            [appRole]="['Encargado']"
+          >Registrar nueva asistencia</button>
+          <button
+            mat-stroked-button color="warn"
+            class="btn round mb-3 ms-2 botonR"
+            (click)="registrarNuevaLicencia()"
+            [appRole]="['Encargado']"
+          >Registrar nueva licencia</button>
         </div>
       </div>
     </div>
@@ -125,10 +136,10 @@
                     <button class="btn" mat-icon-button matTooltip="Ver" (click)="verAsistencia(asistencia, false)">
                       <mat-icon class="ver">visibility</mat-icon>
                     </button>
-                    <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verAsistencia(asistencia, true)">
+                    <button class="btn" mat-icon-button matTooltip="Modificar" (click)="verAsistencia(asistencia, true)" [appRole]="['Encargado']">
                       <mat-icon class="editar">edit</mat-icon>
                     </button>
-                    <button class="btn" mat-icon-button matTooltip="Eliminar" color="primary" (click)="eliminarAsistencia(asistencia.id)">
+                    <button class="btn" mat-icon-button matTooltip="Eliminar" color="primary" (click)="eliminarAsistencia(asistencia.id)" [appRole]="['Encargado']">
                       <mat-icon class="eliminar">delete</mat-icon>
                     </button>
                   </mat-cell>

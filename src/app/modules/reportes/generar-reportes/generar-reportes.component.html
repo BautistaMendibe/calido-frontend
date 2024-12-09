@@ -2,7 +2,7 @@
   <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Generar reportes</p>
+        <p class="titulo">Reportes</p>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -52,7 +52,7 @@
                 </mat-form-field>
               </div>
               <div class="col-md-3 mb-2">
-                <button *ngIf="!buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte" style="float: right" (click)="generarReporte(reporte)" id="btnBuscar">Generar reporte</button>
+                <button *ngIf="!buscandoData" mat-raised-button color="accent" class="btn round btn-generar-reporte" style="float: right" (click)="generarReporte(reporte)" id="btnBuscar2">Generar reporte</button>
                 <div class="spinner-wrapper" *ngIf="buscandoData">
                   <mat-spinner></mat-spinner>
                 </div>
