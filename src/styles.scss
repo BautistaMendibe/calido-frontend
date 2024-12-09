@@ -23,14 +23,14 @@
   --title-generar-reporte: #333;
   --bg-hover-generar-reporte: #f1f0f0;
   --mat-table-row-item-outline-color: #ddd;
-  --mdc-outlined-text-field-outline-color: #575757;
-  --mdc-outlined-text-field-disabled-outline-color: #bdb2b2;
-  --mdc-outlined-text-field-disabled-label-text-color: #bdb2b2;
-  --mdc-outlined-text-field-hover-outline-color: #353535;
+  --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, .38);
+  --mdc-outlined-text-field-disabled-outline-color: rgba(0, 0, 0, .06);
+  --mdc-outlined-text-field-disabled-label-text-color: rgba(0, 0, 0, .38);
+  --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, .6);
   --mdc-outlined-text-field-focus-outline-color: #e15b35;
   --mdc-outlined-text-field-focus-label-text-color: #e15b35;
-  --mdc-outlined-text-field-label-text-color: #131313;
-  --mdc-outlined-text-field-hover-label-text-color: #606060;
+  --mdc-outlined-text-field-label-text-color: rgba(0, 0, 0, .6);
+  --mdc-outlined-text-field-hover-label-text-color: rgba(0, 0, 0, .6);
   --btn-border-registrar: 1px solid #e15b35;
   --btn-radius-registrar: 5px;
   --mdc-outlined-button-outline-color: #ffffff;
@@ -38,7 +38,7 @@
   --border-productos-venta: 1px solid #ddd;
   --bs-secondary-bg: #fdfdfd;
   --detalle-arqueo: #555;
-  --mdc-dialog-container-color: #fdfdfd;
+  --bg-mat-dialog: red;
 }
 
 .dark-mode {
@@ -78,7 +78,7 @@
   --border-productos-venta: 1px solid #3E3E4E;
   --bs-secondary-bg: #2A2A3B;
   --detalle-arqueo: #bebebe;
-  --mdc-dialog-container-color: #2A2A3B;
+  --bg-mat-dialog: blue;
 }
 
 html, body {
@@ -168,9 +168,11 @@ svg {
   background-color: var(--bg-drawer);
 }
 
-.mat-dialog-container {
-  background-color: var(--bg-drawer) !important;
+/*
+.mdc-dialog__surface {
+  background-color: var(--bg-mat-dialog) !important;
 }
+*/
 
 .notify-success {
   --mat-mdc-snack-bar-button-color: #155724;
@@ -254,11 +256,13 @@ svg {
 
 .custom-dialog-container {
   overflow: hidden;  /* Oculta el desbordamiento exterior */
+  background-color: var(--bg-drawer) !important;
 }
 
 .custom-dialog-container .mat-dialog-content {
   max-height: calc(85vh - 64px); /* Ajusta la altura del contenido para evitar solapamiento */
   overflow-y: auto;  /* Habilita la barra de desplazamiento vertical */
+  background-color: var(--bg-drawer) !important;
 }
 
 @media (max-width: 1200px) {
