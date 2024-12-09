@@ -34,7 +34,6 @@ export class VisualizacionesVentasComponent implements OnInit {
   
   employees: string[] = [
     'Julian Carles',
-    'Consumidor Final',
     'Joaquin Antonio Battig Chavez',
     'Bautista Mendibe',
     'Bautista Juan Lopez Mendibe',
