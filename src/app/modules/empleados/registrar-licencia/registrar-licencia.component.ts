@@ -13,6 +13,7 @@ import {SpResult} from "../../../models/resultadoSp.model";
 import {EstadoLicencia} from "../../../models/estadoLicencia.model";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {FilesService} from "../../../services/files.service";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-registrar-licencia',
@@ -32,6 +33,7 @@ export class RegistrarLicenciaComponent implements OnInit {
   public licencia: Licencia;
   public esConsulta: boolean;
   public formDesactivado: boolean;
+  public darkMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -40,6 +42,7 @@ export class RegistrarLicenciaComponent implements OnInit {
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
     private filesService: FilesService,
+    private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarAsistenciaComponent,
       licencia: Licencia;
@@ -56,6 +59,7 @@ export class RegistrarLicenciaComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.obtenerInformacionTema();
     this.crearFormulario();
     this.obtenerMotivos();
     this.obtenerEstadosLicencia();
@@ -65,6 +69,10 @@ export class RegistrarLicenciaComponent implements OnInit {
     if (this.esConsulta && this.licencia) {
       this.rellenarFormularioDataLicencia();
     }
+  }
+
+  private obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private crearFormulario(){

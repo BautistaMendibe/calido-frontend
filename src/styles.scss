@@ -25,7 +25,7 @@
   --mat-table-row-item-outline-color: #ddd;
   --mdc-outlined-text-field-outline-color: rgba(0, 0, 0, .38);
   --mdc-outlined-text-field-disabled-outline-color: rgba(0, 0, 0, .06);
-  --mdc-outlined-text-field-disabled-label-text-color: rgba(0, 0, 0, .38);
+  --mdc-outlined-text-field-disabled-label-text-color: rgba(0, 0, 0, 0.26);
   --mdc-outlined-text-field-hover-outline-color: rgba(0, 0, 0, .6);
   --mdc-outlined-text-field-focus-outline-color: #e15b35;
   --mdc-outlined-text-field-focus-label-text-color: #e15b35;
@@ -38,9 +38,9 @@
   --border-productos-venta: 1px solid #ddd;
   --bs-secondary-bg: #fdfdfd;
   --detalle-arqueo: #555;
-  --bg-mat-dialog: red;
   --text-muted-custom: rgba(33, 37, 41, .75);
   --product-name-detalle-venta: #000000;
+  --bg-venta-anulada: #f2f2f2;
 }
 
 .dark-mode {
@@ -80,9 +80,9 @@
   --border-productos-venta: 1px solid #3E3E4E;
   --bs-secondary-bg: #2A2A3B;
   --detalle-arqueo: #bebebe;
-  --bg-mat-dialog: blue;
   --text-muted-custom: grey;
   --product-name-detalle-venta: #EDEDED;
+  --bg-venta-anulada: #2e2e42;
 }
 
 html, body {
@@ -177,6 +177,10 @@ svg {
   background-color: var(--bg-mat-dialog) !important;
 }
 */
+
+.custom-dialo-calido {
+  background-color: var(--bg-drawer);
+}
 
 .notify-success {
   --mat-mdc-snack-bar-button-color: #155724;

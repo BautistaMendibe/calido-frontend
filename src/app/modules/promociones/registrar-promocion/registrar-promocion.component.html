@@ -1,141 +1,143 @@
-<div class="container py-3 px-4 col-xl-12" [class.dark-mode]="darkMode">
-  <br>
-  <div class="row">
-    <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar promoción' : 'Registrar promoción'}}</p>
-      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Administrador', 'Encargado']">
-        <mat-icon class="editar mb-3">edit</mat-icon>
-      </button>
-    </div>
-  </div>
-  <br>
-  <mat-divider></mat-divider>
-
-  <form [formGroup]="form">
-    <div class="row pt-4">
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Nombre</mat-label>
-          <input type="text" matInput [formControl]="txNombre"/>
-        </mat-form-field>
-        <app-error-messages [control]="txNombre"></app-error-messages>
-      </div>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Porcentaje de descuento</mat-label>
-          <input type="text" matInput [formControl]="txPorcentajeDescuento" maxlength="3" (input)="validarPorcentaje()"/>
-        </mat-form-field>
-        <app-error-messages [control]="txPorcentajeDescuento"></app-error-messages>
-      </div>
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha Hasta (inclusive)</mat-label>
-          <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaHasta" [min]="fechaHoy"/>
-          <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
-          <mat-datepicker #pickerHasta></mat-datepicker>
-        </mat-form-field>
-        <app-error-messages [control]="txFechaHasta"></app-error-messages>
+<div class="custom-dialo-calido" [class.dark-mode]="darkMode">
+  <div class="container py-3 px-4 col-xl-12">
+    <br>
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">{{esConsulta ? 'Consultar promoción' : 'Registrar promoción'}}</p>
+        <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Administrador', 'Encargado']">
+          <mat-icon class="editar mb-3">edit</mat-icon>
+        </button>
       </div>
     </div>
-  </form>
-  <br>
+    <br>
+    <mat-divider></mat-divider>
+
+    <form [formGroup]="form">
+      <div class="row pt-4">
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Nombre</mat-label>
+            <input type="text" matInput [formControl]="txNombre"/>
+          </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
+        </div>
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Porcentaje de descuento</mat-label>
+            <input type="text" matInput [formControl]="txPorcentajeDescuento" maxlength="3" (input)="validarPorcentaje()"/>
+          </mat-form-field>
+          <app-error-messages [control]="txPorcentajeDescuento"></app-error-messages>
+        </div>
+        <div class="col-md">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha Hasta (inclusive)</mat-label>
+            <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaHasta" [min]="fechaHoy"/>
+            <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
+            <mat-datepicker #pickerHasta></mat-datepicker>
+          </mat-form-field>
+          <app-error-messages [control]="txFechaHasta"></app-error-messages>
+        </div>
+      </div>
+    </form>
+    <br>
 
 
-  <h3 class="subtitulo" *ngIf="promocion">Productos incluídos en la promoción:</h3>
-  <h3 class="subtitulo" *ngIf="!promocion">Selecciona los productos incluídos:</h3>
-  <mat-divider class="my-3"></mat-divider>
+    <h3 class="subtitulo" *ngIf="promocion">Productos incluídos en la promoción:</h3>
+    <h3 class="subtitulo" *ngIf="!promocion">Selecciona los productos incluídos:</h3>
+    <mat-divider class="my-3"></mat-divider>
 
-  <!-- loading -->
-  <div class="spinner-wrapper" *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
-  </div>
-
-  <div class="row pt-4" *ngIf="listaProductos.length > 0">
-    <div class="col-md-4">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Producto</mat-label>
-        <input type="text" matInput [formControl]="txBuscar"/>
-        <mat-icon matPrefix>search</mat-icon>
-      </mat-form-field>
-      <app-error-messages [control]="txBuscar"></app-error-messages>
+    <!-- loading -->
+    <div class="spinner-wrapper" *ngIf="isLoading">
+      <mat-spinner></mat-spinner>
     </div>
-    <div class="col-md-8">
-      <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="esConsulta">
-        <mat-icon>add</mat-icon>Nuevo producto
-      </button>
+
+    <div class="row pt-4" *ngIf="listaProductos.length > 0">
+      <div class="col-md-4">
+        <mat-form-field appearance="outline" class="w-100">
+          <mat-label>Producto</mat-label>
+          <input type="text" matInput [formControl]="txBuscar"/>
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+        <app-error-messages [control]="txBuscar"></app-error-messages>
+      </div>
+      <div class="col-md-8">
+        <button mat-stroked-button color="warn" class="btn round new-product-btn" (click)="registrarNuevoProducto()" [disabled]="esConsulta">
+          <mat-icon>add</mat-icon>Nuevo producto
+        </button>
+      </div>
     </div>
-  </div>
 
-  <mat-card [hidden]="isLoading || listaProductos.length === 0">
-    <mat-card-content>
-      <div class="row">
-        <div class="col-md-12">
-          <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta" [class.custom-table]="!esConsulta">
+    <mat-card [hidden]="isLoading || listaProductos.length === 0">
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <mat-table [dataSource]="tableDataSource" matSort [class.disabled-table]="esConsulta" [class.custom-table]="!esConsulta">
 
-            <ng-container matColumnDef="seleccionar">
-              <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Seleccionar">
-                <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
-              </mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="seleccionar">
+                <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Seleccionar">
+                  <mat-checkbox (change)="seleccionarProducto(producto)" [checked]="producto.estaEnPromocion"></mat-checkbox>
+                </mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="imgProducto">
-              <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
-              <mat-cell *matCellDef="let producto">
-                <img [src]="producto.imgProducto" class="img-thumbnail"/>
-              </mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="imgProducto">
+                <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
+                <mat-cell *matCellDef="let producto">
+                  <img [src]="producto.imgProducto" class="img-thumbnail"/>
+                </mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
-            </ng-container>
+              <ng-container matColumnDef="nombre">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
+              </ng-container>
 
-            <ng-container matColumnDef="precioConIVA">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>PRECIO DE VENTA</mat-header-cell>
-              <mat-cell *matCellDef="let producto" data-label="Precio">
-                <div class="precio-container">
+              <ng-container matColumnDef="precioConIVA">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PRECIO DE VENTA</mat-header-cell>
+                <mat-cell *matCellDef="let producto" data-label="Precio">
+                  <div class="precio-container">
                   <span [ngClass]="{'precio-tachado': producto.estaEnPromocion}">
                     {{ producto.precioConIVA | mask: 'separator.2' : { prefix: '$', thousandSeparator: ',' } }}
                   </span>
-                  <span *ngIf="producto.estaEnPromocion" class="precio-promocion">
+                    <span *ngIf="producto.estaEnPromocion" class="precio-promocion">
                     {{ (producto.precioConIVA * (1 - this.txPorcentajeDescuento.value / 100)) | mask: 'separator.2' : { prefix: '$', thousandSeparator: ',' } }}
                   </span>
-                </div>
-              </mat-cell>
-            </ng-container>
+                  </div>
+                </mat-cell>
+              </ng-container>
 
-            <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-            <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+              <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
+              <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
 
-          </mat-table>
+            </mat-table>
 
-          <mat-paginator
-                         [length]="this.listaProductos.length"
-                         [pageSize]="10"
-                         [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+            <mat-paginator
+              [length]="this.listaProductos.length"
+              [pageSize]="10"
+              [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+          </div>
         </div>
+      </mat-card-content>
+    </mat-card>
+
+    <h5 *ngIf="!isLoading && !(this.listaProductos.length > 0)" class="alert alert-secondary text-center">
+      No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+    </h5>
+
+    <br>
+    <mat-divider class="my-3"></mat-divider>
+
+    <!-- Btn de cancelar y registrar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+          Cancelar
+        </button>
+        <button *ngIf="!this.promocion" mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registrar</button>
+        <button *ngIf="this.promocion" mat-raised-button color="accent" class="btn round" (click)="modificarPromocion()" id="btnBuscar2">Modificar</button>
       </div>
-    </mat-card-content>
-  </mat-card>
-
-  <h5 *ngIf="!isLoading && !(this.listaProductos.length > 0)" class="alert alert-secondary text-center">
-    No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
-  </h5>
-
-  <br>
-  <mat-divider class="my-3"></mat-divider>
-
-  <!-- Btn de cancelar y registrar -->
-  <div class="row text-right">
-    <div class="col d-flex justify-content-end">
-      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-        Cancelar
-      </button>
-      <button *ngIf="!this.promocion" mat-raised-button color="accent" class="btn round" (click)="registrarPromocion()" id="btnBuscar">Registrar</button>
-      <button *ngIf="this.promocion" mat-raised-button color="accent" class="btn round" (click)="modificarPromocion()" id="btnBuscar2">Modificar</button>
     </div>
-  </div>
 
-  <br>
+    <br>
+  </div>
 </div>

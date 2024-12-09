@@ -1,92 +1,94 @@
-<div class="container py-3 col-xl-11 form-emergente">
-  <br>
-  <div class="row">
-    <div class="col d-flex justify-content-between align-items-center">
-      <p class="titulo">{{esConsulta ? 'Consultar Asistencia' : 'Registrar Asistencia'}}</p>
-      <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Encargado']">
-        <mat-icon class="editar">edit</mat-icon>
-      </button>
+<div class="custom-dialo-calido" [class.dark-mode]="darkMode">
+  <div class="container py-3 col-xl-11">
+    <br>
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">{{esConsulta ? 'Consultar Asistencia' : 'Registrar Asistencia'}}</p>
+        <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Encargado']">
+          <mat-icon class="editar">edit</mat-icon>
+        </button>
+      </div>
     </div>
+
+    <mat-divider></mat-divider>
+
+    <br>
+    <form [formGroup]="form">
+      <div class="row pt-12">
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Empleado</mat-label>
+            <mat-select [formControl]="txEmpleados">
+              <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id">
+                {{ empleado.nombre + ' ' + empleado.apellido }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <app-error-messages [control]="txEmpleados"></app-error-messages>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha</mat-label>
+            <input matInput [matDatepicker]="picker" [formControl]="txFecha" [max]="fechaHoy"/>
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <app-error-messages [control]="txFecha"></app-error-messages>
+        </div>
+      </div>
+
+      <div class="row pt-12">
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Hora de Entrada</mat-label>
+            <input type="time" step="1" matInput [formControl]="txHoraEntrada"/>
+          </mat-form-field>
+          <app-error-messages [control]="txHoraEntrada"></app-error-messages>
+        </div>
+
+        <div class="col-md-6">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Hora de Salida</mat-label>
+            <input type="time" step="1" matInput [formControl]="txHoraSalida"/>
+          </mat-form-field>
+          <app-error-messages [control]="txHoraSalida"></app-error-messages>
+        </div>
+
+      </div>
+
+      <div class="row pt-12">
+
+        <div class="col-md-12">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Comentario</mat-label>
+            <input type="text" matInput [formControl]="txComentario"/>
+          </mat-form-field>
+          <app-error-messages [control]="txComentario"></app-error-messages>
+        </div>
+
+      </div>
+
+    </form>
+
+    <mat-divider></mat-divider>
+    <br>
+
+    <!-- Btn de cancelar, registrar y modificar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
+          {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
+        </button>
+        <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaAsistencia()" id="btnBuscar">Registrar</button>
+        <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarAsistencia()" id="btnBuscar2">Modificar</button>
+      </div>
+    </div>
+
+    <br>
   </div>
-
-  <mat-divider></mat-divider>
-
-  <br>
-  <form [formGroup]="form">
-    <div class="row pt-12">
-
-      <div class="col-md-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Empleado</mat-label>
-          <mat-select [formControl]="txEmpleados">
-            <mat-option *ngFor="let empleado of listaEmpleados" [value]="empleado.id">
-              {{ empleado.nombre + ' ' + empleado.apellido }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-        <app-error-messages [control]="txEmpleados"></app-error-messages>
-      </div>
-
-      <div class="col-md-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Fecha</mat-label>
-          <input matInput [matDatepicker]="picker" [formControl]="txFecha" [max]="fechaHoy"/>
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-          <mat-datepicker #picker></mat-datepicker>
-        </mat-form-field>
-        <app-error-messages [control]="txFecha"></app-error-messages>
-      </div>
-    </div>
-
-    <div class="row pt-12">
-
-      <div class="col-md-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Hora de Entrada</mat-label>
-          <input type="time" step="1" matInput [formControl]="txHoraEntrada"/>
-        </mat-form-field>
-        <app-error-messages [control]="txHoraEntrada"></app-error-messages>
-      </div>
-
-      <div class="col-md-6">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Hora de Salida</mat-label>
-          <input type="time" step="1" matInput [formControl]="txHoraSalida"/>
-        </mat-form-field>
-        <app-error-messages [control]="txHoraSalida"></app-error-messages>
-      </div>
-
-    </div>
-
-    <div class="row pt-12">
-
-      <div class="col-md-12">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Comentario</mat-label>
-          <input type="text" matInput [formControl]="txComentario"/>
-        </mat-form-field>
-        <app-error-messages [control]="txComentario"></app-error-messages>
-      </div>
-
-    </div>
-
-  </form>
-
-  <mat-divider></mat-divider>
-  <br>
-
-  <!-- Btn de cancelar, registrar y modificar -->
-  <div class="row text-right">
-    <div class="col d-flex justify-content-end">
-      <button mat-button color="accent" class="btn round" (click)="cancelar()" id="btnLimpiarFiltro">
-        {{ (!data.editar && esConsulta) ? 'Volver' : 'Cancelar' }}
-      </button>
-      <button *ngIf="!esConsulta" mat-raised-button color="accent" class="btn round" (click)="registrarNuevaAsistencia()" id="btnBuscar">Registrar</button>
-      <button *ngIf="data.editar" mat-raised-button color="accent" class="btn round" (click)="modificarAsistencia()" id="btnBuscar2">Modificar</button>
-    </div>
-  </div>
-
-  <br>
 </div>
 
 
