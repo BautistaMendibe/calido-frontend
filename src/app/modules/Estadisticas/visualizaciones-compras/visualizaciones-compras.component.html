@@ -1,45 +1,49 @@
-<div class="container">
-    <!-- Filtros -->
-    <div class="filters-container">
-      <div class="row">
-        <div class="col d-flex justify-content-between align-items-center">
-          <p class="titulo">{{ 'Estadísticas de Compras' }}</p>
-        </div>
-      </div>
-  
-      <mat-divider></mat-divider>
-      <br />
-      <form [formGroup]="filtersForm" class="filters-row mt-3">
-        <div class="filter-item">
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha Inicio</mat-label>
-            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
-            <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-            <mat-datepicker #pickerInicio></mat-datepicker>
-          </mat-form-field>
-        </div>
-  
-        <div class="filter-item">
-          <mat-form-field appearance="outline">
-            <mat-label>Fecha Fin</mat-label>
-            <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
-            <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
-            <mat-datepicker #pickerFin></mat-datepicker>
-          </mat-form-field>
-        </div>
-      </form>
-  
-      <div class="row text-right">
-        <div class="col d-flex justify-content-end">
-          <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()">
-            <mat-icon>autorenew</mat-icon>
-            Limpiar
-          </button>
-        </div>
+<div class="container py-3 col-xl-11">
+  <!-- Mat-card para los filtros -->
+  <mat-card class="mat-elevation-z12 p-4 mat-card">
+    <div class="row">
+      <div class="col d-flex justify-content-between align-items-center">
+        <p class="titulo">Estadísticas de Compras</p>
       </div>
     </div>
-    <!-- Gráficos -->
-    <div class="row mt-4">
+    <mat-divider></mat-divider>
+    <br>
+    <h4 style="color: grey">Filtros de búsqueda</h4>
+
+    <form [formGroup]="filtersForm" class="filters-row mt-3">
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Inicio</mat-label>
+          <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
+          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="filter-item">
+        <mat-form-field appearance="outline">
+          <mat-label>Fecha Fin</mat-label>
+          <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
+          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+          <mat-datepicker #pickerFin></mat-datepicker>
+        </mat-form-field>
+      </div>
+    </form>
+
+    <!-- Btn de limpiar -->
+    <div class="row text-right">
+      <div class="col d-flex justify-content-end">
+        <button mat-button color="accent" class="btn round" (click)="limpiarFiltros()" id="btnLimpiarFiltro">
+          <mat-icon>autorenew</mat-icon>
+          Limpiar
+        </button>
+      </div>
+    </div>
+  </mat-card>
+
+  <!-- Mat-card para los gráficos -->
+  <mat-card class="mat-elevation-z12 p-4 mat-card mt-4">
+    <div class="row">
       <div class="col-md-6 mb-4">
         <div class="chart-card">
           <h3 class="chart-title"><span class="icon">📊</span> Gastos Totales por Producto</h3>
@@ -57,13 +61,13 @@
           <h3 class="chart-title"><span class="icon">🕒</span> Compras por Fecha y Hora</h3>
           <iframe [src]="grafanaUrls.comprasPorFechaHora" class="chart-frame"></iframe>
         </div>
-      </div>  
+      </div>
       <div class="col-md-6 mb-4">
         <div class="chart-card">
           <h3 class="chart-title"><span class="icon">📋</span> Compras por Proveedor</h3>
           <iframe [src]="grafanaUrls.comprasPorProveedor" class="chart-frame"></iframe>
         </div>
-      </div>  
-   </div>
+      </div>
+    </div>
+  </mat-card>
 </div>
-  
