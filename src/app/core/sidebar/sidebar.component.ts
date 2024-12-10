@@ -67,6 +67,8 @@ export class SidebarComponent implements OnInit {
   public linkText = false;
   private lastSelectedItem: Menu | null = null;
   public sizeScreen: number = 0;
+  private touchStartX: number = 0;
+  private touchMoveX: number = 0;
 
   constructor(
     private router: Router,
@@ -98,6 +100,11 @@ export class SidebarComponent implements OnInit {
     }
   }
 
+  /**
+   * Mapea los roles de los usuarios a los menús y submenús desde las rutas.
+   * Si una ruta tiene roles definidos, se asignan al menú correspondiente
+   * para que se muestre o no según los permisos del usuario.
+   */
   private mapearRoles() {
     const routeConfig = this.router.config;
 
@@ -242,5 +249,41 @@ export class SidebarComponent implements OnInit {
         });
       }
     });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent) {
+    const clickedInside = (event.target as HTMLElement).closest('.sidenavContainer');
+    if (!clickedInside && this.sideNavState) {
+      this.onSinenavToggle(); // Cierra el sidebar si está abierto
+    }
+  }
+
+  @HostListener('document:touchstart', ['$event'])
+  onTouchStart(event: TouchEvent) {
+    this.touchStartX = event.touches[0].clientX; // Captura la posición inicial del toque
+  }
+
+  @HostListener('document:touchmove', ['$event'])
+  onTouchMove(event: TouchEvent) {
+    this.touchMoveX = event.touches[0].clientX; // Captura la posición actual mientras se mueve
+  }
+
+  @HostListener('document:touchend', ['$event'])
+  onTouchEnd(event: TouchEvent) {
+    // Calcula la dirección del desplazamiento
+    const deltaX = this.touchMoveX - this.touchStartX;
+
+    if (deltaX > 50 && !this.sideNavState) {
+      // Swipe hacia la derecha: abre el sidebar si está cerrado
+      this.onSinenavToggle();
+    } else if (deltaX < -50 && this.sideNavState) {
+      // Swipe hacia la izquierda: cierra el sidebar si está abierto
+      this.onSinenavToggle();
+    }
+
+    // Resetea las posiciones de toque
+    this.touchStartX = 0;
+    this.touchMoveX = 0;
   }
 }
