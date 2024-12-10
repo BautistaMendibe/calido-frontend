@@ -31,6 +31,8 @@ import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum
 import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
 import {combineLatest, Subject} from "rxjs";
 import {takeUntil} from "rxjs/operators";
+import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
+import {Arqueo} from "../../../models/Arqueo.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -48,6 +50,7 @@ export class RegistrarVentaComponent implements OnInit{
   public listaCajas: Caja[] = [];
   public tarjetasRegistradas: Tarjeta[] = [];
   private ventasCtaCteCliente: Venta[] = [];
+  private arqueosHoy: Arqueo[] = [];
 
   public subTotal: number = 0;
   public impuestoIva: number = 0;
@@ -144,6 +147,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.buscarEmpleados();
     this.obtenerEmpleadoLogueado();
     this.buscarCajas();
+    this.buscarArqueoCajaHoy();
   }
 
   private buscarConfiguracionesParaVenta() {
@@ -160,6 +164,18 @@ export class RegistrarVentaComponent implements OnInit{
   private buscarCajas() {
     this.cajasService.consultarCajas(new FiltrosCajas()).subscribe((cajas) => {
       this.listaCajas = cajas;
+    });
+  }
+
+  private buscarArqueoCajaHoy() {
+    const filtro = new FiltrosArqueos();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    filtro.fechaApertura = hoy;
+
+    this.cajasService.consultarArqueos(filtro).subscribe((arqueos) => {
+      this.arqueosHoy = arqueos;
     });
   }
 
@@ -386,6 +402,13 @@ export class RegistrarVentaComponent implements OnInit{
 
   public async confirmarVenta() {
     if (this.form.valid && this.productosSeleccionados.length > 0) {
+      // Validación de que la caja seleccionada esté abierta
+      const arqueoConCaja = this.arqueosHoy.find((arqueo) => arqueo.idCaja === this.txCaja.value);
+      if (!arqueoConCaja || arqueoConCaja.idEstadoArqueo !== 1) {
+        this.notificacionService.openSnackBarError('La caja seleccionada no está abierta, intentelo nuevamente.');
+        return;
+      }
+
       // Validación para consumidor final
       if ((this.totalVenta >= this.montoConsumidorFinal) && this.txCliente.value == -1) {
         this.notificacionService.openSnackBarError(
