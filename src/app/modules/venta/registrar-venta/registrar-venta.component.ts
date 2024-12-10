@@ -580,7 +580,7 @@ export class RegistrarVentaComponent implements OnInit{
             QRPagado = true;
             setTimeout(() => {
               dialogRef.close();
-            }, 2000);
+            }, 3000);
           } else {
             this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
           }
