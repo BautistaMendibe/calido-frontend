@@ -26,6 +26,10 @@ h3 {
   color: var(--color-text-title);
 }
 
+.fecha {
+  font-size: 10px;
+}
+
 .currency-symbol {
   font-weight: bold;
   font-size: 14px;
@@ -54,4 +58,14 @@ h3 {
 canvas {
   height: auto !important;
   width: 100% !important;
+}
+
+
+@media (max-width: 750px) {
+  h3 {
+    font-size: 12px;
+  }
+  .fecha {
+    display: none;
+  }
 }
