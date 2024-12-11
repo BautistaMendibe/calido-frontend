@@ -14,6 +14,12 @@ export class AsistenciasEmpleadosComponent implements OnInit {
   private filtrosAsistencias: FiltrosAsistencias;
   public buscando: boolean = false;
 
+  public fechaHoy = new Date().toLocaleString('es-AR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+
   constructor(private usuariosService: UsuariosService) {
     this.filtrosAsistencias = new FiltrosAsistencias();
   }
