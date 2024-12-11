@@ -601,6 +601,13 @@ export class RegistrarVentaComponent implements OnInit{
           if (pagoExitoso) {
             this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
             QRPagado = true;
+
+            // Actualizar el estado manualmente para que siempre se muestre el ícono
+            if (dialogRef.componentInstance) {
+              dialogRef.componentInstance.estadoPago = 'PAGADO';
+              dialogRef.componentInstance.icono = 'check_circle';
+            }
+
             setTimeout(() => {
               dialogRef.close();
             }, 3000);
