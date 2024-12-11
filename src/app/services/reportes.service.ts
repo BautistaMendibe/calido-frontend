@@ -118,7 +118,7 @@ export class ReportesService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*'], // Ajusta los anchos según el número de columnas y contenido
+            widths: Array(reporte.columnas.length).fill('*'), // Ajusta los anchos según el número de columnas y contenido
             body: [
               // Encabezado de la tabla
               [

@@ -327,7 +327,7 @@ export class GenerarReportesComponent implements OnInit {
             'Compra por proveedores',
             'reportes_pedidos_por_proveedor',
             new FiltrosReportesComando(),
-            ['Proveedor', 'Cantidad de compras'],
+            ['Proveedor', 'Total ($)', 'Cantidad de compras'],
             [],
           ),
         ]
