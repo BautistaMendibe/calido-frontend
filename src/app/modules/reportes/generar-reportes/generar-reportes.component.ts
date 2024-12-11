@@ -308,7 +308,7 @@ export class GenerarReportesComponent implements OnInit {
         'local_shipping',
         [
           new ReporteComando(
-            'Compras por proveedor',
+            'Compra por proveedores',
             'reportes_pedidos_por_proveedor',
             new FiltrosReportesComando(),
             ['Proveedor', 'Cantidad de compras'],

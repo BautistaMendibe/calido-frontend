@@ -60,20 +60,6 @@ export class ReportesService {
                     {
                       columns: [
                         {
-                          text: 'Fecha emisión',
-                          style: 'invoiceSubTitle',
-                          width: 80
-                        },
-                        {
-                          text: fechaEmision,
-                          style: 'invoiceSubValue',
-                          width: '*'
-                        },
-                      ],
-                    },
-                    {
-                      columns: [
-                        {
                           text: 'Fecha desde',
                           style: 'invoiceSubTitle',
                           width: 80
@@ -94,6 +80,20 @@ export class ReportesService {
                         },
                         {
                           text: reporte.filtros.fechaHasta ? reporte.filtros.fechaHasta.toLocaleDateString() : '-',
+                          style: 'invoiceSubValue',
+                          width: '*'
+                        },
+                      ],
+                    },
+                    {
+                      columns: [
+                        {
+                          text: 'Fecha emisión',
+                          style: 'invoiceSubTitle',
+                          width: 80
+                        },
+                        {
+                          text: fechaEmision,
                           style: 'invoiceSubValue',
                           width: '*'
                         },
