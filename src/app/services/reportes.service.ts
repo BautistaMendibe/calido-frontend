@@ -25,7 +25,14 @@ export class ReportesService {
 
 
   public generarPDF(reporte: ReporteComando, configuracion: Configuracion) {
-    const fechaEmision = new Date().toLocaleDateString('es-AR');
+    const fechaEmision = new Date().toLocaleString('es-AR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
 
     const docDefinition: TDocumentDefinitions = {
       content: [
