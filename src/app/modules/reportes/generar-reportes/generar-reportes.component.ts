@@ -183,13 +183,22 @@ export class GenerarReportesComponent implements OnInit {
     const labels = reporte.data.map((item) => item.dato1);
     const data = reporte.data.map((item) => item.dato2);
 
+    const total = data.reduce((sum, value) => sum + value, 0);
+
+    // Agregar porcentaje al label
+    const labelsConPorcentajes = labels.map((label, index) => {
+      const porcentaje = ((data[index] / total) * 100).toFixed(2);
+      return `${label} (${porcentaje}%)`;
+    });
+
+    // Generar colores dinámicos
     const colores = this.generarColoresDinamicos(data.length);
 
     // Crear el gráfico de tipo 'pie'
     this.chart = new Chart(ctx, {
       type: 'pie' as ChartType,
       data: {
-        labels: labels,
+        labels: labelsConPorcentajes,
         datasets: [
           {
             label: 'Cantidad',
@@ -208,6 +217,13 @@ export class GenerarReportesComponent implements OnInit {
           },
           tooltip: {
             enabled: true,
+            callbacks: {
+              label: (tooltipItem) => {
+                const value = tooltipItem.raw as number;
+                const percentage = ((value / total) * 100).toFixed(2);
+                return `${tooltipItem.label}: ${value} (${percentage}%)`;
+              },
+            },
           },
         },
       },
