@@ -44,6 +44,8 @@
   --bg-venta-anulada: #f2f2f2;
   --mat-select-disabled-text-color: rgba(0, 0, 0, 0.38);
   --diferencia-title-color: #333;
+  --bg-summary-venta: #f8fafc;
+  --mdc-form-field-label-text-color: rgba(0, 0, 0, 0.87);
 }
 
 .dark-mode {
@@ -89,6 +91,8 @@
   --bg-venta-anulada: #2e2e42;
   --mat-select-disabled-text-color: rgba(255, 255, 255, 0.38);
   --diferencia-title-color: #EDEDED;
+  --bg-summary-venta: #3E3E4E;
+  --mdc-form-field-label-text-color: #EDEDED;
 }
 
 .mdc-text-field--outlined.mdc-text-field--disabled .mdc-text-field__input {
@@ -98,6 +102,10 @@
 select:disabled,
 .mat-mdc-select.mat-mdc-select-disabled .mat-mdc-select-value {
   color: var(--mat-select-disabled-text-color) !important;
+}
+
+.mdc-form-field {
+  --mdc-form-field-label-text-color: var(--mat-form-field-label-text-color) !important;
 }
 
 html, body {

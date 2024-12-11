@@ -18,6 +18,9 @@ import {MatSort} from "@angular/material/sort";
 import {
   AsignarCuentaCorrienteComponent
 } from "../../clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component";
+import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
+import {CajasService} from "../../../services/cajas.service";
+import {Arqueo} from "../../../models/Arqueo.model";
 
 @Component({
   selector: 'app-consultar-ventas',
@@ -34,6 +37,8 @@ export class ConsultarVentasComponent implements OnInit {
   public formasDePago: FormaDePago[] = [];
   public tiposFactura: TipoFactura[] = [];
   public ventas: Venta[] = [];
+  private arqueosHoy: Arqueo[] = [];
+
   public isLoading: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -45,7 +50,8 @@ export class ConsultarVentasComponent implements OnInit {
     private notificacionService: SnackBarService,
     private ventasService: VentasService,
     private router: Router,
-    private notificationDialogService: NotificationService
+    private notificationDialogService: NotificationService,
+    private cajasService: CajasService
   ){
     this.filtros = new FiltrosVentas();
     this.form = new FormGroup({});
@@ -56,6 +62,7 @@ export class ConsultarVentasComponent implements OnInit {
     this.buscarFormasDePago();
     this.buscarTiposFactura();
     this.buscarVentas();
+    this.buscarArqueoCajaHoy();
   }
 
   private crearForm() {
@@ -109,6 +116,18 @@ export class ConsultarVentasComponent implements OnInit {
     this.buscarVentas();
   }
 
+  private buscarArqueoCajaHoy() {
+    const filtro = new FiltrosArqueos();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    filtro.fechaApertura = hoy;
+
+    this.cajasService.consultarArqueos(filtro).subscribe((arqueos) => {
+      this.arqueosHoy = arqueos;
+    });
+  }
+
   public verVenta(venta: Venta) {
     this.dialog.open(
       DetalleVentaComponent,
@@ -126,6 +145,12 @@ export class ConsultarVentasComponent implements OnInit {
   }
 
   public anularVenta(venta: Venta, onSuccess?: () => void) {
+    // Verifica si la caja de la venta que se desea anular está abierta
+    if (!this.determinarArqueoCajaHoy(venta)) {
+      this.notificacionService.openSnackBarError('La caja de esta venta no está abierta, intentelo nuevamente.');
+      return;
+    }
+
     // Condición para abrir el matDialog
     if (venta.comprobanteAfip.comprobante_nro && venta.cliente.id === -1) {
       // Abre el diálogo con el componente AsignarCuentaCorrienteComponent
@@ -215,6 +240,12 @@ export class ConsultarVentasComponent implements OnInit {
   }
 
   public facturarVenta(venta: Venta) {
+    // Verifica si la caja de la venta que se desea facturar está abierta
+    if (!this.determinarArqueoCajaHoy(venta)) {
+      this.notificacionService.openSnackBarError('La caja de esta venta no está abierta, intentelo nuevamente.');
+      return;
+    }
+
     this.notificationDialogService.confirmation('¿Desea facturar esta venta?', 'Facturar venta')
       .afterClosed()
       .subscribe((value) => {
@@ -229,6 +260,14 @@ export class ConsultarVentasComponent implements OnInit {
           });
         }
       });
+  }
+
+  private determinarArqueoCajaHoy(venta: Venta): boolean {
+    const arqueoConCaja = this.arqueosHoy.find((arqueo) => arqueo.idCaja === venta.idCaja);
+    if (!arqueoConCaja || arqueoConCaja.idEstadoArqueo !== 1) {
+      return false;
+    }
+    return true;
   }
 
   // Getters
