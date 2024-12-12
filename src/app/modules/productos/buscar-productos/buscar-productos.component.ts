@@ -46,6 +46,9 @@ export class BuscarProductosComponent implements OnInit {
     this.txBuscar.valueChanges.subscribe(value => {
       this.filtrarProductos(value);
     });
+
+    
+    
   }
 
   private buscarProductos() {
