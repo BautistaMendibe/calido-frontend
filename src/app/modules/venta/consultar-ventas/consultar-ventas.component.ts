@@ -40,6 +40,7 @@ export class ConsultarVentasComponent implements OnInit {
   private arqueosHoy: Arqueo[] = [];
 
   public isLoading: boolean = false;
+  public maxDate: Date;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -55,6 +56,7 @@ export class ConsultarVentasComponent implements OnInit {
   ){
     this.filtros = new FiltrosVentas();
     this.form = new FormGroup({});
+    this.maxDate = new Date();
   }
 
   ngOnInit() {

@@ -42,14 +42,14 @@ export class ErrorMessagesComponent {
       key: 'matDatepickerMin',
       message: (error: any) => {
         const minDate = new Date(error?.min); // Convierte a Date
-        return `La fecha debe ser mayor al ${minDate.toLocaleDateString('es-AR')}.`;
+        return `La fecha debe ser mayor o igual al ${minDate.toLocaleDateString('es-AR')}.`;
       }
     },
     {
       key: 'matDatepickerMax',
       message: (error: any) => {
         const minDate = new Date(error?.min); // Convierte a Date
-        return `La fecha debe ser menor al ${minDate.toLocaleDateString('es-AR')}.`;
+        return `La fecha debe ser menor o igual al ${minDate.toLocaleDateString('es-AR')}.`;
       }
     },
   ];
