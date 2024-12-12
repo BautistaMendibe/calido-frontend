@@ -29,7 +29,7 @@
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Método de Pago</mat-label>
+            <mat-label>Método de pago</mat-label>
             <mat-select formControlName="payment_method">
               <mat-option value="">Todos</mat-option>
               <mat-option *ngFor="let method of paymentMethods"
@@ -95,7 +95,7 @@
         <div class="row mt-4">
           <div class="col-md-6 mb-4">
             <div class="chart-card">
-              <h3 class="chart-title"><span class="icon">📈</span> Ranking de Ventas por Categoría</h3>
+              <h3 class="chart-title"><span class="icon">📈</span> Ranking de ventas por categoría</h3>
               <iframe [src]="grafanaUrls.categoria" class="chart-frame"></iframe>
             </div>
           </div>
@@ -107,7 +107,7 @@
           </div>
           <div class="col-md-12 mb-4">
             <div class="chart-card chart-full">
-              <h3 class="chart-title"><span class="icon">👤</span> Ventas por Empleados</h3>
+              <h3 class="chart-title"><span class="icon">👤</span> Ventas por empleados</h3>
               <iframe [src]="grafanaUrls.empleados" class="chart-frame"></iframe>
             </div>
           </div>

@@ -3,7 +3,7 @@
   <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Estadísticas de Compras</p>
+        <p class="titulo">Estadísticas de compras</p>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -14,7 +14,7 @@
       <div class="filter-item">
         <mat-form-field appearance="outline">
           <mat-label>Fecha Inicio</mat-label>
-          <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
+          <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" [max]="maxDate"/>
           <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
           <mat-datepicker #pickerInicio></mat-datepicker>
         </mat-form-field>
@@ -23,7 +23,7 @@
       <div class="filter-item">
         <mat-form-field appearance="outline">
           <mat-label>Fecha Fin</mat-label>
-          <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
+          <input matInput [matDatepicker]="pickerFin" formControlName="end_date" [max]="maxDate" [min]="txFechaDesde.value"/>
           <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
           <mat-datepicker #pickerFin></mat-datepicker>
         </mat-form-field>
@@ -46,25 +46,25 @@
     <div class="row">
       <div class="col-md-6 mb-4">
         <div class="chart-card">
-          <h3 class="chart-title"><span class="icon">📊</span> Gastos Totales por Producto</h3>
+          <h3 class="chart-title"><span class="icon">📊</span> Gastos totales por producto</h3>
           <iframe [src]="grafanaUrls.gastosPorProducto" class="chart-frame"></iframe>
         </div>
       </div>
       <div class="col-md-6 mb-4">
         <div class="chart-card">
-          <h3 class="chart-title"><span class="icon">📈</span> Gastos Totales por Tipo de Producto</h3>
+          <h3 class="chart-title"><span class="icon">📈</span> Gastos totales por tipo de producto</h3>
           <iframe [src]="grafanaUrls.gastosPorTipoProducto" class="chart-frame"></iframe>
         </div>
       </div>
       <div class="col-md-6 mb-4">
         <div class="chart-card">
-          <h3 class="chart-title"><span class="icon">🕒</span> Compras por Fecha y Hora</h3>
+          <h3 class="chart-title"><span class="icon">🕒</span> Compras por fecha y hora</h3>
           <iframe [src]="grafanaUrls.comprasPorFechaHora" class="chart-frame"></iframe>
         </div>
       </div>
       <div class="col-md-6 mb-4">
         <div class="chart-card">
-          <h3 class="chart-title"><span class="icon">📋</span> Compras por Proveedor</h3>
+          <h3 class="chart-title"><span class="icon">📋</span> Compras por proveedor</h3>
           <iframe [src]="grafanaUrls.comprasPorProveedor" class="chart-frame"></iframe>
         </div>
       </div>

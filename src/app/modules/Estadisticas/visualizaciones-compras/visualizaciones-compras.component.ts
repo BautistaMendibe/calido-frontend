@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -9,6 +9,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class VisualizacionesComprasComponent implements OnInit {
   filtersForm: FormGroup;
+  public maxDate: Date;
 
   grafanaUrls: {
     gastosPorProducto: SafeResourceUrl;
@@ -28,6 +29,7 @@ export class VisualizacionesComprasComponent implements OnInit {
       start_date: [null],
       end_date: [null],
     });
+    this.maxDate = new Date();
   }
 
   ngOnInit(): void {
@@ -81,6 +83,10 @@ export class VisualizacionesComprasComponent implements OnInit {
       start_date: null,
       end_date: null,
     });
+  }
+
+  get txFechaDesde(): FormControl {
+    return this.filtersForm.get('start_date') as FormControl;
   }
 }
 
