@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {VentasService} from "../../../services/ventas.services";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {Subject} from "rxjs";
+import {ProductosService} from "../../../services/productos.service";
 
 @Component({
   selector: 'app-visualizaciones-ventas',
@@ -10,40 +15,11 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 export class VisualizacionesVentasComponent implements OnInit {
   filtersForm: FormGroup;
   public maxDate: Date;
+  private dataLoaded$ = new Subject<boolean>();
 
-  paymentMethods: string[] = [
-    'Efectivo',
-    'Tarjeta de Crédito',
-    'Tarjeta de Débito',
-    'Transferencia',
-    'Cuenta Corriente',
-    'Saldo de cuenta corriente',
-    'Mercado Pago',
-    'QR',
-  ];
-  categories: string[] = [
-    'Zapatillas',
-    'Accesorios',
-    'Mochila',
-    'Zapato',
-    'Medias',
-    'Gorro',
-    'Sandalias',
-    'Musculosa',
-    'Remera',
-  ];
-  employees: string[] = [
-    'Julian Carles',
-    'Consumidor Final',
-    'Joaquin Antonio Battig Chavez',
-    'Bautista Mendibe',
-    'Bautista Juan Lopez Mendibe',
-    'Nicolas Coronati',
-    'Federico Coronati',
-    'Juan Mendibe',
-    'Silvia Nuñez',
-    'Federico Coronati',
-  ];
+  paymentMethods: string[] = [];
+  categories: string[] = [];
+  employees: string[] = [];
   grafanaUrls: {
     formaPago: SafeResourceUrl;
     fechaHora: SafeResourceUrl;
@@ -56,7 +32,12 @@ export class VisualizacionesVentasComponent implements OnInit {
     empleados: '',
   };
 
-  constructor(private fb: FormBuilder, private sanitizer: DomSanitizer) {
+  constructor(
+    private fb: FormBuilder,
+    private sanitizer: DomSanitizer,
+    private ventasService: VentasService,
+    private usuariosService: UsuariosService,
+    private productosService: ProductosService) {
     this.filtersForm = this.fb.group({
       start_date: [null],
       end_date: [null],
@@ -68,8 +49,43 @@ export class VisualizacionesVentasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateGrafanaUrls();
-    this.filtersForm.valueChanges.subscribe(() => this.updateGrafanaUrls());
+    this.buscarDatosCombo();
+  }
+
+  private buscarDatosCombo() {
+    // Crear un contador para llevar la cuenta de las suscripciones completadas
+    let completedSubscriptions = 0;
+    const totalSubscriptions = 3;
+
+    this.usuariosService.consultarEmpleados(new FiltrosEmpleados()).subscribe((empleados) => {
+      this.employees = empleados.map((empleado) => empleado.nombre + ' ' + empleado.apellido);
+      completedSubscriptions++;
+      if (completedSubscriptions === totalSubscriptions) {
+        this.dataLoaded$.next(true);
+      }
+    });
+
+    this.ventasService.buscarFormasDePago().subscribe((formasPago) => {
+      this.paymentMethods = formasPago.map((formaPago) => formaPago.nombre);
+      completedSubscriptions++;
+      if (completedSubscriptions === totalSubscriptions) {
+        this.dataLoaded$.next(true);
+      }
+    });
+
+    this.productosService.buscarTiposProductos().subscribe((categorias) => {
+      this.categories = categorias.map((categoria) => categoria.nombre);
+      completedSubscriptions++;
+      if (completedSubscriptions === totalSubscriptions) {
+        this.dataLoaded$.next(true);
+      }
+    });
+
+    // Suscribirse al Subject para ejecutar updateGrafanaUrls() cuando todas las suscripciones se completen
+    this.dataLoaded$.subscribe(() => {
+      this.updateGrafanaUrls();
+      this.filtersForm.valueChanges.subscribe(() => this.updateGrafanaUrls());
+    });
   }
 
   private formatToUnix(date: Date | null): number {
