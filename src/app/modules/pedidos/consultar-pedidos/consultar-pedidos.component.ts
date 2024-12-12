@@ -44,6 +44,7 @@ export class ConsultarPedidosComponent implements OnInit {
 
   private filtros: FiltrosPedidos;
   public isLoading: boolean = false;
+  public maxDate: Date;
 
   private formatter = new Intl.NumberFormat('es-AR', {
     style: 'currency',
@@ -66,6 +67,7 @@ export class ConsultarPedidosComponent implements OnInit {
     this.filtros = new FiltrosPedidos();
     this.tableDataSource.paginator = this.paginator;
     pdfMake.vfs = pdfFonts.pdfMake.vfs;
+    this.maxDate = new Date();
   }
 
   ngOnInit() {

@@ -26,7 +26,7 @@ export class SidebarComponent implements OnInit {
         {id: 1, nombre: 'Registrar venta', path:'registrar-venta', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Consultar ventas', path:'consultar-ventas', icon: '', activo: false, subMenu: []}
       ]},
-    {id: 3, nombre: 'Ordenes de Compra', path:'consultar-pedidos', icon: 'receipt', activo: false, subMenu: []},
+    {id: 3, nombre: 'Órdenes de Compra', path:'consultar-pedidos', icon: 'receipt', activo: false, subMenu: []},
     {id: 4, nombre: 'Inventario', path:'consultar-comprobante', icon: 'add_box', activo: false, subMenu: [
         {id: 1, nombre: 'Consultar comprobantes', path:'consultar-comprobante', icon: '', activo: false, subMenu: []},
         {id: 2, nombre: 'Consultar inventario', path:'consultar-inventario', icon: '', activo: false, subMenu: []}

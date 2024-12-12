@@ -23,7 +23,7 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Número de Comprobante</mat-label>
+            <mat-label>Número de comprobante</mat-label>
             <input type="text" matInput [formControl]="txComprobante"/>
           </mat-form-field>
           <app-error-messages [control]="txComprobante"></app-error-messages>
@@ -31,7 +31,7 @@
 
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Tipo Comprobante</mat-label>
+            <mat-label>Tipo comprobante</mat-label>
             <mat-select [formControl]="txTipoComprobante">
               <mat-option *ngFor="let tipoComprobante of listaTiposComprobantes" [value]="tipoComprobante.id">
                 {{ tipoComprobante.nombre }}
@@ -70,7 +70,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Desde</mat-label>
-            <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaEmisionDesde" />
+            <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaEmisionDesde" [max]="maxDate"/>
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
@@ -80,7 +80,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Hasta</mat-label>
-            <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaEmisionHasta" />
+            <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaEmisionHasta" [max]="maxDate" [min]="txFechaEmisionDesde.value"/>
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>

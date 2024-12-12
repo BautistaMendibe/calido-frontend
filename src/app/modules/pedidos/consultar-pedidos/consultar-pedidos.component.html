@@ -2,7 +2,7 @@
   <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Ordenes de Compra</p>
+        <p class="titulo">Órdenes de Compra</p>
         <button mat-stroked-button color="warn" class="btn round mb-3 botonR btn-registrar" (click)="registrarNuevoPedido()">Registrar nueva orden de compra</button>
       </div>
     </div>
@@ -38,7 +38,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Desde</mat-label>
-            <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaEmisionDesde" />
+            <input matInput [matDatepicker]="pickerDesde" [formControl]="txFechaEmisionDesde" [max]="maxDate"/>
             <mat-datepicker-toggle matSuffix [for]="pickerDesde"></mat-datepicker-toggle>
             <mat-datepicker #pickerDesde></mat-datepicker>
           </mat-form-field>
@@ -48,7 +48,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Hasta</mat-label>
-            <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaEmisionHasta" />
+            <input matInput [matDatepicker]="pickerHasta" [formControl]="txFechaEmisionHasta" [max]="maxDate" [min]="txFechaEmisionDesde.value"/>
             <mat-datepicker-toggle matSuffix [for]="pickerHasta"></mat-datepicker-toggle>
             <mat-datepicker #pickerHasta></mat-datepicker>
           </mat-form-field>
@@ -89,7 +89,7 @@
 
 
   <mat-card-header class="header-card">
-    <h2 style="color: grey">Ordenes de Compra encontradas</h2>
+    <h2 style="color: grey">Órdenes de Compra encontradas</h2>
   </mat-card-header>
 
   <!-- loading -->
@@ -169,7 +169,7 @@
   </mat-card>
 
   <h5 *ngIf="!isLoading && !(this.pedidos.length > 0)" class="alert alert-secondary text-center">
-    No se encuentran ordenes de compra para mostrar, realice una nueva búsqueda.
+    No se encuentran órdenes de compra para mostrar, realice una nueva búsqueda.
   </h5>
 </div>
 
