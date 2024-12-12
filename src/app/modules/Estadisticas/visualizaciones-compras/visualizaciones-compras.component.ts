@@ -5,7 +5,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-visualizaciones-compras',
   templateUrl: './visualizaciones-compras.component.html',
-  styleUrls: ['./visualizaciones-compras.component.scss'],
+  styleUrls: ['./visualizaciones-compras.component.scss']
 })
 export class VisualizacionesComprasComponent implements OnInit {
   filtersForm: FormGroup;

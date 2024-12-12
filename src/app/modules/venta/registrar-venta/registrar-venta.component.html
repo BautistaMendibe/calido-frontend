@@ -213,7 +213,7 @@
           <div class="summary-container summary-container-spacing"
                *ngIf="this.tieneCuentaCorrienteRegistrada && this.txCliente.value && this.txCliente.value !== -1">
             <div class="summary-row">
-              <span>Saldo de cuenta corriente:</span>
+              <span>Crédito a favor de cliente en cuenta corriente:</span>
               <span class="text-summary">$ {{ this.saldoCuentaCorrienteCliente | number:'1.2-2':'es-AR' }}</span>
             </div>
             <div class="summary-row"
@@ -221,10 +221,10 @@
                  && this.saldoCuentaCorrienteCliente > 0
                  && this.tieneCuentaCorrienteRegistrada
                  && (this.saldoCuentaCorrienteCliente >= this.totalVenta)">
-              <span>Usar saldo para cancelar totalmente esta venta:</span>
+              <span>Usar para cancelar totalmente esta venta:</span>
               <mat-checkbox
                 [formControl]="txCancelarConSaldo"
-                matTooltip="Usar saldo de cuenta corriente para este venta">
+                matTooltip="Usar crédito a favor del cliente para cancelar totalmente esta venta">
               </mat-checkbox>
             </div>
             <div class="summary-row"
@@ -232,10 +232,10 @@
                  && this.tieneCuentaCorrienteRegistrada
                  && (this.saldoCuentaCorrienteCliente > 0
                  && this.saldoCuentaCorrienteCliente < this.totalVenta)">
-              <span>Usar saldo parcial para cubrir esta venta:</span>
+              <span>Usar parcialmente para cubrir esta venta:</span>
               <mat-checkbox
                 [formControl]="txCancelarConSaldo"
-                matTooltip="Aplicar saldo a favor del cliente para esta venta de forma parcial">
+                matTooltip="Aplicar crédito a favor del cliente para esta venta de forma parcial">
               </mat-checkbox>
             </div>
           </div>
@@ -283,7 +283,7 @@
               <div class="dotted-line" *ngIf="this.txCancelarConSaldo.value === true && cantidadCuotaSeleccionada.interes"></div>
               <div *ngIf="this.txCancelarConSaldo.value === true">
                 <div class="summary-row">
-                  <span>Saldo de cuenta corriente</span>
+                  <span>Crédito de cuenta corriente</span>
                   <span class="text-summary">
                     -$ {{
                       (this.saldoCuentaCorrienteCliente >= this.totalVenta

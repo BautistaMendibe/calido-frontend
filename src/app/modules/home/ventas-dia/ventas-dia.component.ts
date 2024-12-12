@@ -15,6 +15,12 @@ export class VentasDiaComponent implements OnInit{
   public ventas: VentasDiariaComando[] = [];
   public buscando: boolean = false;
   private isDarkMode: boolean = false;
+  public fechaHoy = new Date().toLocaleString('es-AR', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  });
+  public fechaAyer = new Date();
 
 
   constructor(private ventasService: VentasService, private themeService: ThemeCalidoService) {
@@ -22,6 +28,7 @@ export class VentasDiaComponent implements OnInit{
 
   ngOnInit() {
     this.buscarInfoTema();
+    this.fechaAyer.setDate(this.fechaAyer.getDate() - 1);
     this.buscarTotalVentas();
   }
 

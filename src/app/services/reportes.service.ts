@@ -25,7 +25,14 @@ export class ReportesService {
 
 
   public generarPDF(reporte: ReporteComando, configuracion: Configuracion) {
-    const fechaEmision = new Date().toLocaleDateString('es-AR');
+    const fechaEmision = new Date().toLocaleString('es-AR', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+
 
     const docDefinition: TDocumentDefinitions = {
       content: [
@@ -60,20 +67,6 @@ export class ReportesService {
                     {
                       columns: [
                         {
-                          text: 'Fecha emisión',
-                          style: 'invoiceSubTitle',
-                          width: 80
-                        },
-                        {
-                          text: fechaEmision,
-                          style: 'invoiceSubValue',
-                          width: '*'
-                        },
-                      ],
-                    },
-                    {
-                      columns: [
-                        {
                           text: 'Fecha desde',
                           style: 'invoiceSubTitle',
                           width: 80
@@ -99,6 +92,20 @@ export class ReportesService {
                         },
                       ],
                     },
+                    {
+                      columns: [
+                        {
+                          text: 'Fecha emisión',
+                          style: 'invoiceSubTitle',
+                          width: 80
+                        },
+                        {
+                          text: fechaEmision,
+                          style: 'invoiceSubValue',
+                          width: '*'
+                        },
+                      ],
+                    },
                   ],
                 }
               ],
@@ -111,7 +118,7 @@ export class ReportesService {
         {
           table: {
             headerRows: 1,
-            widths: ['*', '*'], // Ajusta los anchos según el número de columnas y contenido
+            widths: Array(reporte.columnas.length).fill('*'), // Ajusta los anchos según el número de columnas y contenido
             body: [
               // Encabezado de la tabla
               [

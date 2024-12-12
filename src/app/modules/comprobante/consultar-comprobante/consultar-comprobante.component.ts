@@ -37,9 +37,10 @@ export class ConsultarComprobanteComponent implements OnInit {
   public listaUsuarios: Usuario[] = [];
   public listaTiposComprobantes: TipoComprobante[] = [];
   public columnas: string[] = ['fechaEmision', 'numeroComprobante', 'tipoComprobante', 'proveedor', 'responsable', 'total', 'acciones'];
-
   private filtros: FiltrosComprobantes;
   public isLoading: boolean = false;
+  public maxDate: Date;
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -63,6 +64,7 @@ export class ConsultarComprobanteComponent implements OnInit {
   ) {
     this.form = new FormGroup({});
     this.filtros = new FiltrosComprobantes();
+    this.maxDate = new Date();
   }
 
   ngOnInit() {

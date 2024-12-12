@@ -19,8 +19,8 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Fecha de Apertura</mat-label>
-            <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" />
+            <mat-label>Fecha de apertura</mat-label>
+            <input matInput [matDatepicker]="pickerApertura" [formControl]="txFechaApertura" [max]="maxDate"/>
             <mat-datepicker-toggle matSuffix [for]="pickerApertura"></mat-datepicker-toggle>
             <mat-datepicker #pickerApertura></mat-datepicker>
           </mat-form-field>

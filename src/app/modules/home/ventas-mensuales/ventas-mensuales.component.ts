@@ -50,8 +50,34 @@ export class VentasMensualesComponent implements OnInit {
 
   private buscarCantidadVentasMensuales() {
     this.buscando = true;
+
+    // Mapeo de meses en inglés a español
+    const mesesEnEspanol: { [key: string]: string } = {
+      January: 'Enero',
+      February: 'Febrero',
+      March: 'Marzo',
+      April: 'Abril',
+      May: 'Mayo',
+      June: 'Junio',
+      July: 'Julio',
+      August: 'Agosto',
+      September: 'Septiembre',
+      October: 'Octubre',
+      November: 'Noviembre',
+      December: 'Diciembre'
+    };
+
     this.ventasService.buscarCantidadVentasMensuales().subscribe((cantidadVentasMensuales) => {
-      this.ventasMesuales = cantidadVentasMensuales;
+
+      // Traducir los nombres de los meses
+      this.ventasMesuales = cantidadVentasMensuales.map(venta => {
+        const [mes, anio] = venta.mes.split('  '); // Separar mes y año
+        return {
+          ...venta,
+          mes: `${mesesEnEspanol[mes.trim()]} ${anio.trim()}` // Traducir el mes y conservar el año
+        };
+      });
+
       this.barChartLabels = this.ventasMesuales.map(venta => venta.mes);
       this.barChartData[0].data = this.ventasMesuales.map(venta => venta.total);
       this.buscando = false;

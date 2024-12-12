@@ -321,4 +321,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   get txBuscar() {
     return this.form.get('txBuscar') as FormControl;
   }
+
+  protected readonly Math = Math;
 }

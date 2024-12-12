@@ -121,7 +121,7 @@
 .diferencia-title {
   font-size: 1.5rem;
   font-weight: bold;
-  color: #333;
+  color: var(--diferencia-title-color) !important;
   margin: 0;
 }
 

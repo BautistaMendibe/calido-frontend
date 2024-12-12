@@ -30,6 +30,7 @@ export class ConsultarArqueoCajaComponent implements OnInit {
   private filtros: FiltrosArqueos;
   private unsubscribe$: Subject<void> = new Subject<void>();
   public isLoading: boolean = false;
+  public maxDate: Date;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -46,6 +47,7 @@ export class ConsultarArqueoCajaComponent implements OnInit {
       txEstado: [''],
     });
     this.filtros = new FiltrosArqueos();
+    this.maxDate = new Date();
   }
 
   ngOnInit() {
