@@ -1,6 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import {ProductosService} from "../../../services/productos.service";
+import {ProveedoresService} from "../../../services/proveedores.service";
+import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
+import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-visualizaciones-compras',
@@ -9,6 +14,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class VisualizacionesComprasComponent implements OnInit {
   filtersForm: FormGroup;
+  private dataLoaded$ = new Subject<boolean>();
 
   grafanaUrls: {
     gastosPorProducto: SafeResourceUrl;
@@ -35,39 +41,17 @@ export class VisualizacionesComprasComponent implements OnInit {
 
   productosArray: { id: number; nombre: string }[] = [];
 
-  productos: { [id: number]: string } = {
-    10: 'Remera Térmica',
-    11: 'Sandalia Abigail',
-    12: 'Sandalias Sole',
-    19: 'Musculosa moda',
-    21: 'Remera bordada',
-    23: 'Zapatillas Sneaker',
-    24: 'Pashmina Chalina',
-    25: 'Converse Hi',
-    26: 'Converse Low',
-    27: 'Crocs Crocband',
-    35: 'Gorro De Lana Tipo A',
-    36: 'Gorro Lana Bean',
-    37: 'Medias Altas',
-    38: 'Zapato',
-  };
+  productos: { [id: number]: string } = {};
 
   tiposProductoArray: { id: number; nombre: string }[] = [];
 
-  tiposProducto: { [id: number]: string } = {
-    20: 'Zapato',
-    19: 'Medias',
-    18: 'Gorro',
-    15: 'Accesorio',
-    12: 'Zapatillas',
-    11: 'Musculosa',
-    9: 'Sandalias',
-    7: 'Remera Térmica',
-    3: 'Remera',
-    1: 'Jean',
-  };
+  tiposProducto: { [id: number]: string } = {};
 
-  constructor(private fb: FormBuilder, private sanitizer: DomSanitizer) {
+  constructor(
+    private fb: FormBuilder,
+    private sanitizer: DomSanitizer,
+    private productosService: ProductosService,
+    private proveedoresService: ProveedoresService) {
     // Inicializa el formulario
     this.filtersForm = this.fb.group({
       start_date: [null],
@@ -79,24 +63,71 @@ export class VisualizacionesComprasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.updateGrafanaUrls(); // Inicializa las URLs
-    this.filtersForm.valueChanges.subscribe(() => this.updateGrafanaUrls());
+    this.buscarDatosCombo();
+  }
 
-    // Convierte los objetos en arrays para mat-select
-    this.proveedoresArray = Object.entries(this.proveedores).map(([id, nombre]) => ({
-      id: Number(id),
-      nombre,
-    }));
+  private buscarDatosCombo() {
+    // Crear un contador para llevar la cuenta de las suscripciones completadas
+    let completedSubscriptions = 0;
+    const totalSubscriptions = 3;
 
-    this.productosArray = Object.entries(this.productos).map(([id, nombre]) => ({
-      id: Number(id),
-      nombre,
-    }));
+    this.productosService.consultarProductos(new FiltrosProductos()).subscribe((productos) => {
+      // Mapea los productos recibidos a la lista en el formato { [id: number]: string }
+      this.productos = productos.reduce((acc, producto) => {
+        acc[producto.id] = producto.nombre; // Asigna el nombre al id
+        return acc;
+      }, {} as { [id: number]: string }); // Asegura el tipo del objeto vacío
 
-    this.tiposProductoArray = Object.entries(this.tiposProducto).map(([id, nombre]) => ({
-      id: Number(id),
-      nombre,
-    }));
+      completedSubscriptions++;
+      if (completedSubscriptions === totalSubscriptions) {
+        this.dataLoaded$.next(true);
+      }
+    });
+
+    this.productosService.buscarTiposProductos().subscribe((tiposProducto) => {
+      this.tiposProducto = tiposProducto.reduce((acc, tipo) => {
+        acc[tipo.id] = tipo.nombre; // Asigna el nombre al id
+        return acc;
+      }, {} as { [id: number]: string }); // Asegura el tipo del objeto vacío
+
+      completedSubscriptions++;
+      if (completedSubscriptions === totalSubscriptions) {
+        this.dataLoaded$.next(true);
+      }
+    });
+
+    this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
+      this.proveedores = proveedores.reduce((acc, proveedor) => {
+        acc[proveedor.id] = proveedor.nombre; // Asigna el nombre al id
+        return acc;
+      }, {} as { [id: number]: string }); // Asegura el tipo del objeto vacío
+      completedSubscriptions++;
+
+      if (completedSubscriptions === totalSubscriptions) {
+        this.dataLoaded$.next(true);
+      }
+    });
+
+    // Suscribirse al Subject para ejecutar updateGrafanaUrls() cuando todas las suscripciones se completen
+    this.dataLoaded$.subscribe(() => {
+      this.updateGrafanaUrls();
+      this.filtersForm.valueChanges.subscribe(() => this.updateGrafanaUrls());
+
+      this.proveedoresArray = Object.entries(this.proveedores).map(([id, nombre]) => ({
+        id: Number(id),
+        nombre,
+      }));
+
+      this.productosArray = Object.entries(this.productos).map(([id, nombre]) => ({
+        id: Number(id),
+        nombre,
+      }));
+
+      this.tiposProductoArray = Object.entries(this.tiposProducto).map(([id, nombre]) => ({
+        id: Number(id),
+        nombre,
+      }));
+    });
   }
 
   private formatToUnix(date: Date | null): number {

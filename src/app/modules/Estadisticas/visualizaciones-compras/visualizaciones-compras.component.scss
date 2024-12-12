@@ -1,4 +1,3 @@
-
 .chart-title {
   font-size: 1.5rem;
   font-weight: bold; /* Hace los títulos en negrita */
@@ -6,7 +5,6 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  text-transform: capitalize; /* Opcional: para que los títulos tengan la primera letra en mayúscula */
 }
 
 .filters {
@@ -78,93 +76,3 @@ button {
   width: 100%;
   height: 400px;
 }
-
-.container {
-    padding: 20px;
-    font-family: 'Roboto', sans-serif;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-  }
-  
-  .chart-title {
-    font-size: 1.5rem;
-    font-weight: bold; /* Hace los títulos en negrita */
-    color: #333;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    text-transform: capitalize; /* Opcional: para que los títulos tengan la primera letra en mayúscula */
-  }
-  
-  .filters {
-    margin-bottom: 20px;
-    padding: 20px;
-    background: #f9fafc;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  }
-  
-  .filters-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); /* Distribución responsiva */
-    gap: 20px; /* Espaciado entre los filtros */
-  }
-  
-  .filter-item {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  button {
-    border-radius: 20px;
-    font-weight: bold;
-    padding: 10px 20px;
-  }
-  
-  .mat-form-field {
-    width: 100%;
-  }
-  
-  .chart-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Dos columnas para gráficos */
-    gap: 20px;
-    margin-top: 20px;
-  }
-  
-  .chart-full {
-    grid-column: span 2; /* Gráficos que ocupan toda la fila */
-  }
-  
-  .chart-card {
-    background: #ffffff;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .chart-card h3 {
-    font-size: 1.3rem;
-    margin-bottom: 15px;
-    color: #333;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-  
-  .chart-card h3 .icon {
-    font-size: 1.5rem;
-    color: #666;
-  }
-  
-  .chart-frame {
-    border: none;
-    border-radius: 10px;
-    width: 100%;
-    height: 400px;
-  }
-  
