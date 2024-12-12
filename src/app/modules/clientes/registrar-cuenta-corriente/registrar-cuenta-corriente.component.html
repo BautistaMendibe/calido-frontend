@@ -87,7 +87,7 @@
             formControlName="txBalance"
             type="text"
             mask="separator.2"
-            [prefix]="(Math.abs(txDebe.value || 0) > Math.abs(txHaber.value || 0)) ? '$ ' : '-$ '"
+            [prefix]="(Math.abs(txDebe.value || 0) >= Math.abs(txHaber.value || 0)) ? '$ ' : '-$ '"
             thousandSeparator=","
             [allowNegativeNumbers]="false"
           />
