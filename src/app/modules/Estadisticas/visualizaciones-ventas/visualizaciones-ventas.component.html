@@ -2,7 +2,7 @@
   <mat-card class="mat-elevation-z12 p-4 mat-card">
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">Estadisticas de Ventas</p>
+        <p class="titulo">Estadísticas de ventas</p>
       </div>
     </div>
     <mat-divider></mat-divider>
@@ -13,16 +13,16 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Fecha Inicio</mat-label>
-            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date"/>
+            <mat-label>Fecha Desde</mat-label>
+            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" [max]="maxDate"/>
             <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerInicio></mat-datepicker>
           </mat-form-field>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Fecha Fin</mat-label>
-            <input matInput [matDatepicker]="pickerFin" formControlName="end_date"/>
+            <mat-label>Fecha Hasta</mat-label>
+            <input matInput [matDatepicker]="pickerFin" formControlName="end_date" [max]="maxDate" [min]="txFechaDesde.value"/>
             <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
             <mat-datepicker #pickerFin></mat-datepicker>
           </mat-form-field>

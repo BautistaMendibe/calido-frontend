@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 
 @Component({
@@ -9,6 +9,7 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 })
 export class VisualizacionesVentasComponent implements OnInit {
   filtersForm: FormGroup;
+  public maxDate: Date;
 
   paymentMethods: string[] = [
     'Efectivo',
@@ -31,7 +32,6 @@ export class VisualizacionesVentasComponent implements OnInit {
     'Musculosa',
     'Remera',
   ];
-  
   employees: string[] = [
     'Julian Carles',
     'Consumidor Final',
@@ -64,6 +64,7 @@ export class VisualizacionesVentasComponent implements OnInit {
       var_category: [''],
       employee_name: [''],
     });
+    this.maxDate = new Date();
   }
 
   ngOnInit(): void {
@@ -127,5 +128,9 @@ export class VisualizacionesVentasComponent implements OnInit {
       var_category: '', // "Todas" o vacío
       employee_name: '', // "Todos" o vacío
     });
+  }
+
+  get txFechaDesde(): FormControl {
+    return this.filtersForm.get('start_date') as FormControl;
   }
 }
