@@ -6,6 +6,7 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {Subject} from "rxjs";
 import {ProductosService} from "../../../services/productos.service";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-visualizaciones-ventas',
@@ -14,6 +15,7 @@ import {ProductosService} from "../../../services/productos.service";
 })
 export class VisualizacionesVentasComponent implements OnInit {
   filtersForm: FormGroup;
+  public darkMode: boolean = false;
   public maxDate: Date;
   private dataLoaded$ = new Subject<boolean>();
 
@@ -37,7 +39,8 @@ export class VisualizacionesVentasComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private ventasService: VentasService,
     private usuariosService: UsuariosService,
-    private productosService: ProductosService) {
+    private productosService: ProductosService,
+    private themeService: ThemeCalidoService) {
     this.filtersForm = this.fb.group({
       start_date: [null],
       end_date: [null],
@@ -49,7 +52,12 @@ export class VisualizacionesVentasComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.obtenerInformacionTema();
     this.buscarDatosCombo();
+  }
+
+  obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private buscarDatosCombo() {
@@ -111,6 +119,8 @@ export class VisualizacionesVentasComponent implements OnInit {
 
     const baseGrafanaUrl = 'https://grafanae-production.up.railway.app/d-solo/fe2gk0zzvuo00f/ventas';
 
+    const theme: string = this.darkMode ? 'dark' : 'light';
+
     let employeeFilter = '';
     if (employee_name === 'Todos') {
       employeeFilter = this.employees.map((name) => encodeURIComponent(name)).join(',');
@@ -119,19 +129,19 @@ export class VisualizacionesVentasComponent implements OnInit {
     }
 
     this.grafanaUrls.formaPago = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=7&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=7&theme=${theme}`
     );
 
     this.grafanaUrls.fechaHora = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&orgId=1&panelId=8&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&orgId=1&panelId=8&theme=${theme}`
     );
 
     this.grafanaUrls.categoria = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=2&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=2&theme=${theme}`
     );
 
     this.grafanaUrls.empleados = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&orgId=1&panelId=9&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&orgId=1&panelId=9&theme=${theme}`
     );
   }
 

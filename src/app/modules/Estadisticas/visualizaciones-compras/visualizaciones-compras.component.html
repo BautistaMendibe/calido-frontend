@@ -17,7 +17,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Desde</mat-label>
-            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
+            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" [max]="maxDate"/>
             <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
             <mat-datepicker #pickerInicio></mat-datepicker>
           </mat-form-field>
@@ -26,7 +26,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha Hasta</mat-label>
-            <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
+            <input matInput [matDatepicker]="pickerFin" formControlName="end_date" [max]="maxDate" [min]="txFechaDesde.value" />
             <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
             <mat-datepicker #pickerFin></mat-datepicker>
           </mat-form-field>

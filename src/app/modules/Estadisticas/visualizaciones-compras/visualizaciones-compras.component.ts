@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import {ProductosService} from "../../../services/productos.service";
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {FiltrosProductos} from "../../../models/comandos/FiltrosProductos.comando";
 import {Subject} from "rxjs";
+import {ThemeCalidoService} from "../../../services/theme.service";
 
 @Component({
   selector: 'app-visualizaciones-compras',
@@ -14,6 +15,8 @@ import {Subject} from "rxjs";
 })
 export class VisualizacionesComprasComponent implements OnInit {
   filtersForm: FormGroup;
+  public darkMode: boolean = false;
+  public maxDate: Date;
   private dataLoaded$ = new Subject<boolean>();
 
   grafanaUrls: {
@@ -29,7 +32,6 @@ export class VisualizacionesComprasComponent implements OnInit {
   };
 
   proveedoresArray: { id: number; nombre: string }[] = [];
-
   proveedores: { [id: number]: string } = {
     43: 'María Amores y Asociados',
     44: 'Prit Sould',
@@ -40,18 +42,16 @@ export class VisualizacionesComprasComponent implements OnInit {
   };
 
   productosArray: { id: number; nombre: string }[] = [];
-
   productos: { [id: number]: string } = {};
-
   tiposProductoArray: { id: number; nombre: string }[] = [];
-
   tiposProducto: { [id: number]: string } = {};
 
   constructor(
     private fb: FormBuilder,
     private sanitizer: DomSanitizer,
     private productosService: ProductosService,
-    private proveedoresService: ProveedoresService) {
+    private proveedoresService: ProveedoresService,
+    private themeService: ThemeCalidoService) {
     // Inicializa el formulario
     this.filtersForm = this.fb.group({
       start_date: [null],
@@ -60,10 +60,16 @@ export class VisualizacionesComprasComponent implements OnInit {
       producto: [''],
       tipo_producto: ['']
     });
+    this.maxDate = new Date();
   }
 
   ngOnInit(): void {
+    this.obtenerInformacionTema();
     this.buscarDatosCombo();
+  }
+
+  obtenerInformacionTema() {
+    this.darkMode = this.themeService.isDarkMode();
   }
 
   private buscarDatosCombo() {
@@ -151,22 +157,24 @@ export class VisualizacionesComprasComponent implements OnInit {
     const formattedStartDate = this.formatToString(start_date) || '2024-10-28';
     const formattedEndDate = this.formatToString(end_date) || '2024-12-03';
 
+    const theme: string = this.darkMode ? 'dark' : 'light';
+
     const baseGrafanaUrl = 'https://grafanae-production.up.railway.app/d-solo/de2ghvhvnumf4d/compras';
 
     this.grafanaUrls.gastosPorProducto = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=4&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=4&theme=${theme}`
     );
 
     this.grafanaUrls.gastosPorTipoProducto = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=2&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=2&theme=${theme}`
     );
 
     this.grafanaUrls.comprasPorFechaHora = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=5&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=5&theme=${theme}`
     );
 
     this.grafanaUrls.comprasPorProveedor = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=6&theme=light`
+      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-proveedor=${proveedor}&var-producto=${producto}&var-tipo_producto=${tipo_producto}&orgId=1&panelId=6&theme=${theme}`
     );
   }
 
@@ -179,5 +187,9 @@ export class VisualizacionesComprasComponent implements OnInit {
       producto: '',
       tipo_producto: ''
     });
+  }
+
+  get txFechaDesde(): FormControl {
+    return this.filtersForm.get('start_date') as FormControl;
   }
 }
