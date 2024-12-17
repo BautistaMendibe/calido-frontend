@@ -29,6 +29,8 @@ export class Venta {
   bonificacion: number;
   saldoACancelarParcialmente: number;
 
+  totalDeVentas: number;
+
   constructor(
       id?: number,
       montoTotal?: number,
@@ -51,7 +53,8 @@ export class Venta {
       saldoDisponible?: number,
       canceladaConSaldo?: number,
       bonificacion?: number,
-      saldoACancelarParcialmente?: number
+      saldoACancelarParcialmente?: number,
+      totalDeVentas?: number
   ) {
 
     this.id = id!;
@@ -76,5 +79,6 @@ export class Venta {
     this.canceladaConSaldo = canceladaConSaldo!;
     this.bonificacion = bonificacion!;
     this.saldoACancelarParcialmente = saldoACancelarParcialmente!;
+    this.totalDeVentas = totalDeVentas!;
   }
 }

@@ -76,7 +76,7 @@
           <mat-icon>autorenew</mat-icon>
           Limpiar
         </button>
-        <button mat-raised-button color="accent" class="btn round" (click)="buscarVentas()" id="btnBuscar">Buscar</button>
+        <button mat-raised-button color="accent" class="btn round" (click)="buscarVentasPaginado(0, 10)" id="btnBuscar">Buscar</button>
       </div>
     </div>
   </mat-card>
@@ -99,28 +99,28 @@
 
             <ng-container matColumnDef="id">
               <mat-header-cell *matHeaderCellDef mat-sort-header>NÚMERO DE VENTA</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.id }}</mat-cell>
+              <mat-cell *matCellDef="let venta">{{ venta?.id }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="cliente">
               <mat-header-cell *matHeaderCellDef>CLIENTE</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.cliente.nombre + ' ' + venta.cliente.apellido }}</mat-cell>
+              <mat-cell *matCellDef="let venta">{{ venta?.cliente.nombre + ' ' + venta?.cliente.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="montoTotal">
               <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
-              <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
+              <mat-cell *matCellDef="let venta">$ {{ venta?.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="fecha">
               <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
+              <mat-cell *matCellDef="let venta">{{ venta?.fecha | date: 'dd/MM/yyyy' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="formaDePago">
               <mat-header-cell *matHeaderCellDef>FORMA DE PAGO</mat-header-cell>
               <mat-cell *matCellDef="let venta">
-                 {{ venta.formaDePago?.nombre }}
+                 {{ venta?.formaDePago?.nombre }}
               </mat-cell>
             </ng-container>
 
@@ -128,13 +128,13 @@
               <mat-header-cell *matHeaderCellDef>PRODUCTOS</mat-header-cell>
               <mat-cell *matCellDef="let venta">
                 <div class="productos-container">
-                  <ng-container *ngFor="let producto of venta.productos.slice(0, 3)">
+                  <ng-container *ngFor="let producto of venta?.productos.slice(0, 3)">
                     <span class="producto-circulo" [matTooltip]="producto.nombre" (click)="verProducto(producto)">
                     <img [src]="producto.imgProducto" alt="Producto" class="producto-imagen">
                     </span>
                   </ng-container>
-                  <span *ngIf="venta.productos.length > 3" matTooltip="{{ getNombresProductos(venta.productos) }}" class="mas-productos">
-                        +{{ venta.productos.length - 3 }}
+                  <span *ngIf="venta?.productos.length > 3" matTooltip="{{ getNombresProductos(venta.productos) }}" class="mas-productos">
+                        + {{ venta?.productos.length - 3 }}
                   </span>
                 </div>
               </mat-cell>
@@ -147,17 +147,17 @@
                   <mat-icon class="ver">visibility</mat-icon>
                 </button>
                 <button
-                  *ngIf="venta.anulada == 0"
+                  *ngIf="venta?.anulada == 0"
                   mat-icon-button
                   color="primary"
                   matTooltip="Anular venta"
                   (click)="anularVenta(venta)"
-                  [disabled]="venta.canceladaConSaldo === 1 && venta.comprobanteAfip.comprobante_pdf_url !== null"
+                  [disabled]="venta?.canceladaConSaldo === 1 && venta?.comprobanteAfip.comprobante_pdf_url !== null"
                   [appRole]="['Cajero', 'Encargado']">
                   <mat-icon class="eliminar">settings_backup_restore</mat-icon>
                 </button>
                 <button
-                  *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null"
+                  *ngIf="venta?.comprobanteAfip.comprobante_pdf_url != null"
                   mat-icon-button color="primary"
                   matTooltip="Imprimir comprobante"
                   (click)="imprimirComprobante(venta)"
@@ -165,12 +165,12 @@
                   <mat-icon class="imprimir">print</mat-icon>
                 </button>
                 <button
-                  *ngIf="venta.comprobanteAfip.comprobante_pdf_url == null && venta.anulada == 0"
+                  *ngIf="venta?.comprobanteAfip.comprobante_pdf_url == null && venta?.anulada == 0"
                   mat-icon-button
                   color="primary"
                   matTooltip="Facturar venta"
                   (click)="facturarVenta(venta)"
-                  [disabled]="venta.canceladaConSaldo === 1"
+                  [disabled]="venta?.canceladaConSaldo === 1"
                   [appRole]="['Cajero', 'Encargado']">
                   <mat-icon class="facturar">attach_money</mat-icon>
                 </button>
@@ -179,14 +179,15 @@
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
             <mat-row *matRowDef="let row; columns: columnas;"
-                     [ngClass]="{'anulada-row': row.anulada}"
-                     [matTooltip]="row.anulada ? 'Venta anulada' : ''"></mat-row>
+                     [ngClass]="{'anulada-row': row?.anulada}"
+                     [matTooltip]="row?.anulada ? 'Venta anulada' : ''"></mat-row>
           </mat-table>
 
           <mat-paginator
-            [length]="this.ventas.length"
+            [length]="totalDeVentas"
             [pageSize]="10"
-            [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+            [pageSizeOptions]="[5, 10, 20]"
+            (page)="onPageChange($event)" showFirstLastButtons>
           </mat-paginator>
         </div>
       </div>

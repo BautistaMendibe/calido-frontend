@@ -49,6 +49,10 @@ export class VentasService {
     return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas`, filtros);
   }
 
+  public buscarVentasPaginadas(filtros: FiltrosVentas): Observable<Venta[]>{
+    return this.http.post<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-paginadas`, filtros);
+  }
+
   public buscarVentasPorCC(idUsuario: number): Observable<Venta[]> {
     return this.http.get<Venta[]>(`${this.urlBackend}/${this.controllerName}/buscar-ventas-por-cc/${idUsuario}`);
   }
