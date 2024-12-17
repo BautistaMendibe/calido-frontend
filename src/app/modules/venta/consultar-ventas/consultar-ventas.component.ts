@@ -92,10 +92,11 @@ export class ConsultarVentasComponent implements OnInit {
     });
   }
 
-  public buscarVentasPaginado(offset: number, limit: number) {
-    // Salir si ya se cargaron las ventas para este offset
-    if (this.cargadosOffsets.has(offset)) {
-      return;
+  public buscarVentasPaginado(offset: number, limit: number, reset: boolean = false) {
+    // Si se desea resetear los datos, limpiar las ventas y los offsets cargados
+    if (reset) {
+      this.ventas = []; // Limpiar las ventas
+      this.cargadosOffsets.clear(); // Limpiar los offsets cargados
     }
 
     // Asignación de filtros
@@ -107,13 +108,18 @@ export class ConsultarVentasComponent implements OnInit {
     this.filtros.limit = limit;
     this.filtros.offset = offset;
 
+    // Salir si ya se cargaron las ventas para este offset
+    if (this.cargadosOffsets.has(offset)) {
+      return;
+    }
+
     this.isLoading = true;
 
     this.ventasService.buscarVentasPaginadas(this.filtros).subscribe((ventas) => {
       const totalDeVentas = ventas[0]?.totalDeVentas;
 
       if (offset === 0) {
-        // Si es la primer página, completar con null hasta el totalDeVentas (bug del paginator)
+        // Si es la primer página, completar con null hasta el totalDeVentas (se hace por bug del paginator)
         const diferencia = totalDeVentas - ventas.length;
         this.ventas = [...ventas, ...new Array(diferencia).fill(null)];
       } else {
@@ -156,7 +162,7 @@ export class ConsultarVentasComponent implements OnInit {
 
   public limpiarFiltros() {
     this.form.reset();
-    this.buscarVentasPaginado(0, 10);
+    this.buscarVentasPaginado(0, 10, true);
   }
 
   private buscarArqueoCajaHoy() {
@@ -211,7 +217,7 @@ export class ConsultarVentasComponent implements OnInit {
       dialogRef.afterClosed().subscribe((resultado) => {
         if (resultado) {
           this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-          this.buscarVentasPaginado(0, 10);
+          this.buscarVentasPaginado(0, 10, true);
           if (onSuccess) {
             onSuccess(); // Llama al callback solo si es exitoso
           }
@@ -243,7 +249,7 @@ export class ConsultarVentasComponent implements OnInit {
           this.ventasService.anularVenta(venta).subscribe((respuesta) => {
             if (respuesta.mensaje === 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-              this.buscarVentasPaginado(0, 10);
+              this.buscarVentasPaginado(0, 10, true);
               if (onSuccess) {
                 onSuccess(); // Llama al callback solo si es exitoso
               }
@@ -296,7 +302,7 @@ export class ConsultarVentasComponent implements OnInit {
           this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
-              this.buscarVentasPaginado(0, 10);
+              this.buscarVentasPaginado(0, 10, true);
             } else {
               this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
             }
