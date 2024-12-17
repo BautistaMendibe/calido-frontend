@@ -22,9 +22,9 @@ export class DetalleVentaComponent implements OnInit{
   public form: FormGroup;
   public venta: Venta;
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public referencia: ConsultarVentasComponent;
   public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
   public darkMode: boolean = false;
+  public esAnulacion: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -39,12 +39,12 @@ export class DetalleVentaComponent implements OnInit{
     private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta,
-      referencia: ConsultarVentasComponent
+      esAnulacion: boolean
     }
   ) {
     this.form = new FormGroup({});
     this.venta = this.data.venta;
-    this.referencia = this.data.referencia;
+    this.esAnulacion = this.data.esAnulacion;
   }
 
   ngOnInit() {
@@ -96,9 +96,11 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public desHacerVenta() {
-    this.referencia.anularVenta(this.venta, () => {
-      this.dialogRef.close();
-    });
+    // TODO: simplemente activar el formulario
+
+    //this.referencia.anularVenta(this.venta, () => {
+    //  this.dialogRef.close();
+    //});
   }
 
   public imprimirComprobante() {

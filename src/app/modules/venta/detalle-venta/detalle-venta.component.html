@@ -3,7 +3,7 @@
     <br>
     <div class="row">
       <div class="col-8 mt-2">
-        <p class="titulo">Consultar venta</p>
+        <p class="titulo">{{esAnulacion ? 'Anular venta' : 'Consultar venta'}}</p>
         <p *ngIf="venta.anulada">Venta anulada</p>
       </div>
       <div class="col-4">
