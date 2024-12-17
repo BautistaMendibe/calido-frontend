@@ -32,7 +32,7 @@ export class ConsultarVentasComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public form: FormGroup;
   private filtros: FiltrosVentas;
-  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
+  public columnas: string[] = ['id', 'cliente', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
 
   public formasDePago: FormaDePago[] = [];
   public tiposFactura: TipoFactura[] = [];

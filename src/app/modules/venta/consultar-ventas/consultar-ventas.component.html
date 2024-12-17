@@ -102,6 +102,11 @@
               <mat-cell *matCellDef="let venta">{{ venta.id }}</mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="cliente">
+              <mat-header-cell *matHeaderCellDef>CLIENTE</mat-header-cell>
+              <mat-cell *matCellDef="let venta">{{ venta.cliente.nombre + ' ' + venta.cliente.apellido }}</mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="montoTotal">
               <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
               <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
@@ -113,7 +118,7 @@
             </ng-container>
 
             <ng-container matColumnDef="formaDePago">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>FORMA DE PAGO</mat-header-cell>
+              <mat-header-cell *matHeaderCellDef>FORMA DE PAGO</mat-header-cell>
               <mat-cell *matCellDef="let venta">
                  {{ venta.formaDePago?.nombre }}
               </mat-cell>
