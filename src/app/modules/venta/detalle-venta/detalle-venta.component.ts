@@ -11,6 +11,12 @@ import {ConsultarVentasComponent} from "../consultar-ventas/consultar-ventas.com
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
+import {FiltrosCuentasCorrientes} from "../../../models/comandos/FiltrosCuentasCorrientes";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {
+  RegistrarCuentaCorrienteComponent
+} from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -25,6 +31,7 @@ export class DetalleVentaComponent implements OnInit{
   public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
   public darkMode: boolean = false;
   public esAnulacion: boolean = false;
+  public cuentas: CuentaCorriente[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,6 +44,7 @@ export class DetalleVentaComponent implements OnInit{
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
+    private usuariosService: UsuariosService,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta,
       esAnulacion: boolean
@@ -50,8 +58,9 @@ export class DetalleVentaComponent implements OnInit{
   ngOnInit() {
     this.obtenerInformacionTema();
     this.crearFormulario();
+    this.consultarCuentasCorrientes();
     this.setearDatos();
-    this.form.disable();
+    this.desactivarFormulario();
     this.tableDataSource.data = this.venta.productos;
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort;
@@ -74,6 +83,13 @@ export class DetalleVentaComponent implements OnInit{
       txCondicionIvaCliente: ['', []],
       txDescuento: ['', []],
       txInteres: ['', []],
+      txCuenta: ['', [Validators.required]]
+    });
+  }
+
+  public consultarCuentasCorrientes() {
+    this.usuariosService.consultarCuentasCorrientesxUsuario(new FiltrosCuentasCorrientes()).subscribe((cuentas) => {
+      this.cuentas = cuentas;
     });
   }
 
@@ -89,6 +105,26 @@ export class DetalleVentaComponent implements OnInit{
     this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
     this.txDescuento.setValue(this.venta.descuento);
     this.txInteres.setValue(this.venta.interes);
+    this.txCuenta.setValue(this.venta.cliente.id == -1 ? '' : this.venta.cliente.id);
+  }
+
+  public desactivarFormulario() {
+    if (!this.esAnulacion) {
+      this.form.disable();
+    } else {
+      // Cuando es anulacion solo desactivar los datos comunes
+      this.txNumeroVenta.disable();
+      this.txFecha.disable();
+      this.txFormaDePago.disable();
+      this.txTipoFactura.disable();
+      this.txMontoTotal.disable();
+      this.txCliente.disable();
+      this.txDniCliente.disable();
+      this.txMailCliente.disable();
+      this.txCondicionIvaCliente.disable();
+      this.txDescuento.disable();
+      this.txInteres.disable();
+    }
   }
 
   private formatDate(fecha: Date): string | null {
@@ -110,6 +146,25 @@ export class DetalleVentaComponent implements OnInit{
 
   public cerrar() {
     this.dialogRef.close();
+  }
+
+  public registrarNuevaCuenta() {
+    const dialogRef = this.dialog.open(RegistrarCuentaCorrienteComponent, {
+      width: '75%',
+      height: 'auto',
+      autoFocus: false,
+      data: {
+        referencia: this,
+        esConsulta: false,
+        formDesactivado: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.consultarCuentasCorrientes();
+      }
+    });
   }
 
   // Getters
@@ -155,6 +210,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txInteres(): FormControl {
     return this.form.get('txInteres') as FormControl;
+  }
+
+  get txCuenta() {
+    return this.form.get('txCuenta') as FormControl;
   }
 
 }

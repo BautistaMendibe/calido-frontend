@@ -127,6 +127,32 @@
         </div>
       </div>
 
+      <div *ngIf="esAnulacion">
+        <br>
+        <h3 class="subtitulo">Cuenta corriente:</h3>
+        <span class="aviso-producto">Esta será la cuenta corriente donde se añadirá el saldo a favor del cliente luego de anular la venta.</span>
+        <mat-divider class="my-3"></mat-divider>
+        <div class="row pt-4">
+          <div class="col-md-9">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Cuenta Corriente</mat-label>
+              <mat-select [formControl]="txCuenta">
+                <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.usuario.id">
+                  {{ '(' + cuenta.id + ') ' + cuenta.usuario.nombre + ' ' + cuenta.usuario.apellido }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <app-error-messages [control]="txCuenta"></app-error-messages>
+          </div>
+          <div class="col-md">
+            <button mat-stroked-button color="warn" class="btn round new-account-btn w-100" style="height: 70%;" (click)="registrarNuevaCuenta()">
+              <mat-icon>add</mat-icon> Nueva cuenta
+            </button>
+          </div>
+        </div>
+      </div>
+
+
       <br>
       <h3 class="subtitulo">Productos vendidos:</h3>
       <span class="aviso-producto" *ngIf="esAnulacion">Selecciona aquellos productos y la cantidad que el cliente desea devolver.</span>
