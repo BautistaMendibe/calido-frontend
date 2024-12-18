@@ -28,10 +28,11 @@ export class DetalleVentaComponent implements OnInit{
   public form: FormGroup;
   public venta: Venta;
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
+  public columnas: string[] = ['seleccionar', 'imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
   public darkMode: boolean = false;
   public esAnulacion: boolean = false;
   public cuentas: CuentaCorriente[] = [];
+  public productosSelecionados: Producto[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -168,6 +169,27 @@ export class DetalleVentaComponent implements OnInit{
         this.consultarCuentasCorrientes(result.id);
       }
     });
+  }
+
+  public seleccionarProductoParaAnular(producto: Producto) {
+    const index = this.venta.productos.findIndex(p => p.id === producto.id);
+    if (index > -1) {
+      this.productosSelecionados.splice(index, 1);
+      producto.anulado = false;
+    } else {
+      this.productosSelecionados.push(producto);
+      producto.anulado = true;
+    }
+  }
+
+  public aumentarCantidad(producto: Producto) {
+    if (producto.cantidadAnulada < producto.cantidadSeleccionada) {
+      producto.cantidadSeleccionada++;
+    }
+  }
+
+  public disminuirCantidad(producto: Producto) {
+    producto.cantidadAnulada != 0 ? producto.cantidadAnulada-- : false;
   }
 
   // Getters
