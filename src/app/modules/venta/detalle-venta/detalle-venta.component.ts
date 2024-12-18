@@ -87,9 +87,12 @@ export class DetalleVentaComponent implements OnInit{
     });
   }
 
-  public consultarCuentasCorrientes() {
+  public consultarCuentasCorrientes(idCuenta?: number) {
     this.usuariosService.consultarCuentasCorrientesxUsuario(new FiltrosCuentasCorrientes()).subscribe((cuentas) => {
       this.cuentas = cuentas;
+      if (idCuenta) {
+        this.txCuenta.setValue(this.venta.cliente.id);
+      }
     });
   }
 
@@ -162,7 +165,7 @@ export class DetalleVentaComponent implements OnInit{
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result) {
-        this.consultarCuentasCorrientes();
+        this.consultarCuentasCorrientes(result.id);
       }
     });
   }
