@@ -171,25 +171,27 @@ export class DetalleVentaComponent implements OnInit{
     });
   }
 
-  public seleccionarProductoParaAnular(producto: Producto) {
+  public seleccionarProductoParaAnular(producto: Producto, event: boolean) {
     const index = this.venta.productos.findIndex(p => p.id === producto.id);
-    if (index > -1) {
+    if (!event) {
       this.productosSelecionados.splice(index, 1);
       producto.anulado = false;
+      producto.cantidadAnulada = 0;
     } else {
       this.productosSelecionados.push(producto);
       producto.anulado = true;
+      producto.cantidadAnulada = producto.cantidadSeleccionada;
     }
   }
 
   public aumentarCantidad(producto: Producto) {
     if (producto.cantidadAnulada < producto.cantidadSeleccionada) {
-      producto.cantidadSeleccionada++;
+      producto.cantidadAnulada++;
     }
   }
 
   public disminuirCantidad(producto: Producto) {
-    producto.cantidadAnulada != 0 ? producto.cantidadAnulada-- : false;
+    producto.cantidadAnulada--;
   }
 
   // Getters
