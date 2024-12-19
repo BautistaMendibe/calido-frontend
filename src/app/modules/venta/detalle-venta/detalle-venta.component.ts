@@ -17,6 +17,7 @@ import {UsuariosService} from "../../../services/usuarios.service";
 import {
   RegistrarCuentaCorrienteComponent
 } from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import {VentasService} from "../../../services/ventas.services";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -32,7 +33,6 @@ export class DetalleVentaComponent implements OnInit{
   public darkMode: boolean = false;
   public esAnulacion: boolean = false;
   public cuentas: CuentaCorriente[] = [];
-  public productosSelecionadosParaAnular: Producto[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -46,6 +46,7 @@ export class DetalleVentaComponent implements OnInit{
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
     private usuariosService: UsuariosService,
+    private ventasService: VentasService,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta,
       esAnulacion: boolean
@@ -54,6 +55,7 @@ export class DetalleVentaComponent implements OnInit{
     this.form = new FormGroup({});
     this.venta = this.data.venta;
     this.esAnulacion = this.data.esAnulacion;
+    this.venta.productosSeleccionadoParaAnular = [];
   }
 
   ngOnInit() {
@@ -174,11 +176,11 @@ export class DetalleVentaComponent implements OnInit{
   public seleccionarProductoParaAnular(producto: Producto, event: boolean) {
     const index = this.venta.productos.findIndex(p => p.id === producto.id);
     if (!event) {
-      this.productosSelecionadosParaAnular.splice(index, 1);
+      this.venta.productosSeleccionadoParaAnular.splice(index, 1);
       producto.anulado = false;
       producto.cantidadAnulada = 0;
     } else {
-      this.productosSelecionadosParaAnular.push(producto);
+      this.venta.productosSeleccionadoParaAnular.push(producto);
       producto.anulado = true;
       producto.cantidadAnulada = producto.cantidadSeleccionada;
     }
@@ -195,7 +197,14 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public anularVenta() {
-
+    this.ventasService.anularVenta(this.venta).subscribe((res) => {
+      if (res.mensaje == 'OK') {
+        this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+        this.dialogRef.close(true);
+      } else {
+        this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
+      }
+    });
   }
 
   // Getters

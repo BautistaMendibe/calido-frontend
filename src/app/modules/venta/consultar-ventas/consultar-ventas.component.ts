@@ -154,21 +154,43 @@ export class ConsultarVentasComponent implements OnInit {
       return;
     }
 
-    this.dialog.open(
-      DetalleVentaComponent,
-      {
-        width: '95%',
-        autoFocus: false,
-        height: '90vh',
-        panelClass: 'custom-dialog-container',
-        data: {
-          venta: venta,
-          esAnulacion: true
+    // Si no tiene facturacion, se anula de forma logica y completa.
+    if (!venta.comprobanteAfip.comprobante_pdf_url) {
+      this.notificationDialogService.confirmation('¿Desea anular esta venta? Se anulará de forma completa.', 'Anular venta')
+        .afterClosed()
+        .subscribe((value) => {
+          if (value) {
+            this.ventasService.anularVentaSinFacturacion(venta).subscribe((respuesta) => {
+              if (respuesta.mensaje === 'OK') {
+                this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+                this.buscarVentas();
+              } else {
+                this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
+              }
+            });
+          }
+        });
+    } else {
+      const dialogAnular = this.dialog.open(
+        DetalleVentaComponent,
+        {
+          width: '95%',
+          autoFocus: false,
+          height: '90vh',
+          panelClass: 'custom-dialog-container',
+          data: {
+            venta: venta,
+            esAnulacion: true
+          }
         }
-      }
-    );
+      );
 
-
+      dialogAnular.afterClosed().subscribe((res) => {
+        if (res) {
+          this.buscarVentas();
+        }
+      });
+    }
 
 
     // Condición para abrir el matDialog

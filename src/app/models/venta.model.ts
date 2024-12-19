@@ -13,6 +13,7 @@ export class Venta {
   formaDePago: FormaDePago;
   detalleVenta: DetalleVenta[];
   productos: Producto[];
+  productosSeleccionadoParaAnular: Producto[];
   facturacion: TipoFactura;
   comprobanteAfip: ComprobanteAfip;
   idEmpleado: number;
@@ -37,6 +38,7 @@ export class Venta {
       formaDePago?: FormaDePago,
       detalleVenta?: DetalleVenta[],
       productos?: Producto[],
+      productosSeleccionadoParaAnular?: Producto[],
       facturacion?: TipoFactura,
       comprobanteAfip?: ComprobanteAfip,
       idEmpleado?: number,
@@ -61,6 +63,7 @@ export class Venta {
     this.formaDePago = formaDePago!;
     this.detalleVenta = detalleVenta!;
     this.productos = productos!;
+    this.productosSeleccionadoParaAnular = productosSeleccionadoParaAnular!;
     this.facturacion = facturacion!;
     this.comprobanteAfip = comprobanteAfip!;
     this.idEmpleado = idEmpleado!;
