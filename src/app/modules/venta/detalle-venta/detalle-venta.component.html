@@ -225,6 +225,7 @@
           <button mat-button color="accent" class="btn round" (click)="cerrar()" id="btnLimpiarFiltro">
             Cerrar
           </button>
+          <button *ngIf="esAnulacion" mat-raised-button color="accent" class="btn round" (click)="anularVenta()" id="btnBuscar">Anular</button>
         </div>
       </div>
       <br>

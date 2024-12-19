@@ -32,7 +32,7 @@ export class DetalleVentaComponent implements OnInit{
   public darkMode: boolean = false;
   public esAnulacion: boolean = false;
   public cuentas: CuentaCorriente[] = [];
-  public productosSelecionados: Producto[] = [];
+  public productosSelecionadosParaAnular: Producto[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -174,11 +174,11 @@ export class DetalleVentaComponent implements OnInit{
   public seleccionarProductoParaAnular(producto: Producto, event: boolean) {
     const index = this.venta.productos.findIndex(p => p.id === producto.id);
     if (!event) {
-      this.productosSelecionados.splice(index, 1);
+      this.productosSelecionadosParaAnular.splice(index, 1);
       producto.anulado = false;
       producto.cantidadAnulada = 0;
     } else {
-      this.productosSelecionados.push(producto);
+      this.productosSelecionadosParaAnular.push(producto);
       producto.anulado = true;
       producto.cantidadAnulada = producto.cantidadSeleccionada;
     }
@@ -192,6 +192,10 @@ export class DetalleVentaComponent implements OnInit{
 
   public disminuirCantidad(producto: Producto) {
     producto.cantidadAnulada--;
+  }
+
+  public anularVenta() {
+
   }
 
   // Getters
