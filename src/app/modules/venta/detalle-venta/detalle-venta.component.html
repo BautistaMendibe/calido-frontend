@@ -163,10 +163,10 @@
           <div class="row">
             <div class="col-md-12">
               <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
-                <ng-container matColumnDef="seleccionar">
+                <ng-container matColumnDef="seleccionar" *ngIf="esAnulacion">
                   <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
                   <mat-cell *matCellDef="let producto" data-label="Seleccionar">
-                    <mat-checkbox (change)="seleccionarProductoParaAnular(producto, $event.checked)" [checked]="producto.anulado"></mat-checkbox>
+                    <mat-checkbox *ngIf="esAnulacion" (change)="seleccionarProductoParaAnular(producto, $event.checked)" [checked]="producto.anulado"></mat-checkbox>
                   </mat-cell>
                 </ng-container>
 
@@ -204,8 +204,8 @@
                 </ng-container>
 
 
-                <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-                <mat-row class="queue-row" *matRowDef="let row; columns: columnas" [ngClass]="{'anulada-row': row.anulado}"></mat-row>
+                <mat-header-row *matHeaderRowDef="esAnulacion ? columnasAnulacion : columnas"></mat-header-row>
+                <mat-row class="queue-row" *matRowDef="let row; columns: esAnulacion ? columnasAnulacion : columnas" [ngClass]="{'anulada-row': row.anulado}"></mat-row>
 
               </mat-table>
 
@@ -218,11 +218,14 @@
         </mat-card-content>
       </mat-card>
 
+      <h5 *ngIf="(this.venta.totalAnulado > 0)" class="mt-4">
+        Saldo a favor del cliente después de la anulación: <b>$ {{this.venta.totalAnulado}}</b>
+      </h5>
+
       <h5 *ngIf="!(this.venta.productos.length > 0)" class="alert alert-secondary text-center">
         No se encuentran productos de la venta para mostrar, por favor realice una nueva búsqueda.
       </h5>
 
-      <br>
       <mat-divider class="my-3"></mat-divider>
 
       <div class="row text-right">

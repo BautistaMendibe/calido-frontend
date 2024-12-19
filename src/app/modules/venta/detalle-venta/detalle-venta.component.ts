@@ -29,7 +29,8 @@ export class DetalleVentaComponent implements OnInit{
   public form: FormGroup;
   public venta: Venta;
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public columnas: string[] = ['seleccionar', 'imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
+  public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
+  public columnasAnulacion: string[] = ['seleccionar', 'imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
   public darkMode: boolean = false;
   public esAnulacion: boolean = false;
   public cuentas: CuentaCorriente[] = [];
@@ -138,11 +139,7 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public desHacerVenta() {
-    // TODO: simplemente activar el formulario
-
-    //this.referencia.anularVenta(this.venta, () => {
-    //  this.dialogRef.close();
-    //});
+    this.esAnulacion = true;
   }
 
   public imprimirComprobante() {
@@ -179,24 +176,29 @@ export class DetalleVentaComponent implements OnInit{
       this.venta.productosSeleccionadoParaAnular.splice(index, 1);
       producto.anulado = false;
       producto.cantidadAnulada = 0;
+      this.calcularTotalAnulado();
     } else {
       this.venta.productosSeleccionadoParaAnular.push(producto);
       producto.anulado = true;
       producto.cantidadAnulada = producto.cantidadSeleccionada;
+      this.calcularTotalAnulado();
     }
   }
 
   public aumentarCantidad(producto: Producto) {
     if (producto.cantidadAnulada < producto.cantidadSeleccionada) {
       producto.cantidadAnulada++;
+      this.calcularTotalAnulado();
     }
   }
 
   public disminuirCantidad(producto: Producto) {
     producto.cantidadAnulada--;
+    this.calcularTotalAnulado();
   }
 
   public anularVenta() {
+    this.calcularTotalAnulado();
     this.ventasService.anularVenta(this.venta).subscribe((res) => {
       if (res.mensaje == 'OK') {
         this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
@@ -205,6 +207,15 @@ export class DetalleVentaComponent implements OnInit{
         this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
       }
     });
+  }
+
+  private calcularTotalAnulado() {
+    let monto = 0;
+    this.venta.totalAnulado = 0;
+    this.venta.productosSeleccionadoParaAnular.map((producto) => {
+      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada);
+    });
+    this.venta.totalAnulado = monto;
   }
 
   // Getters
