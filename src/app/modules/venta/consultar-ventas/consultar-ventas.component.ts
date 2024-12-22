@@ -32,7 +32,7 @@ export class ConsultarVentasComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public form: FormGroup;
   private filtros: FiltrosVentas;
-  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
+  public columnas: string[] = ['id', 'cliente', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'acciones'];
 
   public formasDePago: FormaDePago[] = [];
   public tiposFactura: TipoFactura[] = [];
@@ -41,6 +41,9 @@ export class ConsultarVentasComponent implements OnInit {
 
   public isLoading: boolean = false;
   public maxDate: Date;
+
+  public cargadosOffsets: Set<number> = new Set();
+  public totalDeVentas!: number;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -63,7 +66,7 @@ export class ConsultarVentasComponent implements OnInit {
     this.crearForm();
     this.buscarFormasDePago();
     this.buscarTiposFactura();
-    this.buscarVentas();
+    this.buscarVentasPaginado(0, 10);
     this.buscarArqueoCajaHoy();
   }
 
@@ -89,24 +92,68 @@ export class ConsultarVentasComponent implements OnInit {
     });
   }
 
-  private armarFiltro() {
+  public buscarVentasPaginado(offset: number, limit: number, reset: boolean = false) {
+    // Si se desea resetear los datos, limpiar las ventas y los offsets cargados
+    if (reset) {
+      this.ventas = []; // Limpiar las ventas
+      this.cargadosOffsets.clear(); // Limpiar los offsets cargados
+    }
+
+    // Asignación de filtros
     this.filtros.numero = this.txNumero.value;
     this.filtros.fechaDesde = this.txFechaDesde.value;
     this.filtros.fechaHasta = this.txFechaHasta.value;
     this.filtros.formaDePago = this.txFormaDePago.value;
     this.filtros.tipoFacturacion = this.txTiposFactura.value;
+    this.filtros.limit = limit;
+    this.filtros.offset = offset;
+
+    // Salir si ya se cargaron las ventas para este offset
+    if (this.cargadosOffsets.has(offset)) {
+      return;
+    }
+
+    this.isLoading = true;
+
+    this.ventasService.buscarVentasPaginadas(this.filtros).subscribe((ventas) => {
+      const totalDeVentas = ventas[0]?.totalDeVentas;
+
+      if (offset === 0) {
+        // Si es la primer página, completar con null hasta el totalDeVentas (se hace por bug del paginator)
+        const diferencia = totalDeVentas - ventas.length;
+        this.ventas = [...ventas, ...new Array(diferencia).fill(null)];
+      } else {
+        // Reemplazar los valores null por las nuevas ventas
+        const nullIndex = this.ventas.findIndex(v => v === null);
+        if (nullIndex !== -1) {
+          this.ventas.splice(nullIndex, ventas.length, ...ventas);
+        } else {
+          this.ventas = [...this.ventas, ...ventas];
+        }
+      }
+
+      // Actualizar el total de ventas
+      this.totalDeVentas = totalDeVentas;
+
+      // Marca el offset como cargado (para no buscar offsets ya cargados)
+      this.cargadosOffsets.add(offset);
+
+      // Asigna los datos a la tabla
+      this.tableDataSource.data = this.ventas;
+      this.tableDataSource.sort = this.sort;
+      this.tableDataSource.paginator = this.paginator;
+
+      this.isLoading = false;
+    });
   }
 
-  public buscarVentas() {
-    this.isLoading = true;
-    this.armarFiltro();
-    this.ventasService.buscarVentas(this.filtros).subscribe((ventas) => {
-      this.ventas = ventas;
-      this.tableDataSource.data = this.ventas;
-      this.tableDataSource.paginator = this.paginator;
-      this.tableDataSource.sort = this.sort;
-      this.isLoading = false;
-    })
+  /**
+   * Listener para cambios de pagina
+   */
+  public onPageChange(event: any) {
+    const offset = event.pageIndex * event.pageSize;
+    const limit = event.pageSize;
+    this.buscarVentasPaginado(offset, limit);
   }
 
   public registrarNuevaVenta() {
@@ -115,7 +162,7 @@ export class ConsultarVentasComponent implements OnInit {
 
   public limpiarFiltros() {
     this.form.reset();
-    this.buscarVentas();
+    this.buscarVentasPaginado(0, 10, true);
   }
 
   private buscarArqueoCajaHoy() {
@@ -163,7 +210,7 @@ export class ConsultarVentasComponent implements OnInit {
             this.ventasService.anularVentaSinFacturacion(venta).subscribe((respuesta) => {
               if (respuesta.mensaje === 'OK') {
                 this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-                this.buscarVentas();
+                this.buscarVentasPaginado(0, 10, true);
               } else {
                 this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
               }
@@ -187,7 +234,7 @@ export class ConsultarVentasComponent implements OnInit {
 
       dialogAnular.afterClosed().subscribe((res) => {
         if (res) {
-          this.buscarVentas();
+          this.buscarVentasPaginado(0, 10, true);
         }
       });
     }
@@ -295,7 +342,7 @@ export class ConsultarVentasComponent implements OnInit {
           this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
               this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
-              this.buscarVentas();
+              this.buscarVentasPaginado(0, 10, true);
             } else {
               this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
             }

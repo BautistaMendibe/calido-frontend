@@ -12,56 +12,58 @@
   <!-- Mat-card para filtros y botón limpiar -->
     <h4 style="color: grey">Filtros de búsqueda</h4>
 
-    <form [formGroup]="filtersForm" class="filters-row mt-3">
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha Desde</mat-label>
-          <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" />
-          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
-          <mat-datepicker #pickerInicio></mat-datepicker>
-        </mat-form-field>
-      </div>
+    <form [formGroup]="filtersForm">
+      <div class="row pt-4">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha Desde</mat-label>
+            <input matInput [matDatepicker]="pickerInicio" formControlName="start_date" [max]="maxDate"/>
+            <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+            <mat-datepicker #pickerInicio></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Fecha Hasta</mat-label>
-          <input matInput [matDatepicker]="pickerFin" formControlName="end_date" />
-          <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
-          <mat-datepicker #pickerFin></mat-datepicker>
-        </mat-form-field>
-      </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Fecha Hasta</mat-label>
+            <input matInput [matDatepicker]="pickerFin" formControlName="end_date" [max]="maxDate" [min]="txFechaDesde.value" />
+            <mat-datepicker-toggle matSuffix [for]="pickerFin"></mat-datepicker-toggle>
+            <mat-datepicker #pickerFin></mat-datepicker>
+          </mat-form-field>
+        </div>
 
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Proveedor</mat-label>
-          <mat-select formControlName="proveedor">
-            <mat-option *ngFor="let proveedor of proveedoresArray" [value]="proveedor.id">
-              {{ proveedor.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Proveedor</mat-label>
+            <mat-select formControlName="proveedor">
+              <mat-option *ngFor="let proveedor of proveedoresArray" [value]="proveedor.id">
+                {{ proveedor.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Producto</mat-label>
-          <mat-select formControlName="producto">
-            <mat-option *ngFor="let producto of productosArray" [value]="producto.id">
-              {{ producto.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Producto</mat-label>
+            <mat-select formControlName="producto">
+              <mat-option *ngFor="let producto of productosArray" [value]="producto.id">
+                {{ producto.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
-      <div class="filter-item">
-        <mat-form-field appearance="outline">
-          <mat-label>Tipo de Producto</mat-label>
-          <mat-select formControlName="tipo_producto">
-            <mat-option *ngFor="let tipoProducto of tiposProductoArray" [value]="tipoProducto.id">
-              {{ tipoProducto.nombre }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tipo de Producto</mat-label>
+            <mat-select formControlName="tipo_producto">
+              <mat-option *ngFor="let tipoProducto of tiposProductoArray" [value]="tipoProducto.id">
+                {{ tipoProducto.nombre }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
       </div>
     </form>
 

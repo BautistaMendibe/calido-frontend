@@ -30,6 +30,9 @@ export class Venta {
   bonificacion: number;
   saldoACancelarParcialmente: number;
   totalAnulado: number;
+  clienteDebe: number;
+
+  totalDeVentas: number; // se usa para mostrar el total de ventas en paginación
 
   constructor(
       id?: number,
@@ -55,6 +58,8 @@ export class Venta {
       canceladaConSaldo?: number,
       bonificacion?: number,
       saldoACancelarParcialmente?: number,
+      clienteDebe?: number,
+      totalDeVentas?: number,
       totalAnulado?: number
   ) {
 
@@ -82,5 +87,7 @@ export class Venta {
     this.bonificacion = bonificacion!;
     this.saldoACancelarParcialmente = saldoACancelarParcialmente!;
     this.totalAnulado = totalAnulado!;
+    this.clienteDebe = clienteDebe!;
+    this.totalDeVentas = totalDeVentas!;
   }
 }
