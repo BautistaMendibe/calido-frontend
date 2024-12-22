@@ -13,6 +13,7 @@ export class Venta {
   formaDePago: FormaDePago;
   detalleVenta: DetalleVenta[];
   productos: Producto[];
+  productosSeleccionadoParaAnular: Producto[];
   facturacion: TipoFactura;
   comprobanteAfip: ComprobanteAfip;
   idEmpleado: number;
@@ -28,6 +29,7 @@ export class Venta {
   canceladaConSaldo: number;
   bonificacion: number;
   saldoACancelarParcialmente: number;
+  totalAnulado: number;
 
   constructor(
       id?: number,
@@ -37,6 +39,7 @@ export class Venta {
       formaDePago?: FormaDePago,
       detalleVenta?: DetalleVenta[],
       productos?: Producto[],
+      productosSeleccionadoParaAnular?: Producto[],
       facturacion?: TipoFactura,
       comprobanteAfip?: ComprobanteAfip,
       idEmpleado?: number,
@@ -51,7 +54,8 @@ export class Venta {
       saldoDisponible?: number,
       canceladaConSaldo?: number,
       bonificacion?: number,
-      saldoACancelarParcialmente?: number
+      saldoACancelarParcialmente?: number,
+      totalAnulado?: number
   ) {
 
     this.id = id!;
@@ -61,6 +65,7 @@ export class Venta {
     this.formaDePago = formaDePago!;
     this.detalleVenta = detalleVenta!;
     this.productos = productos!;
+    this.productosSeleccionadoParaAnular = productosSeleccionadoParaAnular!;
     this.facturacion = facturacion!;
     this.comprobanteAfip = comprobanteAfip!;
     this.idEmpleado = idEmpleado!;
@@ -76,5 +81,6 @@ export class Venta {
     this.canceladaConSaldo = canceladaConSaldo!;
     this.bonificacion = bonificacion!;
     this.saldoACancelarParcialmente = saldoACancelarParcialmente!;
+    this.totalAnulado = totalAnulado!;
   }
 }

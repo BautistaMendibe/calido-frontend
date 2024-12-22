@@ -268,10 +268,9 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   private gestionarRespuesta(respuesta: any, mensajeExito: string) {
     if (respuesta.mensaje === 'OK') {
       this.notificacionService.openSnackBarSuccess(mensajeExito);
-      this.referencia.buscar();
-      this.dialogRef.close();
+      this.dialogRef.close(respuesta);
     } else {
-      this.notificacionService.openSnackBarError('Error al procesar la solicitud, intentelo nuevamente');
+      this.notificacionService.openSnackBarError(respuesta.mensaje);
     }
   }
 
