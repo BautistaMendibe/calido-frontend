@@ -144,6 +144,8 @@ export class ConsultarVentasComponent implements OnInit {
       this.tableDataSource.paginator = this.paginator;
 
       this.isLoading = false;
+    }, error => {
+      this.isLoading = false;
     });
   }
 
@@ -203,7 +205,8 @@ export class ConsultarVentasComponent implements OnInit {
 
     // Si no tiene facturacion, se anula de forma logica y completa.
     if (!venta.comprobanteAfip.comprobante_pdf_url) {
-      this.notificationDialogService.confirmation('¿Desea anular esta venta? Se anulará de forma completa.', 'Anular venta')
+      this.notificationDialogService.confirmation(`¿Desea anular esta venta?
+      Se anulará de forma completa.`, 'Anular venta')
         .afterClosed()
         .subscribe((value) => {
           if (value) {

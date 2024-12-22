@@ -194,7 +194,7 @@
     </mat-card-content>
   </mat-card>
 
-  <h5 *ngIf="!isLoading && !(this.ventas.length > 0)" class="alert alert-secondary text-center">
+  <h5 *ngIf="!isLoading && this.ventas.length == 0" class="alert alert-secondary text-center">
     No se encuentran ventas para mostrar, por favor realice una nueva búsqueda.
   </h5>
 </div>

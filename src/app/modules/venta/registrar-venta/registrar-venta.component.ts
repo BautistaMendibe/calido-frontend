@@ -68,7 +68,7 @@ export class RegistrarVentaComponent implements OnInit{
   public mostrarTarjetasCuotas: boolean = false;
   public registrandoVenta: boolean = false;
   private facturacionAutomatica: boolean = false;
-  public limiteProductos: number = 30;
+  public limiteProductos: number = 20;
   public tieneCuentaCorrienteRegistrada: boolean = false;
   public PagoRealizado: boolean = false;
 
