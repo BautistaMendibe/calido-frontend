@@ -25,10 +25,6 @@ export class Venta {
   idCaja: number;
   fechaFacturacion: Date;
   fechaAnulacion: Date;
-  saldoDisponible: number;
-  canceladaConSaldo: number;
-  bonificacion: number;
-  saldoACancelarParcialmente: number;
   totalAnulado: number;
   clienteDebe: number;
 
@@ -54,10 +50,6 @@ export class Venta {
       idCaja?: number,
       fechaFacturacion?: Date,
       fechaAnulacion?: Date,
-      saldoDisponible?: number,
-      canceladaConSaldo?: number,
-      bonificacion?: number,
-      saldoACancelarParcialmente?: number,
       clienteDebe?: number,
       totalDeVentas?: number,
       totalAnulado?: number
@@ -82,10 +74,6 @@ export class Venta {
     this.idCaja = idCaja!;
     this.fechaFacturacion = fechaFacturacion!;
     this.fechaAnulacion = fechaAnulacion!;
-    this.saldoDisponible = saldoDisponible!;
-    this.canceladaConSaldo = canceladaConSaldo!;
-    this.bonificacion = bonificacion!;
-    this.saldoACancelarParcialmente = saldoACancelarParcialmente!;
     this.totalAnulado = totalAnulado!;
     this.clienteDebe = clienteDebe!;
     this.totalDeVentas = totalDeVentas!;

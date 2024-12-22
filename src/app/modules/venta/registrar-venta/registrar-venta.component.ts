@@ -440,95 +440,6 @@ export class RegistrarVentaComponent implements OnInit{
       venta.cantidadCuotas = this.cantidadCuotaSeleccionada?.cantidadCuota;
       venta.interes = this.cantidadCuotaSeleccionada?.interes;
 
-      // Caso 1: Saldo mayor a 0 pero menor al total (Facturación parcial con bonificación)
-      if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente > 0 && this.saldoCuentaCorrienteCliente < this.totalVenta) {
-        // Cuánto debería restarle al cliente de su saldo (el saldo disponible total de su cuenta)
-        venta.saldoACancelarParcialmente = this.saldoCuentaCorrienteCliente;
-
-        // Ajustar el monto total después de la bonificación
-        venta.montoTotal = this.totalVenta - this.saldoCuentaCorrienteCliente;
-
-        // Calcular la bonificación en la venta
-        const sumatoriaProductos = venta.productos.reduce((sumatoria, producto) => {
-          const porcentajeDescuento = producto.promocion?.porcentajeDescuento || 0; // Si no tiene promoción, el descuento es 0
-          const descuento = (producto.precioSinIVA * porcentajeDescuento) / 100;
-          const precioConDescuento = producto.precioSinIVA - descuento;
-          return sumatoria + (precioConDescuento * producto.cantidadSeleccionada);
-        }, 0);
-
-        venta.bonificacion = -(venta.montoTotal / 1.21) + sumatoriaProductos;
-
-        // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
-        if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
-          const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
-          if (QRpagado) {
-            // console.log('Pago confirmado. Registrando la venta');
-          } else {
-            this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
-            return; // Detenemos el flujo para no registrar la venta
-          }
-        }
-        // FIN QR SIRO
-
-        this.registrandoVenta = true;
-
-        this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
-          if (respuesta.mensaje == 'OK') {
-            venta.id = respuesta.id;
-
-            // Restar saldo de la cuenta corriente
-            this.cancelarVentaConSaldoParcialmente(venta);
-
-            // Facturar automáticamente si la opción está marcada
-            if (this.facturacionAutomatica) {
-              this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
-                if (respuestaAfip.mensaje == 'OK') {
-                  this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
-                } else {
-                  this.notificacionService.openSnackBarError('Error al facturar venta. Inténtelo nuevamente desde consultas.');
-                }
-              });
-            }
-
-            this.registrandoVenta = false;
-            this.limpiarVenta();
-          } else {
-            this.notificacionService.openSnackBarError('Error al registrar la venta, inténtelo nuevamente.');
-            this.registrandoVenta = false;
-          }
-        });
-        return;
-      }
-
-      // Caso 2: Saldo suficiente para cubrir el total (flujo anterior)
-      if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente >= this.totalVenta) {
-        // A cancelar será el total de la venta.
-        venta.saldoACancelarParcialmente = this.totalVenta;
-
-        // El total siempre va a ser cero, porque o su saldo es igual a la venta o es mayor (venta gratuita no se factura).
-        venta.montoTotal = 0;
-
-        this.registrandoVenta = true;
-
-        this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
-          if (respuesta.mensaje == 'OK') {
-            venta.id = respuesta.id;
-
-            // Llamar a cancelarVentaConSaldo con la venta registrada
-            this.cancelarVentaConSaldo(venta);
-
-            this.registrandoVenta = false;
-            this.limpiarVenta();
-          } else {
-            this.notificacionService.openSnackBarError('Error al registrar la venta, inténtelo nuevamente.');
-            this.registrandoVenta = false;
-          }
-        });
-        return;
-      }
-
-      // Caso normal (venta no vinculada al saldo de cuenta corriente)
-
       // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
       if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
         const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
@@ -802,26 +713,6 @@ export class RegistrarVentaComponent implements OnInit{
       this.saldoCuentaCorrienteCliente = 0;
     });
 
-    combineLatest([this.txCliente.valueChanges, this.txFormaDePago.valueChanges]).subscribe(
-      ([cliente, formaDePago]) => {
-        this.tieneCuentaCorrienteRegistrada = false;
-        this.saldoCuentaCorrienteCliente = 0;
-        this.txCancelarConSaldo.setValue(false);
-
-        if (formaDePago !== this.formasDePagoEnum.CUENTA_CORRIENTE) {
-          // Si hay cliente y este no es consumidor final
-          if (cliente && cliente !== -1) {
-            this.ventasService.buscarVentasPorCC(cliente).subscribe((ventas) => {
-              this.ventasCtaCteCliente = ventas;
-              if (this.ventasCtaCteCliente.length > 0) {
-                this.calcularBalanceCuentaCorriente();
-              }
-            });
-          }
-        }
-      }
-    );
-
     // Escuchar cambios en el campo de búsqueda
     this.txBuscar.valueChanges.subscribe(() => {
       const textoBusqueda = this.normalizarTexto(this.txBuscar.value || '');
@@ -882,27 +773,6 @@ export class RegistrarVentaComponent implements OnInit{
     } else {
       this.txTipoFacturacion.setValue(this.getTiposFacturacionEnum.FACTURA_A);
     }
-  }
-
-  private calcularBalanceCuentaCorriente() {
-    let total = 0;
-    let debe = 0;
-    let haber = 0;
-
-    this.ventasCtaCteCliente.forEach(venta => {
-      if (venta.anulada && venta.saldoDisponible >= 0 && venta.comprobanteAfip.comprobante_nro !== null) {
-        // Si la venta está anulada, sumamos el saldo disponible al balance.
-        total += Number(venta.saldoDisponible) || 0;
-        haber += Number(venta.saldoDisponible) || 0;
-      } else if (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1 && !venta.anulada) {
-        // Si no tiene comprobante (no facturada), la restamos como saldo negativo, salvo que haya sido cancelada con saldo.
-        total -= Number(venta.montoTotal) || 0;
-        debe -= Number(venta.montoTotal) || 0;
-      }
-    });
-
-    this.saldoCuentaCorrienteCliente = total;
-    if (this.saldoCuentaCorrienteCliente > 0) { this.tieneCuentaCorrienteRegistrada = true; }
   }
 
   public mostrarQR(idReferenciaOperacion: string): MatDialogRef<QRVentanaComponent> {

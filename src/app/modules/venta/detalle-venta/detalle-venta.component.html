@@ -14,7 +14,7 @@
             color="primary"
             matTooltip="Anular venta"
             (click)="desHacerVenta()"
-            [disabled]="venta.canceladaConSaldo === 1 && venta.comprobanteAfip.comprobante_pdf_url !== null"
+            [disabled]="venta.comprobanteAfip.comprobante_pdf_url !== null"
             [appRole]="['Cajero', 'Encargado']">
             <mat-icon class="eliminar">settings_backup_restore</mat-icon>
           </button>

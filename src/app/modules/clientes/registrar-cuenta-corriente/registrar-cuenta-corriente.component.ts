@@ -126,8 +126,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
       // Determinar si hay ventas no facturadas o no canceladas con saldo (lo que indica que hay cosas que hacer en esta cta cte)
       this.tieneAccionesPendientes = ventas.some((venta) =>
-        (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1) ||
-        (venta.canceladaConSaldo && venta.canceladaConSaldo !== 1)
+        (venta.comprobanteAfip.comprobante_nro == null)
       );
 
       // Asignar solo las ventas filtradas
@@ -147,11 +146,11 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     let haber = 0;
 
     this.ventas.forEach(venta => {
-      if (venta.anulada && venta.saldoDisponible >= 0 && venta.comprobanteAfip.comprobante_nro !== null) {
+      if (venta.anulada && venta.comprobanteAfip.comprobante_nro !== null) {
         // Si la venta está anulada, sumamos el saldo disponible al balance.
-        total += Number(venta.saldoDisponible) || 0;
-        haber += Number(venta.saldoDisponible) || 0;
-      } else if (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1 && !venta.anulada) {
+        //total += Number(venta.saldoDisponible) || 0;
+        //haber += Number(venta.saldoDisponible) || 0;
+      } else if (venta.comprobanteAfip.comprobante_nro == null && !venta.anulada) {
         // Si no tiene comprobante (no facturada), la restamos como saldo negativo, salvo que haya sido cancelada con saldo.
         total -= Number(venta.montoTotal) || 0;
         debe -= Number(venta.montoTotal) || 0;
