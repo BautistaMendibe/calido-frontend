@@ -2,6 +2,25 @@
   color: #5e5e5e;
 }
 
+.aviso-producto {
+  font-size: 13px;
+  margin-bottom: 10px;
+  font-weight: 400;
+  color: #888;
+}
+
+.quantity-input {
+  width: 40px;
+}
+
+.mat-header-cell {
+  text-align: center !important;
+}
+
+.anulada-row {
+  background-color: var(--bg-venta-anulada);
+}
+
 .img-thumbnail {
   width: 60px;
   height: 60px;

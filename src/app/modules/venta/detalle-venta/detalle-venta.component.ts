@@ -11,6 +11,13 @@ import {ConsultarVentasComponent} from "../consultar-ventas/consultar-ventas.com
 import {NotificationService} from "../../../services/notificacion.service";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
+import {FiltrosCuentasCorrientes} from "../../../models/comandos/FiltrosCuentasCorrientes";
+import {UsuariosService} from "../../../services/usuarios.service";
+import {
+  RegistrarCuentaCorrienteComponent
+} from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
+import {VentasService} from "../../../services/ventas.services";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -22,9 +29,11 @@ export class DetalleVentaComponent implements OnInit{
   public form: FormGroup;
   public venta: Venta;
   public tableDataSource: MatTableDataSource<Producto> = new MatTableDataSource<Producto>([]);
-  public referencia: ConsultarVentasComponent;
   public columnas: string[] = ['imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
+  public columnasAnulacion: string[] = ['seleccionar', 'imgProducto', 'nombre', 'cantidadSeleccionada', 'subTotalVenta'];
   public darkMode: boolean = false;
+  public esAnulacion: boolean = false;
+  public cuentas: CuentaCorriente[] = [];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -37,21 +46,25 @@ export class DetalleVentaComponent implements OnInit{
     private notificacionService: SnackBarService,
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
+    private usuariosService: UsuariosService,
+    private ventasService: VentasService,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta,
-      referencia: ConsultarVentasComponent
+      esAnulacion: boolean
     }
   ) {
     this.form = new FormGroup({});
     this.venta = this.data.venta;
-    this.referencia = this.data.referencia;
+    this.esAnulacion = this.data.esAnulacion;
+    this.venta.productosSeleccionadoParaAnular = [];
   }
 
   ngOnInit() {
     this.obtenerInformacionTema();
     this.crearFormulario();
+    this.consultarCuentasCorrientes();
     this.setearDatos();
-    this.form.disable();
+    this.desactivarFormulario();
     this.tableDataSource.data = this.venta.productos;
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort;
@@ -74,6 +87,16 @@ export class DetalleVentaComponent implements OnInit{
       txCondicionIvaCliente: ['', []],
       txDescuento: ['', []],
       txInteres: ['', []],
+      txCuenta: ['', [Validators.required]]
+    });
+  }
+
+  public consultarCuentasCorrientes(idCuenta?: number) {
+    this.usuariosService.consultarCuentasCorrientesxUsuario(new FiltrosCuentasCorrientes()).subscribe((cuentas) => {
+      this.cuentas = cuentas;
+      if (idCuenta) {
+        this.txCuenta.setValue(this.venta.cliente.id);
+      }
     });
   }
 
@@ -89,6 +112,26 @@ export class DetalleVentaComponent implements OnInit{
     this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
     this.txDescuento.setValue(this.venta.descuento);
     this.txInteres.setValue(this.venta.interes);
+    this.txCuenta.setValue(this.venta.cliente.id == -1 ? '' : this.venta.cliente.id);
+  }
+
+  public desactivarFormulario() {
+    if (!this.esAnulacion) {
+      this.form.disable();
+    } else {
+      // Cuando es anulacion solo desactivar los datos comunes
+      this.txNumeroVenta.disable();
+      this.txFecha.disable();
+      this.txFormaDePago.disable();
+      this.txTipoFactura.disable();
+      this.txMontoTotal.disable();
+      this.txCliente.disable();
+      this.txDniCliente.disable();
+      this.txMailCliente.disable();
+      this.txCondicionIvaCliente.disable();
+      this.txDescuento.disable();
+      this.txInteres.disable();
+    }
   }
 
   private formatDate(fecha: Date): string | null {
@@ -96,9 +139,7 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public desHacerVenta() {
-    this.referencia.anularVenta(this.venta, () => {
-      this.dialogRef.close();
-    });
+    this.esAnulacion = true;
   }
 
   public imprimirComprobante() {
@@ -108,6 +149,73 @@ export class DetalleVentaComponent implements OnInit{
 
   public cerrar() {
     this.dialogRef.close();
+  }
+
+  public registrarNuevaCuenta() {
+    const dialogRef = this.dialog.open(RegistrarCuentaCorrienteComponent, {
+      width: '75%',
+      height: 'auto',
+      autoFocus: false,
+      data: {
+        referencia: this,
+        esConsulta: false,
+        formDesactivado: false
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.consultarCuentasCorrientes(result.id);
+      }
+    });
+  }
+
+  public seleccionarProductoParaAnular(producto: Producto, event: boolean) {
+    const index = this.venta.productos.findIndex(p => p.id === producto.id);
+    if (!event) {
+      this.venta.productosSeleccionadoParaAnular.splice(index, 1);
+      producto.anulado = false;
+      producto.cantidadAnulada = 0;
+      this.calcularTotalAnulado();
+    } else {
+      this.venta.productosSeleccionadoParaAnular.push(producto);
+      producto.anulado = true;
+      producto.cantidadAnulada = producto.cantidadSeleccionada;
+      this.calcularTotalAnulado();
+    }
+  }
+
+  public aumentarCantidad(producto: Producto) {
+    if (producto.cantidadAnulada < producto.cantidadSeleccionada) {
+      producto.cantidadAnulada++;
+      this.calcularTotalAnulado();
+    }
+  }
+
+  public disminuirCantidad(producto: Producto) {
+    producto.cantidadAnulada--;
+    this.calcularTotalAnulado();
+  }
+
+  public anularVenta() {
+    this.calcularTotalAnulado();
+    this.ventasService.anularVenta(this.venta).subscribe((res) => {
+      if (res.mensaje == 'OK') {
+        this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+        this.dialogRef.close(true);
+      } else {
+        this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
+      }
+    });
+  }
+
+  private calcularTotalAnulado() {
+    let monto = 0;
+    this.venta.totalAnulado = 0;
+    this.venta.productosSeleccionadoParaAnular.map((producto) => {
+      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada);
+    });
+    this.venta.totalAnulado = monto;
   }
 
   // Getters
@@ -153,6 +261,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txInteres(): FormControl {
     return this.form.get('txInteres') as FormControl;
+  }
+
+  get txCuenta() {
+    return this.form.get('txCuenta') as FormControl;
   }
 
 }

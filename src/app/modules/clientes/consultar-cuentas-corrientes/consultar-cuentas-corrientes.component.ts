@@ -86,7 +86,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   }
 
   public registrarNuevaCuenta() {
-    this.dialog.open(
+    const refDialog = this.dialog.open(
       RegistrarCuentaCorrienteComponent,
       {
         width: '75%',
@@ -101,6 +101,10 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
         }
       }
     );
+
+    refDialog.afterClosed().subscribe((result) => {
+      this.buscar();
+    });
   }
 
   public verCuentaCorriente(cuentaCorriente: CuentaCorriente, editar: boolean) {

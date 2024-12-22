@@ -3,13 +3,13 @@
     <br>
     <div class="row">
       <div class="col-8 mt-2">
-        <p class="titulo">Consultar venta</p>
+        <p class="titulo">{{esAnulacion ? 'Anular venta' : 'Consultar venta'}}</p>
         <p *ngIf="venta.anulada">Venta anulada</p>
       </div>
       <div class="col-4">
         <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
           <button
-            *ngIf="!venta.anulada"
+            *ngIf="!venta.anulada && !esAnulacion"
             mat-icon-button
             color="primary"
             matTooltip="Anular venta"
@@ -127,8 +127,35 @@
         </div>
       </div>
 
+      <div *ngIf="esAnulacion">
+        <br>
+        <h3 class="subtitulo">Cuenta corriente:</h3>
+        <span class="aviso-producto">Esta será la cuenta corriente donde se añadirá el saldo a favor del cliente luego de anular la venta.</span>
+        <mat-divider class="my-3"></mat-divider>
+        <div class="row pt-4">
+          <div class="col-md-9">
+            <mat-form-field appearance="outline" class="w-100">
+              <mat-label>Cuenta Corriente</mat-label>
+              <mat-select [formControl]="txCuenta">
+                <mat-option *ngFor="let cuenta of cuentas" [value]="cuenta.usuario.id">
+                  {{ '(' + cuenta.id + ') ' + cuenta.usuario.nombre + ' ' + cuenta.usuario.apellido }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <app-error-messages [control]="txCuenta"></app-error-messages>
+          </div>
+          <div class="col-md">
+            <button mat-stroked-button color="warn" class="btn round new-account-btn w-100" style="height: 70%;" (click)="registrarNuevaCuenta()">
+              <mat-icon>add</mat-icon> Nueva cuenta
+            </button>
+          </div>
+        </div>
+      </div>
+
+
       <br>
       <h3 class="subtitulo">Productos vendidos:</h3>
+      <span class="aviso-producto" *ngIf="esAnulacion">Selecciona aquellos productos y la cantidad que el cliente desea devolver.</span>
       <mat-divider class="my-3"></mat-divider>
 
       <mat-card>
@@ -136,6 +163,13 @@
           <div class="row">
             <div class="col-md-12">
               <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
+                <ng-container matColumnDef="seleccionar" *ngIf="esAnulacion">
+                  <mat-header-cell *matHeaderCellDef>SELECCIÓN</mat-header-cell>
+                  <mat-cell *matCellDef="let producto" data-label="Seleccionar">
+                    <mat-checkbox *ngIf="esAnulacion" (change)="seleccionarProductoParaAnular(producto, $event.checked)" [checked]="producto.anulado"></mat-checkbox>
+                  </mat-cell>
+                </ng-container>
+
                 <ng-container matColumnDef="imgProducto">
                   <mat-header-cell *matHeaderCellDef>IMAGEN</mat-header-cell>
                   <mat-cell *matCellDef="let producto">
@@ -144,23 +178,34 @@
                 </ng-container>
 
                 <ng-container matColumnDef="nombre">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>PRODUCTO</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef>PRODUCTO</mat-header-cell>
                   <mat-cell *matCellDef="let producto" data-label="Producto">{{ producto.nombre }}</mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="cantidadSeleccionada">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>CANTIDAD</mat-header-cell>
-                  <mat-cell *matCellDef="let producto" data-label="Cantidad">{{ producto.cantidadSeleccionada }}</mat-cell>
+                  <mat-header-cell *matHeaderCellDef class="text-center justify-content-center">CANTIDAD</mat-header-cell>
+                  <mat-cell *matCellDef="let producto" data-label="Cantidad" class="justify-content-center">
+                    <div class="d-flex align-items-center col-4 justify-content-center">
+                      <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)" [disabled]="!(producto.anulado) || (producto.cantidadAnulada == 1)">-</button>
+                      <input
+                        type="text"
+                        [matTooltip]="producto.anulado ? 'Cantidad original: ' + producto.cantidadSeleccionada : ''"
+                        disabled
+                        class="form-control form-control-sm mx-2 text-center quantity-input"
+                        [value]="producto.anulado ? producto.cantidadAnulada : producto.cantidadSeleccionada">
+                      <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)" [disabled]="!(producto.anulado) || (producto.cantidadAnulada == producto.cantidadSeleccionada)">+</button>
+                    </div>
+                  </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="subTotalVenta">
-                  <mat-header-cell *matHeaderCellDef mat-sort-header>SUBTOTAL</mat-header-cell>
+                  <mat-header-cell *matHeaderCellDef>SUBTOTAL</mat-header-cell>
                   <mat-cell *matCellDef="let producto" data-label="subTotal">$ {{ producto.subTotalVenta | number:'1.2-2':'es-AR' }}</mat-cell>
                 </ng-container>
 
 
-                <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
-                <mat-row class="queue-row" *matRowDef="let row; columns: columnas"></mat-row>
+                <mat-header-row *matHeaderRowDef="esAnulacion ? columnasAnulacion : columnas"></mat-header-row>
+                <mat-row class="queue-row" *matRowDef="let row; columns: esAnulacion ? columnasAnulacion : columnas" [ngClass]="{'anulada-row': row.anulado}"></mat-row>
 
               </mat-table>
 
@@ -173,11 +218,14 @@
         </mat-card-content>
       </mat-card>
 
+      <h5 *ngIf="(this.venta.totalAnulado > 0)" class="mt-4">
+        Saldo a favor del cliente después de la anulación: <b>$ {{this.venta.totalAnulado}}</b>
+      </h5>
+
       <h5 *ngIf="!(this.venta.productos.length > 0)" class="alert alert-secondary text-center">
         No se encuentran productos de la venta para mostrar, por favor realice una nueva búsqueda.
       </h5>
 
-      <br>
       <mat-divider class="my-3"></mat-divider>
 
       <div class="row text-right">
@@ -185,6 +233,7 @@
           <button mat-button color="accent" class="btn round" (click)="cerrar()" id="btnLimpiarFiltro">
             Cerrar
           </button>
+          <button *ngIf="esAnulacion" mat-raised-button color="accent" class="btn round" (click)="anularVenta()" id="btnBuscar">Anular</button>
         </div>
       </div>
       <br>

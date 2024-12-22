@@ -86,4 +86,8 @@ export class VentasService {
     const body = { IdReferenciaOperacion: IdReferenciaOperacion };
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/consultar-pago`, body);
   }
+
+  public anularVentaSinFacturacion(venta: Venta): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/anular-venta-sin-facturacion`, venta);
+  }
 }

@@ -13,6 +13,7 @@ export class Venta {
   formaDePago: FormaDePago;
   detalleVenta: DetalleVenta[];
   productos: Producto[];
+  productosSeleccionadoParaAnular: Producto[];
   facturacion: TipoFactura;
   comprobanteAfip: ComprobanteAfip;
   idEmpleado: number;
@@ -28,6 +29,7 @@ export class Venta {
   canceladaConSaldo: number;
   bonificacion: number;
   saldoACancelarParcialmente: number;
+  totalAnulado: number;
   clienteDebe: number;
 
   totalDeVentas: number; // se usa para mostrar el total de ventas en paginación
@@ -40,6 +42,7 @@ export class Venta {
       formaDePago?: FormaDePago,
       detalleVenta?: DetalleVenta[],
       productos?: Producto[],
+      productosSeleccionadoParaAnular?: Producto[],
       facturacion?: TipoFactura,
       comprobanteAfip?: ComprobanteAfip,
       idEmpleado?: number,
@@ -56,7 +59,8 @@ export class Venta {
       bonificacion?: number,
       saldoACancelarParcialmente?: number,
       clienteDebe?: number,
-      totalDeVentas?: number
+      totalDeVentas?: number,
+      totalAnulado?: number
   ) {
 
     this.id = id!;
@@ -66,6 +70,7 @@ export class Venta {
     this.formaDePago = formaDePago!;
     this.detalleVenta = detalleVenta!;
     this.productos = productos!;
+    this.productosSeleccionadoParaAnular = productosSeleccionadoParaAnular!;
     this.facturacion = facturacion!;
     this.comprobanteAfip = comprobanteAfip!;
     this.idEmpleado = idEmpleado!;
@@ -81,6 +86,7 @@ export class Venta {
     this.canceladaConSaldo = canceladaConSaldo!;
     this.bonificacion = bonificacion!;
     this.saldoACancelarParcialmente = saldoACancelarParcialmente!;
+    this.totalAnulado = totalAnulado!;
     this.clienteDebe = clienteDebe!;
     this.totalDeVentas = totalDeVentas!;
   }
