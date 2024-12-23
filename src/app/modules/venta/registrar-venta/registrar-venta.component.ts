@@ -49,7 +49,6 @@ export class RegistrarVentaComponent implements OnInit{
   public listaEmpleados: Usuario[] = [];
   public listaCajas: Caja[] = [];
   public tarjetasRegistradas: Tarjeta[] = [];
-  private ventasCtaCteCliente: Venta[] = [];
   private arqueosHoy: Arqueo[] = [];
 
   public subTotal: number = 0;
@@ -70,7 +69,6 @@ export class RegistrarVentaComponent implements OnInit{
   private facturacionAutomatica: boolean = false;
   public limiteProductos: number = 20;
   public tieneCuentaCorrienteRegistrada: boolean = false;
-  public PagoRealizado: boolean = false;
 
   private stopPolling$ = new Subject<void>();
   private isDialogClosed = false;
@@ -606,26 +604,6 @@ export class RegistrarVentaComponent implements OnInit{
         clearTimeout(timeout);
         reject('Polling cancelado.');
       });
-    });
-  }
-
-  private cancelarVentaConSaldo(venta: Venta) {
-    this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta registrada y cancelada con saldo con éxito.');
-      } else {
-        this.notificacionService.openSnackBarError('Error al cancelar venta. Intentelo nuevamente.');
-      }
-    });
-  }
-
-  private cancelarVentaConSaldoParcialmente(venta: Venta){
-    this.ventasService.cancelarVentaParcialmente(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta registrada y cancelada parcialmente con saldo con éxito.');
-      } else {
-        this.notificacionService.openSnackBarError('Error al cancelar venta parcialmente. Intentelo nuevamente.');
-      }
     });
   }
 
