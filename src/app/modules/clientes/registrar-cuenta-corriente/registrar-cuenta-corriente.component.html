@@ -135,15 +135,6 @@
                 </mat-cell>
               </ng-container>
 
-              <ng-container matColumnDef="saldoDisponible">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>SALDO DISP</mat-header-cell>
-                <mat-cell *matCellDef="let venta">
-                  {{ venta.saldoDisponible != null && true
-                  ? ('$ ' + (venta.saldoDisponible | number:'1.2-2':'es-AR'))
-                  : 'No aplica' }}
-                </mat-cell>
-              </ng-container>
-
               <ng-container matColumnDef="fecha">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
                 <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy' }}</mat-cell>

@@ -37,7 +37,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public ventas: Venta[] = [];
-  public columnas: string[] = ['id', 'montoTotal', 'saldoDisponible', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
+  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
 
   public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
