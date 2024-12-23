@@ -10,6 +10,8 @@ import {TipoFactura} from "../models/tipoFactura.model";
 import {FiltrosVentas} from "../models/comandos/FiltrosVentas.comando";
 import {VentasMensuales} from "../models/comandos/dashboard/VentasMensuales.comando";
 import {VentasDiariaComando} from "../models/comandos/dashboard/VentasDiaria.comando";
+import {DetalleVenta} from "../models/detalleVenta.model";
+import {FiltrosDetallesVenta} from "../models/comandos/FiltrosDetallesVenta.comando";
 
 
 @Injectable({
@@ -89,5 +91,9 @@ export class VentasService {
 
   public anularVentaSinFacturacion(venta: Venta): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/anular-venta-sin-facturacion`, venta);
+  }
+
+  public buscarDetallesVenta(filtros: FiltrosDetallesVenta): Observable<DetalleVenta[]>{
+    return this.http.post<DetalleVenta[]>(`${this.urlBackend}/${this.controllerName}/buscar-detalles-venta`, filtros);
   }
 }

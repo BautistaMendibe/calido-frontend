@@ -19,6 +19,8 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {NotificationService} from "../../../services/notificacion.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
+import {FiltrosMovimientosCuentaCorriente} from "../../../models/comandos/FiltrosMovimientosCuentaCorriente.comando";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -44,8 +46,16 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public tieneAccionesPendientes: boolean = false;
   public darkMode: boolean = false;
 
+  public tableDataSourceMovimientos: MatTableDataSource<MovimientoCuentaCorriente> = new MatTableDataSource<MovimientoCuentaCorriente>([]);
+  public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
+  public columnasMovimientos: string[] = ['id', 'idVenta', 'monto', 'fecha', 'descripcion', 'acciones']
+  public listaMovimientosDeshabilitada: boolean = false;
+  public isLoadingMovimientos: boolean = false;
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginatorMovimientos!: MatPaginator;
+  @ViewChild(MatSort) sortMovimientos!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -86,6 +96,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
     if (this.data.editar) {
       this.listaVentasDeshabilitada = false;
+      this.listaMovimientosDeshabilitada = false;
       this.txCreada.disable();
       this.txCliente.disable();
     }
@@ -94,7 +105,9 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.filtrosSuscripciones();
 
     if (this.esConsulta || this.data.editar) {
-      this.buscarVentas(this.data.cuentaCorriente.idUsuario);
+      const idUsuario = this.data.cuentaCorriente.idUsuario;
+      this.buscarVentas(idUsuario);
+      this.buscarMovimientosCuentaCorriente(idUsuario);
     }
 
     this.txCliente.valueChanges.subscribe(() => { this.buscarVentas(this.txCliente.value); this.calcularBalance(); });
@@ -138,6 +151,22 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       this.calcularBalance();
       this.isLoading = false;
     })
+  }
+
+  public buscarMovimientosCuentaCorriente(idUsuario: number) {
+    const filtro = new FiltrosMovimientosCuentaCorriente();
+    filtro.idUsuario = idUsuario;
+
+    this.isLoadingMovimientos = true;
+
+    this.usuarioService.consultarMovimientosCuentaCorriente(filtro).subscribe((movimientos) => {
+      this.movimientosCuentaCorriente = movimientos;
+      this.tableDataSourceMovimientos.data = movimientos;
+      this.tableDataSourceMovimientos.paginator = this.paginatorMovimientos;
+      this.tableDataSourceMovimientos.sort = this.sortMovimientos;
+
+      this.isLoadingMovimientos = false;
+    });
   }
 
   private calcularBalance() {
