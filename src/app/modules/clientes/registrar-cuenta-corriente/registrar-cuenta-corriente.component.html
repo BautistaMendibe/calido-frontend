@@ -10,10 +10,12 @@
     </div>
   </div>
 
-  <mat-divider></mat-divider>
-
-  <br>
   <form [formGroup]="form">
+
+    <br>
+    <h3>Datos generales:</h3>
+    <mat-divider></mat-divider>
+
     <div class="row pt-4">
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
@@ -57,7 +59,7 @@
 
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Le debemos al cliente</mat-label>
+          <mat-label>El cliente pagó</mat-label>
           <input
             matInput
             formControlName="txHaber"
@@ -95,6 +97,9 @@
         <app-error-messages [control]="txBalance"></app-error-messages>
       </div>
     </div>
+
+    <br *ngIf="this.ventas.length > 0">
+    <h3 *ngIf="this.ventas.length > 0">Movimientos de la cuenta:</h3>
 
     <mat-divider class="my-3"></mat-divider>
     <br *ngIf="ventas.length == 0 && !esRegistro">
@@ -216,7 +221,7 @@
       No se encuentran ventas de cuenta corriente de este cliente para mostrar.
     </h5>
 
-    <br *ngIf="movimientosCuentaCorriente.length > 0">
+    <br *ngIf="this.movimientosCuentaCorriente">
 
     <mat-card [hidden]="!(movimientosCuentaCorriente.length > 0)">
       <mat-card-content>
@@ -225,7 +230,7 @@
             <mat-table [dataSource]="tableDataSourceMovimientos" matSort class="custom-table" [class.disabled-table]="formDesactivado || listaMovimientosDeshabilitada">
 
               <ng-container matColumnDef="id">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>MOVIMIENTO</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PAGO</mat-header-cell>
                 <mat-cell *matCellDef="let movimiento">{{ movimiento.id }}</mat-cell>
               </ng-container>
 
@@ -270,7 +275,7 @@
       </mat-card-content>
     </mat-card>
 
-    <h5 *ngIf="!isLoadingMovimientos && this.movimientosCuentaCorriente.length === 0" class="alert alert-secondary text-center">
+    <h5 *ngIf="!isLoading && this.movimientosCuentaCorriente.length === 0" class="alert alert-secondary text-center">
       No se encuentran pagos de cuenta corriente de este cliente para mostrar.
     </h5>
   </form>

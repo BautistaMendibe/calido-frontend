@@ -50,7 +50,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
   public columnasMovimientos: string[] = ['id', 'idVenta', 'monto', 'fecha', 'descripcion', 'acciones']
   public listaMovimientosDeshabilitada: boolean = false;
-  public isLoadingMovimientos: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -107,7 +106,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     if (this.esConsulta || this.data.editar) {
       const idUsuario = this.data.cuentaCorriente.idUsuario;
       this.buscarVentas(idUsuario);
-      this.buscarMovimientosCuentaCorriente(idUsuario);
     }
 
     this.txCliente.valueChanges.subscribe(() => { this.buscarVentas(this.txCliente.value); this.calcularBalance(); });
@@ -137,10 +135,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   public buscarVentas(idUsuario: number) {
     this.isLoading = true;
     this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
-      // Determinar si hay ventas no facturadas o no canceladas con saldo (lo que indica que hay cosas que hacer en esta cta cte)
-      this.tieneAccionesPendientes = ventas.some((venta) =>
-        (venta.comprobanteAfip.comprobante_nro == null)
-      );
 
       // Asignar solo las ventas filtradas
       this.ventas = ventas;
@@ -148,8 +142,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       this.tableDataSource.paginator = this.paginator;
       this.tableDataSource.sort = this.sort;
 
-      this.calcularBalance();
-      this.isLoading = false;
+      this.buscarMovimientosCuentaCorriente(idUsuario);
     })
   }
 
@@ -157,38 +150,81 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     const filtro = new FiltrosMovimientosCuentaCorriente();
     filtro.idUsuario = idUsuario;
 
-    this.isLoadingMovimientos = true;
-
     this.usuarioService.consultarMovimientosCuentaCorriente(filtro).subscribe((movimientos) => {
       this.movimientosCuentaCorriente = movimientos;
       this.tableDataSourceMovimientos.data = movimientos;
       this.tableDataSourceMovimientos.paginator = this.paginatorMovimientos;
       this.tableDataSourceMovimientos.sort = this.sortMovimientos;
 
-      this.isLoadingMovimientos = false;
+      this.calcularBalance();
+      this.isLoading = false;
     });
   }
 
   private calcularBalance() {
-    let total = 0;
     let debe = 0;
     let haber = 0;
 
+    this.movimientosCuentaCorriente.forEach((pago) => {
+      const montoPago = Number(pago.monto) || 0;
+
+      // Los pagos del cliente se suman al haber.
+      haber += montoPago;
+    });
+
     this.ventas.forEach(venta => {
-      if (venta.anulada && venta.comprobanteAfip.comprobante_nro !== null) {
-        // Si la venta está anulada, sumamos el saldo disponible al balance.
-        //total += Number(venta.saldoDisponible) || 0;
-        //haber += Number(venta.saldoDisponible) || 0;
-      } else if (venta.comprobanteAfip.comprobante_nro == null && !venta.anulada) {
-        // Si no tiene comprobante (no facturada), la restamos como saldo negativo, salvo que haya sido cancelada con saldo.
-        total -= Number(venta.montoTotal) || 0;
-        debe -= Number(venta.montoTotal) || 0;
+      const pagosAsociados: MovimientoCuentaCorriente[] = this.movimientosCuentaCorriente.filter(pago => pago.idVenta === venta.id);
+
+      // Si la venta está facturada (y no fue anulada).
+      if (venta.comprobanteAfip?.comprobante_nro && !venta.anulada) {
+        const montoVenta = Number(venta.montoTotal) || 0;
+
+        debe += montoVenta;
+        return;
+      }
+
+      // Si la venta fue anulada (total o parcialmente)
+      if (venta.comprobanteAfip?.comprobante_nro && venta.anulada) {
+        venta.detalleVenta.forEach(detalle => {
+          const cantidadNoAnulada = Number(detalle.cantidad) - Number(detalle.producto.cantidadAnulada || 0);
+          const cantidadAnulada = Number(detalle.producto.cantidadAnulada || 0);
+          const precioUnitario = Number(detalle.subTotal) || 0;
+
+          // Cantidad no anulada: se comporta como una venta normal
+          if (cantidadNoAnulada > 0) {
+            debe += cantidadNoAnulada * precioUnitario;
+          }
+
+          // Cantidad anulada: genera una nota de crédito
+          if (cantidadAnulada > 0) {
+            const montoAnulado = cantidadAnulada * precioUnitario;
+
+            // Reducimos el debe por la parte anulada
+            debe -= montoAnulado;
+
+            // Ajustamos el haber si hay pagos asociados
+            pagosAsociados.forEach(pago => {
+              const montoPago = Number(pago.monto) || 0;
+
+              // Reducimos el haber por los pagos (devolvimos los pagos por anular la venta, por ende ya no nos pagó)
+              haber -= Math.min(montoPago, montoAnulado);
+            });
+          }
+        });
       }
     });
 
-    this.txBalance.setValue(total);
+    const saldo: number = debe - haber;
     this.txDebe.setValue(debe);
     this.txHaber.setValue(haber);
+    this.txBalance.setValue(saldo);
+    this.determinarAccionesPendienteEnCuenta(saldo);
+  }
+
+  private determinarAccionesPendienteEnCuenta(saldo: number) {
+    if (saldo && saldo > 0) {
+      this.tieneAccionesPendientes = true;
+    }
   }
 
   public facturarVenta(venta: Venta) {
