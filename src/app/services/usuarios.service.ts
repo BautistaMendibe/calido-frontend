@@ -147,4 +147,8 @@ export class UsuariosService {
   public consultarMovimientosCuentaCorriente(filtro: FiltrosMovimientosCuentaCorriente): Observable<MovimientoCuentaCorriente[]>{
     return this.http.post<MovimientoCuentaCorriente[]>(`${this.urlBackend}/${this.controllerName}/consultar-movimientos-cuenta-corriente`, filtro);
   }
+
+  public eliminarMovimientoCuentaCorriente(idMovimiento: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-movimiento-cuenta-corriente/${idMovimiento}`);
+  }
 }

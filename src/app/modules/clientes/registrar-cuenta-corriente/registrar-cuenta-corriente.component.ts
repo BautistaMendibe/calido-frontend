@@ -39,7 +39,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
   public ventas: Venta[] = [];
-  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
+  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'productos', 'estado', 'acciones'];
 
   public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
@@ -48,7 +48,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public tableDataSourceMovimientos: MatTableDataSource<MovimientoCuentaCorriente> = new MatTableDataSource<MovimientoCuentaCorriente>([]);
   public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
-  public columnasMovimientos: string[] = ['id', 'idVenta', 'monto', 'fecha', 'descripcion', 'acciones']
+  public columnasMovimientos: string[] = ['id', 'idVenta', 'monto', 'fecha', 'formaDePago', 'acciones']
   public listaMovimientosDeshabilitada: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -227,42 +227,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     }
   }
 
-  public facturarVenta(venta: Venta) {
-    this.notificationDialogService.confirmation('¿Desea facturar esta venta?', 'Facturar venta')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
-              this.buscarVentas(this.txCliente.value);
-              this.tableDataSource._updateChangeSubscription();
-            } else {
-              this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
-            }
-          });
-        }
-      });
-  }
-
-  public cancelarVenta(venta: Venta) {
-    this.notificationDialogService.confirmation('¿Desea cancelar esta venta con saldo?', 'Cancelar venta')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Venta cancelada con saldo de cuenta correctamente');
-              this.buscarVentas(this.txCliente.value);
-              this.tableDataSource._updateChangeSubscription();
-            } else {
-              this.notificacionService.openSnackBarError('Error al cancelar venta. Intentelo nuevamente.');
-            }
-          });
-        }
-      });
-  }
-
   public verProducto(producto: Producto) {
     this.dialog.open(
       RegistrarProductoComponent,
@@ -310,7 +274,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   public modificarCuentaCorriente() {
-
     if (this.form.valid) {
       const cuentaCorriente = this.construirCuentaCorriente(this.data.cuentaCorriente?.id);
       this.usuarioService.modificarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
@@ -352,12 +315,39 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     // Filtrar por ID de venta.
     this.txBuscar.valueChanges.subscribe((valor) => {
       this.tableDataSource.filter = valor.trim();
+      this.tableDataSourceMovimientos.filter = valor.trim();
     });
 
     this.tableDataSource.filterPredicate = (data: Venta, filter: string): boolean => {
       const nroVenta = data.id?.toString() || '';
       return nroVenta.includes(filter);
     };
+
+    this.tableDataSourceMovimientos.filterPredicate = (data: MovimientoCuentaCorriente, filter: string): boolean => {
+      const nroVenta = data.idVenta?.toString() || '';
+      return nroVenta.includes(filter);
+    };
+  }
+
+  public verMovimiento(movimiento: MovimientoCuentaCorriente, editar: boolean) {
+
+  }
+
+  public eliminarMovimiento(idMovimiento: number) {
+    this.notificationDialogService.confirmation('¿Desea eliminar este pago?', 'Eliminar Pago')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuarioService.eliminarMovimientoCuentaCorriente(idMovimiento).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Pago de cuenta corriente eliminado con éxito');
+              this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar pago de cuenta corriente');
+            }
+          });
+        }
+      });
   }
 
   // Región getters
