@@ -121,7 +121,7 @@ export class VentasDiaComponent implements OnInit{
     {
       type: 'line',
       data: [],
-      label: 'Today',
+      label: 'Hoy',
       borderColor: 'rgba(225, 91, 53, 1)',
       backgroundColor: 'rgb(248,135,99)',
       borderWidth: 2,
@@ -130,7 +130,7 @@ export class VentasDiaComponent implements OnInit{
     {
       type: 'line',
       data: [],
-      label: 'Yesterday',
+      label: 'Ayer',
       borderColor: 'rgba(128, 128, 128, 1)',
       backgroundColor: 'rgba(128, 128, 128, 0.1)',
       borderWidth: 2,

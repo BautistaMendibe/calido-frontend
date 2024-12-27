@@ -96,6 +96,23 @@ export class VentasMensualesComponent implements OnInit {
           font: {
             size: 10,
           },
+          callback: (value) => {
+            // Convierte el valor a un número
+            const numericValue = Number(value);
+            if (isNaN(numericValue)) {
+              return '$ N/A';
+            }
+
+            // Formatea el número según la configuración regional
+            const formattedValue = new Intl.NumberFormat('es-AR', {
+              style: 'currency',
+              currency: 'ARS',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(numericValue);
+
+            return formattedValue;
+          },
         },
         grid: {
           color: 'rgba(0, 0, 0, 0.2)',
@@ -124,10 +141,26 @@ export class VentasMensualesComponent implements OnInit {
         display: false,
         position: 'top',
       },
-    },
-    elements: {
-      bar: {
+      tooltip: {
+        callbacks: {
+          label: (context) => {
+            // Asegura que context.raw es un número
+            const value = Number(context.raw);
+            if (isNaN(value)) {
+              return ' Ventas: N/A';
+            }
 
+            // Formatea el número según la configuración regional
+            const formattedValue = new Intl.NumberFormat('es-AR', {
+              style: 'currency',
+              currency: 'ARS',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+            }).format(value);
+
+            return `Ventas: ${formattedValue}`;
+          },
+        },
       },
     },
   };
