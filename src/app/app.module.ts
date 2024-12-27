@@ -79,6 +79,7 @@ import { AsignarCuentaCorrienteComponent } from './modules/clientes/asignar-cuen
 import { GenerarReportesComponent } from './modules/reportes/generar-reportes/generar-reportes.component';
 import { QRVentanaComponent } from './modules/qr-ventana/qr-ventana.component';
 import {SharedModule} from "./shared/shared.module";
+import { PagarCuentaCorrienteComponent } from './modules/clientes/pagar-cuenta-corriente/pagar-cuenta-corriente.component';
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -143,7 +144,8 @@ registerLocaleData(localeEs, 'es');
     RecuperarContrasenaComponent,
     GenerarReportesComponent,
     AsignarCuentaCorrienteComponent,
-    QRVentanaComponent
+    QRVentanaComponent,
+    PagarCuentaCorrienteComponent
   ],
   imports: [
     BrowserModule,

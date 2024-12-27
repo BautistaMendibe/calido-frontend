@@ -151,4 +151,8 @@ export class UsuariosService {
   public eliminarMovimientoCuentaCorriente(idMovimiento: number): Observable<SpResult>{
     return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-movimiento-cuenta-corriente/${idMovimiento}`);
   }
+
+  public registrarMovimientoCuentaCorriente(movimiento: MovimientoCuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-movimiento-cuenta-corriente`, movimiento);
+  }
 }

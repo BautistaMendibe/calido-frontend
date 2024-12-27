@@ -21,6 +21,7 @@ import {NotificationService} from "../../../services/notificacion.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
 import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
 import {FiltrosMovimientosCuentaCorriente} from "../../../models/comandos/FiltrosMovimientosCuentaCorriente.comando";
+import {PagarCuentaCorrienteComponent} from "../pagar-cuenta-corriente/pagar-cuenta-corriente.component";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -329,8 +330,27 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     };
   }
 
-  public verMovimiento(movimiento: MovimientoCuentaCorriente, editar: boolean) {
+  public registrarMovimiento(venta: Venta) {
+    const dialog = this.dialog.open(
+      PagarCuentaCorrienteComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
+        data: {
+          referencia: this,
+          venta: venta
+        }
+      }
+    );
 
+    dialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
+      }
+    });
   }
 
   public eliminarMovimiento(idMovimiento: number) {
