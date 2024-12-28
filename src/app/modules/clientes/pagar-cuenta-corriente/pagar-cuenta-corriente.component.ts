@@ -11,6 +11,7 @@ import {RegistrarCuentaCorrienteComponent} from "../registrar-cuenta-corriente/r
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
+import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 
 @Component({
   selector: 'app-pagar-cuenta-corriente',
@@ -38,6 +39,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: RegistrarCuentaCorrienteComponent;
       venta: Venta;
+      cuentaCorriente: CuentaCorriente;
     }
   ) {
     this.form = new FormGroup({});
@@ -56,7 +58,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
       txFecha: [{value: this.fechaHoy, disabled: true}, [Validators.required]],
       txMonto: ['', [Validators.required]],
       txFormaDePago: ['', [Validators.required]],
-      txComentario: ['', [Validators.required, Validators.maxLength(200)]]
+      txComentario: ['', [Validators.maxLength(200)]]
     });
   }
 
@@ -89,6 +91,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
         .subscribe((value) => {
           if (value) {
             const movimiento: MovimientoCuentaCorriente = new MovimientoCuentaCorriente();
+            movimiento.idCuentaCorriente = this.data.cuentaCorriente.id;
             movimiento.idVenta = this.txVenta.value;
             movimiento.fecha = this.txFecha.value;
             movimiento.monto = this.txMonto.value;

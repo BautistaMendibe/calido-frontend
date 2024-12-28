@@ -110,7 +110,6 @@ export class DetalleVentaComponent implements OnInit{
     this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');
     this.txMailCliente.setValue(this.venta.cliente.mail ? this.venta.cliente.mail : 'No registrado');
     this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
-    this.txDescuento.setValue(this.venta.descuento);
     this.txInteres.setValue(this.venta.interes);
     this.txCuenta.setValue(this.venta.cliente.id == -1 ? '' : this.venta.cliente.id);
   }

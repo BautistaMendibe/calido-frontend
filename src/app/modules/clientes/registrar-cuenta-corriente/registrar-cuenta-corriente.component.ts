@@ -341,7 +341,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
         autoFocus: false,
         data: {
           referencia: this,
-          venta: venta
+          venta: venta,
+          cuentaCorriente: this.data.cuentaCorriente
         }
       }
     );
