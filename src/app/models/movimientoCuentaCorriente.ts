@@ -1,5 +1,6 @@
 import {CuentaCorriente} from "./cuentaCorriente.model";
 import {FormaDePago} from "./formaDePago.model";
+import {TipoMovimientoCuentaCorriente} from "./tipoMovimientoCuentaCorriente.model";
 
 export class MovimientoCuentaCorriente {
   id: number;
@@ -9,9 +10,11 @@ export class MovimientoCuentaCorriente {
   monto: number;
   idFormaDePago: number;
   descripcion: string;
+  idTipoMovimientoCuentaCorriente: number;
 
   cuentaCorriente: CuentaCorriente;
   formaDePago: FormaDePago;
+  tipoMovimientoCuentaCorriente: TipoMovimientoCuentaCorriente;
 
   constructor(
     id?: number,
@@ -22,7 +25,9 @@ export class MovimientoCuentaCorriente {
     idFormaDePago?: number,
     cuentaCorriente?: CuentaCorriente,
     formaDePago?: FormaDePago,
-    descripcion?: string
+    descripcion?: string,
+    idTipoMovimientoCuentaCorriente?: number,
+    tipoMovimientoCuentaCorriente?: TipoMovimientoCuentaCorriente
   ) {
     this.id = id!;
     this.idCuentaCorriente = idCuentaCorriente!;
@@ -33,5 +38,7 @@ export class MovimientoCuentaCorriente {
     this.cuentaCorriente = cuentaCorriente!;
     this.formaDePago = formaDePago!;
     this.descripcion = descripcion!;
+    this.idTipoMovimientoCuentaCorriente = idTipoMovimientoCuentaCorriente!;
+    this.tipoMovimientoCuentaCorriente = tipoMovimientoCuentaCorriente!;
   }
 }
