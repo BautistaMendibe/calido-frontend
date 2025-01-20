@@ -22,6 +22,7 @@ import {ThemeCalidoService} from "../../../services/theme.service";
 import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
 import {FiltrosMovimientosCuentaCorriente} from "../../../models/comandos/FiltrosMovimientosCuentaCorriente.comando";
 import {PagarCuentaCorrienteComponent} from "../pagar-cuenta-corriente/pagar-cuenta-corriente.component";
+import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-movimiento-cuenta-corriente.enum";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -38,18 +39,12 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   private referencia: ConsultarCuentasCorrientesComponent;
   public fechaHoy: Date = new Date();
 
-  public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
-  public ventas: Venta[] = [];
-  public columnas: string[] = ['id', 'montoTotal', 'fecha', 'productos', 'estado', 'acciones'];
-
-  public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
-  public tieneAccionesPendientes: boolean = false;
   public darkMode: boolean = false;
 
   public tableDataSourceMovimientos: MatTableDataSource<MovimientoCuentaCorriente> = new MatTableDataSource<MovimientoCuentaCorriente>([]);
   public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
-  public columnasMovimientos: string[] = ['id', 'idVenta', 'monto', 'fecha', 'formaDePago', 'acciones']
+  public columnasMovimientos: string[] = ['id', 'tipoMovimientoCuentaCorriente', 'idVenta', 'monto', 'fecha', 'formaDePago', 'acciones']
   public listaMovimientosDeshabilitada: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -95,7 +90,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.txHaber.disable();
 
     if (this.data.editar) {
-      this.listaVentasDeshabilitada = false;
       this.listaMovimientosDeshabilitada = false;
       this.txCreada.disable();
       this.txCliente.disable();
@@ -106,10 +100,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
     if (this.esConsulta || this.data.editar) {
       const idUsuario = this.data.cuentaCorriente.idUsuario;
-      this.buscarVentas(idUsuario);
+      this.buscarMovimientosCuentaCorriente(idUsuario);
     }
 
-    this.txCliente.valueChanges.subscribe(() => { this.buscarVentas(this.txCliente.value); this.calcularBalance(); });
+    this.txCliente.valueChanges.subscribe(() => { this.buscarMovimientosCuentaCorriente(this.txCliente.value); this.calcularBalance(); });
   }
 
   private obtenerInformacionTema() {
@@ -133,20 +127,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     });
   }
 
-  public buscarVentas(idUsuario: number) {
-    this.isLoading = true;
-    this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
-
-      // Asignar solo las ventas filtradas
-      this.ventas = ventas;
-      this.tableDataSource.data = ventas;
-      this.tableDataSource.paginator = this.paginator;
-      this.tableDataSource.sort = this.sort;
-
-      this.buscarMovimientosCuentaCorriente(idUsuario);
-    })
-  }
-
   public buscarMovimientosCuentaCorriente(idUsuario: number) {
     const filtro = new FiltrosMovimientosCuentaCorriente();
     filtro.idUsuario = idUsuario;
@@ -166,103 +146,30 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     let debe = 0;
     let haber = 0;
 
-    this.movimientosCuentaCorriente.forEach((pago) => {
-      const montoPago = Number(pago.monto) || 0;
+    this.movimientosCuentaCorriente.forEach((movimiento) => {
 
-      // Los pagos del cliente se suman al haber.
-      haber += montoPago;
-    });
+      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.VENTA) {
+        const montoVenta = Number(movimiento.monto) || 0;
 
-    this.ventas.forEach(venta => {
-      const pagosAsociados: MovimientoCuentaCorriente[] = this.movimientosCuentaCorriente.filter(pago => pago.idVenta === venta.id);
-
-      // Si la venta está facturada (y no fue anulada).
-      if (venta.comprobanteAfip?.comprobante_nro && !venta.anulada) {
-        const montoVenta = Number(venta.montoTotal) || 0;
-
+        // Las ventas del cliente se suman al debe.
         debe += montoVenta;
-        return;
       }
 
-      // Si la venta fue anulada (total o parcialmente)
-      if (venta.comprobanteAfip?.comprobante_nro && venta.anulada) {
-        venta.detalleVenta.forEach(detalle => {
-          const cantidadNoAnulada = Number(detalle.cantidad) - Number(detalle.producto.cantidadAnulada || 0);
-          const cantidadAnulada = Number(detalle.producto.cantidadAnulada || 0);
-          const precioUnitario = Number(detalle.subTotal) || 0;
+      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.PAGO) {
+        const montoPago = Number(movimiento.monto) || 0;
 
-          // Cantidad no anulada: se comporta como una venta normal
-          if (cantidadNoAnulada > 0) {
-            debe += cantidadNoAnulada * precioUnitario;
-          }
-
-          // Cantidad anulada: genera una nota de crédito
-          if (cantidadAnulada > 0) {
-            const montoAnulado = cantidadAnulada * precioUnitario;
-
-            // Reducimos el debe por la parte anulada
-            debe -= montoAnulado;
-
-            // Ajustamos el haber si hay pagos asociados
-            pagosAsociados.forEach(pago => {
-              const montoPago = Number(pago.monto) || 0;
-
-              // Reducimos el haber por los pagos (devolvimos los pagos por anular la venta, por ende ya no nos pagó)
-              haber -= Math.min(montoPago, montoAnulado);
-            });
-          }
-        });
+        // Los pagos del cliente se suman al haber.
+        haber += montoPago;
       }
+
+      // TODO: Lógica de anulaciones
+
     });
 
     const saldo: number = debe - haber;
     this.txDebe.setValue(debe);
     this.txHaber.setValue(haber);
     this.txBalance.setValue(saldo);
-    this.determinarAccionesPendienteEnCuenta(saldo);
-  }
-
-  private determinarAccionesPendienteEnCuenta(saldo: number) {
-    if (saldo && saldo > 0) {
-      this.tieneAccionesPendientes = true;
-    }
-  }
-
-  public verProducto(producto: Producto) {
-    this.dialog.open(
-      RegistrarProductoComponent,
-      {
-        width: '90%',
-        autoFocus: false,
-        maxHeight: '80vh',
-        panelClass: 'custom-dialog-container',
-        data: {
-          producto: producto,
-          esConsulta: true,
-          formDesactivado: true,
-          editar: false
-        }
-      }
-    );
-  }
-
-  public verVenta(venta: Venta) {
-    this.dialog.open(
-      DetalleVentaComponent,
-      {
-        width: '75%',
-        autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
-        data: {
-          venta: venta,
-        }
-      }
-    )
-  }
-
-  public getNombresProductos(productos: Producto[]): string {
-    return productos.map(producto => producto.nombre).join(', ');
   }
 
   public registrarCuentaCorriente() {
@@ -313,16 +220,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   private filtrosSuscripciones() {
-    // Filtrar por ID de venta.
+    // Filtrar movimientos por ID de venta.
     this.txBuscar.valueChanges.subscribe((valor) => {
-      this.tableDataSource.filter = valor.trim();
       this.tableDataSourceMovimientos.filter = valor.trim();
     });
-
-    this.tableDataSource.filterPredicate = (data: Venta, filter: string): boolean => {
-      const nroVenta = data.id?.toString() || '';
-      return nroVenta.includes(filter);
-    };
 
     this.tableDataSourceMovimientos.filterPredicate = (data: MovimientoCuentaCorriente, filter: string): boolean => {
       const nroVenta = data.idVenta?.toString() || '';
@@ -394,6 +295,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   get txBuscar() {
     return this.form.get('txBuscar') as FormControl;
+  }
+
+  get getTiposMovimientosCuentaCorrienteEnum(): typeof TiposMovimientoCuentaCorrienteEnum {
+    return TiposMovimientoCuentaCorrienteEnum;
   }
 
   protected readonly Math = Math;

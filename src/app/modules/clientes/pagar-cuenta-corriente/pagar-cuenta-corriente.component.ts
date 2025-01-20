@@ -12,6 +12,8 @@ import {FormaDePago} from "../../../models/formaDePago.model";
 import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
+import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-movimiento-cuenta-corriente.enum";
+import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 
 @Component({
   selector: 'app-pagar-cuenta-corriente',
@@ -97,6 +99,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
             movimiento.monto = this.txMonto.value;
             movimiento.idFormaDePago = this.txFormaDePago.value;
             movimiento.descripcion = this.txComentario.value;
+            movimiento.idTipoMovimientoCuentaCorriente = this.getTiposMovimientosCuentaCorrienteEnum.PAGO;
 
             this.usuariosService.registrarMovimientoCuentaCorriente(movimiento).subscribe((respuesta) => {
               if (respuesta.mensaje === 'OK') {
@@ -134,5 +137,9 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   get txComentario() {
     return this.form.get('txComentario') as FormControl;
+  }
+
+  get getTiposMovimientosCuentaCorrienteEnum(): typeof TiposMovimientoCuentaCorrienteEnum {
+    return TiposMovimientoCuentaCorrienteEnum;
   }
 }
