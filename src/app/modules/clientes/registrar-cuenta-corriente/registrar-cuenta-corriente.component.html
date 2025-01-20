@@ -128,13 +128,13 @@
           <div class="col-md-12">
             <mat-table [dataSource]="tableDataSourceMovimientos" matSort class="custom-table" [class.disabled-table]="formDesactivado || listaMovimientosDeshabilitada">
 
-              <ng-container matColumnDef="id">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>MOVIMIENTO</mat-header-cell>
-                <mat-cell *matCellDef="let movimiento">{{ movimiento.id }}</mat-cell>
+              <ng-container matColumnDef="fecha">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
+                <mat-cell *matCellDef="let movimiento">{{ movimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="tipoMovimientoCuentaCorriente">
-                <mat-header-cell *matHeaderCellDef>TIPO MOVIMIENTO</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef>TIPO MOV</mat-header-cell>
                 <mat-cell *matCellDef="let movimiento">{{ movimiento.tipoMovimientoCuentaCorriente?.nombre }}</mat-cell>
               </ng-container>
 
@@ -148,11 +148,6 @@
                 <mat-cell *matCellDef="let movimiento">
                   $ {{ movimiento.monto | number:'1.2-2':'es-AR' }}
                 </mat-cell>
-              </ng-container>
-
-              <ng-container matColumnDef="fecha">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
-                <mat-cell *matCellDef="let movimiento">{{ movimiento.fecha | date: 'dd/MM/yyyy HH:mm' }}</mat-cell>
               </ng-container>
 
               <ng-container matColumnDef="formaDePago">
