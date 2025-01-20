@@ -13,7 +13,6 @@ import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorrien
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-movimiento-cuenta-corriente.enum";
-import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 
 @Component({
   selector: 'app-pagar-cuenta-corriente',
@@ -23,7 +22,6 @@ import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum
 export class PagarCuentaCorrienteComponent implements OnInit {
 
   public form: FormGroup;
-  public ventas: Venta[] = [];
   public formasDePago: FormaDePago[] = [];
   public fechaHoy: Date = new Date();
   private referencia: RegistrarCuentaCorrienteComponent;
@@ -40,7 +38,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
     private themeService: ThemeCalidoService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: RegistrarCuentaCorrienteComponent;
-      venta: Venta;
+      movimiento: MovimientoCuentaCorriente;
       cuentaCorriente: CuentaCorriente;
     }
   ) {
@@ -56,7 +54,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txVenta: [{value: this.data.venta.id, disabled: true}, [Validators.required]],
+      txVenta: [{value: this.data.movimiento.idVenta, disabled: true}, [Validators.required]],
       txFecha: [{value: this.fechaHoy, disabled: true}, [Validators.required]],
       txMonto: ['', [Validators.required]],
       txFormaDePago: ['', [Validators.required]],
@@ -69,14 +67,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
   }
 
   private buscarDataCombos() {
-    this.consultarVentas();
     this.consultarFormasDePago();
-  }
-
-  public consultarVentas() {
-    this.ventasService.buscarVentasPorCC(this.data.venta.cliente.id).subscribe((ventas) => {
-      this.ventas = ventas;
-    });
   }
 
   public consultarFormasDePago() {

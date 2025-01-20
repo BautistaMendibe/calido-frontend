@@ -231,7 +231,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     };
   }
 
-  public registrarMovimiento(venta: Venta) {
+  public registrarMovimiento(movimiento: MovimientoCuentaCorriente) {
     const dialog = this.dialog.open(
       PagarCuentaCorrienteComponent,
       {
@@ -242,7 +242,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
         autoFocus: false,
         data: {
           referencia: this,
-          venta: venta,
+          movimiento: movimiento,
           cuentaCorriente: this.data.cuentaCorriente
         }
       }

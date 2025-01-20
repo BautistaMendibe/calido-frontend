@@ -14,11 +14,7 @@
       <div class="col-md">
         <mat-form-field appearance="outline" class="w-100">
           <mat-label>Venta</mat-label>
-          <mat-select [formControl]="txVenta">
-            <mat-option *ngFor="let venta of ventas" [value]="venta.id">
-              {{ 'Venta ' + venta.id }}
-            </mat-option>
-          </mat-select>
+          <input matInput [formControl]="txVenta" [value]="this.data.movimiento.idVenta" readonly />
         </mat-form-field>
         <app-error-messages [control]="txVenta"></app-error-messages>
       </div>
