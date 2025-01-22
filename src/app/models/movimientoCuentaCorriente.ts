@@ -9,8 +9,8 @@ export class MovimientoCuentaCorriente {
   fecha: Date;
   monto: number;
   idFormaDePago: number;
-  descripcion: string;
   idTipoMovimientoCuentaCorriente: number;
+  comprobante: string;
 
   cuentaCorriente: CuentaCorriente;
   formaDePago: FormaDePago;
@@ -25,9 +25,9 @@ export class MovimientoCuentaCorriente {
     idFormaDePago?: number,
     cuentaCorriente?: CuentaCorriente,
     formaDePago?: FormaDePago,
-    descripcion?: string,
     idTipoMovimientoCuentaCorriente?: number,
-    tipoMovimientoCuentaCorriente?: TipoMovimientoCuentaCorriente
+    tipoMovimientoCuentaCorriente?: TipoMovimientoCuentaCorriente,
+    comprobante?: string
   ) {
     this.id = id!;
     this.idCuentaCorriente = idCuentaCorriente!;
@@ -37,8 +37,8 @@ export class MovimientoCuentaCorriente {
     this.idFormaDePago = idFormaDePago!;
     this.cuentaCorriente = cuentaCorriente!;
     this.formaDePago = formaDePago!;
-    this.descripcion = descripcion!;
     this.idTipoMovimientoCuentaCorriente = idTipoMovimientoCuentaCorriente!;
     this.tipoMovimientoCuentaCorriente = tipoMovimientoCuentaCorriente!;
+    this.comprobante = comprobante!;
   }
 }

@@ -138,6 +138,11 @@
                 <mat-cell *matCellDef="let movimiento">{{ movimiento.tipoMovimientoCuentaCorriente?.nombre }}</mat-cell>
               </ng-container>
 
+              <ng-container matColumnDef="comprobante">
+                <mat-header-cell *matHeaderCellDef mat-sort-header>COMPROBANTE</mat-header-cell>
+                <mat-cell *matCellDef="let movimiento">{{ movimiento.comprobante }}</mat-cell>
+              </ng-container>
+
               <ng-container matColumnDef="idVenta">
                 <mat-header-cell *matHeaderCellDef mat-sort-header>VENTA</mat-header-cell>
                 <mat-cell *matCellDef="let movimiento">{{ movimiento.idVenta }}</mat-cell>

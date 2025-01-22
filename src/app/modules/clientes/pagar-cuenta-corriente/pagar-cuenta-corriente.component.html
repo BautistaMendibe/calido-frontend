@@ -50,21 +50,12 @@
         </mat-form-field>
         <app-error-messages [control]="txFormaDePago"></app-error-messages>
       </div>
+
+      <p class="leyenda" (click)="setearTotalVentaEnMonto()">
+        Monto total de la venta: $ {{this.data.movimiento.monto | number:'1.2-2':'es-AR' }}
+      </p>
     </div>
 
-    <div class="row pt-4">
-      <div class="col-md">
-        <mat-form-field appearance="outline" class="w-100">
-          <mat-label>Comentario</mat-label>
-          <textarea matInput [formControl]="txComentario"
-                    cdkTextareaAutosize
-                    cdkAutosizeMinRows="3"
-                    cdkAutosizeMaxRows="10">
-          </textarea>
-        </mat-form-field>
-        <app-error-messages [control]="txComentario"></app-error-messages>
-      </div>
-    </div>
   </form>
 
   <mat-divider class="my-3"></mat-divider>

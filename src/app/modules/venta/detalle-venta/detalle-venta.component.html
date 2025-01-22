@@ -9,16 +9,6 @@
       <div class="col-4">
         <div class="row justify-content-start justify-content-sm-end" style="margin-right: 15px">
           <button
-            *ngIf="!venta.anulada && !esAnulacion"
-            mat-icon-button
-            color="primary"
-            matTooltip="Anular venta"
-            (click)="desHacerVenta()"
-            [disabled]="venta.comprobanteAfip.comprobante_pdf_url !== null"
-            [appRole]="['Cajero', 'Encargado']">
-            <mat-icon class="eliminar">settings_backup_restore</mat-icon>
-          </button>
-          <button
             *ngIf="venta.comprobanteAfip.comprobante_pdf_url != null"
             mat-icon-button color="primary"
             matTooltip="Imprimir comprobante"
@@ -119,10 +109,10 @@
         </div>
       </div>
 
-      <div *ngIf="esAnulacion">
+      <div *ngIf="esAnulacion && (this.venta.formaDePago.id == this.formasDePagoEnum.CUENTA_CORRIENTE)">
         <br>
         <h3 class="subtitulo">Cuenta corriente:</h3>
-        <span class="aviso-producto">Esta será la cuenta corriente donde se añadirá el saldo a favor del cliente luego de anular la venta.</span>
+        <span class="aviso-producto">Esta es la cuenta corriente del cliente al cual anularás la venta.</span>
         <mat-divider class="my-3"></mat-divider>
         <div class="row pt-4">
           <div class="col-md-9">
@@ -135,11 +125,6 @@
               </mat-select>
             </mat-form-field>
             <app-error-messages [control]="txCuenta"></app-error-messages>
-          </div>
-          <div class="col-md">
-            <button mat-stroked-button color="warn" class="btn round new-account-btn w-100" style="height: 70%;" (click)="registrarNuevaCuenta()">
-              <mat-icon>add</mat-icon> Nueva cuenta
-            </button>
           </div>
         </div>
       </div>
@@ -210,8 +195,8 @@
         </mat-card-content>
       </mat-card>
 
-      <h5 *ngIf="(this.venta.totalAnulado > 0)" class="mt-4">
-        Saldo a favor del cliente después de la anulación: <b>$ {{this.venta.totalAnulado}}</b>
+      <h5 *ngIf="(this.venta.totalAnulado > 0)" class="mt-4 aviso-total-anulado">
+        Total a ser anulado: <b>$ {{ this.venta.totalAnulado | number:'1.2-2':'es-AR' }}</b>
       </h5>
 
       <h5 *ngIf="!(this.venta.productos.length > 0)" class="alert alert-secondary text-center">

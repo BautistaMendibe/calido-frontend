@@ -40,7 +40,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public tableDataSourceMovimientos: MatTableDataSource<MovimientoCuentaCorriente> = new MatTableDataSource<MovimientoCuentaCorriente>([]);
   public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
-  public columnasMovimientos: string[] = ['fecha', 'tipoMovimientoCuentaCorriente', 'idVenta', 'monto', 'formaDePago', 'acciones']
+  public columnasMovimientos: string[] = ['fecha', 'tipoMovimientoCuentaCorriente', 'comprobante', 'idVenta', 'monto', 'formaDePago', 'acciones']
   public listaMovimientosDeshabilitada: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -142,77 +142,79 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     let debe = 0;
     let haber = 0;
 
+    // Mapa para almacenar los pagos asociados a cada venta (idVenta)
+    const pagosPorVenta = new Map<number, number>();
+
+    // Recorrer los movimientos para llenar el mapa de pagos
     this.movimientosCuentaCorriente.forEach((movimiento) => {
 
-      // CASO 1: El movimiento es una venta realizada a la cuenta corriente del cliente
-      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.VENTA) {
-        const montoVenta = Number(movimiento.monto) || 0;
-
-        // Las ventas del cliente se suman al debe.
-        debe += montoVenta;
-        return;
-      }
-
-      // CASO 2: El movimiento es un pago que hizo el cliente a una venta de su cuenta corriente
       if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.PAGO) {
         const montoPago = Number(movimiento.monto) || 0;
 
-        // Los pagos del cliente se suman al haber.
+        // Almacenar el pago en el mapa, sumando si ya existe un pago previo para la misma venta
+        const montoExistente = pagosPorVenta.get(movimiento.idVenta) || 0;
+        pagosPorVenta.set(movimiento.idVenta, montoExistente + montoPago);
+
+        // Los pagos del cliente, además, se suman al haber.
         haber += montoPago;
-        return;
       }
-
-      // CASO 3: El movimiento es una anulación total de una venta de la cuenta corriente del cliente
-      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_TOTAL) {
-        const montoAnulacion = Number(movimiento.monto) || 0;
-
-        // Las anulaciones totales se restan al debe (la deuda ya no existe)
-        debe -= montoAnulacion;
-
-        // Si el cliente había hecho pagos para esa venta, se devuelve el efectivo (por lo que los pagos dejan de existir y se restan del haber)
-        this.movimientosCuentaCorriente.forEach((pago) => {
-
-          if (pago.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.PAGO && pago.idVenta == movimiento.idVenta) {
-            const montoPago = Number(pago.monto) || 0;
-
-            haber -= montoPago;
-          }
-        });
-        return;
-      }
-
-      // CASO 4: El movimiento es una anulación parcial de una venta de la cuenta corriente del cliente
-      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_PARCIAL) {
-        const montoAnulacion = Number(movimiento.monto) || 0;
-
-        // Las anulaciones parciales se restan al debe (disminuyen la deuda).
-        debe -= montoAnulacion;
-
-        let montoPago: number = 0;
-
-        // Primero debemos ver si existen pagos del cliente para esa venta.
-        this.movimientosCuentaCorriente.forEach((pago) => {
-
-          if (pago.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.PAGO && pago.idVenta == movimiento.idVenta) {
-            montoPago += Number(pago.monto);
-          }
-        });
-
-        // Existen pagos, tenemos que ver si los devolvemos o no.
-        if (montoPago && montoPago > 0) {
-          if (montoPago > montoAnulacion) {
-            // Si los pagos son mayores al monto de la anulación, se devuelve solo el excedente de lo que pagó.
-            haber -= montoPago - montoAnulacion;
-          }
-          else {
-            // Si los pagos son menores al monto de la anulación, se devuelve lo que pagó.
-            haber -= montoPago;
-          }
-        }
-      }
-      return;
     });
 
+    // Recorrer los movimientos para calcular el balance
+    this.movimientosCuentaCorriente.forEach((movimiento) => {
+      switch (movimiento.idTipoMovimientoCuentaCorriente) {
+        case this.getTiposMovimientosCuentaCorrienteEnum.VENTA:
+
+          const montoVenta = Number(movimiento.monto) || 0;
+
+          // Las ventas del cliente se suman al debe.
+          debe += montoVenta;
+          break;
+
+        case this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_TOTAL:
+
+          const montoAnulacion = Number(movimiento.monto) || 0;
+
+          // Las anulaciones totales se restan al debe (la deuda ya no existe)
+          debe -= montoAnulacion;
+
+          // Si el cliente había hecho pagos para esa venta, se devuelve el efectivo (por lo que los pagos dejan de existir y se restan del haber)
+          const montoPagoTotal = pagosPorVenta.get(movimiento.idVenta);
+          if (montoPagoTotal !== undefined) {
+            haber -= montoPagoTotal;
+          }
+          break;
+
+        case this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_PARCIAL:
+
+          const montoAnulacionParcial = Number(movimiento.monto) || 0;
+
+          // Las anulaciones parciales se restan al debe (disminuyen la deuda).
+          debe -= montoAnulacionParcial;
+
+          let montoPagoParcial: number = 0;
+
+          // Consultar los pagos asociados a esta venta en el mapa
+          const montoExistenteParcial = pagosPorVenta.get(movimiento.idVenta);
+          if (montoExistenteParcial !== undefined) {
+            montoPagoParcial = montoExistenteParcial;
+          }
+
+          // Existen pagos, tenemos que ver si los devolvemos o no.
+          if (montoPagoParcial && montoPagoParcial > 0) {
+            if (montoPagoParcial > montoAnulacionParcial) {
+              // Si los pagos son mayores al monto de la anulación, se devuelve solo el excedente de lo que pagó.
+              haber -= montoPagoParcial - montoAnulacionParcial;
+            } else {
+              // Si los pagos son menores al monto de la anulación, se devuelve lo que pagó en su totalidad.
+              haber -= montoPagoParcial;
+            }
+          }
+          break;
+      }
+    });
+
+    // Calcular el saldo final
     const saldo: number = debe - haber;
     this.txDebe.setValue(debe);
     this.txHaber.setValue(haber);

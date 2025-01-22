@@ -18,6 +18,7 @@ import {
   RegistrarCuentaCorrienteComponent
 } from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import {VentasService} from "../../../services/ventas.services";
+import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -87,7 +88,7 @@ export class DetalleVentaComponent implements OnInit{
       txCondicionIvaCliente: ['', []],
       txDescuento: ['', []],
       txInteres: ['', []],
-      txCuenta: ['', [Validators.required]]
+      txCuenta: [{ value: '', disabled: true }, []]
     });
   }
 
@@ -135,10 +136,6 @@ export class DetalleVentaComponent implements OnInit{
 
   private formatDate(fecha: Date): string | null {
     return this.datePipe.transform(fecha, 'dd/MM/yyyy HH:mm');
-  }
-
-  public desHacerVenta() {
-    this.esAnulacion = true;
   }
 
   public imprimirComprobante() {
@@ -197,22 +194,24 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public anularVenta() {
-    this.calcularTotalAnulado();
-    this.ventasService.anularVenta(this.venta).subscribe((res) => {
-      if (res.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-        this.dialogRef.close(true);
-      } else {
-        this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
-      }
-    });
+    if (this.form.valid) {
+      this.calcularTotalAnulado();
+      this.ventasService.anularVenta(this.venta).subscribe((res) => {
+        if (res.mensaje == 'OK') {
+          this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+          this.dialogRef.close(true);
+        } else {
+          this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
+        }
+      });
+    }
   }
 
   private calcularTotalAnulado() {
     let monto = 0;
     this.venta.totalAnulado = 0;
     this.venta.productosSeleccionadoParaAnular.map((producto) => {
-      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada);
+      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada) * (1 + this.venta.interes / 100);
     });
     this.venta.totalAnulado = monto;
   }
@@ -264,6 +263,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txCuenta() {
     return this.form.get('txCuenta') as FormControl;
+  }
+
+  get formasDePagoEnum(): typeof FormasDePagoEnum {
+    return FormasDePagoEnum;
   }
 
 }

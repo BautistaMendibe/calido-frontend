@@ -6,7 +6,6 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {VentasService} from "../../../services/ventas.services";
 import {NotificationService} from "../../../services/notificacion.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
-import {Venta} from "../../../models/venta.model";
 import {RegistrarCuentaCorrienteComponent} from "../registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
@@ -58,7 +57,6 @@ export class PagarCuentaCorrienteComponent implements OnInit {
       txFecha: [{value: this.fechaHoy, disabled: true}, [Validators.required]],
       txMonto: ['', [Validators.required]],
       txFormaDePago: ['', [Validators.required]],
-      txComentario: ['', [Validators.maxLength(200)]]
     });
   }
 
@@ -89,7 +87,6 @@ export class PagarCuentaCorrienteComponent implements OnInit {
             movimiento.fecha = this.txFecha.value;
             movimiento.monto = this.txMonto.value;
             movimiento.idFormaDePago = this.txFormaDePago.value;
-            movimiento.descripcion = this.txComentario.value;
             movimiento.idTipoMovimientoCuentaCorriente = this.getTiposMovimientosCuentaCorrienteEnum.PAGO;
 
             this.usuariosService.registrarMovimientoCuentaCorriente(movimiento).subscribe((respuesta) => {
@@ -104,6 +101,10 @@ export class PagarCuentaCorrienteComponent implements OnInit {
           }
         });
     }
+  }
+
+  public setearTotalVentaEnMonto() {
+    this.txMonto.setValue(this.data.movimiento.monto);
   }
 
   public cancelar() {
@@ -124,10 +125,6 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   get txFormaDePago() {
     return this.form.get('txFormaDePago') as FormControl;
-  }
-
-  get txComentario() {
-    return this.form.get('txComentario') as FormControl;
   }
 
   get getTiposMovimientosCuentaCorrienteEnum(): typeof TiposMovimientoCuentaCorrienteEnum {
