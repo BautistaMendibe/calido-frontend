@@ -147,25 +147,6 @@ export class DetalleVentaComponent implements OnInit{
     this.dialogRef.close();
   }
 
-  public registrarNuevaCuenta() {
-    const dialogRef = this.dialog.open(RegistrarCuentaCorrienteComponent, {
-      width: '75%',
-      height: 'auto',
-      autoFocus: false,
-      data: {
-        referencia: this,
-        esConsulta: false,
-        formDesactivado: false
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.consultarCuentasCorrientes(result.id);
-      }
-    });
-  }
-
   public seleccionarProductoParaAnular(producto: Producto, event: boolean) {
     const index = this.venta.productos.findIndex(p => p.id === producto.id);
     if (!event) {
@@ -194,16 +175,22 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public anularVenta() {
-    if (this.form.valid) {
-      this.calcularTotalAnulado();
-      this.ventasService.anularVenta(this.venta).subscribe((res) => {
-        if (res.mensaje == 'OK') {
-          this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-          this.dialogRef.close(true);
-        } else {
-          this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
-        }
-      });
+    if (this.form.valid || this.venta.formaDePago.id !== this.formasDePagoEnum.CUENTA_CORRIENTE) {
+      this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Anular venta') //Está seguro?
+        .afterClosed()
+        .subscribe((value) => {
+          if (value) {
+            this.calcularTotalAnulado();
+            this.ventasService.anularVenta(this.venta).subscribe((res) => {
+              if (res.mensaje == 'OK') {
+                this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+                this.dialogRef.close(true);
+              } else {
+                this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
+              }
+            });
+          }
+        });
     }
   }
 
@@ -211,7 +198,7 @@ export class DetalleVentaComponent implements OnInit{
     let monto = 0;
     this.venta.totalAnulado = 0;
     this.venta.productosSeleccionadoParaAnular.map((producto) => {
-      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada) * (1 + this.venta.interes / 100);
+      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada) * (1 + (this.venta.interes ?? 0) / 100);
     });
     this.venta.totalAnulado = monto;
   }
