@@ -173,7 +173,13 @@
                     [appRole]="['Administrador', 'Cajero', 'Encargado']">
                     <mat-icon>check_circle_outline</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" matTooltip="Eliminar" (click)="eliminarMovimiento(movimiento.id)" [appRole]="['Administrador', 'Cajero', 'Encargado']">
+                  <button
+                    *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.PAGO"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Eliminar"
+                    (click)="eliminarMovimiento(movimiento.id)"
+                    [appRole]="['Administrador', 'Cajero', 'Encargado']">
                     <mat-icon class="eliminar">delete</mat-icon>
                   </button>
                 </mat-cell>
