@@ -75,6 +75,7 @@ export class VentasDiaComponent implements OnInit{
           },
           color: this.isDarkMode ? 'rgb(255,255,255)' : 'rgb(74,74,74)',
           padding: 10,
+          callback: (value) => `$ ${(+value).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         },
         grid: {
           color: 'rgba(255, 255, 255, 0.1)',
@@ -90,6 +91,12 @@ export class VentasDiaComponent implements OnInit{
         backgroundColor: 'rgba(64,64,64,0.8)',
         titleColor: '#ffffff',
         bodyColor: '#ffffff',
+        callbacks: {
+          label: (context) => {
+            const value = Number(context.raw);
+            return ` $ ${(+value).toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+          },
+        },
       },
     },
     elements: {
