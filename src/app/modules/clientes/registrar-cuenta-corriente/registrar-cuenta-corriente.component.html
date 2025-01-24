@@ -165,14 +165,16 @@
                 <mat-cell *matCellDef="let movimiento" data-label="Acciones">
                   <button
                     *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.VENTA"
-                    class="btn"
+                    class="btn button-pay"
                     mat-icon-button
-                    matTooltip="Pagar"
+                    matTooltip="{{ movimiento.anulado == 1 ? 'La venta fue anulada totalmente' : 'Pagar' }}"
                     color="primary"
                     (click)="registrarMovimiento(movimiento)"
-                    [appRole]="['Administrador', 'Cajero', 'Encargado']">
+                    [appRole]="['Administrador', 'Cajero', 'Encargado']"
+                    [disabled]="movimiento.anulado == 1">
                     <mat-icon>check_circle_outline</mat-icon>
                   </button>
+
                   <button
                     *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.PAGO"
                     mat-icon-button
@@ -181,6 +183,15 @@
                     (click)="eliminarMovimiento(movimiento.id)"
                     [appRole]="['Administrador', 'Cajero', 'Encargado']">
                     <mat-icon class="eliminar">delete</mat-icon>
+                  </button>
+                  <button
+                    *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.PAGO"
+                    mat-icon-button
+                    color="primary"
+                    matTooltip="Imprimir"
+                    (click)="imprimirComprobanteDePago(movimiento)"
+                    [appRole]="['Administrador', 'Cajero', 'Encargado']">
+                    <mat-icon class="imprimir">print</mat-icon>
                   </button>
                 </mat-cell>
               </ng-container>

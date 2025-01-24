@@ -76,3 +76,12 @@
 h3 {
   color: #5e5e5e;
 }
+
+button.button-pay[disabled] {
+  opacity: 0.5;
+  pointer-events: auto;
+}
+
+button.button-pay[disabled]:hover {
+  pointer-events: auto;
+}

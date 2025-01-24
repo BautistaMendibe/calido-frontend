@@ -19,6 +19,11 @@ import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorrien
 import {FiltrosMovimientosCuentaCorriente} from "../../../models/comandos/FiltrosMovimientosCuentaCorriente.comando";
 import {PagarCuentaCorrienteComponent} from "../pagar-cuenta-corriente/pagar-cuenta-corriente.component";
 import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-movimiento-cuenta-corriente.enum";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import {TDocumentDefinitions} from "pdfmake/interfaces";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Configuracion} from "../../../models/configuracion.model";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -37,6 +42,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public isLoading: boolean = false;
   public darkMode: boolean = false;
+
+  private configuracion: Configuracion = new Configuracion();
 
   public tableDataSourceMovimientos: MatTableDataSource<MovimientoCuentaCorriente> = new MatTableDataSource<MovimientoCuentaCorriente>([]);
   public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
@@ -57,6 +64,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     private dialog: MatDialog,
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
+    private configuracionesService: ConfiguracionesService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarCuentasCorrientesComponent;
       esConsulta: boolean;
@@ -71,6 +79,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.esRegistro = this.data.esRegistro;
     this.formDesactivado = this.data.formDesactivado;
     this.referencia = this.data.referencia;
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
   ngOnInit() {
@@ -92,6 +101,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     }
 
     this.buscarUsuarios();
+    this.buscarConfiguraciones();
     this.filtrosSuscripciones();
 
     if (this.esConsulta || this.data.editar) {
@@ -319,6 +329,161 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
           });
         }
       });
+  }
+
+  public imprimirComprobanteDePago(movimiento: MovimientoCuentaCorriente) {
+    this.notificationDialogService.confirmation(`¿Desea imprimir el comprobante de pago?
+      Recuerde cargar sus datos
+      en la configuración.`, 'Imprimir Comprobante de Pago')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.imprimir(movimiento);
+        }
+      });
+  }
+
+  public imprimir(movimiento: MovimientoCuentaCorriente) {
+    const docDefinition: TDocumentDefinitions = {
+      header: (currentPage, pageCount, pageSize) => {
+        return [
+          {
+            canvas: [
+              {
+                type: "rect",
+                x: 40,
+                y: 20,
+                w: pageSize.width - 75,
+                h: 0,
+                lineWidth: 1,
+                lineColor: "#a0a0a0",
+              },
+            ],
+          },
+        ];
+      },
+      footer: (currentPage, pageCount, pageSize) => {
+        return [
+          {
+            text: `Gracias por la confianza en ${this.configuracion.razonSocial}`,
+            alignment: 'center',
+            bold: false,
+            fontSize: 18,
+            margin: [0, -16, 0, 0]
+          },
+          {
+            canvas: [
+              {
+                type: "rect",
+                x: 40,
+                y: 10,
+                w: pageSize.width - 75,
+                h: 0,
+                lineWidth: 1,
+                lineColor: "#a0a0a0",
+              }
+            ],
+          }
+        ];
+      },
+      pageSize: "A4",
+      pageOrientation: "landscape",
+      content: [
+        {
+          margin: [0, 10],
+          layout: "noBorders",
+          table: {
+            headerRows: 1,
+            widths: [60, "*"],
+            body: [
+              [
+                {
+                  image: `${this.configuracion.logo}`,
+                  width: 60,
+                },
+                {
+                  text: this.configuracion.razonSocial,
+                  bold: true,
+                  fontSize: 30,
+                  alignment: 'left',
+                  margin: [15, 20, 0, 0],
+                }
+              ],
+            ]
+          },
+        },
+        {
+          margin: [0, 10],
+          layout: "noBorders",
+          table: {
+            headerRows: 1,
+            widths: ["*", "*"],
+            body: [
+              [
+                { text: this.configuracion.razonSocial, bold: true, alignment: 'left' },
+                { text: new Date(movimiento.fecha).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).replace(',', ''), alignment: 'right' }
+              ],
+              [
+                { text: `${this.configuracion.calle} ${this.configuracion.numero}, ${this.configuracion.ciudad}, ${this.configuracion.provincia}, ${this.configuracion.codigoPostal}, Argentina`, alignment: 'left' },
+                { text: `Comprobante #: ${movimiento.comprobante}`, alignment: 'right' }
+              ]
+            ]
+          }
+        },
+        {
+          canvas: [
+            {
+              type: "rect",
+              x: 0,
+              y: 0,
+              w: 760,
+              h: 0,
+              lineWidth: 1,
+              lineColor: "#a0a0a0",
+            }
+          ]
+        },
+        // Tabla de precios
+        {
+          margin: [0, 28, 0, 0],
+          table: {
+            headerRows: 1,
+            widths: ["*", "*"],
+            body: [
+              [
+                {
+                  text: "Total abonado:",
+                  bold: true,
+                  alignment: 'left',
+                  fontSize: 18,
+                  margin: [0, 8],
+                  style: 'tableHeader',
+                  borderColor: ["#fff", "#fff", "#fff", "#fff"]
+                },
+                {
+                  text: `$ ${Number(movimiento.monto).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.').replace('.', ',')}`,
+                  alignment: 'right',
+                  fontSize: 18,
+                  margin: [0, 8],
+                  style: 'tableHeader',
+                  borderColor: ["#fff", "#fff", "#fff", "#fff"]
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    };
+
+    const win = window.open('', '_blank');
+    pdfMake.createPdf(docDefinition).open({}, win);
+  }
+
+
+  private async buscarConfiguraciones() {
+    this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
+      this.configuracion = configuracion;
+    });
   }
 
   // Región getters
