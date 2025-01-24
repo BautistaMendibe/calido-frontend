@@ -175,23 +175,21 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public anularVenta() {
-    if (this.form.valid || this.venta.formaDePago.id !== this.formasDePagoEnum.CUENTA_CORRIENTE) {
-      this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Anular venta') //Está seguro?
-        .afterClosed()
-        .subscribe((value) => {
-          if (value) {
-            this.calcularTotalAnulado();
-            this.ventasService.anularVenta(this.venta).subscribe((res) => {
-              if (res.mensaje == 'OK') {
-                this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-                this.dialogRef.close(true);
-              } else {
-                this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
-              }
-            });
-          }
-        });
-    }
+    this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Anular venta') //Está seguro?
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.calcularTotalAnulado();
+          this.ventasService.anularVenta(this.venta).subscribe((res) => {
+            if (res.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+              this.dialogRef.close(true);
+            } else {
+              this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
+            }
+          });
+        }
+      });
   }
 
   private calcularTotalAnulado() {
