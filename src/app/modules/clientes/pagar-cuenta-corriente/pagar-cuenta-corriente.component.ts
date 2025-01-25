@@ -126,6 +126,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
             movimiento.monto = this.txMonto.value;
             movimiento.idFormaDePago = this.txFormaDePago.value;
             movimiento.idTipoMovimientoCuentaCorriente = this.getTiposMovimientosCuentaCorrienteEnum.PAGO;
+            movimiento.idCaja = this.txCaja.value;
 
             this.usuariosService.registrarMovimientoCuentaCorriente(movimiento).subscribe((respuesta) => {
               if (respuesta.mensaje === 'OK') {
