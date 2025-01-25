@@ -66,6 +66,7 @@ export class DetalleVentaComponent implements OnInit{
     this.consultarCuentasCorrientes();
     this.setearDatos();
     this.desactivarFormulario();
+    this.suscripcionCierreDialogo();
     this.tableDataSource.data = this.venta.productos;
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort;
@@ -73,6 +74,21 @@ export class DetalleVentaComponent implements OnInit{
 
   private obtenerInformacionTema() {
     this.darkMode = this.themeService.isDarkMode();
+  }
+
+  /**
+   * Si el dialogo se cierra, se limpian los productos seleccionados para anular
+   * @private
+   */
+  private suscripcionCierreDialogo() {
+    this.dialogRef.afterClosed().subscribe((res) => {
+      this.venta.productosSeleccionadoParaAnular.some((producto: Producto) => {
+        producto.anulado = false;
+        producto.cantidadAnulada = 0;
+      });
+      this.venta.productosSeleccionadoParaAnular = [];
+      this.venta.totalAnulado = 0;
+    });
   }
 
   private crearFormulario() {

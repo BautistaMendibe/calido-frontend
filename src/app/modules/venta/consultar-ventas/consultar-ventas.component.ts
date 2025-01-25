@@ -15,9 +15,6 @@ import {RegistrarProductoComponent} from "../../productos/registrar-producto/reg
 import {NotificationService} from "../../../services/notificacion.service";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {
-  AsignarCuentaCorrienteComponent
-} from "../../clientes/asignar-cuenta-corriente/asignar-cuenta-corriente.component";
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {CajasService} from "../../../services/cajas.service";
 import {Arqueo} from "../../../models/Arqueo.model";
@@ -241,67 +238,6 @@ export class ConsultarVentasComponent implements OnInit {
         }
       });
     }
-
-
-    // Condición para abrir el matDialog
-    //if (venta.comprobanteAfip.comprobante_nro && venta.cliente.id === -1) {
-    //  // Abre el diálogo con el componente AsignarCuentaCorrienteComponent
-    //  const dialogRef = this.dialog.open(AsignarCuentaCorrienteComponent, {
-    //    width: '55%',
-    //    maxHeight: '80vh',
-    //    panelClass: 'dialog-container',
-    //    autoFocus: false,
-    //    data: {
-    //      venta: venta,
-    //      referencia: this,
-    //    }
-    //  });
-//
-    //  dialogRef.afterClosed().subscribe((resultado) => {
-    //    if (resultado) {
-    //      this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-    //      this.buscarVentas();
-    //      if (onSuccess) {
-    //        onSuccess(); // Llama al callback solo si es exitoso
-    //      }
-    //    } else {
-    //      if (resultado === false) {
-    //        this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
-    //      }
-    //    }
-    //  });
-    //  return;
-    //}
-
-    // Lógica normal si no se cumple la condición
-    //let mensajeTitulo: string = '';
-//
-    //mensajeTitulo = venta.comprobanteAfip.comprobante_nro
-    //  ? 'Generar nota de crédito'
-    //  : 'Anular venta';
-//
-    //const mensajeDescripcion: string = venta.comprobanteAfip.comprobante_nro
-    //  ? `¿Desea generar una nota de crédito?
-    //  Se añadirá balance positivo a la cuenta.`
-    //  : `¿Desea anular esta venta?`;
-//
-    //this.notificationDialogService.confirmation(mensajeDescripcion, mensajeTitulo)
-    //  .afterClosed()
-    //  .subscribe((value) => {
-    //    if (value) {
-    //      this.ventasService.anularVenta(venta).subscribe((respuesta) => {
-    //        if (respuesta.mensaje === 'OK') {
-    //          this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-    //          this.buscarVentas();
-    //          if (onSuccess) {
-    //            onSuccess(); // Llama al callback solo si es exitoso
-    //          }
-    //        } else {
-    //          this.notificacionService.openSnackBarError('Error al anular venta. Intentelo nuevamente.');
-    //        }
-    //      });
-    //    }
-    //  });
   }
 
   public imprimirComprobante(venta: Venta) {

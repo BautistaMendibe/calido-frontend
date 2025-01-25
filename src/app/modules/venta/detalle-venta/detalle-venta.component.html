@@ -162,14 +162,22 @@
                   <mat-header-cell *matHeaderCellDef class="text-center justify-content-center">CANTIDAD</mat-header-cell>
                   <mat-cell *matCellDef="let producto" data-label="Cantidad" class="justify-content-center">
                     <div class="d-flex align-items-center col-4 justify-content-center">
-                      <button class="btn btn-light btn-sm" (click)="disminuirCantidad(producto)" [disabled]="!(producto.anulado) || (producto.cantidadAnulada == 1)">-</button>
+                      <button
+                        class="btn btn-light btn-sm"
+                        (click)="disminuirCantidad(producto)"
+                        [disabled]="!(producto.anulado) || (producto.cantidadAnulada == 1)"
+                        *ngIf="esAnulacion">-</button>
                       <input
                         type="text"
                         [matTooltip]="producto.anulado ? 'Cantidad original: ' + producto.cantidadSeleccionada : ''"
                         disabled
                         class="form-control form-control-sm mx-2 text-center quantity-input"
                         [value]="producto.anulado ? producto.cantidadAnulada : producto.cantidadSeleccionada">
-                      <button class="btn btn-light btn-sm" (click)="aumentarCantidad(producto)" [disabled]="!(producto.anulado) || (producto.cantidadAnulada == producto.cantidadSeleccionada)">+</button>
+                      <button
+                        class="btn btn-light btn-sm"
+                        (click)="aumentarCantidad(producto)"
+                        [disabled]="!(producto.anulado) || (producto.cantidadAnulada == producto.cantidadSeleccionada)"
+                        *ngIf="esAnulacion">+</button>
                     </div>
                   </mat-cell>
                 </ng-container>
