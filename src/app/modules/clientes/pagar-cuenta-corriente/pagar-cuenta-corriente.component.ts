@@ -76,7 +76,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   public registrar() {
     if (this.form.valid) {
-      this.notificationDialogService.confirmation(`¿Desea registrar un pago a esta cuenta corriente?
+      this.notificationDialogService.confirmation(`¿Desea registrar un pago para esta venta?
       Esto modificará la caja del día.`, 'Registrar pago')
         .afterClosed()
         .subscribe((value) => {

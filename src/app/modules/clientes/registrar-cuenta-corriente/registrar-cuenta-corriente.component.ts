@@ -304,7 +304,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   public eliminarMovimiento(idMovimiento: number) {
-    this.notificationDialogService.confirmation('¿Desea eliminar este pago?', 'Eliminar Pago')
+    this.notificationDialogService.confirmation(`¿Desea eliminar este pago?
+      Esto modificará la caja del día.`, 'Eliminar Pago')
       .afterClosed()
       .subscribe((value) => {
         if (value) {
