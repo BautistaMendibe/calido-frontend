@@ -77,11 +77,15 @@ h3 {
   color: #5e5e5e;
 }
 
-button.button-pay[disabled] {
+button.button-pay[disabled],
+button.button-delete[disabled],
+button.button-return[disabled] {
   opacity: 0.5;
   pointer-events: auto;
 }
 
-button.button-pay[disabled]:hover {
+button.button-pay[disabled]:hover,
+button.button-delete[disabled]:hover,
+button.button-return[disabled]:hover {
   pointer-events: auto;
 }

@@ -169,16 +169,19 @@
 
                   <button
                     *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.PAGO"
+                    class="btn button-return"
                     mat-icon-button
                     color="primary"
-                    matTooltip="Devolver pago"
+                    matTooltip="{{ movimiento.devuelto == 1 ? 'Este pago ya ha sido devuelto' : 'Devolver' }}"
                     (click)="devolverPago(movimiento)"
-                    [appRole]="['Administrador', 'Cajero', 'Encargado']">
+                    [appRole]="['Administrador', 'Cajero', 'Encargado']"
+                    [disabled]="movimiento.devuelto == 1">
                     <mat-icon class="devolver">undo</mat-icon>
                   </button>
 
                   <button
                     *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.PAGO"
+                    class="btn"
                     mat-icon-button
                     color="primary"
                     matTooltip="Imprimir"
@@ -189,11 +192,13 @@
 
                   <button
                     *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.PAGO"
+                    class="btn button-delete"
                     mat-icon-button
                     color="primary"
-                    matTooltip="Eliminar"
+                    matTooltip="{{ movimiento.devuelto == 1 ? 'No puedes eliminar pagos que fueron devueltos' : 'Eliminar' }}"
                     (click)="eliminarMovimiento(movimiento.id)"
-                    [appRole]="['Administrador', 'Cajero', 'Encargado']">
+                    [appRole]="['Administrador', 'Cajero', 'Encargado']"
+                    [disabled]="movimiento.devuelto == 1">
                     <mat-icon class="eliminar">delete</mat-icon>
                   </button>
                 </mat-cell>

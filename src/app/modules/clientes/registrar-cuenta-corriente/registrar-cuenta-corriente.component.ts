@@ -173,7 +173,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       }
 
       // CASO 3: El movimiento es una anulación de una venta de la cuenta corriente del cliente (nota de crédito)
-      if (movimiento.idTipoMovimientoCuentaCorriente == (this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_TOTAL || this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_PARCIAL)) {
+      if (
+        movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_TOTAL ||
+        movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_PARCIAL
+      ) {
         const montoAnulacion = Number(movimiento.monto) || 0;
 
         // Las anulaciones se suman al haber.
@@ -410,9 +413,13 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
                 { text: new Date(movimiento.fecha).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).replace(',', ''), alignment: 'right' }
               ],
               [
-                { text: `${this.configuracion.calle} ${this.configuracion.numero}, ${this.configuracion.ciudad}, ${this.configuracion.provincia}, ${this.configuracion.codigoPostal}, Argentina`, alignment: 'left' },
+                { text: `${this.configuracion.calle} ${this.configuracion.numero}, ${this.configuracion.ciudad}`, alignment: 'left' },
                 { text: `Comprobante #: ${movimiento.comprobante}`, alignment: 'right' }
-              ]
+              ],
+              [
+                { text: `Provincia de ${this.configuracion.provincia}, ${this.configuracion.codigoPostal}, Argentina`, alignment: 'left' },
+                { text: `Venta #: ${movimiento.idVenta.toString()}`, alignment: 'right' }
+              ],
             ]
           }
         },
