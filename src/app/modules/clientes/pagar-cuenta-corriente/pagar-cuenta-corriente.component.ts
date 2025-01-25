@@ -12,6 +12,11 @@ import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorrien
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-movimiento-cuenta-corriente.enum";
+import {Caja} from "../../../models/Caja.model";
+import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
+import {CajasService} from "../../../services/cajas.service";
+import {Arqueo} from "../../../models/Arqueo.model";
+import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 
 @Component({
   selector: 'app-pagar-cuenta-corriente',
@@ -21,7 +26,11 @@ import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-mov
 export class PagarCuentaCorrienteComponent implements OnInit {
 
   public form: FormGroup;
+
   public formasDePago: FormaDePago[] = [];
+  public cajas: Caja[] = [];
+  private arqueosHoy: Arqueo[] = [];
+
   public fechaHoy: Date = new Date();
   private referencia: RegistrarCuentaCorrienteComponent;
   public darkMode: boolean = false;
@@ -35,6 +44,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
     private dialog: MatDialog,
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
+    private cajasService: CajasService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: RegistrarCuentaCorrienteComponent;
       movimiento: MovimientoCuentaCorriente;
@@ -57,6 +67,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
       txFecha: [{value: this.fechaHoy, disabled: true}, [Validators.required]],
       txMonto: ['', [Validators.required]],
       txFormaDePago: ['', [Validators.required]],
+      txCaja: ['', [Validators.required]]
     });
   }
 
@@ -66,6 +77,8 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   private buscarDataCombos() {
     this.consultarFormasDePago();
+    this.consultarCajas();
+    this.buscarArqueoCajaHoy();
   }
 
   public consultarFormasDePago() {
@@ -74,8 +87,33 @@ export class PagarCuentaCorrienteComponent implements OnInit {
     });
   }
 
+  public consultarCajas() {
+    this.cajasService.consultarCajas(new FiltrosCajas()).subscribe((cajas) => {
+      this.cajas = cajas;
+    });
+  }
+
+  private buscarArqueoCajaHoy() {
+    const filtro = new FiltrosArqueos();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    filtro.fechaApertura = hoy;
+
+    this.cajasService.consultarArqueos(filtro).subscribe((arqueos) => {
+      this.arqueosHoy = arqueos;
+    });
+  }
+
   public registrar() {
     if (this.form.valid) {
+      // Validación de que la caja seleccionada esté abierta
+      const arqueoConCaja = this.arqueosHoy.find((arqueo) => arqueo.idCaja === this.txCaja.value);
+      if (!arqueoConCaja || arqueoConCaja.idEstadoArqueo !== 1) {
+        this.notificacionService.openSnackBarError('La caja seleccionada no está abierta, intentelo nuevamente.');
+        return;
+      }
+
       this.notificationDialogService.confirmation(`¿Desea registrar un pago para esta venta?
       Esto modificará la caja del día.`, 'Registrar pago')
         .afterClosed()
@@ -125,6 +163,10 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   get txFormaDePago() {
     return this.form.get('txFormaDePago') as FormControl;
+  }
+
+  get txCaja() {
+    return this.form.get('txCaja') as FormControl;
   }
 
   get getTiposMovimientosCuentaCorrienteEnum(): typeof TiposMovimientoCuentaCorrienteEnum {

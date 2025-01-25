@@ -24,6 +24,9 @@ import pdfFonts from "pdfmake/build/vfs_fonts";
 import {TDocumentDefinitions} from "pdfmake/interfaces";
 import {ConfiguracionesService} from "../../../services/configuraciones.service";
 import {Configuracion} from "../../../models/configuracion.model";
+import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
+import {CajasService} from "../../../services/cajas.service";
+import {Arqueo} from "../../../models/Arqueo.model";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -34,6 +37,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public form: FormGroup;
   public listaClientes: Usuario[] = [];
+  public arqueosHoy: Arqueo[] = [];
   public esConsulta: boolean;
   public esRegistro: boolean;
   public formDesactivado: boolean;
@@ -65,6 +69,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
     private configuracionesService: ConfiguracionesService,
+    private cajasService: CajasService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarCuentasCorrientesComponent;
       esConsulta: boolean;
@@ -102,6 +107,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
     this.buscarUsuarios();
     this.buscarConfiguraciones();
+    this.buscarArqueoCajaHoy();
     this.filtrosSuscripciones();
 
     if (this.esConsulta || this.data.editar) {
@@ -283,7 +289,26 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     });
   }
 
+  private buscarArqueoCajaHoy() {
+    const filtro = new FiltrosArqueos();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    filtro.fechaApertura = hoy;
+
+    this.cajasService.consultarArqueos(filtro).subscribe((arqueos) => {
+      this.arqueosHoy = arqueos;
+    });
+  }
+
   public devolverPago(movimiento: MovimientoCuentaCorriente) {
+    // Validación de que la caja seleccionada esté abierta
+    const arqueoConCaja = this.arqueosHoy.find((arqueo) => arqueo.idCaja === movimiento.idCaja);
+    if (!arqueoConCaja || arqueoConCaja.idEstadoArqueo !== 1) {
+      this.notificacionService.openSnackBarError('La caja correspondiente a este pago no está abierta, intentelo nuevamente.');
+      return;
+    }
+
     this.notificationDialogService.confirmation(`¿Desea registrar la devolución del pago?
       Esto modificará la caja del día.`, 'Devolver pago')
       .afterClosed()
