@@ -180,6 +180,15 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
         haber += montoAnulacion;
         return;
       }
+
+      // CASO 4: El movimiento es una devolución de un pago
+      if (movimiento.idTipoMovimientoCuentaCorriente == (this.getTiposMovimientosCuentaCorrienteEnum.DEVOLUCION_DE_PAGO)) {
+        const montoDevolucion = Number(movimiento.monto) || 0;
+
+        // Las devoluciones se restan del haber.
+        haber -= montoDevolucion;
+        return;
+      }
     });
 
     const saldo: number = debe - haber;
