@@ -280,6 +280,26 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     });
   }
 
+  public devolverPago(movimiento: MovimientoCuentaCorriente) {
+    this.notificationDialogService.confirmation(`¿Desea registrar la devolución del pago?
+      Esto modificará la caja del día.`, 'Devolver pago')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          movimiento.idTipoMovimientoCuentaCorriente = this.getTiposMovimientosCuentaCorrienteEnum.DEVOLUCION_DE_PAGO;
+
+          this.usuarioService.registrarMovimientoCuentaCorriente(movimiento).subscribe((respuesta) => {
+            if (respuesta.mensaje === 'OK') {
+              this.notificacionService.openSnackBarSuccess('Devolución de pago registrada con éxito.');
+              this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
+            } else {
+              this.notificacionService.openSnackBarError('Error al registrar devolución. Intentelo nuevamente.');
+            }
+          });
+        }
+      });
+  }
+
   public eliminarMovimiento(idMovimiento: number) {
     this.notificationDialogService.confirmation('¿Desea eliminar este pago?', 'Eliminar Pago')
       .afterClosed()
