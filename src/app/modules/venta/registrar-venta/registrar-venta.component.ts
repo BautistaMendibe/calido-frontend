@@ -10,7 +10,7 @@ import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
-import {MatDialog, MatDialogRef, MatDialogState} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
@@ -29,10 +29,11 @@ import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
 import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
-import {combineLatest, Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {Arqueo} from "../../../models/Arqueo.model";
+import {FiltrosCuentasCorrientes} from "../../../models/comandos/FiltrosCuentasCorrientes";
+import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -58,7 +59,6 @@ export class RegistrarVentaComponent implements OnInit{
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
   public montoConsumidorFinal: number = 99999999;
-  public saldoCuentaCorrienteCliente: number = 0;
 
   public form: FormGroup;
   public tarjetaSeleccionada: Tarjeta;
@@ -68,7 +68,8 @@ export class RegistrarVentaComponent implements OnInit{
   public registrandoVenta: boolean = false;
   private facturacionAutomatica: boolean = false;
   public limiteProductos: number = 20;
-  public tieneCuentaCorrienteRegistrada: boolean = false;
+
+  private cuentasCorrientes: CuentaCorriente[] = [];
 
   private stopPolling$ = new Subject<void>();
   private isDialogClosed = false;
@@ -146,6 +147,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.obtenerEmpleadoLogueado();
     this.buscarCajas();
     this.buscarArqueoCajaHoy();
+    this.buscarCuentasCorrientes();
   }
 
   private buscarConfiguracionesParaVenta() {
@@ -219,12 +221,11 @@ export class RegistrarVentaComponent implements OnInit{
   public cambiarFormaDePago(formaDePagoElegida: number) {
     if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
       const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
-      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO ? this.tiposTarjetasEnum.TARJETA_CREDITO : this.tiposTarjetasEnum.TARJETA_DEBITO;
+      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO
+        ? this.tiposTarjetasEnum.TARJETA_CREDITO
+        : this.tiposTarjetasEnum.TARJETA_DEBITO;
 
       this.txTarjeta.disable();
-      this.txCancelarConSaldo.setValue(false);
-      this.saldoCuentaCorrienteCliente = 0;
-      this.tieneCuentaCorrienteRegistrada = false;
       this.tarjetasService.consultarTarjetas(filtroTarjeta).subscribe((tarjetas) => {
         this.tarjetasRegistradas = tarjetas;
         this.mostrarTarjetasCuotas = true;
@@ -243,13 +244,11 @@ export class RegistrarVentaComponent implements OnInit{
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
       this.txTarjeta.enable();
-      this.txCancelarConSaldo.setValue(false);
-      this.saldoCuentaCorrienteCliente = 0;
-      this.tieneCuentaCorrienteRegistrada = false;
       this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
       this.calcularTotal();
     }
   }
+
 
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
@@ -411,6 +410,15 @@ export class RegistrarVentaComponent implements OnInit{
       if ((this.totalVenta >= this.montoConsumidorFinal) && this.txCliente.value == -1) {
         this.notificacionService.openSnackBarError(
           'El monto total de la venta supera el monto permitido para consumidor final. Seleccione o registre un cliente para esta venta.'
+        );
+        return;
+      }
+
+      // Validación para ver que cliente tenga cuenta corriente en ventas de cuenta corriente
+      if (this.txFormaDePago.value == this.formasDePagoEnum.CUENTA_CORRIENTE &&
+        !this.cuentasCorrientes.some(cuenta => cuenta.idUsuario === this.txCliente.value)) {
+        this.notificacionService.openSnackBarError(
+          'El cliente seleccionado no tiene cuenta corriente. Cree una cuenta corriente para este cliente e intentelo nuevamente.'
         );
         return;
       }
@@ -621,9 +629,6 @@ export class RegistrarVentaComponent implements OnInit{
     // Reestablecer valores
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
-    this.saldoCuentaCorrienteCliente = 0;
-    this.tieneCuentaCorrienteRegistrada = false;
-    this.txCancelarConSaldo.setValue(false);
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
@@ -686,9 +691,6 @@ export class RegistrarVentaComponent implements OnInit{
           this.txCliente.setValue(-1);
         }
       }
-      this.txCancelarConSaldo.setValue(false);
-      this.tieneCuentaCorrienteRegistrada = false;
-      this.saldoCuentaCorrienteCliente = 0;
     });
 
     // Escuchar cambios en el campo de búsqueda
@@ -761,6 +763,12 @@ export class RegistrarVentaComponent implements OnInit{
     });
   }
 
+  private buscarCuentasCorrientes() {
+    this.usuariosService.consultarCuentasCorrientesxUsuario(new FiltrosCuentasCorrientes()).subscribe((cuentas) => {
+      this.cuentasCorrientes = cuentas;
+    });
+  }
+
   // Region getters
   get txFormaDePago(): FormControl {
     return this.form.get('txFormaDePago') as FormControl;
@@ -808,10 +816,6 @@ export class RegistrarVentaComponent implements OnInit{
 
   get txCaja(): FormControl {
     return this.form.get('txCaja') as FormControl;
-  }
-
-  get txCancelarConSaldo(): FormControl {
-    return this.form.get('txCancelarConSaldo') as FormControl
   }
 
   protected readonly Math = Math;

@@ -241,7 +241,7 @@
           </div>
 
           <!-- Resumen si pagas con tarjeta o con saldo de cuenta corriente-->
-          <div class="mt-4" *ngIf="productosSeleccionados.length > 0 && (cantidadCuotaSeleccionada.id || this.txCancelarConSaldo.value === true)">
+          <div class="mt-4" *ngIf="productosSeleccionados.length > 0 && cantidadCuotaSeleccionada.id">
 
             <div class="summary-container">
               <div>

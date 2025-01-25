@@ -167,7 +167,7 @@
                     *ngIf="movimiento.tipoMovimientoCuentaCorriente?.id == this.getTiposMovimientosCuentaCorrienteEnum.VENTA"
                     class="btn button-pay"
                     mat-icon-button
-                    matTooltip="{{ movimiento.anulado == 1 ? 'La venta fue anulada totalmente' : 'Pagar' }}"
+                    matTooltip="{{ movimiento.anulado == 1 ? 'No puedes efectuar pagos para ventas anuladas totalmente' : 'Pagar' }}"
                     color="primary"
                     (click)="registrarMovimiento(movimiento)"
                     [appRole]="['Administrador', 'Cajero', 'Encargado']"
