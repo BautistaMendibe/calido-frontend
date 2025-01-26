@@ -96,7 +96,7 @@
 
   <!-- Filtro y Tabla de Ventas -->
   <div class="row mt-4">
-    <div class="col-md-4" *ngIf="!(ventas.length === 0 && movimientosManuales.length === 0)">
+    <div class="col-md-4" *ngIf="!(movimientosManuales.length === 0)">
       <mat-form-field appearance="outline" class="w-100">
         <mat-label>Forma de Pago</mat-label>
         <button mat-icon-button matPrefix>
@@ -111,45 +111,33 @@
     </div>
 
     <div class="col-md-12 mt-3">
-      <mat-card class="mat-card" [hidden]="ventas.length === 0 && movimientosManuales.length === 0">
+      <mat-card class="mat-card" [hidden]="movimientosManuales.length === 0">
         <mat-card-content>
           <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
 
             <ng-container matColumnDef="fecha">
               <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.fecha | date: 'dd/MM/yyyy HH:mm:ss' }}</mat-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.fechaMovimiento | date: 'dd/MM/yyyy HH:mm:ss' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="formaPago">
               <mat-header-cell *matHeaderCellDef>FORMA DE PAGO</mat-header-cell>
-              <mat-cell *matCellDef="let venta">{{ venta.formaDePago.nombre }}</mat-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.formaPago.nombre }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="descripcion">
               <mat-header-cell *matHeaderCellDef>DESCRIPCION</mat-header-cell>
-              <mat-cell *matCellDef="let venta">
-                <!-- Mostrar descripción personalizada si está disponible -->
-                {{ venta.descripcion ? venta.descripcion : ((venta.anulada === true) ? 'Venta anulada' : 'Venta') }}
-                <!-- Mostrar el ID si es una venta -->
-                {{ (venta.id && !venta.descripcion) ? + '' + venta.id : '' }}
-              </mat-cell>
+              <mat-cell *matCellDef="let movimiento">{{ movimiento.descripcion }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="tipoMovimiento">
               <mat-header-cell *matHeaderCellDef>TIPO MOVIMIENTO</mat-header-cell>
-              <mat-cell *matCellDef="let venta">
-                <!-- Cuenta corriente sin facturar es egreso, sino es ingreso, cualquier otro método es dependiente del monto -->
-                {{
-                  (venta.formaDePago?.id === 6)
-                    ? ((!venta.fechaFacturacion) ? 'Egreso' : 'Ingreso')
-                    : ((venta.montoTotal > 0) ? 'Ingreso' : 'Egreso')
-                }}
-              </mat-cell>
+              <mat-cell *matCellDef="let movimiento">{{ (movimiento.tipoMovimiento == 'ingreso') ? 'Ingreso' : 'Egreso' }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="montoTotal">
               <mat-header-cell *matHeaderCellDef mat-sort-header>MONTO</mat-header-cell>
-              <mat-cell *matCellDef="let venta">$ {{ venta.montoTotal | number:'1.2-2':'es-AR' }}</mat-cell>
+              <mat-cell *matCellDef="let movimiento">$ {{ movimiento.monto | number:'1.2-2':'es-AR' }}</mat-cell>
             </ng-container>
 
             <mat-header-row *matHeaderRowDef="columnas"></mat-header-row>
@@ -157,7 +145,7 @@
           </mat-table>
         </mat-card-content>
         <mat-paginator
-          [length]="this.ventas.length"
+          [length]="this.movimientosManuales.length"
           [pageSize]="10"
           [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
         </mat-paginator>
@@ -165,7 +153,7 @@
     </div>
   </div>
 
-  <h5 *ngIf="!isLoading && this.ventas.length === 0 && this.movimientosManuales.length === 0" class="alert alert-secondary text-center">
+  <h5 *ngIf="!isLoading && this.movimientosManuales.length === 0" class="alert alert-secondary text-center">
     Aún no hay movimientos registrados en la jornada laboral. Aparecerán aquí cuando los haya.
   </h5>
 
@@ -206,6 +194,9 @@
           </div>
 
           <div *ngIf="forma.detalleVisible" class="forma-pago-detalles">
+            <p class="leyenda" *ngIf="forma.id === 6">
+              Los ingresos y egresos de Cuenta Corriente se muestran de forma informativa, no se suman al total.
+            </p>
             <!-- Ingresos -->
             <div class="ingresos-container">
               <h6 class="ingresos-titulo">Ingresos</h6>
@@ -225,9 +216,6 @@
               </p>
               <p *ngFor="let detalle of forma.detallesEgresos" class="detalle">
                 - {{ detalle.concepto }}: $ {{ detalle.monto | number:'1.2-2':'es-AR' }}
-              </p>
-              <p class="leyenda" *ngIf="forma.id === 6">
-                Los egresos de Cuenta Corriente se muestran de forma informativa, no se suman al total de egresos.
               </p>
             </div>
           </div>

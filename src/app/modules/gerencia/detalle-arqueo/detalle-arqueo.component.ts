@@ -14,6 +14,7 @@ import {MatSort} from "@angular/material/sort";
 import {FormaDePago} from "../../../models/formaDePago.model";
 import {MovimientoManual} from "../../../models/movimientoManual.model";
 import {NotificationService} from "../../../services/notificacion.service";
+import {TiposMovimientoArqueoEnum} from "../../../shared/enums/tipos-movimiento-arqueo.enum";
 
 @Component({
   selector: 'app-detalle-arqueo',
@@ -27,7 +28,6 @@ export class DetalleArqueoComponent implements OnInit {
   public formasPago: FormaDePago[] = [];
   public formasPagoParaMovimientos: FormaDePago[] = [];
   public filtradoPorFormasPago: FormaDePago[] = [];
-  public ventas: Venta[] = [];
   public isLoading: boolean = false;
   public movimientosManuales: MovimientoManual[] = [];
   public formaPagoDefecto!: number;
@@ -39,7 +39,7 @@ export class DetalleArqueoComponent implements OnInit {
   public diferenciaCaja: number = 0;
   public diferenciaOtrosMedios: number = 0;
 
-  public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
+  public tableDataSource: MatTableDataSource<MovimientoManual> = new MatTableDataSource<MovimientoManual>([]);
   public columnas: string[] = ['fecha', 'formaPago', 'descripcion', 'tipoMovimiento', 'montoTotal'];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -82,9 +82,9 @@ export class DetalleArqueoComponent implements OnInit {
     this.ventasService.buscarFormasDePago().subscribe((formasPago) => {
       // Asignar las formas de pago para el combo de movimientos (solo efectivo y transferencia)
       this.formasPagoParaMovimientos = formasPago.filter(fp => fp.id === 1 || fp.id === 5);
-      // Asignar las formas de pago recibidas del servicio
+
+      // Mapear iconos para las formas de pago
       this.formasPago = formasPago.map((forma) => {
-        // Agregar el ícono representativo según el ID
         switch (forma.id) {
           case 1: // Efectivo
             forma.icon = 'payments';
@@ -129,7 +129,7 @@ export class DetalleArqueoComponent implements OnInit {
     this.cajasService.consultarArqueos(filtroArqueo).subscribe((arqueos: Arqueo[]) => {
       if (arqueos.length > 0) {
         this.arqueo = arqueos[0];
-        this.buscarVentas();
+        this.buscarMovimientos();
       }
     });
   }
@@ -145,21 +145,9 @@ export class DetalleArqueoComponent implements OnInit {
     this.cajasService.consultarMovimientosManuales(idArqueo).subscribe((movimientos: MovimientoManual[]) => {
       this.movimientosManuales = movimientos;
 
-      // Mapeamos los movimientos manuales al formato de la tabla
-      const movimientosParaTabla = movimientos.map((movimiento) => ({
-        id: movimiento.id,
-        fecha: movimiento.fechaMovimiento,
-        formaDePago: { id: movimiento.formaPago.id, nombre: movimiento.formaPago.nombre },
-        descripcion: movimiento.descripcion,
-        tipoMovimiento: movimiento.tipoMovimiento,
-        montoTotal: movimiento.tipoMovimiento.toLowerCase() === 'egreso' ? -Math.abs(movimiento.monto) : Math.abs(movimiento.monto) // Si es egreso debería ser negativo
-      }) as unknown as Venta);
-
-      // Filtrar datos que NO son movimientos manuales
-      const datosNoMovimientos = this.tableDataSource.data.filter((item: any) => !this.movimientosManuales.some(mov => mov.id === item.id));
-
-      // Combinar datos no relacionados con los nuevos movimientos
-      this.tableDataSource.data = [...datosNoMovimientos, ...movimientosParaTabla];
+      this.tableDataSource.data = this.movimientosManuales;
+      this.tableDataSource.paginator = this.paginator;
+      this.tableDataSource.sort = this.sort;
 
       // Si el arqueo está cerrado, rellenamos los datos y deshabilitamos el formulario
       if (this.arqueo.horaCierre) {
@@ -184,62 +172,6 @@ export class DetalleArqueoComponent implements OnInit {
     }
   }
 
-  public buscarVentas() {
-    if (this.arqueo) {
-      this.isLoading = true;
-      const arqueo = this.arqueo;
-
-      // Crear `fechaHora` con la fecha de apertura
-      const fechaHora = new Date(arqueo.fechaApertura);
-
-      // Ajustar la hora para `fechaHora` utilizando `horaApertura`
-      if (arqueo.horaApertura) {
-        const [hours, minutes, seconds] = (arqueo.horaApertura as unknown as string).split(':').map(Number);
-        fechaHora.setHours(hours, minutes, seconds || 0);
-      }
-
-      // Convertir `fechaHora` al formato de timestamp en zona horaria argentina
-      const fechaHoraLocal = fechaHora
-        .toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' })
-        .replace('T', ' ');
-
-      let fechaHoraCierreLocal = null;
-
-      // Manejar `fechaHoraCierre` si está disponible
-      if (arqueo.horaCierre) {
-        const fechaHoraCierre = new Date(arqueo.fechaApertura); // Usar la misma fecha base
-        const [hoursCierre, minutesCierre, secondsCierre] = (arqueo.horaCierre as unknown as string).split(':').map(Number);
-        fechaHoraCierre.setHours(hoursCierre, minutesCierre, secondsCierre || 0);
-
-        fechaHoraCierreLocal = fechaHoraCierre
-          .toLocaleString('sv-SE', { timeZone: 'America/Argentina/Buenos_Aires' })
-          .replace('T', ' ');
-      }
-
-      // Llamar al servicio con las fechas calculadas
-      this.ventasService.buscarVentasFechaHora(fechaHoraLocal, fechaHoraCierreLocal).subscribe((ventas: Venta[]) => {
-        this.ventas = ventas.map((venta) => ({
-          ...venta,
-          montoTotal: parseFloat(venta.montoTotal as unknown as string) || 0, // Convertir a número si es necesario
-        }));
-
-        this.tableDataSource.data = this.ventas;
-        this.tableDataSource.paginator = this.paginator;
-        this.tableDataSource.sort = this.sort;
-        this.buscarMovimientos();
-      });
-    }
-  }
-
-
-  private determinarAnulacion() {
-    this.ventas.forEach(venta => {
-      if (venta.anulada || venta.fechaAnulacion || !venta.fechaFacturacion) {
-        venta.montoTotal = -Math.abs(venta.montoTotal);
-      }
-    });
-  }
-
   public toggleDetalle(forma: any): void {
     forma.detalleVisible = !forma.detalleVisible;
   }
@@ -249,59 +181,50 @@ export class DetalleArqueoComponent implements OnInit {
     let totalEgresosVentasAnuladasCuentaCorriente = 0;
 
     this.formasPago.forEach((forma) => {
-      // Ingresos: Ventas facturadas (excluyendo las anuladas) y movimientos manuales
-      const ingresosVentas = this.ventas
-        .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && v.fechaFacturacion) // Solo facturadas
-        .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
+      // Ingresos: Ventas (excluyendo las anuladas y de cuenta corriente) y pagos de cuenta corriente
+      const ingresosVentas = this.movimientosManuales
+        .filter(
+          (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
+            && m.tipoMovimiento.toLowerCase() === 'ingreso'
+            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.VENTA ||
+                m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.PAGO))
+        .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
 
+      // Ingresos: Movimientos manuales ingresados por el administrador
       const ingresosMovimientos = this.movimientosManuales
-        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'ingreso')
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre
+          && m.tipoMovimiento.toLowerCase() === 'ingreso'
+          && m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.MOVIMIENTO_MANUAL)
         .reduce((sum: number, mov: MovimientoManual) => sum + Number(mov.monto), 0);
 
       forma.totalIngresos = ingresosVentas + ingresosMovimientos;
 
       forma.detallesIngresos = [
-        { concepto: 'Ventas facturadas', monto: ingresosVentas },
+        { concepto: 'Ventas o pagos', monto: ingresosVentas },
         { concepto: 'Movimientos manuales', monto: ingresosMovimientos },
       ];
 
-      // Egresos
+      // Egresos: Anulaciones de ventas y devoluciones de pagos de cuenta corriente
+      const egresosVentas = this.movimientosManuales
+        .filter(
+          (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
+            && m.tipoMovimiento.toLowerCase() === 'egreso'
+            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.ANULACION ||
+              m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.DEVOLUCION_PAGO))
+        .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
+
       let egresosMovimientos = this.movimientosManuales
-        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre && m.tipoMovimiento.toLowerCase() === 'egreso')
+        .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre
+          && m.tipoMovimiento.toLowerCase() === 'egreso'
+          && m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.MOVIMIENTO_MANUAL)
         .reduce((sum: number, mov: MovimientoManual) => sum + (Number(mov.monto) * -1), 0);
 
-      let egresosVentas = 0;
+      forma.totalEgresos = egresosVentas + egresosMovimientos;
 
-      // Para cuenta corriente (forma.id === 6)
-      if (forma.id === 6) {
-        // Suma todas las ventas anuladas independientemente del método de pago porque al fin y al cabo todas
-        // van a cuenta corriente como crédito (lo que representa un egreso para el negocio)
-        egresosVentas = this.ventas
-          .filter((v: Venta) => v.fechaAnulacion)
-          .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
-
-        totalEgresosVentasAnuladasCuentaCorriente = egresosVentas;
-
-        // Calculamos el saldo pendiente (ventas sin fecha de facturación)
-        const saldoCuentaCorrientePendiente = this.ventas
-          .filter((v: Venta) => v.formaDePago.nombre === forma.nombre && !v.fechaFacturacion)
-          .reduce((sum: number, venta: Venta) => sum + Number(venta.montoTotal), 0);
-
-        forma.totalEgresos = egresosVentas + saldoCuentaCorrientePendiente + egresosMovimientos;
-
-        forma.detallesEgresos = [
-          { concepto: 'Ventas anuladas', monto: egresosVentas },
-          { concepto: 'Saldo cuenta corriente pendiente de pago', monto: saldoCuentaCorrientePendiente },
-          { concepto: 'Movimientos manuales', monto: egresosMovimientos },
-        ];
-      } else {
-        // Para los demás medios de pago, solo egresos manuales
-        forma.totalEgresos = egresosMovimientos;
-
-        forma.detallesEgresos = [
-          { concepto: 'Movimientos manuales', monto: egresosMovimientos },
-        ];
-      }
+      forma.detallesEgresos = [
+        { concepto: 'Ventas anuladas', monto: egresosVentas },
+        { concepto: 'Movimientos manuales', monto: egresosMovimientos },
+      ];
     });
 
     this.calcularTotalesYDiferencias(this.formasPago);
@@ -382,37 +305,6 @@ export class DetalleArqueoComponent implements OnInit {
     this.txCantidadDineroCaja?.updateValueAndValidity();
     this.txCantidadDineroOtrosMedios?.setValidators([Validators.required]);
     this.txCantidadDineroOtrosMedios?.updateValueAndValidity();
-  }
-
-  public eliminarMovimiento(idMovimiento: number) {
-    this.notificationDialogService.confirmation('¿Desea eliminar el movimiento manual?', 'Eliminar Movimiento') //Está seguro?
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          this.cajasService.eliminarMovimientoManual(idMovimiento).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Movimiento eliminado con éxito');
-
-              // Eliminar de lista de movimientos temporal
-              this.movimientosManuales = this.movimientosManuales.filter((mov) => mov.id !== idMovimiento);
-
-              // Eliminar el movimiento de la tabla
-              this.tableDataSource.data = this.tableDataSource.data.filter(
-                (item: any) => item.id !== idMovimiento
-              );
-
-              // Actualiza el MatTableDataSource
-              this.tableDataSource._updateChangeSubscription();
-
-              // Recalcular totales
-              this.calcularFormasPago();
-
-            } else {
-              this.notificacionService.openSnackBarError('Error al eliminar el movimiento, intenta nuevamente.');
-            }
-          });
-        }
-      });
   }
 
   public cerrarArqueo() {
@@ -519,6 +411,10 @@ export class DetalleArqueoComponent implements OnInit {
 
   get txCantidadDineroOtrosMedios(): FormControl {
     return this.form.get('txCantidadDineroOtrosMedios') as FormControl;
+  }
+
+  get tiposMovimientosArqueoEnum(): typeof TiposMovimientoArqueoEnum {
+    return TiposMovimientoArqueoEnum;
   }
 
   protected readonly Math = Math;
