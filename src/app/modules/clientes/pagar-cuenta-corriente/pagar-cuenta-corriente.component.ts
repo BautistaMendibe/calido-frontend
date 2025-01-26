@@ -17,6 +17,8 @@ import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {CajasService} from "../../../services/cajas.service";
 import {Arqueo} from "../../../models/Arqueo.model";
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
+import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
+import {Subject} from "rxjs";
 
 @Component({
   selector: 'app-pagar-cuenta-corriente',
@@ -34,6 +36,9 @@ export class PagarCuentaCorrienteComponent implements OnInit {
   public fechaHoy: Date = new Date();
   private referencia: RegistrarCuentaCorrienteComponent;
   public darkMode: boolean = false;
+
+  private stopPolling$ = new Subject<void>();
+  private isDialogClosed = false;
 
   constructor(
     private fb: FormBuilder,
@@ -117,7 +122,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
       this.notificationDialogService.confirmation(`¿Desea registrar un pago para esta venta?
       Esto modificará la caja del día.`, 'Registrar pago')
         .afterClosed()
-        .subscribe((value) => {
+        .subscribe(async (value) => {
           if (value) {
             const movimiento: MovimientoCuentaCorriente = new MovimientoCuentaCorriente();
             movimiento.idCuentaCorriente = this.data.cuentaCorriente.id;
@@ -127,6 +132,19 @@ export class PagarCuentaCorrienteComponent implements OnInit {
             movimiento.idFormaDePago = this.txFormaDePago.value;
             movimiento.idTipoMovimientoCuentaCorriente = this.getTiposMovimientosCuentaCorrienteEnum.PAGO;
             movimiento.idCaja = this.txCaja.value;
+            movimiento.idUsuario = this.data.cuentaCorriente.idUsuario;
+
+            // Verificar que se paga con QR para esperar el pago ANTES de registrar el pago
+            if (movimiento.idFormaDePago === this.formasDePagoEnum.QR) {
+              const QRpagado = await this.pagarConQRSIRO(movimiento);
+              if (QRpagado) {
+                //console.log('Pago confirmado. Registrando el pago');
+              } else {
+                this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
+                return; // Detenemos el flujo para no registrar el pago
+              }
+            }
+            // FIN QR SIRO
 
             this.usuariosService.registrarMovimientoCuentaCorriente(movimiento).subscribe((respuesta) => {
               if (respuesta.mensaje === 'OK') {
@@ -140,6 +158,141 @@ export class PagarCuentaCorrienteComponent implements OnInit {
           }
         });
     }
+  }
+
+  /**
+   * Función para pagar con QR SIRO
+   * Realiza 65 intentos de polling cada 5 segundos para verificar el estado del pago
+   * @param venta
+   * @private
+   */
+  private async pagarConQRSIRO(movimiento: MovimientoCuentaCorriente): Promise<boolean> {
+    let QRPagado = false;
+
+    if (movimiento.idFormaDePago !== this.formasDePagoEnum.QR) {
+      return QRPagado;
+    }
+
+    this.notificacionService.openSnackBarSuccess('Generando pago.');
+    try {
+      // Generar el pago
+      const respuestaPago = await this.ventasService.pagarConSIROQRPagosDeCuentaCorriente(movimiento).toPromise();
+
+      if ((respuestaPago as { Hash: string }).Hash) {
+        this.notificacionService.openSnackBarSuccess('Pago generado con éxito.');
+        const idReferencia = (respuestaPago as { IdReferenciaOperacion: string }).IdReferenciaOperacion;
+
+        if (idReferencia) {
+          const dialogRef = this.mostrarQR(idReferencia);
+
+          // Polling para consultar el estado del pago
+          const pagoExitoso = await this.pollingEstadoPago(idReferencia, 65, 5000, dialogRef);
+          if (pagoExitoso) {
+            this.notificacionService.openSnackBarSuccess('El pago fue exitoso. Registrando venta.');
+            QRPagado = true;
+
+            // Actualizar el estado manualmente para que siempre se muestre el ícono
+            if (dialogRef.componentInstance) {
+              dialogRef.componentInstance.estadoPago = 'PAGADO';
+              dialogRef.componentInstance.icono = 'check_circle';
+            }
+
+            setTimeout(() => {
+              dialogRef.close();
+            }, 2000);
+          } else {
+            this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
+          }
+        }
+      }
+    } catch (err) {
+      console.error('Error en la llamada:', err);
+      this.notificacionService.openSnackBarError('Error en la solicitud.');
+    }
+
+    return QRPagado;
+  }
+
+  /**
+   * Función para realizar el polling del estado de un pago QR en una ventana modal.
+   * Se consulta el estado de pago cada cierto intervalo de tiempo.
+   * @param idReferencia
+   * @param intentos
+   * @param intervalo
+   * @param dialogRef
+   * @private
+   */
+  private async pollingEstadoPago(idReferencia: string, intentos: number, intervalo: number, dialogRef: MatDialogRef<QRVentanaComponent>): Promise<boolean> {
+    this.stopPolling$ = new Subject<void>(); // Resetear el Subject
+    this.isDialogClosed = false; // Reiniciar la bandera
+
+    // Escuchar el cierre del diálogo
+    const dialogCloseSubscription = dialogRef.afterClosed().subscribe(() => {
+      if (!this.isDialogClosed) {
+        this.isDialogClosed = true; // Evitar múltiples impresiones
+        this.stopPolling$.next(); // Emitir señal para detener el polling
+        this.stopPolling$.complete();
+      }
+    });
+
+    try {
+      for (let i = 0; i < intentos; i++) {
+        // Verificar si el polling debe detenerse
+        if (this.stopPolling$.isStopped || this.isDialogClosed) {
+          break; // Salir del bucle si el polling fue cancelado
+        }
+
+        try {
+          const respuestaConsulta = await this.ventasService.consultaPagoSIROQR(idReferencia).toPromise();
+          if (Array.isArray(respuestaConsulta) && respuestaConsulta.length > 0) {
+            const resultado = respuestaConsulta[respuestaConsulta.length - 1];
+            const pagoExitoso = resultado.PagoExitoso;
+            const estado = resultado.Estado;
+
+            if (pagoExitoso && estado === 'PROCESADA') {
+              dialogCloseSubscription.unsubscribe(); // Limpiar la suscripción
+              return true; // Pago exitoso
+            }
+          }
+        } catch (err) {
+          console.error('Error al consultar el estado del pago:', err);
+        }
+
+        // Esperar antes de reintentar, con verificación para detener
+        await this.delayWithCancel(intervalo, this.stopPolling$);
+      }
+    } finally {
+      dialogCloseSubscription.unsubscribe(); // Asegurar la limpieza
+    }
+
+    return false; // Si se agotan los intentos
+  }
+
+  /**
+   * Retrasa la ejecución por un tiempo determinado o la cancela si se emite un evento en `cancel$`.
+   * @param ms - Tiempo en milisegundos para esperar.
+   * @param cancel$ - Subject que permite cancelar el retraso.
+   * @private
+   */
+  private async delayWithCancel(ms: number, cancel$: Subject<void>): Promise<void> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        resolve();
+      }, ms);
+
+      cancel$.subscribe(() => {
+        clearTimeout(timeout);
+        reject('Polling cancelado.');
+      });
+    });
+  }
+
+  public mostrarQR(idReferenciaOperacion: string): MatDialogRef<QRVentanaComponent> {
+    const qrImageUrl = 'assets/imgs/QR_SIRO.png'; // Ruta de tu imagen QR en el frontend
+    return this.dialog.open(QRVentanaComponent, {
+      data: { imageUrl: qrImageUrl, idReferenciaOperacion: idReferenciaOperacion },
+      width: '400px',
+    });
   }
 
   public setearTotalVentaEnMonto() {
@@ -172,5 +325,9 @@ export class PagarCuentaCorrienteComponent implements OnInit {
 
   get getTiposMovimientosCuentaCorrienteEnum(): typeof TiposMovimientoCuentaCorrienteEnum {
     return TiposMovimientoCuentaCorrienteEnum;
+  }
+
+  get formasDePagoEnum(): typeof FormasDePagoEnum {
+    return FormasDePagoEnum;
   }
 }

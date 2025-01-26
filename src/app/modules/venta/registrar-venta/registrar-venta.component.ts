@@ -527,7 +527,7 @@ export class RegistrarVentaComponent implements OnInit{
 
             setTimeout(() => {
               dialogRef.close();
-            }, 3000);
+            }, 2000);
           } else {
             this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
           }

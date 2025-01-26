@@ -14,6 +14,7 @@ export class MovimientoCuentaCorriente {
   anulado: number;
   devuelto: number;
   idCaja: number;
+  idUsuario: number;
 
   cuentaCorriente: CuentaCorriente;
   formaDePago: FormaDePago;
@@ -33,7 +34,8 @@ export class MovimientoCuentaCorriente {
     comprobante?: string,
     anulado?: number,
     devuelto?: number,
-    idCaja?: number
+    idCaja?: number,
+    idUsuario?: number
   ) {
     this.id = id!;
     this.idCuentaCorriente = idCuentaCorriente!;
@@ -49,5 +51,6 @@ export class MovimientoCuentaCorriente {
     this.anulado = anulado!;
     this.devuelto = devuelto!;
     this.idCaja = idCaja!;
+    this.idUsuario = idUsuario!;
   }
 }

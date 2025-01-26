@@ -12,6 +12,7 @@ import {VentasMensuales} from "../models/comandos/dashboard/VentasMensuales.coma
 import {VentasDiariaComando} from "../models/comandos/dashboard/VentasDiaria.comando";
 import {DetalleVenta} from "../models/detalleVenta.model";
 import {FiltrosDetallesVenta} from "../models/comandos/FiltrosDetallesVenta.comando";
+import {MovimientoCuentaCorriente} from "../models/movimientoCuentaCorriente";
 
 
 @Injectable({
@@ -87,5 +88,9 @@ export class VentasService {
 
   public buscarDetallesVenta(filtros: FiltrosDetallesVenta): Observable<DetalleVenta[]>{
     return this.http.post<DetalleVenta[]>(`${this.urlBackend}/${this.controllerName}/buscar-detalles-venta`, filtros);
+  }
+
+  public pagarConSIROQRPagosDeCuentaCorriente(movimiento: MovimientoCuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/generar-pago-cuenta-corriente`, movimiento);
   }
 }
