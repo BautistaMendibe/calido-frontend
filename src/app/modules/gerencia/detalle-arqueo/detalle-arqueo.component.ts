@@ -6,7 +6,6 @@ import {SnackBarService} from "../../../services/snack-bar.service";
 import {CajasService} from "../../../services/cajas.service";
 import {VentasService} from "../../../services/ventas.services";
 import {MatTableDataSource} from "@angular/material/table";
-import {Venta} from "../../../models/venta.model";
 import {Arqueo} from "../../../models/Arqueo.model";
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {MatPaginator} from "@angular/material/paginator";
@@ -181,13 +180,20 @@ export class DetalleArqueoComponent implements OnInit {
     let totalEgresosVentasAnuladasCuentaCorriente = 0;
 
     this.formasPago.forEach((forma) => {
-      // Ingresos: Ventas (excluyendo las anuladas y de cuenta corriente) y pagos de cuenta corriente
+      // Ingresos: Ventas (excluyendo las anuladas y de cuenta corriente)
       const ingresosVentas = this.movimientosManuales
         .filter(
           (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
             && m.tipoMovimiento.toLowerCase() === 'ingreso'
-            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.VENTA ||
-                m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.PAGO))
+            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.VENTA))
+        .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
+
+      // Ingresos: Pagos de cuenta corriente
+      const ingresosPagos = this.movimientosManuales
+        .filter(
+          (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
+            && m.tipoMovimiento.toLowerCase() === 'ingreso'
+            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.PAGO))
         .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
 
       // Ingresos: Movimientos manuales ingresados por el administrador
@@ -197,32 +203,42 @@ export class DetalleArqueoComponent implements OnInit {
           && m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.MOVIMIENTO_MANUAL)
         .reduce((sum: number, mov: MovimientoManual) => sum + Number(mov.monto), 0);
 
-      forma.totalIngresos = ingresosVentas + ingresosMovimientos;
+      forma.totalIngresos = ingresosVentas + ingresosMovimientos + ingresosPagos;
 
       forma.detallesIngresos = [
-        { concepto: 'Ventas o pagos', monto: ingresosVentas },
+        { concepto: 'Ventas', monto: ingresosVentas },
+        { concepto: 'Pagos de cuenta corriente', monto: ingresosPagos },
         { concepto: 'Movimientos manuales', monto: ingresosMovimientos },
       ];
 
       // Egresos: Anulaciones de ventas y devoluciones de pagos de cuenta corriente
-      const egresosVentas = this.movimientosManuales
+      const egresosAnulacionVentas = this.movimientosManuales
         .filter(
           (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
             && m.tipoMovimiento.toLowerCase() === 'egreso'
-            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.ANULACION ||
-              m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.DEVOLUCION_PAGO))
+            && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.ANULACION))
         .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
 
+      // Egresos: Devoluciones de pagos de cuenta corriente del usuario
+      const egresosDevolucionPagos = this.movimientosManuales
+        .filter(
+          (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
+            && m.tipoMovimiento.toLowerCase() === 'egreso'
+            && m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.DEVOLUCION_PAGO)
+        .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
+
+      // Egresos: Movimientos manuales egresados por el administrador manualmente
       let egresosMovimientos = this.movimientosManuales
         .filter((m: MovimientoManual) => m.formaPago.nombre === forma.nombre
           && m.tipoMovimiento.toLowerCase() === 'egreso'
           && m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.MOVIMIENTO_MANUAL)
         .reduce((sum: number, mov: MovimientoManual) => sum + (Number(mov.monto) * -1), 0);
 
-      forma.totalEgresos = egresosVentas + egresosMovimientos;
+      forma.totalEgresos = egresosAnulacionVentas + egresosMovimientos + egresosDevolucionPagos;
 
       forma.detallesEgresos = [
-        { concepto: 'Ventas anuladas', monto: egresosVentas },
+        { concepto: 'Ventas anuladas', monto: egresosAnulacionVentas },
+        { concepto: 'Pagos devueltos', monto: egresosDevolucionPagos },
         { concepto: 'Movimientos manuales', monto: egresosMovimientos },
       ];
     });
@@ -252,10 +268,15 @@ export class DetalleArqueoComponent implements OnInit {
 
     listaFormasPago.forEach((forma) => {
       if (forma.nombre.toLowerCase() !== 'efectivo') {
-        const ingresos = Number(forma.totalIngresos) || 0;
+        let ingresos = Number(forma.totalIngresos) || 0;
         let egresos = Number(forma.totalEgresos) || 0;
 
-        if (forma.id === 6) egresos = 0;
+        // Si la forma de pago es cuenta corriente, no considerar los ingresos (ventas) y egresos (anulaciones)
+        // dado a que en cuenta corriente no se devuelve dinero, solo se devuelven pagos de cuenta corriente
+        if (forma.id === 6) {
+          ingresos = 0;
+          egresos = 0;
+        }
 
         this.totalOtrosMedios += ingresos + egresos;
       }
@@ -329,7 +350,7 @@ export class DetalleArqueoComponent implements OnInit {
       const diferenciaCajaAbs = Math.abs(this.diferenciaCaja || 0);
       const diferenciaOtrosAbs = Math.abs(this.diferenciaOtrosMedios || 0);
       // Si alguna diferencia es >= 1000, muestra el primer diálogo
-      if (diferenciaCajaAbs >= 1000 || diferenciaOtrosAbs >= 1000) {
+      if (diferenciaCajaAbs >= 5000 || diferenciaOtrosAbs >= 5000) {
         this.notificationDialogService.confirmation(
           `Existen diferencias entre lo indicado
           y lo registrado por el sistema.
