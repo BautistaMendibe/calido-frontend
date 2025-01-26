@@ -166,7 +166,7 @@ export class DetalleArqueoComponent implements OnInit {
       this.tableDataSource.filter = '';
     } else {
       // Filtra por la forma de pago seleccionada
-      this.tableDataSource.filterPredicate = (data: any) => data.formaDePago.id === idFormaPago;
+      this.tableDataSource.filterPredicate = (data: any) => data.formaPago.id === idFormaPago;
       this.tableDataSource.filter = idFormaPago.toString();
     }
   }
