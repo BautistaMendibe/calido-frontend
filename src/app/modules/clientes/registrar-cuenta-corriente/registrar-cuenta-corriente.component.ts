@@ -8,17 +8,25 @@ import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
-import {Venta} from "../../../models/venta.model";
 import {MatTableDataSource} from "@angular/material/table";
-import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
-import {Producto} from "../../../models/producto.model";
 import {VentasService} from "../../../services/ventas.services";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
-import {DetalleVentaComponent} from "../../venta/detalle-venta/detalle-venta.component";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {NotificationService} from "../../../services/notificacion.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {MovimientoCuentaCorriente} from "../../../models/movimientoCuentaCorriente";
+import {FiltrosMovimientosCuentaCorriente} from "../../../models/comandos/FiltrosMovimientosCuentaCorriente.comando";
+import {PagarCuentaCorrienteComponent} from "../pagar-cuenta-corriente/pagar-cuenta-corriente.component";
+import {TiposMovimientoCuentaCorrienteEnum} from "../../../shared/enums/tipo-movimiento-cuenta-corriente.enum";
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+import {TDocumentDefinitions} from "pdfmake/interfaces";
+import {ConfiguracionesService} from "../../../services/configuraciones.service";
+import {Configuracion} from "../../../models/configuracion.model";
+import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
+import {CajasService} from "../../../services/cajas.service";
+import {Arqueo} from "../../../models/Arqueo.model";
 
 @Component({
   selector: 'app-registrar-cuenta-corriente',
@@ -29,23 +37,27 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   public form: FormGroup;
   public listaClientes: Usuario[] = [];
+  public arqueosHoy: Arqueo[] = [];
   public esConsulta: boolean;
   public esRegistro: boolean;
   public formDesactivado: boolean;
   private referencia: ConsultarCuentasCorrientesComponent;
   public fechaHoy: Date = new Date();
 
-  public tableDataSource: MatTableDataSource<Venta> = new MatTableDataSource<Venta>([]);
-  public ventas: Venta[] = [];
-  public columnas: string[] = ['id', 'montoTotal', 'saldoDisponible', 'fecha', 'formaDePago', 'productos', 'estado', 'acciones'];
-
-  public listaVentasDeshabilitada: boolean = false;
   public isLoading: boolean = false;
-  public tieneAccionesPendientes: boolean = false;
   public darkMode: boolean = false;
+
+  private configuracion: Configuracion = new Configuracion();
+
+  public tableDataSourceMovimientos: MatTableDataSource<MovimientoCuentaCorriente> = new MatTableDataSource<MovimientoCuentaCorriente>([]);
+  public movimientosCuentaCorriente: MovimientoCuentaCorriente[] = [];
+  public columnasMovimientos: string[] = ['fecha', 'tipoMovimientoCuentaCorriente', 'comprobante', 'idVenta', 'monto', 'formaDePago', 'acciones']
+  public listaMovimientosDeshabilitada: boolean = false;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
+  @ViewChild(MatPaginator) paginatorMovimientos!: MatPaginator;
+  @ViewChild(MatSort) sortMovimientos!: MatSort;
 
   constructor(
     private fb: FormBuilder,
@@ -56,6 +68,8 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     private dialog: MatDialog,
     private notificationDialogService: NotificationService,
     private themeService: ThemeCalidoService,
+    private configuracionesService: ConfiguracionesService,
+    private cajasService: CajasService,
     @Inject(MAT_DIALOG_DATA) public data: {
       referencia: ConsultarCuentasCorrientesComponent;
       esConsulta: boolean;
@@ -70,6 +84,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.esRegistro = this.data.esRegistro;
     this.formDesactivado = this.data.formDesactivado;
     this.referencia = this.data.referencia;
+    pdfMake.vfs = pdfFonts.pdfMake.vfs;
   }
 
   ngOnInit() {
@@ -85,19 +100,22 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     this.txHaber.disable();
 
     if (this.data.editar) {
-      this.listaVentasDeshabilitada = false;
+      this.listaMovimientosDeshabilitada = false;
       this.txCreada.disable();
       this.txCliente.disable();
     }
 
     this.buscarUsuarios();
+    this.buscarConfiguraciones();
+    this.buscarArqueoCajaHoy();
     this.filtrosSuscripciones();
 
     if (this.esConsulta || this.data.editar) {
-      this.buscarVentas(this.data.cuentaCorriente.idUsuario);
+      const idUsuario = this.data.cuentaCorriente.idUsuario;
+      this.buscarMovimientosCuentaCorriente(idUsuario);
     }
 
-    this.txCliente.valueChanges.subscribe(() => { this.buscarVentas(this.txCliente.value); this.calcularBalance(); });
+    this.txCliente.valueChanges.subscribe(() => { this.buscarMovimientosCuentaCorriente(this.txCliente.value); this.calcularBalance(); });
   }
 
   private obtenerInformacionTema() {
@@ -121,119 +139,71 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
     });
   }
 
-  public buscarVentas(idUsuario: number) {
-    this.isLoading = true;
-    this.ventasService.buscarVentasPorCC(idUsuario).subscribe((ventas) => {
-      // Determinar si hay ventas no facturadas o no canceladas con saldo (lo que indica que hay cosas que hacer en esta cta cte)
-      this.tieneAccionesPendientes = ventas.some((venta) =>
-        (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1) ||
-        (venta.canceladaConSaldo && venta.canceladaConSaldo !== 1)
-      );
+  public buscarMovimientosCuentaCorriente(idUsuario: number) {
+    const filtro = new FiltrosMovimientosCuentaCorriente();
+    filtro.idUsuario = idUsuario;
 
-      // Asignar solo las ventas filtradas
-      this.ventas = ventas;
-      this.tableDataSource.data = ventas;
-      this.tableDataSource.paginator = this.paginator;
-      this.tableDataSource.sort = this.sort;
+    this.usuarioService.consultarMovimientosCuentaCorriente(filtro).subscribe((movimientos) => {
+      this.movimientosCuentaCorriente = movimientos;
+      this.tableDataSourceMovimientos.data = movimientos;
+      this.tableDataSourceMovimientos.paginator = this.paginatorMovimientos;
+      this.tableDataSourceMovimientos.sort = this.sortMovimientos;
 
       this.calcularBalance();
       this.isLoading = false;
-    })
+    });
   }
 
   private calcularBalance() {
-    let total = 0;
     let debe = 0;
     let haber = 0;
 
-    this.ventas.forEach(venta => {
-      if (venta.anulada && venta.saldoDisponible >= 0 && venta.comprobanteAfip.comprobante_nro !== null) {
-        // Si la venta está anulada, sumamos el saldo disponible al balance.
-        total += Number(venta.saldoDisponible) || 0;
-        haber += Number(venta.saldoDisponible) || 0;
-      } else if (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1 && !venta.anulada) {
-        // Si no tiene comprobante (no facturada), la restamos como saldo negativo, salvo que haya sido cancelada con saldo.
-        total -= Number(venta.montoTotal) || 0;
-        debe -= Number(venta.montoTotal) || 0;
+    this.movimientosCuentaCorriente.forEach((movimiento) => {
+
+      // CASO 1: El movimiento es una venta realizada a la cuenta corriente del cliente (factura)
+      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.VENTA) {
+        const montoVenta = Number(movimiento.monto) || 0;
+
+        // Las ventas del cliente se suman al debe.
+        debe += montoVenta;
+        return;
+      }
+
+      // CASO 2: El movimiento es un pago que hizo el cliente a una venta de su cuenta corriente
+      if (movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.PAGO) {
+        const montoPago = Number(movimiento.monto) || 0;
+
+        // Los pagos del cliente se suman al haber.
+        haber += montoPago;
+        return;
+      }
+
+      // CASO 3: El movimiento es una anulación de una venta de la cuenta corriente del cliente (nota de crédito)
+      if (
+        movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_TOTAL ||
+        movimiento.idTipoMovimientoCuentaCorriente == this.getTiposMovimientosCuentaCorrienteEnum.ANULACION_PARCIAL
+      ) {
+        const montoAnulacion = Number(movimiento.monto) || 0;
+
+        // Las anulaciones se suman al haber.
+        haber += montoAnulacion;
+        return;
+      }
+
+      // CASO 4: El movimiento es una devolución de un pago
+      if (movimiento.idTipoMovimientoCuentaCorriente == (this.getTiposMovimientosCuentaCorrienteEnum.DEVOLUCION_DE_PAGO)) {
+        const montoDevolucion = Number(movimiento.monto) || 0;
+
+        // Las devoluciones se restan del haber.
+        haber -= montoDevolucion;
+        return;
       }
     });
 
-    this.txBalance.setValue(total);
+    const saldo: number = debe - haber;
     this.txDebe.setValue(debe);
     this.txHaber.setValue(haber);
-  }
-
-  public facturarVenta(venta: Venta) {
-    this.notificationDialogService.confirmation('¿Desea facturar esta venta?', 'Facturar venta')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
-              this.buscarVentas(this.txCliente.value);
-              this.tableDataSource._updateChangeSubscription();
-            } else {
-              this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
-            }
-          });
-        }
-      });
-  }
-
-  public cancelarVenta(venta: Venta) {
-    this.notificationDialogService.confirmation('¿Desea cancelar esta venta con saldo?', 'Cancelar venta')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Venta cancelada con saldo de cuenta correctamente');
-              this.buscarVentas(this.txCliente.value);
-              this.tableDataSource._updateChangeSubscription();
-            } else {
-              this.notificacionService.openSnackBarError('Error al cancelar venta. Intentelo nuevamente.');
-            }
-          });
-        }
-      });
-  }
-
-  public verProducto(producto: Producto) {
-    this.dialog.open(
-      RegistrarProductoComponent,
-      {
-        width: '90%',
-        autoFocus: false,
-        maxHeight: '80vh',
-        panelClass: 'custom-dialog-container',
-        data: {
-          producto: producto,
-          esConsulta: true,
-          formDesactivado: true,
-          editar: false
-        }
-      }
-    );
-  }
-
-  public verVenta(venta: Venta) {
-    this.dialog.open(
-      DetalleVentaComponent,
-      {
-        width: '75%',
-        autoFocus: false,
-        height: '85vh',
-        panelClass: 'custom-dialog-container',
-        data: {
-          venta: venta,
-        }
-      }
-    )
-  }
-
-  public getNombresProductos(productos: Producto[]): string {
-    return productos.map(producto => producto.nombre).join(', ');
+    this.txBalance.setValue(saldo);
   }
 
   public registrarCuentaCorriente() {
@@ -246,7 +216,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   public modificarCuentaCorriente() {
-
     if (this.form.valid) {
       const cuentaCorriente = this.construirCuentaCorriente(this.data.cuentaCorriente?.id);
       this.usuarioService.modificarCuentaCorriente(cuentaCorriente).subscribe((respuesta) => {
@@ -285,15 +254,255 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
   }
 
   private filtrosSuscripciones() {
-    // Filtrar por ID de venta.
+    // Filtrar movimientos por ID de venta.
     this.txBuscar.valueChanges.subscribe((valor) => {
-      this.tableDataSource.filter = valor.trim();
+      this.tableDataSourceMovimientos.filter = valor.trim();
     });
 
-    this.tableDataSource.filterPredicate = (data: Venta, filter: string): boolean => {
-      const nroVenta = data.id?.toString() || '';
+    this.tableDataSourceMovimientos.filterPredicate = (data: MovimientoCuentaCorriente, filter: string): boolean => {
+      const nroVenta = data.idVenta?.toString() || '';
       return nroVenta.includes(filter);
     };
+  }
+
+  public registrarMovimiento(movimiento: MovimientoCuentaCorriente) {
+    const dialog = this.dialog.open(
+      PagarCuentaCorrienteComponent,
+      {
+        width: '75%',
+        height: 'auto',
+        maxHeight: '80vh',
+        panelClass: 'dialog-container',
+        autoFocus: false,
+        data: {
+          referencia: this,
+          movimiento: movimiento,
+          cuentaCorriente: this.data.cuentaCorriente
+        }
+      }
+    );
+
+    dialog.afterClosed().subscribe((res) => {
+      if (res) {
+        this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
+      }
+    });
+  }
+
+  private buscarArqueoCajaHoy() {
+    const filtro = new FiltrosArqueos();
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    filtro.fechaApertura = hoy;
+
+    this.cajasService.consultarArqueos(filtro).subscribe((arqueos) => {
+      this.arqueosHoy = arqueos;
+    });
+  }
+
+  public devolverPago(movimiento: MovimientoCuentaCorriente) {
+    // Validación de que la caja seleccionada esté abierta
+    const arqueoConCaja = this.arqueosHoy.find((arqueo) => arqueo.idCaja === movimiento.idCaja);
+    if (!arqueoConCaja || arqueoConCaja.idEstadoArqueo !== 1) {
+      this.notificacionService.openSnackBarError('La caja correspondiente a este pago no está abierta, intentelo nuevamente.');
+      return;
+    }
+
+    this.notificationDialogService.confirmation(`¿Desea registrar la devolución del pago?
+      Esto modificará la caja del día.`, 'Devolver pago')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          movimiento.idTipoMovimientoCuentaCorriente = this.getTiposMovimientosCuentaCorrienteEnum.DEVOLUCION_DE_PAGO;
+
+          this.usuarioService.registrarMovimientoCuentaCorriente(movimiento).subscribe((respuesta) => {
+            if (respuesta.mensaje === 'OK') {
+              this.notificacionService.openSnackBarSuccess('Devolución de pago registrada con éxito.');
+              this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
+            } else {
+              this.notificacionService.openSnackBarError('Error al registrar devolución. Intentelo nuevamente.');
+            }
+          });
+        }
+      });
+  }
+
+  public eliminarMovimiento(idMovimiento: number) {
+    this.notificationDialogService.confirmation(`¿Desea eliminar este pago?
+      Esto modificará la caja del día.`, 'Eliminar Pago')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.usuarioService.eliminarMovimientoCuentaCorriente(idMovimiento).subscribe((respuesta) => {
+            if (respuesta.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Pago de cuenta corriente eliminado con éxito');
+              this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
+            } else {
+              this.notificacionService.openSnackBarError('Error al eliminar pago de cuenta corriente');
+            }
+          });
+        }
+      });
+  }
+
+  public imprimirComprobanteDePago(movimiento: MovimientoCuentaCorriente) {
+    this.notificationDialogService.confirmation(`¿Desea imprimir el comprobante de pago?
+      Recuerde cargar sus datos
+      en la configuración.`, 'Imprimir Comprobante de Pago')
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.imprimir(movimiento);
+        }
+      });
+  }
+
+  public imprimir(movimiento: MovimientoCuentaCorriente) {
+    const docDefinition: TDocumentDefinitions = {
+      header: (currentPage, pageCount, pageSize) => {
+        return [
+          {
+            canvas: [
+              {
+                type: "rect",
+                x: 40,
+                y: 20,
+                w: pageSize.width - 75,
+                h: 0,
+                lineWidth: 1,
+                lineColor: "#a0a0a0",
+              },
+            ],
+          },
+        ];
+      },
+      footer: (currentPage, pageCount, pageSize) => {
+        return [
+          {
+            text: `Gracias por la confianza en ${this.configuracion.razonSocial}`,
+            alignment: 'center',
+            bold: false,
+            fontSize: 18,
+            margin: [0, -16, 0, 0]
+          },
+          {
+            canvas: [
+              {
+                type: "rect",
+                x: 40,
+                y: 10,
+                w: pageSize.width - 75,
+                h: 0,
+                lineWidth: 1,
+                lineColor: "#a0a0a0",
+              }
+            ],
+          }
+        ];
+      },
+      pageSize: "A4",
+      pageOrientation: "landscape",
+      content: [
+        {
+          margin: [0, 10],
+          layout: "noBorders",
+          table: {
+            headerRows: 1,
+            widths: [60, "*"],
+            body: [
+              [
+                {
+                  image: `${this.configuracion.logo}`,
+                  width: 60,
+                },
+                {
+                  text: this.configuracion.razonSocial,
+                  bold: true,
+                  fontSize: 30,
+                  alignment: 'left',
+                  margin: [15, 20, 0, 0],
+                }
+              ],
+            ]
+          },
+        },
+        {
+          margin: [0, 10],
+          layout: "noBorders",
+          table: {
+            headerRows: 1,
+            widths: ["*", "*"],
+            body: [
+              [
+                { text: this.configuracion.razonSocial, bold: true, alignment: 'left' },
+                { text: new Date(movimiento.fecha).toLocaleString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false }).replace(',', ''), alignment: 'right' }
+              ],
+              [
+                { text: `${this.configuracion.calle} ${this.configuracion.numero}, ${this.configuracion.ciudad}`, alignment: 'left' },
+                { text: `Comprobante #: ${movimiento.comprobante}`, alignment: 'right' }
+              ],
+              [
+                { text: `Provincia de ${this.configuracion.provincia}, ${this.configuracion.codigoPostal}, Argentina`, alignment: 'left' },
+                { text: `Venta #: ${movimiento.idVenta.toString()}`, alignment: 'right' }
+              ],
+            ]
+          }
+        },
+        {
+          canvas: [
+            {
+              type: "rect",
+              x: 0,
+              y: 0,
+              w: 760,
+              h: 0,
+              lineWidth: 1,
+              lineColor: "#a0a0a0",
+            }
+          ]
+        },
+        // Tabla de precios
+        {
+          margin: [0, 28, 0, 0],
+          table: {
+            headerRows: 1,
+            widths: ["*", "*"],
+            body: [
+              [
+                {
+                  text: "Total abonado:",
+                  bold: true,
+                  alignment: 'left',
+                  fontSize: 18,
+                  margin: [0, 8],
+                  style: 'tableHeader',
+                  borderColor: ["#fff", "#fff", "#fff", "#fff"]
+                },
+                {
+                  text: `$ ${Number(movimiento.monto).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, '.').replace('.', ',')}`,
+                  alignment: 'right',
+                  fontSize: 18,
+                  margin: [0, 8],
+                  style: 'tableHeader',
+                  borderColor: ["#fff", "#fff", "#fff", "#fff"]
+                }
+              ]
+            ]
+          }
+        }
+      ]
+    };
+
+    const win = window.open('', '_blank');
+    pdfMake.createPdf(docDefinition).open({}, win);
+  }
+
+
+  private async buscarConfiguraciones() {
+    this.configuracionesService.consultarConfiguraciones().subscribe((configuracion) => {
+      this.configuracion = configuracion;
+    });
   }
 
   // Región getters
@@ -319,6 +528,10 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
 
   get txBuscar() {
     return this.form.get('txBuscar') as FormControl;
+  }
+
+  get getTiposMovimientosCuentaCorrienteEnum(): typeof TiposMovimientoCuentaCorrienteEnum {
+    return TiposMovimientoCuentaCorrienteEnum;
   }
 
   protected readonly Math = Math;

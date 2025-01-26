@@ -16,6 +16,8 @@ import {FiltrosLicencias} from "../models/comandos/FiltrosLicencias.comando";
 import {EstadoLicencia} from "../models/estadoLicencia.model";
 import {RecuperarContrasena} from "../models/RecuperarContrasena.model";
 import {UltimosMovimientosComando} from "../models/comandos/dashboard/UltimosMovimientos.comando";
+import {MovimientoCuentaCorriente} from "../models/movimientoCuentaCorriente";
+import {FiltrosMovimientosCuentaCorriente} from "../models/comandos/FiltrosMovimientosCuentaCorriente.comando";
 
 @Injectable({
   providedIn: 'root'
@@ -140,5 +142,17 @@ export class UsuariosService {
 
   public cambiarContrasena(recuperarContrasena: RecuperarContrasena): Observable<SpResult> {
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cambiar-contrasena`, recuperarContrasena);
+  }
+
+  public consultarMovimientosCuentaCorriente(filtro: FiltrosMovimientosCuentaCorriente): Observable<MovimientoCuentaCorriente[]>{
+    return this.http.post<MovimientoCuentaCorriente[]>(`${this.urlBackend}/${this.controllerName}/consultar-movimientos-cuenta-corriente`, filtro);
+  }
+
+  public eliminarMovimientoCuentaCorriente(idMovimiento: number): Observable<SpResult>{
+    return this.http.get<SpResult>(`${this.urlBackend}/${this.controllerName}/eliminar-movimiento-cuenta-corriente/${idMovimiento}`);
+  }
+
+  public registrarMovimientoCuentaCorriente(movimiento: MovimientoCuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/registrar-movimiento-cuenta-corriente`, movimiento);
   }
 }

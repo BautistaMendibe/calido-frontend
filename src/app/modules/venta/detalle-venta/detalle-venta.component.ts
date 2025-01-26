@@ -18,6 +18,7 @@ import {
   RegistrarCuentaCorrienteComponent
 } from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import {VentasService} from "../../../services/ventas.services";
+import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -65,6 +66,7 @@ export class DetalleVentaComponent implements OnInit{
     this.consultarCuentasCorrientes();
     this.setearDatos();
     this.desactivarFormulario();
+    this.suscripcionCierreDialogo();
     this.tableDataSource.data = this.venta.productos;
     this.tableDataSource.paginator = this.paginator;
     this.tableDataSource.sort = this.sort;
@@ -72,6 +74,21 @@ export class DetalleVentaComponent implements OnInit{
 
   private obtenerInformacionTema() {
     this.darkMode = this.themeService.isDarkMode();
+  }
+
+  /**
+   * Si el dialogo se cierra, se limpian los productos seleccionados para anular
+   * @private
+   */
+  private suscripcionCierreDialogo() {
+    this.dialogRef.afterClosed().subscribe((res) => {
+      this.venta.productosSeleccionadoParaAnular.some((producto: Producto) => {
+        producto.anulado = false;
+        producto.cantidadAnulada = 0;
+      });
+      this.venta.productosSeleccionadoParaAnular = [];
+      this.venta.totalAnulado = 0;
+    });
   }
 
   private crearFormulario() {
@@ -87,7 +104,7 @@ export class DetalleVentaComponent implements OnInit{
       txCondicionIvaCliente: ['', []],
       txDescuento: ['', []],
       txInteres: ['', []],
-      txCuenta: ['', [Validators.required]]
+      txCuenta: [{ value: '', disabled: true }, []]
     });
   }
 
@@ -110,7 +127,6 @@ export class DetalleVentaComponent implements OnInit{
     this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');
     this.txMailCliente.setValue(this.venta.cliente.mail ? this.venta.cliente.mail : 'No registrado');
     this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
-    this.txDescuento.setValue(this.venta.descuento);
     this.txInteres.setValue(this.venta.interes);
     this.txCuenta.setValue(this.venta.cliente.id == -1 ? '' : this.venta.cliente.id);
   }
@@ -138,10 +154,6 @@ export class DetalleVentaComponent implements OnInit{
     return this.datePipe.transform(fecha, 'dd/MM/yyyy HH:mm');
   }
 
-  public desHacerVenta() {
-    this.esAnulacion = true;
-  }
-
   public imprimirComprobante() {
     const url = this.venta.comprobanteAfip.comprobante_pdf_url;
     window.open(url, '_blank');
@@ -149,25 +161,6 @@ export class DetalleVentaComponent implements OnInit{
 
   public cerrar() {
     this.dialogRef.close();
-  }
-
-  public registrarNuevaCuenta() {
-    const dialogRef = this.dialog.open(RegistrarCuentaCorrienteComponent, {
-      width: '75%',
-      height: 'auto',
-      autoFocus: false,
-      data: {
-        referencia: this,
-        esConsulta: false,
-        formDesactivado: false
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.consultarCuentasCorrientes(result.id);
-      }
-    });
   }
 
   public seleccionarProductoParaAnular(producto: Producto, event: boolean) {
@@ -198,22 +191,28 @@ export class DetalleVentaComponent implements OnInit{
   }
 
   public anularVenta() {
-    this.calcularTotalAnulado();
-    this.ventasService.anularVenta(this.venta).subscribe((res) => {
-      if (res.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
-        this.dialogRef.close(true);
-      } else {
-        this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
-      }
-    });
+    this.notificationDialogService.confirmation('¿Desea anular esta venta?', 'Anular venta') //Está seguro?
+      .afterClosed()
+      .subscribe((value) => {
+        if (value) {
+          this.calcularTotalAnulado();
+          this.ventasService.anularVenta(this.venta).subscribe((res) => {
+            if (res.mensaje == 'OK') {
+              this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
+              this.dialogRef.close(true);
+            } else {
+              this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
+            }
+          });
+        }
+      });
   }
 
   private calcularTotalAnulado() {
     let monto = 0;
     this.venta.totalAnulado = 0;
     this.venta.productosSeleccionadoParaAnular.map((producto) => {
-      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada);
+      monto += ((producto.precioConIVA * (1 - (producto.promocion ? producto.promocion.porcentajeDescuento : 0) / 100)) * producto.cantidadAnulada) * (1 + (this.venta.interes ?? 0) / 100);
     });
     this.venta.totalAnulado = monto;
   }
@@ -265,6 +264,10 @@ export class DetalleVentaComponent implements OnInit{
 
   get txCuenta() {
     return this.form.get('txCuenta') as FormControl;
+  }
+
+  get formasDePagoEnum(): typeof FormasDePagoEnum {
+    return FormasDePagoEnum;
   }
 
 }

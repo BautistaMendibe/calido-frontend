@@ -35,5 +35,11 @@
         </div>
       </div>
     </div>
+
+    <div class="no-transaction-list-container" *ngIf="ultimosMovimientos.length == 0 && !buscando">
+      <div class="subtitle justify-content-center text-center">
+        No hay movimientos recientes para mostrar.
+      </div>
+    </div>
   </div>
 </mat-card>

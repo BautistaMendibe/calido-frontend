@@ -10,7 +10,7 @@ import {FormaDePago} from "../../../models/formaDePago.model";
 import {VentasService} from "../../../services/ventas.services";
 import {SnackBarService} from "../../../services/snack-bar.service";
 import {RegistrarProductoComponent} from "../../productos/registrar-producto/registrar-producto.component";
-import {MatDialog, MatDialogRef, MatDialogState} from "@angular/material/dialog";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {RegistrarClientesComponent} from "../../clientes/registrar-clientes/registrar-clientes.component";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
@@ -29,10 +29,11 @@ import {FiltrosCajas} from "../../../models/comandos/FiltrosCaja.comando";
 import {CondicionIvaEnum} from "../../../shared/enums/condicion-iva.enum";
 import {TiposFacturacionEnum} from "../../../shared/enums/tipos-facturacion.enum";
 import {QRVentanaComponent} from "../../qr-ventana/qr-ventana.component";
-import {combineLatest, Subject} from "rxjs";
-import {takeUntil} from "rxjs/operators";
+import {Subject} from "rxjs";
 import {FiltrosArqueos} from "../../../models/comandos/FiltrosArqueos.comando";
 import {Arqueo} from "../../../models/Arqueo.model";
+import {FiltrosCuentasCorrientes} from "../../../models/comandos/FiltrosCuentasCorrientes";
+import {CuentaCorriente} from "../../../models/cuentaCorriente.model";
 
 @Component({
   selector: 'app-registrar-venta',
@@ -49,7 +50,6 @@ export class RegistrarVentaComponent implements OnInit{
   public listaEmpleados: Usuario[] = [];
   public listaCajas: Caja[] = [];
   public tarjetasRegistradas: Tarjeta[] = [];
-  private ventasCtaCteCliente: Venta[] = [];
   private arqueosHoy: Arqueo[] = [];
 
   public subTotal: number = 0;
@@ -59,7 +59,6 @@ export class RegistrarVentaComponent implements OnInit{
   public descuentoPorTarjeta: number = 0;
   public interesPorTarjeta: number = 0;
   public montoConsumidorFinal: number = 99999999;
-  public saldoCuentaCorrienteCliente: number = 0;
 
   public form: FormGroup;
   public tarjetaSeleccionada: Tarjeta;
@@ -68,9 +67,9 @@ export class RegistrarVentaComponent implements OnInit{
   public mostrarTarjetasCuotas: boolean = false;
   public registrandoVenta: boolean = false;
   private facturacionAutomatica: boolean = false;
-  public limiteProductos: number = 30;
-  public tieneCuentaCorrienteRegistrada: boolean = false;
-  public PagoRealizado: boolean = false;
+  public limiteProductos: number = 20;
+
+  private cuentasCorrientes: CuentaCorriente[] = [];
 
   private stopPolling$ = new Subject<void>();
   private isDialogClosed = false;
@@ -148,6 +147,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.obtenerEmpleadoLogueado();
     this.buscarCajas();
     this.buscarArqueoCajaHoy();
+    this.buscarCuentasCorrientes();
   }
 
   private buscarConfiguracionesParaVenta() {
@@ -221,12 +221,11 @@ export class RegistrarVentaComponent implements OnInit{
   public cambiarFormaDePago(formaDePagoElegida: number) {
     if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
       const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
-      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO ? this.tiposTarjetasEnum.TARJETA_CREDITO : this.tiposTarjetasEnum.TARJETA_DEBITO;
+      filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO
+        ? this.tiposTarjetasEnum.TARJETA_CREDITO
+        : this.tiposTarjetasEnum.TARJETA_DEBITO;
 
       this.txTarjeta.disable();
-      this.txCancelarConSaldo.setValue(false);
-      this.saldoCuentaCorrienteCliente = 0;
-      this.tieneCuentaCorrienteRegistrada = false;
       this.tarjetasService.consultarTarjetas(filtroTarjeta).subscribe((tarjetas) => {
         this.tarjetasRegistradas = tarjetas;
         this.mostrarTarjetasCuotas = true;
@@ -245,13 +244,11 @@ export class RegistrarVentaComponent implements OnInit{
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
       this.txTarjeta.enable();
-      this.txCancelarConSaldo.setValue(false);
-      this.saldoCuentaCorrienteCliente = 0;
-      this.tieneCuentaCorrienteRegistrada = false;
       this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
       this.calcularTotal();
     }
   }
+
 
   public seleccionarProducto(producto: Producto) {
     const index = this.productosSeleccionados.findIndex(p => p.id === producto.id);
@@ -417,6 +414,15 @@ export class RegistrarVentaComponent implements OnInit{
         return;
       }
 
+      // Validación para ver que cliente tenga cuenta corriente en ventas de cuenta corriente
+      if (this.txFormaDePago.value == this.formasDePagoEnum.CUENTA_CORRIENTE &&
+        !this.cuentasCorrientes.some(cuenta => cuenta.idUsuario === this.txCliente.value)) {
+        this.notificacionService.openSnackBarError(
+          'El cliente seleccionado no tiene cuenta corriente. Cree una cuenta corriente para este cliente e intentelo nuevamente.'
+        );
+        return;
+      }
+
       const venta: Venta = new Venta();
 
       // Configuración de la venta
@@ -439,95 +445,6 @@ export class RegistrarVentaComponent implements OnInit{
       venta.tarjeta = this.tarjetaSeleccionada?.nombre;
       venta.cantidadCuotas = this.cantidadCuotaSeleccionada?.cantidadCuota;
       venta.interes = this.cantidadCuotaSeleccionada?.interes;
-
-      // Caso 1: Saldo mayor a 0 pero menor al total (Facturación parcial con bonificación)
-      if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente > 0 && this.saldoCuentaCorrienteCliente < this.totalVenta) {
-        // Cuánto debería restarle al cliente de su saldo (el saldo disponible total de su cuenta)
-        venta.saldoACancelarParcialmente = this.saldoCuentaCorrienteCliente;
-
-        // Ajustar el monto total después de la bonificación
-        venta.montoTotal = this.totalVenta - this.saldoCuentaCorrienteCliente;
-
-        // Calcular la bonificación en la venta
-        const sumatoriaProductos = venta.productos.reduce((sumatoria, producto) => {
-          const porcentajeDescuento = producto.promocion?.porcentajeDescuento || 0; // Si no tiene promoción, el descuento es 0
-          const descuento = (producto.precioSinIVA * porcentajeDescuento) / 100;
-          const precioConDescuento = producto.precioSinIVA - descuento;
-          return sumatoria + (precioConDescuento * producto.cantidadSeleccionada);
-        }, 0);
-
-        venta.bonificacion = -(venta.montoTotal / 1.21) + sumatoriaProductos;
-
-        // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
-        if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
-          const QRpagado = await this.pagarConQRSIRO(venta); // Espera a que se resuelva la promesa antes de seguir el flujo
-          if (QRpagado) {
-            // console.log('Pago confirmado. Registrando la venta');
-          } else {
-            this.notificacionService.openSnackBarError('El pago no se completó. Por favor, reintente la venta.');
-            return; // Detenemos el flujo para no registrar la venta
-          }
-        }
-        // FIN QR SIRO
-
-        this.registrandoVenta = true;
-
-        this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
-          if (respuesta.mensaje == 'OK') {
-            venta.id = respuesta.id;
-
-            // Restar saldo de la cuenta corriente
-            this.cancelarVentaConSaldoParcialmente(venta);
-
-            // Facturar automáticamente si la opción está marcada
-            if (this.facturacionAutomatica) {
-              this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
-                if (respuestaAfip.mensaje == 'OK') {
-                  this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
-                } else {
-                  this.notificacionService.openSnackBarError('Error al facturar venta. Inténtelo nuevamente desde consultas.');
-                }
-              });
-            }
-
-            this.registrandoVenta = false;
-            this.limpiarVenta();
-          } else {
-            this.notificacionService.openSnackBarError('Error al registrar la venta, inténtelo nuevamente.');
-            this.registrandoVenta = false;
-          }
-        });
-        return;
-      }
-
-      // Caso 2: Saldo suficiente para cubrir el total (flujo anterior)
-      if (this.txCancelarConSaldo.value === true && this.saldoCuentaCorrienteCliente >= this.totalVenta) {
-        // A cancelar será el total de la venta.
-        venta.saldoACancelarParcialmente = this.totalVenta;
-
-        // El total siempre va a ser cero, porque o su saldo es igual a la venta o es mayor (venta gratuita no se factura).
-        venta.montoTotal = 0;
-
-        this.registrandoVenta = true;
-
-        this.ventasService.registrarVenta(venta).subscribe((respuesta) => {
-          if (respuesta.mensaje == 'OK') {
-            venta.id = respuesta.id;
-
-            // Llamar a cancelarVentaConSaldo con la venta registrada
-            this.cancelarVentaConSaldo(venta);
-
-            this.registrandoVenta = false;
-            this.limpiarVenta();
-          } else {
-            this.notificacionService.openSnackBarError('Error al registrar la venta, inténtelo nuevamente.');
-            this.registrandoVenta = false;
-          }
-        });
-        return;
-      }
-
-      // Caso normal (venta no vinculada al saldo de cuenta corriente)
 
       // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
       if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
@@ -610,7 +527,7 @@ export class RegistrarVentaComponent implements OnInit{
 
             setTimeout(() => {
               dialogRef.close();
-            }, 3000);
+            }, 2000);
           } else {
             this.notificacionService.openSnackBarError('Error. El pago no fue procesado.');
           }
@@ -698,26 +615,6 @@ export class RegistrarVentaComponent implements OnInit{
     });
   }
 
-  private cancelarVentaConSaldo(venta: Venta) {
-    this.ventasService.cancelarVenta(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta registrada y cancelada con saldo con éxito.');
-      } else {
-        this.notificacionService.openSnackBarError('Error al cancelar venta. Intentelo nuevamente.');
-      }
-    });
-  }
-
-  private cancelarVentaConSaldoParcialmente(venta: Venta){
-    this.ventasService.cancelarVentaParcialmente(venta).subscribe((respuesta) => {
-      if (respuesta.mensaje == 'OK') {
-        this.notificacionService.openSnackBarSuccess('Venta registrada y cancelada parcialmente con saldo con éxito.');
-      } else {
-        this.notificacionService.openSnackBarError('Error al cancelar venta parcialmente. Intentelo nuevamente.');
-      }
-    });
-  }
-
   private limpiarVenta() {
     this.productosSeleccionados.map((producto) => {
       producto.seleccionadoParaVenta = false;
@@ -732,9 +629,6 @@ export class RegistrarVentaComponent implements OnInit{
     // Reestablecer valores
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
-    this.saldoCuentaCorrienteCliente = 0;
-    this.tieneCuentaCorrienteRegistrada = false;
-    this.txCancelarConSaldo.setValue(false);
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
@@ -797,30 +691,7 @@ export class RegistrarVentaComponent implements OnInit{
           this.txCliente.setValue(-1);
         }
       }
-      this.txCancelarConSaldo.setValue(false);
-      this.tieneCuentaCorrienteRegistrada = false;
-      this.saldoCuentaCorrienteCliente = 0;
     });
-
-    combineLatest([this.txCliente.valueChanges, this.txFormaDePago.valueChanges]).subscribe(
-      ([cliente, formaDePago]) => {
-        this.tieneCuentaCorrienteRegistrada = false;
-        this.saldoCuentaCorrienteCliente = 0;
-        this.txCancelarConSaldo.setValue(false);
-
-        if (formaDePago !== this.formasDePagoEnum.CUENTA_CORRIENTE) {
-          // Si hay cliente y este no es consumidor final
-          if (cliente && cliente !== -1) {
-            this.ventasService.buscarVentasPorCC(cliente).subscribe((ventas) => {
-              this.ventasCtaCteCliente = ventas;
-              if (this.ventasCtaCteCliente.length > 0) {
-                this.calcularBalanceCuentaCorriente();
-              }
-            });
-          }
-        }
-      }
-    );
 
     // Escuchar cambios en el campo de búsqueda
     this.txBuscar.valueChanges.subscribe(() => {
@@ -884,32 +755,17 @@ export class RegistrarVentaComponent implements OnInit{
     }
   }
 
-  private calcularBalanceCuentaCorriente() {
-    let total = 0;
-    let debe = 0;
-    let haber = 0;
-
-    this.ventasCtaCteCliente.forEach(venta => {
-      if (venta.anulada && venta.saldoDisponible >= 0 && venta.comprobanteAfip.comprobante_nro !== null) {
-        // Si la venta está anulada, sumamos el saldo disponible al balance.
-        total += Number(venta.saldoDisponible) || 0;
-        haber += Number(venta.saldoDisponible) || 0;
-      } else if (venta.comprobanteAfip.comprobante_nro == null && venta.canceladaConSaldo !== 1 && !venta.anulada) {
-        // Si no tiene comprobante (no facturada), la restamos como saldo negativo, salvo que haya sido cancelada con saldo.
-        total -= Number(venta.montoTotal) || 0;
-        debe -= Number(venta.montoTotal) || 0;
-      }
-    });
-
-    this.saldoCuentaCorrienteCliente = total;
-    if (this.saldoCuentaCorrienteCliente > 0) { this.tieneCuentaCorrienteRegistrada = true; }
-  }
-
   public mostrarQR(idReferenciaOperacion: string): MatDialogRef<QRVentanaComponent> {
     const qrImageUrl = 'assets/imgs/QR_SIRO.png'; // Ruta de tu imagen QR en el frontend
     return this.dialog.open(QRVentanaComponent, {
       data: { imageUrl: qrImageUrl, idReferenciaOperacion: idReferenciaOperacion },
       width: '400px',
+    });
+  }
+
+  private buscarCuentasCorrientes() {
+    this.usuariosService.consultarCuentasCorrientesxUsuario(new FiltrosCuentasCorrientes()).subscribe((cuentas) => {
+      this.cuentasCorrientes = cuentas;
     });
   }
 
@@ -960,10 +816,6 @@ export class RegistrarVentaComponent implements OnInit{
 
   get txCaja(): FormControl {
     return this.form.get('txCaja') as FormControl;
-  }
-
-  get txCancelarConSaldo(): FormControl {
-    return this.form.get('txCancelarConSaldo') as FormControl
   }
 
   protected readonly Math = Math;

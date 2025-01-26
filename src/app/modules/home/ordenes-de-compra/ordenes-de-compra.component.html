@@ -24,7 +24,7 @@
           <div class="details">
             <div class="name">{{ orden.id }}</div>
             <div class="subtitle">{{ orden.proveedor }}</div>
-            <div class="subtitle">{{ '$ ' + orden.total }}</div>
+            <div class="subtitle">{{ '$ ' + (orden.total ? (orden.total | number:'1.2-2':'es-AR') : '0.00') }}</div>
           </div>
           <div class="amount-time">
             <div [ngClass]="obtenerClaseEstado(orden.estadoPedido)">{{ orden.estadoPedido }}</div>

@@ -10,6 +10,9 @@ import {TipoFactura} from "../models/tipoFactura.model";
 import {FiltrosVentas} from "../models/comandos/FiltrosVentas.comando";
 import {VentasMensuales} from "../models/comandos/dashboard/VentasMensuales.comando";
 import {VentasDiariaComando} from "../models/comandos/dashboard/VentasDiaria.comando";
+import {DetalleVenta} from "../models/detalleVenta.model";
+import {FiltrosDetallesVenta} from "../models/comandos/FiltrosDetallesVenta.comando";
+import {MovimientoCuentaCorriente} from "../models/movimientoCuentaCorriente";
 
 
 @Injectable({
@@ -70,14 +73,6 @@ export class VentasService {
     return this.http.get<VentasDiariaComando[]>(`${this.urlBackend}/${this.controllerName}/obtener-cantidad-ventas-dia-hora`);
   }
 
-  public cancelarVenta(venta: Venta): Observable<SpResult>{
-    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cancelar-venta`, venta);
-  }
-
-  public cancelarVentaParcialmente(venta: Venta): Observable<SpResult>{
-    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/cancelar-venta-parcialmente`, venta);
-  }
-
   public pagarConSIROQR(venta: Venta): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/generar-pago`, venta);
   }
@@ -89,5 +84,13 @@ export class VentasService {
 
   public anularVentaSinFacturacion(venta: Venta): Observable<SpResult>{
     return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/anular-venta-sin-facturacion`, venta);
+  }
+
+  public buscarDetallesVenta(filtros: FiltrosDetallesVenta): Observable<DetalleVenta[]>{
+    return this.http.post<DetalleVenta[]>(`${this.urlBackend}/${this.controllerName}/buscar-detalles-venta`, filtros);
+  }
+
+  public pagarConSIROQRPagosDeCuentaCorriente(movimiento: MovimientoCuentaCorriente): Observable<SpResult>{
+    return this.http.post<SpResult>(`${this.urlBackend}/${this.controllerName}/generar-pago-cuenta-corriente`, movimiento);
   }
 }

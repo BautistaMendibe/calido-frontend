@@ -36,13 +36,6 @@
   overflow-x: auto; /* Permitir desplazamiento horizontal */
 }
 
-.leyenda {
-  font-size: 0.7rem;
-  color: #555;
-  opacity: 0.7;
-  vertical-align: middle;
-}
-
 .custom-table {
   width: 100%;
   border-collapse: collapse; /* Quita espacios entre celdas */
@@ -78,4 +71,21 @@
   .custom-table th, .custom-table td {
     padding: 6px; /* Reduce el espacio entre celdas */
   }
+}
+
+h3 {
+  color: #5e5e5e;
+}
+
+button.button-pay[disabled],
+button.button-delete[disabled],
+button.button-return[disabled] {
+  opacity: 0.5;
+  pointer-events: auto;
+}
+
+button.button-pay[disabled]:hover,
+button.button-delete[disabled]:hover,
+button.button-return[disabled]:hover {
+  pointer-events: auto;
 }
