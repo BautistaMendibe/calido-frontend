@@ -217,7 +217,7 @@ export class DetalleArqueoComponent implements OnInit {
           (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
             && m.tipoMovimiento.toLowerCase() === 'egreso'
             && (m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.ANULACION))
-        .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
+        .reduce((sum: number, movimiento: MovimientoManual) => sum + (Number(movimiento.monto) * -1), 0);
 
       // Egresos: Devoluciones de pagos de cuenta corriente del usuario
       const egresosDevolucionPagos = this.movimientosManuales
@@ -225,7 +225,7 @@ export class DetalleArqueoComponent implements OnInit {
           (m: MovimientoManual) => m.formaPago.nombre === forma.nombre
             && m.tipoMovimiento.toLowerCase() === 'egreso'
             && m.idTipoMovimientoArqueo === this.tiposMovimientosArqueoEnum.DEVOLUCION_PAGO)
-        .reduce((sum: number, movimiento: MovimientoManual) => sum + Number(movimiento.monto), 0);
+        .reduce((sum: number, movimiento: MovimientoManual) => sum + (Number(movimiento.monto) * -1), 0);
 
       // Egresos: Movimientos manuales egresados por el administrador manualmente
       let egresosMovimientos = this.movimientosManuales
