@@ -8,7 +8,7 @@ export class ReporteComando {
   activo: boolean = false;
   data: any[];
   columnas: string[];
-  imagenGrafico: string;
+  imagenGrafico?: string;
   noNecesitaFiltro: boolean;
 
 

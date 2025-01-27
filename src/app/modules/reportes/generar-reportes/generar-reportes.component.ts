@@ -59,6 +59,15 @@ export class GenerarReportesComponent implements OnInit {
       txFiltroString: [''],
       txTipoGrafico: [this.tiposGraficos[0]],
     });
+
+    // Forzar que fechaHasta tenga hora 23:59:59 para que sea el final del día
+    this.form.get('txFechaHasta')?.valueChanges.subscribe((fecha) => {
+      if (fecha) {
+        let fechaHasta = new Date(fecha);
+        fechaHasta.setHours(23, 59, 59, 999);
+        this.form.get('txFechaHasta')?.setValue(fechaHasta, { emitEvent: false });
+      }
+    });
   }
 
   private async buscarConfiguraciones() {
@@ -82,14 +91,15 @@ export class GenerarReportesComponent implements OnInit {
         reporte.data = data;
 
         if (this.txTipoGrafico.value != 'Ninguno' && !reporte.noNecesitaFiltro) {
-          if(this.txTipoGrafico.value == 'Barras') {
+          if (this.txTipoGrafico.value == 'Barras') {
             this.generarGraficoBarras(reporte);
           }
-          if(this.txTipoGrafico.value == 'Torta') {
+          if (this.txTipoGrafico.value == 'Torta') {
             this.generarGraficoTorta(reporte);
           }
         } else {
-          reporte.imagenGrafico = '';
+          // Si no hay gráfico, eliminamos la propiedad imagenGrafico
+          delete reporte.imagenGrafico;
           this.reporteService.generarPDF(reporte, this.configuracion);
           this.buscandoData = false;
         }
@@ -99,6 +109,7 @@ export class GenerarReportesComponent implements OnInit {
       this.buscandoData = false;
     }
   }
+
 
   private validarFechas(reporte: ReporteComando): boolean {
     if (this.txFechaDesde.value && !(this.txFechaHasta.value)) {
@@ -139,18 +150,17 @@ export class GenerarReportesComponent implements OnInit {
       return;
     }
 
-    // Mapeamos los datos para las etiquetas (dato1) y los valores (dato2)
     const labels = reporte.data.map((item) => item.dato1.length > 10 ? item.dato1.substring(0, 10) + '...' : item.dato1);
     const data = reporte.data.map((item) => item.dato2);
 
     this.chart = new Chart(ctx, {
       type: 'bar',
       data: {
-        labels: labels, // Etiquetas dinámicas para el eje X
+        labels: labels,
         datasets: [
           {
-            label: 'Cantidad', // Etiqueta para la leyenda
-            data: data, // Datos de la cantidad
+            label: 'Cantidad',
+            data: data,
             backgroundColor: 'rgba(246,121,86,0.8)',
             borderColor: 'rgba(225, 91, 53, 1)',
             borderWidth: 1,
@@ -160,10 +170,13 @@ export class GenerarReportesComponent implements OnInit {
       options: this.barChartOptions,
     });
 
-    // Generar la imagen en base64 cuando el gráfico esté renderizado
     setTimeout(() => {
-      reporte.imagenGrafico = this.chart.toBase64Image();
-      console.log(reporte.imagenGrafico);
+      reporte.imagenGrafico = this.chart?.toBase64Image() || undefined;
+
+      if (!reporte.imagenGrafico) {
+        delete reporte.imagenGrafico; // Elimina la propiedad si no tiene un valor válido
+      }
+
       document.body.removeChild(canvas);
       this.reporteService.generarPDF(reporte, this.configuracion);
       this.buscandoData = false;
@@ -232,7 +245,6 @@ export class GenerarReportesComponent implements OnInit {
     // Generar imagen en base64 para el PDF
     setTimeout(() => {
       reporte.imagenGrafico = this.chart.toBase64Image();
-      console.log(reporte.imagenGrafico);
       document.body.removeChild(canvas);
       this.reporteService.generarPDF(reporte, this.configuracion);
       this.buscandoData = false;
