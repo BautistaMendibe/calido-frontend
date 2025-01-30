@@ -1,0 +1,45 @@
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra horizontalmente */
+  justify-content: center; /* Centra verticalmente */
+  text-align: center;
+  width: 250px; /* Reduce el ancho */
+  margin: auto; /* Centra el bloque en la página */
+}
+
+.loading-text {
+  margin-bottom: 5px; /* Espacio entre el texto y los puntos */
+}
+
+#dots {
+  display: flex;
+  justify-content: center; /* Centra los puntos */
+  width: 40px; /* Ajusta el ancho del SVG */
+}
+
+#dots #dot1 {
+  animation: load 1s infinite;
+}
+
+#dots #dot2 {
+  animation: load 1s infinite;
+  animation-delay: 0.2s;
+}
+
+#dots #dot3 {
+  animation: load 1s infinite;
+  animation-delay: 0.4s;
+}
+
+@keyframes load {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

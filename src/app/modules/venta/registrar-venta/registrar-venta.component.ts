@@ -656,21 +656,22 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public registrarProducto() {
-    this.dialog.open(
-      RegistrarProductoComponent,
-      {
-        width: '90%',
-        height: 'auto',
-        autoFocus: false,
-        maxHeight: '80vh',
-        panelClass: 'dialog-container',
-        data: {
-          referencia: this,
-          esConsulta: false,
-          formDesactivado: false
-        }
-      }
-    );
+    this.notificacionService.openSnackBarLoading();
+    //this.dialog.open(
+    //  RegistrarProductoComponent,
+    //  {
+    //    width: '90%',
+    //    height: 'auto',
+    //    autoFocus: false,
+    //    maxHeight: '80vh',
+    //    panelClass: 'dialog-container',
+    //    data: {
+    //      referencia: this,
+    //      esConsulta: false,
+    //      formDesactivado: false
+    //    }
+    //  }
+    //);
   }
 
   public registrarCliente() {
