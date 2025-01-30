@@ -72,6 +72,22 @@
       </div>
 
       <div class="row">
+        <div class="col-md-4" *ngIf="venta.tarjeta">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Tarjeta</mat-label>
+            <input type="text" matInput [formControl]="txTarjeta"/>
+          </mat-form-field>
+          <app-error-messages [control]="txTarjeta"></app-error-messages>
+        </div>
+
+        <div class="col-md-4" *ngIf="venta.ultimosCuatroDigitosTarjeta">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Ult. Dígitos tarjeta</mat-label>
+            <input type="text" matInput [formControl]="txUltimosCuatroDigitosTarjeta"/>
+          </mat-form-field>
+          <app-error-messages [control]="txUltimosCuatroDigitosTarjeta"></app-error-messages>
+        </div>
+
         <div class="col-md-4" *ngIf="venta.interes">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Interés por tarjeta</mat-label>
