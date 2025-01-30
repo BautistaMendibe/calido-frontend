@@ -134,6 +134,7 @@ export class RegistrarVentaComponent implements OnInit{
       txBuscar: ['', []],
       txTarjeta: ['', []],
       txCuotas: ['', []],
+      tx4UltimosDigitosTarjetas: ['', []],
       txCaja: [1, [Validators.required]],
       txCancelarConSaldo: [false, []]
     });
@@ -445,6 +446,7 @@ export class RegistrarVentaComponent implements OnInit{
       venta.tarjeta = this.tarjetaSeleccionada?.nombre;
       venta.cantidadCuotas = this.cantidadCuotaSeleccionada?.cantidadCuota;
       venta.interes = this.cantidadCuotaSeleccionada?.interes;
+      venta.ultimosCuatroDigitosTarjeta = this.tx4UltimosDigitosTarjetas.value;
 
       // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
       if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
@@ -629,6 +631,7 @@ export class RegistrarVentaComponent implements OnInit{
     // Reestablecer valores
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
+    this.tx4UltimosDigitosTarjetas.setValue(null);
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
@@ -796,6 +799,10 @@ export class RegistrarVentaComponent implements OnInit{
 
   get txCuotas(): FormControl {
     return this.form.get('txCuotas') as FormControl;
+  }
+
+  get tx4UltimosDigitosTarjetas(): FormControl {
+    return this.form.get('tx4UltimosDigitosTarjetas') as FormControl;
   }
 
   get formasDePagoEnum(): typeof FormasDePagoEnum {
