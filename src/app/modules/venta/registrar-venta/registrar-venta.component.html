@@ -160,6 +160,13 @@
               </mat-form-field>
               <app-error-messages [control]="txCuotas"></app-error-messages>
             </div>
+            <div class="col-3">
+              <mat-form-field appearance="outline" class="w-100">
+                <mat-label>Ult. 4 Dig.</mat-label>
+                <input type="text" matInput [formControl]="tx4UltimosDigitosTarjetas" maxlength="4"/>
+              </mat-form-field>
+              <app-error-messages [control]="tx4UltimosDigitosTarjetas"></app-error-messages>
+            </div>
           </div>
 
           <div class="row">

@@ -6,4 +6,5 @@ export class FiltrosVentas {
   tipoFacturacion?: number;
   limit?: number;
   offset?: number;
+  ultimosCuatroDigitosTarjeta?: string
 }

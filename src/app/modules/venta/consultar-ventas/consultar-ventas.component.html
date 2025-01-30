@@ -67,6 +67,13 @@
           </mat-form-field>
           <app-error-messages [control]="txFechaHasta"></app-error-messages>
         </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Ult. Dígitos tarjeta</mat-label>
+            <input type="text" matInput [formControl]="txUltimosCuatroDigitosTarjeta" maxlength="4"/>
+          </mat-form-field>
+          <app-error-messages [control]="txUltimosCuatroDigitosTarjeta"></app-error-messages>
+        </div>
       </div>
     </form>
 

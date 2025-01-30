@@ -74,6 +74,7 @@ export class ConsultarVentasComponent implements OnInit {
       txFechaHasta: [''],
       txFormaDePago: [''],
       txTiposFactura: [''],
+      txUltimosCuatroDigitosTarjeta: [''],
     });
   }
 
@@ -102,6 +103,7 @@ export class ConsultarVentasComponent implements OnInit {
     this.filtros.fechaHasta = this.txFechaHasta.value;
     this.filtros.formaDePago = this.txFormaDePago.value;
     this.filtros.tipoFacturacion = this.txTiposFactura.value;
+    this.filtros.ultimosCuatroDigitosTarjeta = this.txUltimosCuatroDigitosTarjeta.value;
     this.filtros.limit = limit;
     this.filtros.offset = offset;
 
@@ -278,11 +280,14 @@ export class ConsultarVentasComponent implements OnInit {
       .afterClosed()
       .subscribe((value) => {
         if (value) {
+          const snackBarRef = this.notificacionService.openSnackBarLoading();
           this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
               this.buscarVentasPaginado(0, 10, true);
             } else {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
             }
           });
@@ -317,6 +322,10 @@ export class ConsultarVentasComponent implements OnInit {
 
   get txTiposFactura(): FormControl {
     return this.form.get('txTiposFactura') as FormControl;
+  }
+
+  get txUltimosCuatroDigitosTarjeta(): FormControl {
+    return this.form.get('txUltimosCuatroDigitosTarjeta') as FormControl;
   }
 
 }

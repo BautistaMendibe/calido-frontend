@@ -134,6 +134,7 @@ export class RegistrarVentaComponent implements OnInit{
       txBuscar: ['', []],
       txTarjeta: ['', []],
       txCuotas: ['', []],
+      tx4UltimosDigitosTarjetas: ['', []],
       txCaja: [1, [Validators.required]],
       txCancelarConSaldo: [false, []]
     });
@@ -219,6 +220,13 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public cambiarFormaDePago(formaDePagoElegida: number) {
+
+    this.txCuotas.setValue(null);
+    this.txTarjeta.setValue(null);
+    this.tx4UltimosDigitosTarjetas.setValue(null);
+
+    this.tarjetaSeleccionada = new Tarjeta();
+
     if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
       const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
       filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO
@@ -235,14 +243,17 @@ export class RegistrarVentaComponent implements OnInit{
       if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
         this.mostrarTarjetasCuotas = false;
         this.txCuotas.setValue(null);
+        this.txTarjeta.setValue(null);
+        this.tx4UltimosDigitosTarjetas.setValue(null);
         this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
         this.calcularTotal();
       }
 
     } else {
-      this.mostrarTarjetasCuotas = false;
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
+      this.tx4UltimosDigitosTarjetas.setValue(null);
+      this.mostrarTarjetasCuotas = false;
       this.txTarjeta.enable();
       this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
       this.calcularTotal();
@@ -445,6 +456,7 @@ export class RegistrarVentaComponent implements OnInit{
       venta.tarjeta = this.tarjetaSeleccionada?.nombre;
       venta.cantidadCuotas = this.cantidadCuotaSeleccionada?.cantidadCuota;
       venta.interes = this.cantidadCuotaSeleccionada?.interes;
+      venta.ultimosCuatroDigitosTarjeta = this.tx4UltimosDigitosTarjetas.value;
 
       // Verificar que se paga con QR para esperar el pago ANTES de registrar la venta
       if (venta.formaDePago.id === this.formasDePagoEnum.QR) {
@@ -467,17 +479,23 @@ export class RegistrarVentaComponent implements OnInit{
 
           // Facturar venta automáticamente si la opción está marcada
           if (this.facturacionAutomatica) {
+            // Mostrar snackbar de carga
+            const snackBarRef = this.notificacionService.openSnackBarLoading();
             this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
               if (respuestaAfip.mensaje == 'OK') {
+                snackBarRef.dismiss();
                 this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
+                this.registrandoVenta = false;
+                this.limpiarVenta();
               } else {
+                snackBarRef.dismiss();
                 this.notificacionService.openSnackBarError('Error al facturar venta. Inténtelo nuevamente desde consultas.');
               }
             });
+          } else {
+            this.limpiarVenta();
+            this.registrandoVenta = false;
           }
-
-          this.registrandoVenta = false;
-          this.limpiarVenta();
         } else {
           this.notificacionService.openSnackBarError('Error al registrar la venta, inténtelo nuevamente.');
           this.registrandoVenta = false;
@@ -629,6 +647,11 @@ export class RegistrarVentaComponent implements OnInit{
     // Reestablecer valores
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
+    this.tx4UltimosDigitosTarjetas.setValue(null);
+    this.txTarjeta.setValue(null);
+
+    this.mostrarTarjetasCuotas = false;
+    this.tarjetaSeleccionada = new Tarjeta();
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
@@ -796,6 +819,10 @@ export class RegistrarVentaComponent implements OnInit{
 
   get txCuotas(): FormControl {
     return this.form.get('txCuotas') as FormControl;
+  }
+
+  get tx4UltimosDigitosTarjetas(): FormControl {
+    return this.form.get('tx4UltimosDigitosTarjetas') as FormControl;
   }
 
   get formasDePagoEnum(): typeof FormasDePagoEnum {
