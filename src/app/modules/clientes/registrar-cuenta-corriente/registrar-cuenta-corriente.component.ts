@@ -200,7 +200,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       }
     });
 
-    const saldo: number = debe - haber;
+    const saldo: number = Math.round(debe) - Math.round(haber);
     this.txDebe.setValue(debe);
     this.txHaber.setValue(haber);
     this.txBalance.setValue(saldo);
@@ -322,24 +322,6 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
               this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
             } else {
               this.notificacionService.openSnackBarError('Error al registrar devolución. Intentelo nuevamente.');
-            }
-          });
-        }
-      });
-  }
-
-  public eliminarMovimiento(idMovimiento: number) {
-    this.notificationDialogService.confirmation(`¿Desea eliminar este pago?
-      Esto modificará la caja del día.`, 'Eliminar Pago')
-      .afterClosed()
-      .subscribe((value) => {
-        if (value) {
-          this.usuarioService.eliminarMovimientoCuentaCorriente(idMovimiento).subscribe((respuesta) => {
-            if (respuesta.mensaje == 'OK') {
-              this.notificacionService.openSnackBarSuccess('Pago de cuenta corriente eliminado con éxito');
-              this.buscarMovimientosCuentaCorriente(this.data.cuentaCorriente.idUsuario);
-            } else {
-              this.notificacionService.openSnackBarError('Error al eliminar pago de cuenta corriente');
             }
           });
         }
