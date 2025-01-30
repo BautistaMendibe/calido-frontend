@@ -220,6 +220,13 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public cambiarFormaDePago(formaDePagoElegida: number) {
+
+    this.txCuotas.setValue(null);
+    this.txTarjeta.setValue(null);
+    this.tx4UltimosDigitosTarjetas.setValue(null);
+
+    this.tarjetaSeleccionada = new Tarjeta();
+
     if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO || formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
       const filtroTarjeta: FiltrosTarjetas = new FiltrosTarjetas();
       filtroTarjeta.tipoTarjeta = formaDePagoElegida == this.formasDePagoEnum.TARJETA_CREDITO
@@ -236,14 +243,17 @@ export class RegistrarVentaComponent implements OnInit{
       if (formaDePagoElegida == this.formasDePagoEnum.TARJETA_DEBITO) {
         this.mostrarTarjetasCuotas = false;
         this.txCuotas.setValue(null);
+        this.txTarjeta.setValue(null);
+        this.tx4UltimosDigitosTarjetas.setValue(null);
         this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
         this.calcularTotal();
       }
 
     } else {
-      this.mostrarTarjetasCuotas = false;
       this.txTarjeta.setValue(null);
       this.txCuotas.setValue(null);
+      this.tx4UltimosDigitosTarjetas.setValue(null);
+      this.mostrarTarjetasCuotas = false;
       this.txTarjeta.enable();
       this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
       this.calcularTotal();
@@ -632,6 +642,10 @@ export class RegistrarVentaComponent implements OnInit{
     this.txFormaDePago.setValue(this.formasDePago[0].id);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
     this.tx4UltimosDigitosTarjetas.setValue(null);
+    this.txTarjeta.setValue(null);
+
+    this.mostrarTarjetasCuotas = false;
+    this.tarjetaSeleccionada = new Tarjeta();
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
