@@ -74,6 +74,7 @@ export class ConsultarVentasComponent implements OnInit {
       txFechaHasta: [''],
       txFormaDePago: [''],
       txTiposFactura: [''],
+      txUltimosCuatroDigitosTarjeta: [''],
     });
   }
 
@@ -102,6 +103,7 @@ export class ConsultarVentasComponent implements OnInit {
     this.filtros.fechaHasta = this.txFechaHasta.value;
     this.filtros.formaDePago = this.txFormaDePago.value;
     this.filtros.tipoFacturacion = this.txTiposFactura.value;
+    this.filtros.ultimosCuatroDigitosTarjeta = this.txUltimosCuatroDigitosTarjeta.value;
     this.filtros.limit = limit;
     this.filtros.offset = offset;
 
@@ -317,6 +319,10 @@ export class ConsultarVentasComponent implements OnInit {
 
   get txTiposFactura(): FormControl {
     return this.form.get('txTiposFactura') as FormControl;
+  }
+
+  get txUltimosCuatroDigitosTarjeta(): FormControl {
+    return this.form.get('txUltimosCuatroDigitosTarjeta') as FormControl;
   }
 
 }

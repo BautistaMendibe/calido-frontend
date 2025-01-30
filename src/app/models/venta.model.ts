@@ -26,7 +26,7 @@ export class Venta {
   fechaAnulacion: Date;
   totalAnulado: number;
   clienteDebe: number;
-  ultimosCuatroDigitosTarjeta: number;
+  ultimosCuatroDigitosTarjeta: string;
 
   totalDeVentas: number; // se usa para mostrar el total de ventas en paginación
 
@@ -52,7 +52,7 @@ export class Venta {
       clienteDebe?: number,
       totalDeVentas?: number,
       totalAnulado?: number,
-      ultimosCuatroDigitosTarjeta?: number
+      ultimosCuatroDigitosTarjeta?: string
   ) {
 
     this.id = id!;

@@ -104,7 +104,9 @@ export class DetalleVentaComponent implements OnInit{
       txCondicionIvaCliente: ['', []],
       txDescuento: ['', []],
       txInteres: ['', []],
-      txCuenta: [{ value: '', disabled: true }, []]
+      txTarjeta: ['', []],
+      txCuenta: [{ value: '', disabled: true }, []],
+      txUltimosCuatroDigitosTarjeta: ['', []],
     });
   }
 
@@ -127,6 +129,8 @@ export class DetalleVentaComponent implements OnInit{
     this.txDniCliente.setValue(this.venta.cliente.dni ? this.venta.cliente.dni : 'No registrado');
     this.txMailCliente.setValue(this.venta.cliente.mail ? this.venta.cliente.mail : 'No registrado');
     this.txCondicionIvaCliente.setValue(this.venta.cliente.idCondicionIva);
+    this.txTarjeta.setValue(this.venta.tarjeta);
+    this.txUltimosCuatroDigitosTarjeta.setValue(this.venta.ultimosCuatroDigitosTarjeta);
     this.txInteres.setValue(this.venta.interes);
     this.txCuenta.setValue(this.venta.cliente.id == -1 ? '' : this.venta.cliente.id);
   }
@@ -147,6 +151,8 @@ export class DetalleVentaComponent implements OnInit{
       this.txCondicionIvaCliente.disable();
       this.txDescuento.disable();
       this.txInteres.disable();
+      this.txTarjeta.disable();
+      this.txUltimosCuatroDigitosTarjeta.disable();
     }
   }
 
@@ -264,6 +270,14 @@ export class DetalleVentaComponent implements OnInit{
 
   get txCuenta() {
     return this.form.get('txCuenta') as FormControl;
+  }
+
+  get txUltimosCuatroDigitosTarjeta() {
+    return this.form.get('txUltimosCuatroDigitosTarjeta') as FormControl;
+  }
+
+  get txTarjeta() {
+    return this.form.get('txTarjeta') as FormControl;
   }
 
   get formasDePagoEnum(): typeof FormasDePagoEnum {
