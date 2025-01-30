@@ -199,6 +199,14 @@ svg {
   --mdc-snackbar-supporting-text-weight: 800;
 }
 
+.notify-loading {
+  --mat-mdc-snack-bar-button-color: #535715;
+  --mdc-snackbar-container-color: #e9e9f5;
+  --mdc-snackbar-supporting-text-color: #5e92fc;
+  --mat-snack-bar-button-color: #a88c26;
+  --mdc-snackbar-supporting-text-weight: 800;
+}
+
 .notify-error {
   --mat-mdc-snack-bar-button-color: #571206;
   --mdc-snackbar-container-color: #edd3c3;

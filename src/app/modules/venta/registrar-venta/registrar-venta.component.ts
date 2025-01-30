@@ -479,12 +479,16 @@ export class RegistrarVentaComponent implements OnInit{
 
           // Facturar venta automáticamente si la opción está marcada
           if (this.facturacionAutomatica) {
+            // Mostrar snackbar de carga
+            const snackBarRef = this.notificacionService.openSnackBarLoading();
             this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
               if (respuestaAfip.mensaje == 'OK') {
+                snackBarRef.dismiss();
                 this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
                 this.registrandoVenta = false;
                 this.limpiarVenta();
               } else {
+                snackBarRef.dismiss();
                 this.notificacionService.openSnackBarError('Error al facturar venta. Inténtelo nuevamente desde consultas.');
               }
             });
