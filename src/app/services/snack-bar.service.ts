@@ -12,20 +12,20 @@ export class SnackBarService {
     this.snackBar.open(mensaje, 'Cerrar', {
       verticalPosition: 'top',
       panelClass: 'notify-error',
-      duration: 4000
+      duration: 3000
     });
   }
 
   public openSnackBarSuccess(mensaje: string) {
     this.snackBar.open(mensaje, 'Cerrar', {
-      duration: 4000,
+      duration: 2000,
       verticalPosition: 'top',
       panelClass: 'notify-success'
     });
   }
 
   public openSnackBarLoading() {
-    this.snackBar.openFromComponent(SnackBarLoadingComponent, {
+    return this.snackBar.openFromComponent(SnackBarLoadingComponent, {
       verticalPosition: 'top',
       panelClass: 'notify-loading'
     });

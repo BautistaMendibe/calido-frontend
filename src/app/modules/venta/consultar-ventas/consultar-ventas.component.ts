@@ -280,11 +280,14 @@ export class ConsultarVentasComponent implements OnInit {
       .afterClosed()
       .subscribe((value) => {
         if (value) {
+          const snackBarRef = this.notificacionService.openSnackBarLoading();
           this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarSuccess('Venta facturada correctamente');
               this.buscarVentasPaginado(0, 10, true);
             } else {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarError('Error al facturar venta. Intentelo nuevamente.');
             }
           });
