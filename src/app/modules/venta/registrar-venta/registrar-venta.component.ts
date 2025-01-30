@@ -482,14 +482,16 @@ export class RegistrarVentaComponent implements OnInit{
             this.ventasService.facturarVentaConAfip(venta).subscribe((respuestaAfip) => {
               if (respuestaAfip.mensaje == 'OK') {
                 this.notificacionService.openSnackBarSuccess('Venta facturada con éxito.');
+                this.registrandoVenta = false;
+                this.limpiarVenta();
               } else {
                 this.notificacionService.openSnackBarError('Error al facturar venta. Inténtelo nuevamente desde consultas.');
               }
             });
+          } else {
+            this.limpiarVenta();
+            this.registrandoVenta = false;
           }
-
-          this.registrandoVenta = false;
-          this.limpiarVenta();
         } else {
           this.notificacionService.openSnackBarError('Error al registrar la venta, inténtelo nuevamente.');
           this.registrandoVenta = false;
