@@ -1,15 +1,21 @@
 .loading-container {
   display: flex;
-  flex-direction: column;
-  align-items: center; /* Centra horizontalmente */
-  justify-content: center; /* Centra verticalmente */
+  flex-direction: row; /* Alinea el texto y los puntos en la misma línea */
+  align-items: center; /* Alinea verticalmente */
   text-align: center;
-  width: 250px; /* Reduce el ancho */
+  width: auto; /* Ajusta el ancho al contenido */
   margin: auto; /* Centra el bloque en la página */
+  gap: 10px; /* Espaciado entre el texto y los puntos */
 }
 
 .loading-text {
-  margin-bottom: 5px; /* Espacio entre el texto y los puntos */
+  margin-bottom: 0; /* Elimina el margen inferior */
+  font-weight: bold;
+  color: #d9534f; /* Color rojo similar al de la imagen */
+}
+
+#dots g {
+  fill: #e15b35; /* Cambia el color de los puntos */
 }
 
 #dots {
