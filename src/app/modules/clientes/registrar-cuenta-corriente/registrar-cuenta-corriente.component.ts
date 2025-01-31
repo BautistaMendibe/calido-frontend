@@ -200,7 +200,7 @@ export class RegistrarCuentaCorrienteComponent implements OnInit {
       }
     });
 
-    const saldo: number = Math.round(debe) - Math.round(haber);
+    const saldo: number = Math.round((debe - haber) * 100) / 100;
     this.txDebe.setValue(debe);
     this.txHaber.setValue(haber);
     this.txBalance.setValue(saldo);
