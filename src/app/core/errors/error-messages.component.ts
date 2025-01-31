@@ -22,10 +22,22 @@ export class ErrorMessagesComponent {
 
   errorOrder = [
     { key: 'required', message: () => 'Campo obligatorio.' },
-    { key: 'maxlength', message: (error: any) => `La longitud máxima es ${error?.requiredLength} caracteres.` },
-    { key: 'minlength', message: (error: any) => `La longitud mínima es ${error?.requiredLength} caracteres.` },
-    { key: 'max', message: (error: any) => `Valor máximo permitido: ${error?.max} caracteres.` },
-    { key: 'min', message: (error: any) => `Valor mínimo permitido: ${error?.min} caracteres.` },
+    { key: 'maxlength', message: (error: any) => `La longitud máxima es de ${error?.requiredLength} caracteres.` },
+    { key: 'minlength', message: (error: any) => `La longitud mínima es de ${error?.requiredLength} caracteres.` },
+    {
+      key: 'max',
+      message: (error: any) =>
+        error?.context === 'monetario'
+          ? `El monto no puede exceder ${new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(error?.maxValue)}.`
+          : `El texto excede el máximo permitido de ${error?.max} caracteres.`
+    },
+    {
+      key: 'min',
+      message: (error: any) =>
+        error?.context === 'monetario'
+          ? `El monto no puede ser menor a ${new Intl.NumberFormat('es-AR', { style: 'currency', currency: 'ARS' }).format(error?.minValue)}.`
+          : `El texto debe tener un mínimo de ${error?.min} caracteres.`
+    },
     { key: 'invalidDate', message: () => 'Fecha debe ser anterior a hoy.' },
     { key: 'fechaInvalida', message: () => 'Fecha debe ser anterior a hoy.' },
     { key: 'nullValidator', message: () => 'Este campo no debe estar vacío.' },
@@ -52,5 +64,6 @@ export class ErrorMessagesComponent {
         return `La fecha debe ser menor o igual al ${minDate.toLocaleDateString('es-AR')}.`;
       }
     },
+    { key: 'montoMayorCero', message: () => 'El monto ingresado debe ser mayor a cero.' },
   ];
 }

@@ -1,5 +1,13 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {UsuariosService} from "../../../services/usuarios.service";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {SnackBarService} from "../../../services/snack-bar.service";
@@ -70,7 +78,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
     this.form = this.fb.group({
       txVenta: [{value: this.data.movimiento.idVenta, disabled: true}, [Validators.required]],
       txFecha: [{value: this.fechaHoy, disabled: true}, [Validators.required]],
-      txMonto: ['', [Validators.required]],
+      txMonto: ['', [Validators.required, this.maxWithContext(this.data.movimiento.monto, 'monetario'), this.montoMayorACeroValidator()]],
       txFormaDePago: ['', [Validators.required]],
       txCaja: ['', [Validators.required]]
     });
@@ -293,6 +301,24 @@ export class PagarCuentaCorrienteComponent implements OnInit {
       data: { imageUrl: qrImageUrl, idReferenciaOperacion: idReferenciaOperacion },
       width: '400px',
     });
+  }
+
+  private maxWithContext(maxValue: number, context?: string): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control.value != null && +control.value > maxValue) {
+        return {
+          max: { maxValue, context }
+        };
+      }
+      return null;
+    };
+  }
+
+  private montoMayorACeroValidator(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value;
+      return value > 0 ? null : { 'montoMayorCero': { value: control.value } };
+    };
   }
 
   public setearTotalVentaEnMonto() {

@@ -78,14 +78,12 @@ h3 {
 }
 
 button.button-pay[disabled],
-button.button-delete[disabled],
 button.button-return[disabled] {
   opacity: 0.5;
   pointer-events: auto;
 }
 
 button.button-pay[disabled]:hover,
-button.button-delete[disabled]:hover,
 button.button-return[disabled]:hover {
   pointer-events: auto;
 }
