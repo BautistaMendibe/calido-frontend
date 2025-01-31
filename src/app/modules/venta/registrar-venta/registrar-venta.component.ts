@@ -442,6 +442,10 @@ export class RegistrarVentaComponent implements OnInit{
       venta.fecha = new Date();
       venta.formaDePago = new FormaDePago();
       venta.formaDePago.id = this.txFormaDePago.value;
+      const formaDePago = this.formasDePago.find(forma => forma.id === this.txFormaDePago.value);
+      if (formaDePago) {
+        venta.formaDePago.idAfip = formaDePago.idAfip;
+      }
       venta.facturacion = new TipoFactura();
       venta.facturacion.id = this.txTipoFacturacion.value;
       const selectedTipoFacturacion = this.tiposDeFacturacion.find(tp => tp.id === this.txTipoFacturacion.value);
