@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, HostListener, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import { MatDialog } from "@angular/material/dialog";
 import { PromocionesService } from "../../../services/promociones.service";
@@ -123,6 +123,17 @@ export class NotificarPromocionComponent implements OnInit {
   addEmoji(event: any) {
     const commentControl = this.form.get('comment');
     commentControl?.setValue(commentControl?.value + event.emoji.native);
+  }
+
+  @HostListener('document:click', ['$event'])
+  onClickOutside(event: Event) {
+    const emojiPickerElement = document.querySelector('.emoji-mart');
+    const emojiButton = document.querySelector('.emoji-button');
+
+    if (this.showEmojiPicker && emojiPickerElement && !emojiPickerElement.contains(event.target as Node) &&
+      emojiButton && !emojiButton.contains(event.target as Node)) {
+      this.showEmojiPicker = false;
+    }
   }
 
   get comment(): FormControl {
