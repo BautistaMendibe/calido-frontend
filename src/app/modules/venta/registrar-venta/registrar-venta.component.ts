@@ -134,7 +134,7 @@ export class RegistrarVentaComponent implements OnInit{
       txBuscar: ['', []],
       txTarjeta: ['', []],
       txCuotas: ['', []],
-      tx4UltimosDigitosTarjetas: ['', []],
+      tx4UltimosDigitosTarjetas: ['', [Validators.pattern(/^\d+$/)]], // Solo números
       txCaja: [1, [Validators.required]],
       txCancelarConSaldo: [false, []]
     });

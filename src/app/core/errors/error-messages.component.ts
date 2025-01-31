@@ -22,8 +22,8 @@ export class ErrorMessagesComponent {
 
   errorOrder = [
     { key: 'required', message: () => 'Campo obligatorio.' },
-    { key: 'maxlength', message: (error: any) => `La longitud máxima es ${error?.requiredLength} caracteres.` },
-    { key: 'minlength', message: (error: any) => `La longitud mínima es ${error?.requiredLength} caracteres.` },
+    { key: 'maxlength', message: (error: any) => `La longitud máxima es de ${error?.requiredLength} caracteres.` },
+    { key: 'minlength', message: (error: any) => `La longitud mínima es de ${error?.requiredLength} caracteres.` },
     {
       key: 'max',
       message: (error: any) =>
