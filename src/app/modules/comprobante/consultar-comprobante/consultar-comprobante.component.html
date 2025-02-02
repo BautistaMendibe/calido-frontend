@@ -24,7 +24,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Número de comprobante</mat-label>
-            <input type="text" matInput [formControl]="txComprobante"/>
+            <input matInput [formControl]="txComprobante" autocomplete="off" type="search"/>
           </mat-form-field>
           <app-error-messages [control]="txComprobante"></app-error-messages>
         </div>
