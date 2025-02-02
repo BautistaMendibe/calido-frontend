@@ -115,8 +115,8 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txApellido: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]], // a date
       txCodigoPostal: ['', []], // an int
-      txDNI: ['', [Validators.pattern(/^\d{7,8}$/), Validators.pattern(/^[0-9]+$/)]], // numérico, 7 u 8 caracteres
-      txCuil: ['', []], // se usa máscara
+      txDNI: ['', [Validators.maxLength(8), Validators.pattern(/^[0-9]+$/)]],
+      txCuil: ['', [Validators.maxLength(11)]], // se usa máscara
       txContrasena: ['', [Validators.required]],
       ddGenero: ['', []], // desplegable a int
       txProvincia: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],

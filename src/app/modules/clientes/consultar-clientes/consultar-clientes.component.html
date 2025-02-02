@@ -21,17 +21,10 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre</mat-label>
+            <mat-label>Nombre y/o apellido</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
           <app-error-messages [control]="txNombre"></app-error-messages>
-        </div>
-        <div class="col-md-3">
-          <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Apellido</mat-label>
-            <input type="text" matInput [formControl]="txApellido"/>
-          </mat-form-field>
-          <app-error-messages [control]="txApellido"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
