@@ -14,6 +14,7 @@ import {EstadoLicencia} from "../../../models/estadoLicencia.model";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {FilesService} from "../../../services/files.service";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {EstadoLicenciaEnum} from "../../../shared/enums/estado-licencia.enum";
 
 @Component({
   selector: 'app-registrar-licencia',
@@ -102,7 +103,11 @@ export class RegistrarLicenciaComponent implements OnInit {
 
   private obtenerEstadosLicencia() {
     this.usuariosService.obtenerEstadosLicencia().subscribe((estados) => {
-      this.listaEstados = estados;
+      if (this.esConsulta) {
+        this.listaEstados = estados;
+      } else {
+        this.listaEstados = estados.filter((estado) => estado.id != this.getEstadosLicenciaEnum.DENEGADA);
+      }
     });
   }
 
@@ -280,5 +285,9 @@ export class RegistrarLicenciaComponent implements OnInit {
 
   get txEstado(): FormControl {
     return this.form.get('txEstado') as FormControl;
+  }
+
+  get getEstadosLicenciaEnum(): typeof EstadoLicenciaEnum {
+    return EstadoLicenciaEnum;
   }
 }

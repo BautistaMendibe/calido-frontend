@@ -3,7 +3,7 @@ import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {MatTableDataSource} from "@angular/material/table";
 import {Usuario} from "../../../models/usuario.model";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FiltrosEmpleados} from "../../../models/comandos/FiltrosEmpleados.comando";
 import {MatDialog} from "@angular/material/dialog";
 import {UsuariosService} from "../../../services/usuarios.service";
@@ -49,8 +49,7 @@ export class ConsultarClientesComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombre: ['', []],
-      txApellido: ['', []],
+      txNombre: ['', [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txMail: ['', []],
     });
   }
@@ -62,12 +61,11 @@ export class ConsultarClientesComponent implements OnInit {
 
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
-    this.filtros.apellido = this.txApellido.value;
     this.filtros.mail = this.txMail.value;
     this.isLoading = true;
 
     this.usuariosService.consultarClientes(this.filtros).subscribe((clientes) => {
-      this.clientes = clientes;
+      this.clientes = clientes.filter(cliente => cliente.id !== -1); // no mostrar consumidor final
       this.tableDataSource.data = this.clientes;
       this.tableDataSource.paginator = this.paginator;
       this.tableDataSource.sort = this.sort;
@@ -137,10 +135,6 @@ export class ConsultarClientesComponent implements OnInit {
   // Regios getters
   get txNombre(): FormControl {
     return this.form.get('txNombre') as FormControl;
-  }
-
-  get txApellido(): FormControl {
-    return this.form.get('txApellido') as FormControl;
   }
 
   get txMail(): FormControl {

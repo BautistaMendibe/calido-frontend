@@ -16,7 +16,7 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Nombre y/o apellido</mat-label>
+            <mat-label>Empleado</mat-label>
             <input type="text" matInput [formControl]="txNombre"/>
           </mat-form-field>
           <app-error-messages [control]="txNombre"></app-error-messages>
@@ -31,7 +31,7 @@
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>CUIL</mat-label>
-            <input type="text" matInput [formControl]="txCuil"/>
+            <input type="text" matInput [formControl]="txCuil" mask="00-00000000-0"/>
           </mat-form-field>
           <app-error-messages [control]="txCuil"></app-error-messages>
         </div>
@@ -75,13 +75,8 @@
             </ng-container>
 
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
-              <mat-cell *matCellDef="let usuario" data-label="Nombre">{{ usuario.nombre }}</mat-cell>
-            </ng-container>
-
-            <ng-container matColumnDef="apellido">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>APELLIDO</mat-header-cell>
-              <mat-cell *matCellDef="let usuario" data-label="Apellido">{{ usuario.apellido }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef>EMPLEADO</mat-header-cell>
+              <mat-cell *matCellDef="let usuario" data-label="Nombre">{{ usuario.nombre + ' ' + usuario.apellido }}</mat-cell>
             </ng-container>
 
             <ng-container matColumnDef="cuil">

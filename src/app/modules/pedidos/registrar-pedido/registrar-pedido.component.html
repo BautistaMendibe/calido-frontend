@@ -50,7 +50,7 @@
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
               <mat-label>Fecha de Pedido</mat-label>
-              <input matInput [matDatepicker]="pickerPedido" [formControl]="txFechaPedido" [max]="this.fechaHoy"/>
+              <input matInput [matDatepicker]="pickerPedido" [formControl]="txFechaPedido"/>
               <mat-datepicker-toggle matSuffix [for]="pickerPedido"></mat-datepicker-toggle>
               <mat-datepicker #pickerPedido></mat-datepicker>
             </mat-form-field>
@@ -114,7 +114,7 @@
 
         <br>
 
-        <mat-card class="mat-card" [hidden]="productos.length === 0">
+        <mat-card class="mat-card" [hidden]="(productos.length === 0 || this.dataSourceProductos.filteredData.length == 0)">
           <mat-card-content>
             <div class="row">
 
@@ -172,14 +172,14 @@
         </mat-card>
       </form>
 
-      <h5 *ngIf="!isLoading && !(this.productos.length > 0)" class="alert alert-secondary text-center">
-        No se encuentran productos para mostrar, por favor realice una nueva búsqueda.
+      <h5 *ngIf="!isLoading && (this.productos.length == 0 || this.dataSourceProductos.filteredData.length == 0)" class="alert alert-secondary text-center">
+        No se encuentran productos del proveedor seleccionado para mostrar, por favor realice una nueva búsqueda.
       </h5>
 
-      <br>
-      <mat-divider></mat-divider>
+      <br [hidden]="(productos.length === 0 || this.dataSourceProductos.filteredData.length == 0)">
+      <mat-divider [hidden]="(productos.length === 0 || this.dataSourceProductos.filteredData.length == 0)"></mat-divider>
 
-      <div class="row pt-4">
+      <div class="row pt-4" [hidden]="(productos.length === 0 || this.dataSourceProductos.filteredData.length == 0)">
         <div class="col-md">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Costo de Compra</mat-label>
@@ -225,7 +225,7 @@
         </div>
       </div>
 
-      <div class="row pt-4 justify-content-center">
+      <div class="row pt-4 justify-content-center" [hidden]="(productos.length === 0 || this.dataSourceProductos.filteredData.length == 0)">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Total</mat-label>
