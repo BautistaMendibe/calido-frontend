@@ -85,19 +85,19 @@ export class RegistrarClientesComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombre: ['', [Validators.required]],
-      txApellido: ['', [Validators.required]],
+      txNombre: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txApellido: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txMail: ['', [Validators.required, this.emailValidator()]],
       txCondicionIva: ['', [Validators.required]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]],
-      txCodigoPostal: ['', []],
-      txDNI: ['', [Validators.maxLength(8)]],
+      txCodigoPostal: ['', [Validators.pattern(/^[0-9]+$/)]],
+      txDNI: ['', [Validators.maxLength(8), Validators.pattern(/^[0-9]+$/)]],
       txCUIT: ['', [Validators.maxLength(11)]],
       ddGenero: ['', []],
-      txProvincia: ['', []],
-      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txProvincia: ['', [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[0-9]+$/)]],
     });
   }
 

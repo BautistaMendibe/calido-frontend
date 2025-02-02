@@ -35,6 +35,7 @@ export class RegistrarEmpleadosComponent implements OnInit{
 
   private idProvincia: number;
   private idLocalidad: number;
+  public fechaHoy: Date = new Date();
   public listaProvincias: Provincia[] = [];
   public provinciasFiltradas: Provincia[] = [];
   public listaLocalidades: Localidad[] = [];
@@ -110,18 +111,18 @@ export class RegistrarEmpleadosComponent implements OnInit{
   private crearFormulario() {
     this.form = this.fb.group({
       txNombreUsuario: ['', [Validators.required]],
-      txNombre: ['', [Validators.required]],
-      txApellido: ['', [Validators.required]],
+      txNombre: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txApellido: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txFechaNacimiento: ['', [this.fechaMenorQueHoy()]], // a date
       txCodigoPostal: ['', []], // an int
-      txDNI: ['', [Validators.pattern(/^\d{7,8}$/)]], // numérico, 7 u 8 caracteres
-      txCuil: ['', []], // se usa máscara
+      txDNI: ['', [Validators.maxLength(8), Validators.pattern(/^[0-9]+$/)]],
+      txCuil: ['', [Validators.maxLength(11)]], // se usa máscara
       txContrasena: ['', [Validators.required]],
       ddGenero: ['', []], // desplegable a int
-      txProvincia: ['', [Validators.required]],
-      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txProvincia: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[0-9]+$/)]],
       txRoles: [[], [Validators.required]],
       txMail: ['', [Validators.required, this.emailValidator()]]
     });

@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
@@ -24,7 +24,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
   public empleados: Usuario[] = [];
-  public columnas: string[] = ['nombreUsuario', "nombre",'apellido', 'cuil', 'acciones'];
+  public columnas: string[] = ['nombreUsuario', 'nombre', 'cuil', 'acciones'];
   public isLoading: boolean = false;
 
   private filtros: FiltrosEmpleados;
@@ -48,7 +48,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
 
   private crearFormulario() {
     this.form = this.fb.group({
-      txNombre: ['', []],
+      txNombre: ['', [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txCuil: ['', []],
       txUsuario: ['', []]
     });
@@ -62,7 +62,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public buscar() {
     this.filtros.nombre = this.txNombre.value;
     this.filtros.usuario = this.txUsuario.value;
-    this.filtros.cuil = this.txCuil.value.replace(/[^0-9]/g, '');
+    this.filtros.cuil = this.txCuil.value;
 
     this.isLoading = true;
     this.usuariosService.consultarEmpleados(this.filtros).subscribe((empleados) => {
