@@ -1,4 +1,4 @@
-import {Injectable, Injector} from '@angular/core';
+import {Injectable, Injector, ViewContainerRef} from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {SnackBarLoadingComponent} from "../shared/snack-bar-loading/snack-bar-loading.component";
 import {Overlay} from "@angular/cdk/overlay";
@@ -7,7 +7,7 @@ import {Overlay} from "@angular/cdk/overlay";
   providedIn: 'root'
 })
 export class SnackBarService {
-  constructor(private snackBar: MatSnackBar, private injector: Injector) {}
+  constructor(private snackBar: MatSnackBar) {}
 
   public openSnackBarError(mensaje: string) {
     this.snackBar.open(mensaje, 'Cerrar', {
@@ -30,6 +30,15 @@ export class SnackBarService {
       verticalPosition: 'top',
       panelClass: 'notify-loading',
       data: {mensaje: mensaje}
+    });
+  }
+
+  public openSnackBarLoadingFromDialog(mensaje: string, viewContainerRef: ViewContainerRef) {
+    return this.snackBar.openFromComponent(SnackBarLoadingComponent, {
+      verticalPosition: 'top',
+      panelClass: 'notify-loading-from-dialog',
+      data: {mensaje: mensaje},
+      viewContainerRef: viewContainerRef
     });
   }
 }
