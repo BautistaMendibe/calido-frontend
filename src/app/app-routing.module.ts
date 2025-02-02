@@ -115,7 +115,7 @@ const routes: Routes = [
     path: 'registrar-venta',
     component: RegistrarVentaComponent,
     canActivate: [authGuard],
-    data: { roles: ['Cajero', 'Encargado'] },
+    data: { roles: ['Vendedor', 'Cajero', 'Encargado'] },
   },
   {
     path: 'consultar-pedidos',
