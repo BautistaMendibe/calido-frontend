@@ -24,7 +24,7 @@ export class ConsultarEmpleadosComponent implements OnInit {
   public tableDataSource: MatTableDataSource<Usuario> = new MatTableDataSource<Usuario>([]);
   public form: FormGroup;
   public empleados: Usuario[] = [];
-  public columnas: string[] = ['nombreUsuario', "nombre",'apellido', 'cuil', 'acciones'];
+  public columnas: string[] = ['nombreUsuario', 'nombre', 'cuil', 'acciones'];
   public isLoading: boolean = false;
 
   private filtros: FiltrosEmpleados;
