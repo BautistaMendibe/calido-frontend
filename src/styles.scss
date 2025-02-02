@@ -108,6 +108,15 @@ select:disabled,
   --mdc-form-field-label-text-color: var(--mat-form-field-label-text-color) !important;
 }
 
+/* saca la ‘X’ de inputs del tipo 'search' en Internet Explorer */
+input[type=search]::-ms-clear { display: none; width : 0; height: 0; }
+input[type=search]::-ms-reveal { display: none; width : 0; height: 0; }
+/* saca la ‘X’ de inputs del tipo 'search' de Chrome */
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration { display: none; }
+
 html, body {
   height: 100%;
   margin: 0;
@@ -395,6 +404,5 @@ svg {
 .container {
   overflow-x: auto;
 }
-
 
 /* Fin Responsive */
