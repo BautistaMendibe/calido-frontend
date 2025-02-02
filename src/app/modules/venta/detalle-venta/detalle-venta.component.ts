@@ -203,10 +203,13 @@ export class DetalleVentaComponent implements OnInit{
         if (value) {
           this.calcularTotalAnulado();
           this.ventasService.anularVenta(this.venta).subscribe((res) => {
+            const snackBarRef = this.notificacionService.openSnackBarLoading('Generando nota de crédito');
             if (res.mensaje == 'OK') {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
               this.dialogRef.close(true);
             } else {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
             }
           });
