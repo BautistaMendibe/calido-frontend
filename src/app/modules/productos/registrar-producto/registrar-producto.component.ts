@@ -70,7 +70,7 @@ export class RegistrarProductoComponent implements OnInit {
 
       // Solo permitir modificar precio de ser necesario
       if (this.editarPrecioDeVenta) {
-        this.txCosto.enable();
+        this.txPromocion.enable();
       }
     }
 
