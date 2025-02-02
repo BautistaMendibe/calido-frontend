@@ -409,7 +409,7 @@ export class ConsultarPedidosComponent implements OnInit {
           ]
         },
         {
-          text: 'OBSERVACIONES',
+          text: pedido.observaciones ? 'OBSERVACIONES' : '',
           style: 'notesTitle'
         },
         {
