@@ -76,14 +76,14 @@ export class RegistrarProveedorComponent implements OnInit{
   private crearFormulario() {
     this.form = this.fb.group({
       txTipoProveedor: ['', []],
-      txNombre: ['', [Validators.required]],
+      txNombre: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txTelefono: ['', [Validators.pattern(/^\+?[0-9]{1,15}$/)]],
       txEmail: ['', [this.emailValidator()]],
       txCuit: ['', []],
-      txProvincia: [ '', [Validators.required]],
-      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
+      txProvincia: [ '', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
+      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[0-9]+$/)]],
     });
   }
 

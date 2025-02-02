@@ -56,7 +56,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>DNI</mat-label>
-            <input type="text" matInput [formControl]="txDNI"/>
+            <input type="text" matInput [formControl]="txDNI" maxlength="8"/>
           </mat-form-field>
           <app-error-messages [control]="txDNI"></app-error-messages>
         </div>
@@ -64,7 +64,7 @@
         <div class="col-md-4">
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>Fecha de nacimiento</mat-label>
-            <input matInput [matDatepicker]="pickerFechaNacimiento" [formControl]="txFechaNacimiento" />
+            <input matInput [matDatepicker]="pickerFechaNacimiento" [formControl]="txFechaNacimiento" [max]="fechaHoy" />
             <mat-datepicker-toggle matSuffix [for]="pickerFechaNacimiento"></mat-datepicker-toggle>
             <mat-datepicker #pickerFechaNacimiento></mat-datepicker>
           </mat-form-field>
