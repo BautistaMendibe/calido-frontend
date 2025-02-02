@@ -77,7 +77,7 @@ export class RegistrarProveedorComponent implements OnInit{
     this.form = this.fb.group({
       txTipoProveedor: ['', []],
       txNombre: ['', [Validators.required]],
-      txTelefono: ['', []],
+      txTelefono: ['', [Validators.pattern(/^\+?[0-9]{1,15}$/)]],
       txEmail: ['', [this.emailValidator()]],
       txCuit: ['', []],
       txProvincia: [ '', [Validators.required]],
