@@ -13,6 +13,8 @@ import {Cuota} from "../../../models/Cuota.model";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {TiposTarjetasEnum} from "../../../shared/enums/tipos-tarjetas.enum";
+import {of} from "rxjs";
 
 @Component({
   selector: 'app-registrar-tarjeta',
@@ -75,7 +77,7 @@ export class RegistrarTarjetaComponent implements OnInit {
     this.buscarCuotas();
 
     if (this.data.editar) {
-      this.listaCuotasDeshabilitada = false;
+      this.listaCuotasDeshabilitada = this.data.tarjeta.tipoTarjeta.id !== this.tipoTarjetaEnum.TARJETA_CREDITO;
     }
   }
 
@@ -152,6 +154,9 @@ export class RegistrarTarjetaComponent implements OnInit {
     this.form.enable();
     this.data.formDesactivado = false;
     this.formDesactivado = false;
+    if (this.txTipoTarjeta.value === this.tipoTarjetaEnum.TARJETA_CREDITO) {
+      this.listaCuotasDeshabilitada = false;
+    }
     this.data.editar = true;
   }
 
@@ -164,15 +169,17 @@ export class RegistrarTarjetaComponent implements OnInit {
       tarjeta.idTipoTarjeta = this.txTipoTarjeta.value;
       tarjeta.cuotaPorTarjeta = [];
 
-      this.cuotasSeleccionadas.forEach((cuotaSeleccionada) => {
-        const cuotaPorTarjeta: CuotaPorTarjeta = new CuotaPorTarjeta();
+      if (tarjeta.idTipoTarjeta === this.tipoTarjetaEnum.TARJETA_CREDITO) {
+        this.cuotasSeleccionadas.forEach((cuotaSeleccionada) => {
+          const cuotaPorTarjeta: CuotaPorTarjeta = new CuotaPorTarjeta();
 
-        cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
-        cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
+          cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
+          cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
 
-        // Agregar la cuota a la lista de la tarjeta
-        tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
-      });
+          // Agregar la cuota a la lista de la tarjeta
+          tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
+        });
+      }
 
       this.tarjetasService.registrarTarjeta(tarjeta).subscribe((respuesta) => {
         if (respuesta.mensaje === 'OK') {
@@ -195,16 +202,18 @@ export class RegistrarTarjetaComponent implements OnInit {
       tarjeta.idTipoTarjeta = this.txTipoTarjeta.value;
       tarjeta.cuotaPorTarjeta = [];
 
-      this.cuotasSeleccionadas.forEach((cuotaSeleccionada) => {
-        const cuotaPorTarjeta: CuotaPorTarjeta = new CuotaPorTarjeta();
+      if (tarjeta.idTipoTarjeta === this.tipoTarjetaEnum.TARJETA_CREDITO) {
+        this.cuotasSeleccionadas.forEach((cuotaSeleccionada) => {
+          const cuotaPorTarjeta: CuotaPorTarjeta = new CuotaPorTarjeta();
 
-        cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
-        cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
-        cuotaPorTarjeta.idTarjeta = cuotaSeleccionada.idTarjeta;
+          cuotaPorTarjeta.interes = cuotaSeleccionada.interes;
+          cuotaPorTarjeta.idCuota = cuotaSeleccionada.idCuota;
+          cuotaPorTarjeta.idTarjeta = cuotaSeleccionada.idTarjeta;
 
-        // Agregar la cuota a la lista de la tarjeta
-        tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
-      });
+          // Agregar la cuota a la lista de la tarjeta
+          tarjeta.cuotaPorTarjeta.push(cuotaPorTarjeta);
+        });
+      }
 
       this.tarjetasService.modificarTarjeta(tarjeta).subscribe((res) => {
         if (res.mensaje == 'OK') {
@@ -275,6 +284,12 @@ export class RegistrarTarjetaComponent implements OnInit {
     return str.charAt(0).toUpperCase() + str.slice(1);
   }
 
+  public cambioTipoTarjeta() {
+    const tipoTarjeta = this.txTipoTarjeta.value;
+
+    this.listaCuotasDeshabilitada = tipoTarjeta !== this.tipoTarjetaEnum.TARJETA_CREDITO;
+  }
+
   public cancelar() {
     this.dialogRef.close();
   }
@@ -286,5 +301,9 @@ export class RegistrarTarjetaComponent implements OnInit {
 
   get txTipoTarjeta(): FormControl {
     return this.form.get('txTipoTarjeta') as FormControl;
+  }
+
+  get tipoTarjetaEnum(): typeof TiposTarjetasEnum {
+    return TiposTarjetasEnum;
   }
 }
