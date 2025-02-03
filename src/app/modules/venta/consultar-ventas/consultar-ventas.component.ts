@@ -280,7 +280,7 @@ export class ConsultarVentasComponent implements OnInit {
       .afterClosed()
       .subscribe((value) => {
         if (value) {
-          const snackBarRef = this.notificacionService.openSnackBarLoading();
+          const snackBarRef = this.notificacionService.openSnackBarLoading('Facturando venta');
           this.ventasService.facturarVentaConAfip(venta).subscribe((respuesta) => {
             if (respuesta.mensaje == 'OK') {
               snackBarRef.dismiss();

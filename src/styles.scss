@@ -216,6 +216,16 @@ svg {
   --mdc-snackbar-supporting-text-weight: 800;
 }
 
+.notify-loading-from-dialog {
+  position: relative;
+  z-index: 1001;
+  --mat-mdc-snack-bar-button-color: #535715;
+  --mdc-snackbar-container-color: #fde4dc;
+  --mdc-snackbar-supporting-text-color: #e15b35;
+  --mat-snack-bar-button-color: #a88c26;
+  --mdc-snackbar-supporting-text-weight: 800;
+}
+
 .notify-error {
   --mat-mdc-snack-bar-button-color: #571206;
   --mdc-snackbar-container-color: #edd3c3;

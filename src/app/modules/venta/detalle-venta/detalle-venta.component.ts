@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {Component, Inject, OnInit, ViewChild, ViewContainerRef} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialog, MatDialogRef} from "@angular/material/dialog";
 import {Venta} from "../../../models/venta.model";
@@ -19,6 +19,8 @@ import {
 } from "../../clientes/registrar-cuenta-corriente/registrar-cuenta-corriente.component";
 import {VentasService} from "../../../services/ventas.services";
 import {FormasDePagoEnum} from "../../../shared/enums/formas-de-pago.enum";
+import {SnackBarLoadingComponent} from "../../../shared/snack-bar-loading/snack-bar-loading.component";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-detalle-venta',
@@ -49,6 +51,8 @@ export class DetalleVentaComponent implements OnInit{
     private themeService: ThemeCalidoService,
     private usuariosService: UsuariosService,
     private ventasService: VentasService,
+    private viewContainerRef: ViewContainerRef,
+    private snackBar: MatSnackBar,
     @Inject(MAT_DIALOG_DATA) public data: {
       venta: Venta,
       esAnulacion: boolean
@@ -202,11 +206,14 @@ export class DetalleVentaComponent implements OnInit{
       .subscribe((value) => {
         if (value) {
           this.calcularTotalAnulado();
+          const snackBarRef = this.notificacionService.openSnackBarLoadingFromDialog('Generando nota de crédito', this.viewContainerRef);
           this.ventasService.anularVenta(this.venta).subscribe((res) => {
             if (res.mensaje == 'OK') {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarSuccess('Venta anulada correctamente');
               this.dialogRef.close(true);
             } else {
+              snackBarRef.dismiss();
               this.notificacionService.openSnackBarError('Error al anular la venta, intentelo nuevamente.');
             }
           });
