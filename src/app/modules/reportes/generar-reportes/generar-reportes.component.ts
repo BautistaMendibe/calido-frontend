@@ -61,11 +61,11 @@ export class GenerarReportesComponent implements OnInit {
     });
 
     // Forzar que fechaHasta tenga hora 23:59:59 para que sea el final del día
-    this.form.get('txFechaHasta')?.valueChanges.subscribe((fecha) => {
+    this.txFechaHasta.valueChanges.subscribe((fecha) => {
       if (fecha) {
         let fechaHasta = new Date(fecha);
         fechaHasta.setHours(23, 59, 59, 999);
-        this.form.get('txFechaHasta')?.setValue(fechaHasta, { emitEvent: false });
+        this.txFechaHasta.setValue(fechaHasta, { emitEvent: false });
       }
     });
   }
