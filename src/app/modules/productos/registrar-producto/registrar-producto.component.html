@@ -3,8 +3,8 @@
     <br>
     <div class="row">
       <div class="col d-flex justify-content-between align-items-center">
-        <p class="titulo">{{esConsulta ? 'Consultar producto' : 'Registrar producto'}}</p>
-        <button *ngIf="esConsulta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Administrador', 'Cajero', 'Encargado']">
+        <p class="titulo">{{editarPrecioDeVenta ? 'Editar producto en venta' : esConsulta ? 'Consultar producto'  : 'Registrar producto'}}</p>
+        <button *ngIf="esConsulta && !editarPrecioDeVenta" class="btn" mat-icon-button matTooltip="Modificar" (click)="habilitarEdicion()" [appRole]="['Administrador', 'Cajero', 'Encargado']">
           <mat-icon class="editar mb-3">edit</mat-icon>
         </button>
       </div>
