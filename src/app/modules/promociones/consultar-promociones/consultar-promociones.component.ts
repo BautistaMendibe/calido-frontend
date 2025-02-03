@@ -106,7 +106,8 @@ export class ConsultarPromocionesComponent implements OnInit {
         autoFocus: false,
         data: {
           promocion: promocion,
-          esConsulta: !editar
+          esConsulta: !editar,
+          referencia: this
         }
       }
     );

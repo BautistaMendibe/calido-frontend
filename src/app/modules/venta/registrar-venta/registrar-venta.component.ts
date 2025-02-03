@@ -316,7 +316,7 @@ export class RegistrarVentaComponent implements OnInit{
   }
 
   public cancelarVenta() {
-    this.notificationDialogService.confirmation('Los productos serán eliminados de la venta actual\n\n¿Desea continuar?', 'Cancelar venta')
+    this.notificationDialogService.confirmation('Los productos serán eliminados de la venta actual\n¿Desea continuar?', 'Cancelar venta')
       .afterClosed()
       .subscribe((value) => {
         if (value) {
