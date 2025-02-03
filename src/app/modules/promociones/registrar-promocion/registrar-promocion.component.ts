@@ -10,6 +10,7 @@ import {RegistrarProductoComponent} from "../../productos/registrar-producto/reg
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {ThemeCalidoService} from "../../../services/theme.service";
+import {ConsultarPromocionesComponent} from "../consultar-promociones/consultar-promociones.component";
 
 @Component({
   selector: 'app-registrar-promocion',
@@ -43,6 +44,7 @@ export class RegistrarPromocionComponent implements OnInit{
     @Inject(MAT_DIALOG_DATA) public data: {
       promocion: Promocion,
       esConsulta: boolean,
+      referencia: ConsultarPromocionesComponent
     }
   ) {
     this.form = new FormGroup({});
@@ -54,6 +56,7 @@ export class RegistrarPromocionComponent implements OnInit{
     this.obtenerInformacionTema();
     this.crearFormulario();
     this.buscarProductos();
+    this.suscripcionCierreDialogo();
 
     const filtro = { textoBusqueda: '' };
 
@@ -272,6 +275,22 @@ export class RegistrarPromocionComponent implements OnInit{
 
   public cancelar() {
     this.dialogRef.close();
+    if (!this.esConsulta) {
+      this.data.referencia.buscar();
+    }
+  }
+
+  /**
+   * Si el dialogo se cierra de forma no común (backdropClick) y
+   * solo cuando no es consulta, se buscan las promociones de nuevo
+   * @private
+   */
+  private suscripcionCierreDialogo() {
+    this.dialogRef.backdropClick().subscribe((res) => {
+      if (!this.esConsulta) {
+        this.data.referencia.buscar();
+      }
+    });
   }
 
   // Region getters

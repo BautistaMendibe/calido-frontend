@@ -56,12 +56,8 @@
               <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.id }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="nombre">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
-              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.nombre }}</mat-cell>
-            </ng-container>
-            <ng-container matColumnDef="apellido">
-              <mat-header-cell *matHeaderCellDef mat-sort-header>APELLIDO</mat-header-cell>
-              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.apellido }}</mat-cell>
+              <mat-header-cell *matHeaderCellDef >CLIENTE</mat-header-cell>
+              <mat-cell *matCellDef="let cuentaCorriente">{{ cuentaCorriente.usuario?.nombre + ' ' + cuentaCorriente.usuario?.apellido }}</mat-cell>
             </ng-container>
             <ng-container matColumnDef="fechaDesde">
               <mat-header-cell *matHeaderCellDef mat-sort-header>FECHA DE CREACIÓN</mat-header-cell>

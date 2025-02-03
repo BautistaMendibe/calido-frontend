@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {FormBuilder, FormControl, FormGroup} from "@angular/forms";
+import {FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {FiltrosCuentasCorrientes} from "../../../models/comandos/FiltrosCuentasCorrientes";
 import {Subject} from "rxjs";
 import {MatDialog} from "@angular/material/dialog";
@@ -24,7 +24,7 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   public tableDataSource: MatTableDataSource<CuentaCorriente> = new MatTableDataSource<CuentaCorriente>([]);
   public form: FormGroup;
   public cuentas: CuentaCorriente[] = [];
-  public columnas: string[] = ['id', 'nombre', 'apellido', 'fechaDesde', 'acciones'];
+  public columnas: string[] = ['id', 'nombre', 'fechaDesde', 'acciones'];
   private filtros: FiltrosCuentasCorrientes;
   private unsubscribe$: Subject<void> = new Subject<void>();
   public isLoading: boolean = false;
@@ -52,19 +52,18 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
 
   private createForm() {
     this.form = this.fb.group({
-      txCliente: [''],
-      txDesdeMonto:['']
+      txCliente: ['', [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]]
     });
   }
 
   public limpiarFiltros() {
     this.form.reset();
+    this.buscar();
   }
 
   public buscar() {
     this.filtros = {
-      cliente: this.txCliente.value,
-      desdeMonto: this.txDesdeMonto.value
+      cliente: this.txCliente.value
     };
 
     this.isLoading = true;
@@ -146,9 +145,5 @@ export class ConsultarCuentasCorrientesComponent implements OnInit{
   // Región getters
   get txCliente(): FormControl {
     return this.form.get('txCliente') as FormControl;
-  }
-
-  get txDesdeMonto(): FormControl {
-    return this.form.get('txDesdeMonto') as FormControl;
   }
 }
