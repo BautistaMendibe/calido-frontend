@@ -34,6 +34,7 @@ export class RegistrarClientesComponent implements OnInit {
   public localidadesFiltradas: Localidad[] = [];
   public usuario: Usuario;
   public condicionesIva: CondicionIva[] = [];
+  public fechaHoy: Date = new Date();
 
   public esConsulta: boolean;
   public formDesactivado: boolean;
@@ -408,6 +409,5 @@ export class RegistrarClientesComponent implements OnInit {
   get txNumero(): FormControl {
     return this.form.get('txNumero') as FormControl;
   }
-
 
 }

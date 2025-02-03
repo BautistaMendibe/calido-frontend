@@ -16,17 +16,17 @@
       <div class="row pt-4">
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">
-            <mat-label>Empleado</mat-label>
-            <input type="text" matInput [formControl]="txNombre"/>
-          </mat-form-field>
-          <app-error-messages [control]="txNombre"></app-error-messages>
-        </div>
-        <div class="col-md-3">
-          <mat-form-field appearance="outline" class="w-100">
             <mat-label>Usuario</mat-label>
             <input type="text" matInput [formControl]="txUsuario"/>
           </mat-form-field>
           <app-error-messages [control]="txUsuario"></app-error-messages>
+        </div>
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Empleado</mat-label>
+            <input type="text" matInput [formControl]="txNombre"/>
+          </mat-form-field>
+          <app-error-messages [control]="txNombre"></app-error-messages>
         </div>
         <div class="col-md-3">
           <mat-form-field appearance="outline" class="w-100">

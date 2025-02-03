@@ -75,6 +75,7 @@ export class ConsultarProductosComponent implements OnInit {
 
   public limpiarFiltros() {
     this.form.reset();
+    this.buscar();
   }
 
   public buscar() {

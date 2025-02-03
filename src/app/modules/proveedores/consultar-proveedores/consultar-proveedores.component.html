@@ -16,7 +16,7 @@
         <div class="row pt-4">
           <div class="col-md-3">
             <mat-form-field appearance="outline" class="w-100">
-              <mat-label>Nombre</mat-label>
+              <mat-label>Proveedor</mat-label>
               <input type="text" matInput [formControl]="txNombre"/>
             </mat-form-field>
             <app-error-messages [control]="txNombre"></app-error-messages>
@@ -56,7 +56,7 @@
           <div class="col-md-12 ">
             <mat-table [dataSource]="tableDataSource" matSort class="custom-table">
               <ng-container matColumnDef="nombre">
-                <mat-header-cell *matHeaderCellDef mat-sort-header>NOMBRE</mat-header-cell>
+                <mat-header-cell *matHeaderCellDef mat-sort-header>PROVEEDOR</mat-header-cell>
                 <mat-cell *matCellDef="let proveedor" data-label="Nombre">{{ proveedor.nombre }}</mat-cell>
               </ng-container>
 
