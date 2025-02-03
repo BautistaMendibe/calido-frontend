@@ -256,7 +256,7 @@ export class MarcarAsistenciaComponent implements OnInit {
           });
 
           if (existeSuperposicionLicencia) {
-            this.notificacionService.openSnackBarError('No puede marcar presencia en días que tiene licencia.');
+            this.notificacionService.openSnackBarError('No puede marcar asistencia en días que tiene una licencia solicitada.');
             return; // No continuar si hay superposición con licencias
           }
 
