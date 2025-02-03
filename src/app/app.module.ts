@@ -65,7 +65,7 @@ import { RegistrarCajaComponent } from './modules/gerencia/registrar-caja/regist
 import { RegistrarArqueoCajaComponent } from './modules/gerencia/registrar-arqueo-caja/registrar-arqueo-caja.component';
 import { DetalleArqueoComponent } from './modules/gerencia/detalle-arqueo/detalle-arqueo.component';
 import {ErrorMessagesComponent} from "./core/errors/error-messages.component";
-import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatPaginatorIntl, MatPaginatorModule} from "@angular/material/paginator";
 import { VentasDiaComponent } from './modules/home/ventas-dia/ventas-dia.component';
 import { VentasMensualesComponent } from './modules/home/ventas-mensuales/ventas-mensuales.component';
 import { BaseChartDirective } from 'ng2-charts';
@@ -80,6 +80,7 @@ import { GenerarReportesComponent } from './modules/reportes/generar-reportes/ge
 import { QRVentanaComponent } from './modules/qr-ventana/qr-ventana.component';
 import {SharedModule} from "./shared/shared.module";
 import { PagarCuentaCorrienteComponent } from './modules/clientes/pagar-cuenta-corriente/pagar-cuenta-corriente.component';
+import {getSpanishPaginatorIntl} from "./shared/utils/custom-paginator-intl.util";
 registerLocaleData(localeEs, 'es');
 
 @NgModule({
@@ -180,6 +181,7 @@ registerLocaleData(localeEs, 'es');
       provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
     },
     { provide: LOCALE_ID, useValue: 'es' },
+    { provide: MatPaginatorIntl, useValue: getSpanishPaginatorIntl() },
   ],
   bootstrap: [AppComponent],
   exports: [ErrorMessagesComponent]
