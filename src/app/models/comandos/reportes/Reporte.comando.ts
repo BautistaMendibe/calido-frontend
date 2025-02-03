@@ -10,6 +10,7 @@ export class ReporteComando {
   columnas: string[];
   imagenGrafico?: string;
   noNecesitaFiltro: boolean;
+  noNecesitaGrafico: boolean;
 
 
   constructor(
@@ -20,6 +21,7 @@ export class ReporteComando {
     data?: any[],
     imagenGrafico?: string,
     noNecesitaFiltro?: boolean,
+    noNecesitaGrafico?: boolean,
   ) {
     this.nombre = nombre!;
     this.funcionSP = funcionSP!;
@@ -28,5 +30,6 @@ export class ReporteComando {
     this.columnas = columnas!;
     this.imagenGrafico = imagenGrafico!;
     this.noNecesitaFiltro = noNecesitaFiltro!;
+    this.noNecesitaGrafico = noNecesitaGrafico!;
   }
 }

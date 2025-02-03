@@ -301,6 +301,16 @@ export class GenerarReportesComponent implements OnInit {
         'sell',
         [
           new ReporteComando(
+            'Ventas por fecha',
+            'reportes_ventas_por_tipo_producto',
+            new FiltrosReportesComando(),
+            ['Tipo de producto', 'Cantidad de ventas'],
+            [],
+            '',
+            false,
+            true
+          ),
+          new ReporteComando(
             'Ventas por tipo de producto',
             'reportes_ventas_por_tipo_producto',
             new FiltrosReportesComando(),
