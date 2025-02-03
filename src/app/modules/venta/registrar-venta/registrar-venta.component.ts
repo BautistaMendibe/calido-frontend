@@ -320,16 +320,7 @@ export class RegistrarVentaComponent implements OnInit{
       .afterClosed()
       .subscribe((value) => {
         if (value) {
-          // Recorremos los productos seleccionados en orden inverso
-          for (let i = this.productosSeleccionados.length - 1; i >= 0; i--) {
-            // Actualizamos las propiedades del producto
-            const producto = this.productosSeleccionados[i];
-            producto.seleccionadoParaVenta = false;
-            producto.cantidadSeleccionada = 0;
-
-            // Eliminamos el producto del array de productos seleccionados
-            this.productosSeleccionados.splice(i, 1);
-          }
+          this.limpiarVenta();
         }
       });
   }
@@ -653,6 +644,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
     this.tx4UltimosDigitosTarjetas.setValue(null);
     this.txTarjeta.setValue(null);
+    this.txBuscar.setValue(null);
 
     this.mostrarTarjetasCuotas = false;
     this.tarjetaSeleccionada = new Tarjeta();
