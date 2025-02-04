@@ -38,8 +38,8 @@
             <mat-label>Email</mat-label>
             <input type="email" matInput [formControl]="txMail"/>
           </mat-form-field>
+          <app-error-messages [control]="txMail"></app-error-messages>
         </div>
-        <app-error-messages [control]="txMail"></app-error-messages>
 
       </div>
 
