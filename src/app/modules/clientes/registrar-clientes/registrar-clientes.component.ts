@@ -110,7 +110,7 @@ export class RegistrarClientesComponent implements OnInit {
     this.txProvincia.addValidators(this.provinceValidator());
     this.txLocalidad.addValidators(this.localityValidator());
   }
-  
+
   public habilitarEdicion(){
     this.form.enable();
     this.data.editar = true;
