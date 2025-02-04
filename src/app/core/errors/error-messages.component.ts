@@ -65,5 +65,7 @@ export class ErrorMessagesComponent {
       }
     },
     { key: 'montoMayorCero', message: () => 'El monto ingresado debe ser mayor a cero.' },
+    { key: 'invalidProvince', message: () => 'La provincia ingresada no existe.' },
+    { key: 'invalidLocality', message: () => 'La localidad ingresada no existe.' },
   ];
 }

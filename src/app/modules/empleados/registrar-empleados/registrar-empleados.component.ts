@@ -6,7 +6,6 @@ import {
   Validators,
   AbstractControl,
   ValidatorFn,
-  ValidationErrors, Form
 } from "@angular/forms";
 import {Usuario} from "../../../models/usuario.model";
 import {UsuariosService} from "../../../services/usuarios.service";
@@ -119,14 +118,24 @@ export class RegistrarEmpleadosComponent implements OnInit{
       txCuil: ['', [Validators.maxLength(11)]], // se usa máscara
       txContrasena: ['', [Validators.required]],
       ddGenero: ['', []], // desplegable a int
-      txProvincia: ['', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
-      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txProvincia: ['', {
+        validators: [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)],
+        updateOn: 'change'
+      }],
+      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, {
+        validators: [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)],
+        updateOn: 'change'
+      }],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
       txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[0-9]+$/)]],
       txRoles: [[], [Validators.required]],
       txMail: ['', [Validators.required, this.emailValidator()]]
     });
+
+    this.txProvincia.addValidators(this.provinceValidator());
+    this.txLocalidad.addValidators(this.localityValidator());
   }
+
 
   // Método para aplicar validaciones al campo de contraseña
   applyPasswordValidations() {
@@ -147,6 +156,22 @@ export class RegistrarEmpleadosComponent implements OnInit{
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
       const valid = emailPattern.test(control.value);
       return valid ? null : { invalidEmail: { value: control.value } };
+    };
+  }
+
+  private provinceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+      const valid = this.provinciasFiltradas.some(provincia => provincia.nombre === control.value);
+      return valid ? null : { invalidProvince: { value: control.value } };
+    };
+  }
+
+  private localityValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+      const valid = this.localidadesFiltradas.some(localidad => localidad.nombre === control.value);
+      return valid ? null : { invalidLocality: { value: control.value } };
     };
   }
 

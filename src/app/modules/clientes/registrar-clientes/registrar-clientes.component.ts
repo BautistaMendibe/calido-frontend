@@ -95,17 +95,42 @@ export class RegistrarClientesComponent implements OnInit {
       txDNI: ['', [Validators.maxLength(8), Validators.pattern(/^[0-9]+$/)]],
       txCUIT: ['', [Validators.maxLength(11)]],
       ddGenero: ['', []],
-      txProvincia: ['', [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
-      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
+      txProvincia: ['', {
+        validators: [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)],
+        updateOn: 'change'
+      }],
+      txLocalidad: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, {
+        validators: [Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)],
+        updateOn: 'change'
+      }],
       txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, []],
       txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[0-9]+$/)]],
     });
-  }
 
+    this.txProvincia.addValidators(this.provinceValidator());
+    this.txLocalidad.addValidators(this.localityValidator());
+  }
+  
   public habilitarEdicion(){
     this.form.enable();
     this.data.editar = true;
     this.tieneProvincia();
+  }
+
+  private provinceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+      const valid = this.provinciasFiltradas.some(provincia => provincia.nombre === control.value);
+      return valid ? null : { invalidProvince: { value: control.value } };
+    };
+  }
+
+  private localityValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+      const valid = this.localidadesFiltradas.some(localidad => localidad.nombre === control.value);
+      return valid ? null : { invalidLocality: { value: control.value } };
+    };
   }
 
   // Validar que la fecha de nacimiento sea menor a la de hoy
