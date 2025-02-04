@@ -1,5 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn, Validators} from "@angular/forms";
+import {
+  AbstractControl,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidatorFn,
+  Validators
+} from "@angular/forms";
 import {Proveedor} from "../../../models/proveedores.model";
 import {ProveedoresService} from "../../../services/proveedores.service";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
@@ -80,11 +87,20 @@ export class RegistrarProveedorComponent implements OnInit{
       txTelefono: ['', [Validators.pattern(/^\+?[0-9]{1,15}$/)]],
       txEmail: ['', [this.emailValidator()]],
       txCuit: ['', []],
-      txProvincia: [ '', [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
-      txLocalidad: [ {value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)]],
-      txCalle: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.required]],
-      txNumero: [{value: '', disabled: (!this.esConsulta || this.formDesactivado)}, [Validators.pattern(/^[0-9]+$/)]],
+      txProvincia: ['', {
+        validators: [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)],
+        updateOn: 'change'
+      }],
+      txLocalidad: [{ value: '', disabled: (!this.esConsulta || this.formDesactivado) }, {
+        validators: [Validators.required, Validators.pattern(/^[^\d@!¿?+#$%&*/()=<>;:{}[\]\\]+$/)],
+        updateOn: 'change'
+      }],
+      txCalle: [{ value: '', disabled: (!this.esConsulta || this.formDesactivado) }, [Validators.required]],
+      txNumero: [{ value: '', disabled: (!this.esConsulta || this.formDesactivado) }, [Validators.pattern(/^[0-9]+$/)]],
     });
+
+    this.txProvincia.addValidators(this.provinceValidator());
+    this.txLocalidad.addValidators(this.localityValidator());
   }
 
   private rellenarFormularioDataProveedor() {
@@ -128,6 +144,22 @@ export class RegistrarProveedorComponent implements OnInit{
       const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:\.[a-zA-Z]{2,})?$/;
       const valid = emailPattern.test(control.value);
       return valid ? null : { invalidEmail: { value: control.value } };
+    };
+  }
+
+  private provinceValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+      const valid = this.provinciasFiltradas.some(provincia => provincia.nombre === control.value);
+      return valid ? null : { invalidProvince: { value: control.value } };
+    };
+  }
+
+  private localityValidator(): ValidatorFn {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!control.value) return null;
+      const valid = this.localidadesFiltradas.some(localidad => localidad.nombre === control.value);
+      return valid ? null : { invalidLocality: { value: control.value } };
     };
   }
 

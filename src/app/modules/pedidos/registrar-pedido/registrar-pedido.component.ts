@@ -118,7 +118,7 @@ export class RegistrarPedidoComponent implements OnInit {
     this.form = this.fb.group({
       txBuscar: ['', []],
       txMontoEnvio: ['', [Validators.required]],
-      txFechaPedido: [new Date(), [Validators.required]],
+      txFechaPedido: [(!this.esConsulta ? this.fechaHoy : ''), [Validators.required]],
       txFechaEntrega: [''],
       txEstadoPedido: [1, [Validators.required]],
       txTransporte: [''],
@@ -196,8 +196,8 @@ export class RegistrarPedidoComponent implements OnInit {
 
   private rellenarFormularioDataPedido() {
     this.txMontoEnvio.setValue(this.pedido.montoEnvio);
-    this.txFechaPedido.setValue(this.formatDate(this.pedido.fechaEmision));
-    this.txFechaEntrega.setValue(this.formatDate(this.pedido.fechaEntrega));
+    this.txFechaPedido.setValue(this.pedido.fechaEmision);
+    this.txFechaEntrega.setValue(this.pedido.fechaEntrega);
     this.txEstadoPedido.setValue(this.pedido.idEstadoPedido);
     this.txTransporte.setValue(this.pedido.transporte.nombre);
     this.txProveedor.setValue(this.pedido.idProveedor);

@@ -49,7 +49,7 @@ export class ErrorMessagesComponent {
     { key: 'horaInvalida', message: () => 'Hora salida debe ser mayor a hora entrada.' },
     { key: 'passwordMismatch', message: () => 'Las contraseñas no coinciden.' },
     { key: 'invalidPercentage', message: () => 'El porcentaje debe ser mayor a 0 y menor o igual a 100.' },
-    { key: 'invalidEmail', message: () => 'El email ingresado no es válido.' },
+    { key: 'invalidEmail', message: () => 'El email ingresado es inválido.' },
     {
       key: 'matDatepickerMin',
       message: (error: any) => {
@@ -65,5 +65,7 @@ export class ErrorMessagesComponent {
       }
     },
     { key: 'montoMayorCero', message: () => 'El monto ingresado debe ser mayor a cero.' },
+    { key: 'invalidProvince', message: () => 'La provincia ingresada no existe.' },
+    { key: 'invalidLocality', message: () => 'La localidad ingresada no existe.' },
   ];
 }

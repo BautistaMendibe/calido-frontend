@@ -111,7 +111,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.form = this.fb.group({
       txBuscar: ['', []],
       txNumeroComprobante: ['', [Validators.required, Validators.maxLength(16)]],
-      txFechaEmision: [new Date(), [Validators.required]],
+      txFechaEmision: [(!this.esConsulta ? this.fechaHoy : '' ), [Validators.required]],
       txProveedor: ['', [Validators.required]],
       txObservaciones: ['', [Validators.maxLength(200)]],
       txTipoComprobante: [1, [Validators.required]],
@@ -137,7 +137,6 @@ export class RegistrarComprobanteComponent implements OnInit {
   private buscarProveedores() {
     this.proveedoresService.buscarTodosProveedores().subscribe((proveedores) => {
       this.listaProveedores = proveedores;
-
     });
   }
 
@@ -222,7 +221,7 @@ export class RegistrarComprobanteComponent implements OnInit {
     this.txTipoComprobante.setValue(this.comprobante.idTipoComprobante);
     this.txResponsable.setValue(this.comprobante.idResponsable);
     this.txReceptor.setValue(this.comprobante.idReceptor);
-    this.txFechaEmision.setValue(this.formatDate(this.comprobante.fechaEmision));
+    this.txFechaEmision.setValue(this.comprobante.fechaEmision);
     this.txObservaciones.setValue(this.comprobante.observaciones);
 
     this.comprobante.detalleComprobante.forEach((detalle: DetalleComprobante) => {

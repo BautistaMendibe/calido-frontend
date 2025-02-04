@@ -85,6 +85,15 @@ export class ConsultarComprobanteComponent implements OnInit {
       txFechaEmisionHasta: ['', []],
       txResponsable: ['', []]
     });
+
+    // Forzar que fechaHasta tenga hora 23:59:59 para que sea el final del día
+    this.txFechaEmisionHasta.valueChanges.subscribe((fecha) => {
+      if (fecha) {
+        let fechaHasta = new Date(fecha);
+        fechaHasta.setHours(23, 59, 59, 999);
+        this.txFechaEmisionHasta.setValue(fechaHasta, { emitEvent: false });
+      }
+    });
   }
 
   public limpiarFiltros() {

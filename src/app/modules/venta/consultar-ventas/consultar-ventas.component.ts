@@ -76,6 +76,15 @@ export class ConsultarVentasComponent implements OnInit {
       txTiposFactura: [''],
       txUltimosCuatroDigitosTarjeta: [''],
     });
+
+    // Forzar que fechaHasta tenga hora 23:59:59 para que sea el final del día
+    this.txFechaHasta.valueChanges.subscribe((fecha) => {
+      if (fecha) {
+        let fechaHasta = new Date(fecha);
+        fechaHasta.setHours(23, 59, 59, 999);
+        this.txFechaHasta.setValue(fechaHasta, { emitEvent: false });
+      }
+    });
   }
 
   private buscarFormasDePago() {
