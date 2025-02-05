@@ -96,8 +96,13 @@ export class VisualizacionesVentasComponent implements OnInit {
     });
   }
 
-  private formatToUnix(date: Date | null): number {
-    return date ? new Date(date).getTime() : 0;
+  private formatToUnix(date: Date | null, isEndDate: boolean = false): number {
+    if (!date) return 0;
+    const adjustedDate = new Date(date);
+    if (isEndDate) {
+      adjustedDate.setHours(23, 59, 59, 999); // Establece la hora a 23:59:59.999
+    }
+    return adjustedDate.getTime();
   }
 
   private formatToString(date: Date | null): string {
@@ -112,12 +117,12 @@ export class VisualizacionesVentasComponent implements OnInit {
     const { start_date, end_date, payment_method, var_category, employee_name } = this.filtersForm.value;
 
     const startDateUnix = this.formatToUnix(start_date) || 1728259200000;
-    const endDateUnix = this.formatToUnix(end_date) || 1733356800000;
+    const endDateUnix = this.formatToUnix(end_date, true) || 1733356800000;
 
-    const formattedStartDate = this.formatToString(start_date) || '2024-12-01';
-    const formattedEndDate = this.formatToString(end_date) || '3000-01-01';
+    const formattedStartDate = this.formatToString(start_date) || '2024-01-01';
+    const formattedEndDate = this.formatToString(end_date) || '2026-01-01';
 
-    const baseGrafanaUrl = 'https://grafanae-production.up.railway.app/d-solo/fe2gk0zzvuo00f/ventas';
+    const baseGrafanaUrl = 'https://grafanae-production.up.railway.app/d-solo/cec3ghf2dxrswc/new-dashboard?';
 
     const theme: string = this.darkMode ? 'dark' : 'light';
 
@@ -128,20 +133,22 @@ export class VisualizacionesVentasComponent implements OnInit {
       employeeFilter = encodeURIComponent(employee_name);
     }
 
-    this.grafanaUrls.formaPago = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=7&theme=${theme}`
+    const safeUrl = (url: string) => this.sanitizer.bypassSecurityTrustResourceUrl(url);
+
+    this.grafanaUrls.formaPago = safeUrl(
+      `${baseGrafanaUrl}?&from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=2&theme=${theme}`
     );
 
-    this.grafanaUrls.fechaHora = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&orgId=1&panelId=8&theme=${theme}`
+    this.grafanaUrls.fechaHora = safeUrl(
+      `${baseGrafanaUrl}?&from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&var-payment_method=${payment_method}&var-var_category=${var_category}&orgId=1&panelId=4&theme=${theme}`
     );
 
-    this.grafanaUrls.categoria = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=2&theme=${theme}`
+    this.grafanaUrls.categoria = safeUrl(
+      `${baseGrafanaUrl}?&from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-payment_method=${payment_method}&var-var_category=${var_category}&var-Empleado=${employeeFilter}&orgId=1&panelId=3&theme=${theme}`
     );
 
-    this.grafanaUrls.empleados = this.sanitizer.bypassSecurityTrustResourceUrl(
-      `${baseGrafanaUrl}?from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&orgId=1&panelId=9&theme=${theme}`
+    this.grafanaUrls.empleados = safeUrl(
+      `${baseGrafanaUrl}?&from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&var-var_category=${var_category}&var-payment_method=${payment_method}&orgId=1&panelId=1&theme=${theme}`
     );
   }
 
