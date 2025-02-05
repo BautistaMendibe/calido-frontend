@@ -129,7 +129,7 @@ export class ConsultarVentasComponent implements OnInit {
       if (offset === 0) {
         // Si es la primer página, completar con null hasta el totalDeVentas (se hace por bug del paginator)
         const diferencia = totalDeVentas - ventas.length;
-        this.ventas = [...ventas, ...new Array(diferencia).fill(null)];
+        this.ventas = ventas.length > 0 ? [...ventas, ...new Array(diferencia).fill(null)] : [];
       } else {
         // Reemplazar los valores null por las nuevas ventas
         const nullIndex = this.ventas.findIndex(v => v === null);
