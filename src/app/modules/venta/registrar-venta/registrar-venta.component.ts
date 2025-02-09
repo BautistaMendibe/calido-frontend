@@ -485,6 +485,8 @@ export class RegistrarVentaComponent implements OnInit{
               } else {
                 snackBarRef.dismiss();
                 this.notificacionService.openSnackBarError('Error al facturar venta. Inténtelo nuevamente desde consultas.');
+                this.registrandoVenta = false;
+                this.limpiarVenta();
               }
             });
           } else {
