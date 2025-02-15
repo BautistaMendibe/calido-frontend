@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ProductosService} from "../../../services/productos.service";
 import {Router} from "@angular/router";
-import {Producto} from "../../../models/producto.model";
 import {ProductoStockLimitadoComando} from "../../../models/comandos/dashboard/ProductoStockLimitado.comando";
 
 @Component({

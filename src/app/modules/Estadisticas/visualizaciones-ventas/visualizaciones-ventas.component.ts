@@ -27,11 +27,13 @@ export class VisualizacionesVentasComponent implements OnInit {
     fechaHora: SafeResourceUrl;
     categoria: SafeResourceUrl;
     empleados: SafeResourceUrl;
+    clientes: SafeResourceUrl;
   } = {
     formaPago: '',
     fechaHora: '',
     categoria: '',
     empleados: '',
+    clientes: '' ,
   };
 
   constructor(
@@ -149,6 +151,10 @@ export class VisualizacionesVentasComponent implements OnInit {
 
     this.grafanaUrls.empleados = safeUrl(
       `${baseGrafanaUrl}?&from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&var-var_category=${var_category}&var-payment_method=${payment_method}&orgId=1&panelId=1&theme=${theme}`
+    );
+
+    this.grafanaUrls.clientes = safeUrl(
+      `${baseGrafanaUrl}?&from=${startDateUnix}&to=${endDateUnix}&timezone=browser&var-start_date=${formattedStartDate}&var-end_date=${formattedEndDate}&var-Empleado=${employeeFilter}&var-var_category=${var_category}&var-payment_method=${payment_method}&orgId=1&panelId=5&theme=${theme}`
     );
   }
 

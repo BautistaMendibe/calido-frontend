@@ -135,8 +135,7 @@ export class RegistrarVentaComponent implements OnInit{
       txTarjeta: ['', []],
       txCuotas: ['', []],
       tx4UltimosDigitosTarjetas: ['', [Validators.pattern(/^\d+$/)]], // Solo números
-      txCaja: [1, [Validators.required]],
-      txCancelarConSaldo: [false, []]
+      txCaja: [1, [Validators.required]]
     });
   }
 
@@ -514,7 +513,7 @@ export class RegistrarVentaComponent implements OnInit{
       return QRPagado;
     }
 
-    this.notificacionService.openSnackBarSuccess('Generando pago.');
+    this.notificacionService.openSnackBarSuccess('Generando pago...');
     try {
       // Generar el pago
       const respuestaPago = await this.ventasService.pagarConSIROQR(venta).toPromise();
@@ -642,7 +641,7 @@ export class RegistrarVentaComponent implements OnInit{
     this.subTotal = 0;
 
     // Reestablecer valores
-    this.txFormaDePago.setValue(this.formasDePago[0].id);
+    this.txFormaDePago.setValue(this.formasDePagoEnum.EFECTIVO);
     this.txTipoFacturacion.setValue(this.tiposDeFacturacion[1].id);
     this.tx4UltimosDigitosTarjetas.setValue(null);
     this.txTarjeta.setValue(null);
@@ -650,6 +649,7 @@ export class RegistrarVentaComponent implements OnInit{
 
     this.mostrarTarjetasCuotas = false;
     this.tarjetaSeleccionada = new Tarjeta();
+    this.cantidadCuotaSeleccionada = new CuotaPorTarjeta();
 
     // Establecer txCliente en consumidor final
     this.txCliente.setValue(-1);
