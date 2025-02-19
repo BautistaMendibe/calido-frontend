@@ -181,7 +181,7 @@ export class PagarCuentaCorrienteComponent implements OnInit {
       return QRPagado;
     }
 
-    this.notificacionService.openSnackBarSuccess('Generando pago.');
+    this.notificacionService.openSnackBarSuccess('Generando pago...');
     try {
       // Generar el pago
       const respuestaPago = await this.ventasService.pagarConSIROQRPagosDeCuentaCorriente(movimiento).toPromise();

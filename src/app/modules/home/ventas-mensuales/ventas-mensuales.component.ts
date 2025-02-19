@@ -68,13 +68,24 @@ export class VentasMensualesComponent implements OnInit {
     };
 
     this.ventasService.buscarCantidadVentasMensuales().subscribe((cantidadVentasMensuales) => {
-
       // Traducir los nombres de los meses
       this.ventasMesuales = cantidadVentasMensuales.map(venta => {
-        const [mes, anio] = venta.mes.split('  '); // Separar mes y año
+        if (!venta.mes) {
+          console.warn("Registro con 'mes' inválido:", venta);
+          return { ...venta, mes: "Fecha desconocida" };
+        }
+
+        // Separar mes y año, eliminando espacios extra
+        const partes = venta.mes.split(/\s+/);
+        if (partes.length < 2) {
+          console.warn("Formato incorrecto en 'mes':", venta.mes);
+          return { ...venta, mes: "Fecha desconocida" };
+        }
+
+        const [mes, anio] = partes;
         return {
           ...venta,
-          mes: `${mesesEnEspanol[mes.trim()]} ${anio.trim()}` // Traducir el mes y conservar el año
+          mes: `${mesesEnEspanol[mes] || mes} ${anio}`
         };
       });
 
@@ -83,6 +94,7 @@ export class VentasMensualesComponent implements OnInit {
       this.buscando = false;
     });
   }
+
 
   public barChartOptions: ChartOptions<'bar'> = {
     responsive: true,

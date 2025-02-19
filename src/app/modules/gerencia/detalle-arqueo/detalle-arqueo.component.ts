@@ -79,8 +79,8 @@ export class DetalleArqueoComponent implements OnInit {
 
   public buscarFormasPago() {
     this.ventasService.buscarFormasDePago().subscribe((formasPago) => {
-      // Asignar las formas de pago para el combo de movimientos (solo efectivo y transferencia)
-      this.formasPagoParaMovimientos = formasPago.filter(fp => fp.id === 1 || fp.id === 5);
+      // Asignar las formas de pago para el combo de movimientos (excluyendo cuenta corriente y QR)
+      this.formasPagoParaMovimientos = formasPago.filter(fp => fp.id !== 6 && fp.id !== 7);
 
       // Mapear iconos para las formas de pago
       this.formasPago = formasPago.map((forma) => {

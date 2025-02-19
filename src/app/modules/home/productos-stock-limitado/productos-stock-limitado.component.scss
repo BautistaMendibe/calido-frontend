@@ -79,3 +79,12 @@ h3 {
 .product-item:hover {
   background: var(--bg-hover-items-home);
 }
+
+.no-productos-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 350px; /* Ajusta la altura según tus necesidades */
+  text-align: center;
+  color: #757575;
+}
